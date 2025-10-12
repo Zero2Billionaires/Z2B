@@ -1,7 +1,8 @@
-const express = require('express');
+import express from 'express';
+import BTSSScore from '../models/BTSSScore.js';
+import CoachUser from '../models/CoachUser.js';
+
 const router = express.Router();
-const BTSSScore = require('../models/BTSSScore');
-const CoachUser = require('../models/CoachUser');
 
 // ========================================
 // BTSS SCORING ROUTES
@@ -260,4 +261,4 @@ function getPhase(score) {
   return 'Foundation';
 }
 
-module.exports = router;
+export default router;

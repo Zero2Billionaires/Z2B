@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const userProgressSchema = new mongoose.Schema({
   userId: {
@@ -198,4 +198,4 @@ userProgressSchema.statics.getOverdueActions = async function(userId) {
     .exec();
 };
 
-module.exports = mongoose.model('UserProgress', userProgressSchema);
+export default mongoose.model('UserProgress', userProgressSchema);

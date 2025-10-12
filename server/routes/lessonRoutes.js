@@ -1,8 +1,9 @@
-const express = require('express');
+import express from 'express';
+import Lesson from '../models/Lesson.js';
+import CoachUser from '../models/CoachUser.js';
+import UserProgress from '../models/UserProgress.js';
+
 const router = express.Router();
-const Lesson = require('../models/Lesson');
-const CoachUser = require('../models/CoachUser');
-const UserProgress = require('../models/UserProgress');
 
 // ========================================
 // LESSON LIBRARY ROUTES
@@ -298,4 +299,4 @@ router.get('/stats/all', async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

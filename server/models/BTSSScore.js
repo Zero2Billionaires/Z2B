@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const btssScoreSchema = new mongoose.Schema({
   userId: {
@@ -195,4 +195,4 @@ btssScoreSchema.statics.calculateGrowthRate = async function(userId) {
   };
 };
 
-module.exports = mongoose.model('BTSSScore', btssScoreSchema);
+export default mongoose.model('BTSSScore', btssScoreSchema);

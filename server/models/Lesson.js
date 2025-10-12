@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const lessonSchema = new mongoose.Schema({
   lessonId: {
@@ -217,4 +217,4 @@ lessonSchema.statics.getRecommendedLessons = async function(userId) {
     .exec();
 };
 
-module.exports = mongoose.model('Lesson', lessonSchema);
+export default mongoose.model('Lesson', lessonSchema);

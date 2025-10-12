@@ -3,10 +3,12 @@
  * Integrates with Claude API or OpenAI for natural coaching conversations
  */
 
-const CoachUser = require('../models/CoachUser');
-const BTSSScore = require('../models/BTSSScore');
-const CoachingSession = require('../models/CoachingSession');
-const UserProgress = require('../models/UserProgress');
+import CoachUser from '../models/CoachUser.js';
+import BTSSScore from '../models/BTSSScore.js';
+import CoachingSession from '../models/CoachingSession.js';
+import UserProgress from '../models/UserProgress.js';
+import { callAI } from './claudeAPI.js';
+import AI_CONFIG from '../config/aiConfig.js';
 
 // Scripture Database (expandable)
 const SCRIPTURE_DATABASE = {
@@ -214,28 +216,40 @@ async function generateCoachResponse(sessionId, userMessage, apiKey = null, mode
     // Prepare API request
     let aiResponse = '';
     let scripture = null;
+    let tokensUsed = 0;
 
-    if (model === 'claude') {
-      // Claude API Integration
-      if (!apiKey) {
-        // For development: return structured placeholder
-        aiResponse = generatePlaceholderResponse(user, userMessage, btssScore);
-      } else {
-        // TODO: Integrate with Claude API
-        // const response = await callClaudeAPI(systemPrompt, conversationHistory, userMessage, apiKey);
-        // aiResponse = response.content;
+    // Check if real-time AI is enabled and API key is configured
+    const useRealAI = AI_CONFIG.features.realTimeAI &&
+                      (AI_CONFIG.claude.apiKey || AI_CONFIG.openai.apiKey);
+
+    if (useRealAI) {
+      // Call real AI API
+      try {
+        const aiResult = await callAI(
+          systemPrompt,
+          conversationHistory,
+          userMessage,
+          model === 'openai' ? 'openai' : 'claude'
+        );
+
+        if (aiResult.success) {
+          aiResponse = aiResult.content;
+          tokensUsed = aiResult.usage?.total_tokens || 0;
+
+          // Update session with tokens used
+          session.tokensUsed = (session.tokensUsed || 0) + tokensUsed;
+        } else {
+          // AI API failed, fall back to placeholder
+          console.warn('AI API call failed, using placeholder response:', aiResult.error);
+          aiResponse = generatePlaceholderResponse(user, userMessage, btssScore);
+        }
+      } catch (error) {
+        console.error('Error in AI API call:', error);
         aiResponse = generatePlaceholderResponse(user, userMessage, btssScore);
       }
     } else {
-      // OpenAI API Integration
-      if (!apiKey) {
-        aiResponse = generatePlaceholderResponse(user, userMessage, btssScore);
-      } else {
-        // TODO: Integrate with OpenAI API
-        // const response = await callOpenAI(systemPrompt, conversationHistory, userMessage, apiKey);
-        // aiResponse = response.content;
-        aiResponse = generatePlaceholderResponse(user, userMessage, btssScore);
-      }
+      // Use placeholder responses (development mode or AI disabled)
+      aiResponse = generatePlaceholderResponse(user, userMessage, btssScore);
     }
 
     // Add scripture if appropriate
@@ -377,7 +391,7 @@ function getTimeBasedGreeting() {
   return 'Good evening';
 }
 
-module.exports = {
+export {
   generateCoachResponse,
   generateCheckInMessage,
   getScripture,

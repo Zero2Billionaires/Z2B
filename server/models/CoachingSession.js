@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const coachingSessionSchema = new mongoose.Schema({
   sessionId: {
@@ -219,4 +219,4 @@ coachingSessionSchema.statics.getSessionStats = async function(userId) {
   };
 };
 
-module.exports = mongoose.model('CoachingSession', coachingSessionSchema);
+export default mongoose.model('CoachingSession', coachingSessionSchema);
