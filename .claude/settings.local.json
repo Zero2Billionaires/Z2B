@@ -45,7 +45,9 @@
       "Bash(git --version)",
       "Bash(gh:*)",
       "Bash(git config:*)",
-      "Bash(start https://github.com/cli/cli/releases/latest)"
+      "Bash(start https://github.com/cli/cli/releases/latest)",
+      "Bash(git commit:*)",
+      "Bash(git add:*)"
     ],
     "deny": [],
     "ask": []
