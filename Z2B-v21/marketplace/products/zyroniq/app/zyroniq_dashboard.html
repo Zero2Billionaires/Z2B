@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Zyroniq Intelligence Engine</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --electric-cyan: #00FFF0;
+            --deep-space-black: #0C0C1C;
+            --quantum-purple: #6C63FF;
+            --neon-silver: #C0C0C0;
+            --luminous-blue: #3AEFFF;
+            --success: #00FF88;
+            --warning: #FFB800;
+            --danger: #FF3366;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--deep-space-black);
+            color: var(--neon-silver);
+            overflow-x: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background: rgba(12, 12, 28, 0.95);
+            backdrop-filter: blur(10px);
+            border-right: 2px solid rgba(0, 255, 240, 0.2);
+            padding: 2rem 0;
+            z-index: 1000;
+        }
+
+        .sidebar-logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--electric-cyan), var(--quantum-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            padding: 0 1.5rem 2rem;
+            border-bottom: 2px solid rgba(0, 255, 240, 0.2);
+        }
+
+        .nav-item {
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: rgba(0, 255, 240, 0.1);
+            border-left-color: var(--electric-cyan);
+        }
+
+        .nav-item i {
+            font-size: 1.2rem;
+            color: var(--electric-cyan);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            padding: 2rem;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: rgba(12, 12, 28, 0.6);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(0, 255, 240, 0.2);
+            border-radius: 15px;
+        }
+
+        .welcome h1 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--electric-cyan);
+            font-size: 2rem;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--electric-cyan), var(--quantum-purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--deep-space-black);
+        }
+
+        /* Earnings Grid */
+        .earnings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .earning-card {
+            background: rgba(12, 12, 28, 0.6);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(0, 255, 240, 0.2);
+            border-radius: 15px;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .earning-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 255, 240, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .earning-card:hover::before { opacity: 1; }
+
+        .earning-card:hover {
+            border-color: var(--electric-cyan);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 255, 240, 0.3);
+        }
+
+        .earning-label {
+            font-size: 0.9rem;
+            color: var(--neon-silver);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .earning-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--electric-cyan);
+            position: relative;
+            z-index: 1;
+        }
+
+        .earning-change {
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .earning-change.positive { color: var(--success); }
+        .earning-change.negative { color: var(--danger); }
+
+        /* Chart Container */
+        .chart-container {
+            background: rgba(12, 12, 28, 0.6);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(0, 255, 240, 0.2);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-title {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--electric-cyan);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Genealogy Tree */
+        .tree-container {
+            background: rgba(12, 12, 28, 0.6);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(0, 255, 240, 0.2);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+        }
+
+        .tree {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .tree-node {
+            background: linear-gradient(135deg, rgba(0, 255, 240, 0.1), rgba(108, 99, 255, 0.1));
+            border: 2px solid var(--electric-cyan);
+            border-radius: 10px;
+            padding: 1rem;
+            min-width: 200px;
+            text-align: center;
+            margin: 1rem;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tree-node:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(0, 255, 240, 0.4);
+        }
+
+        .tree-node.you {
+            border-color: var(--quantum-purple);
+            background: linear-gradient(135deg, rgba(108, 99, 255, 0.2), rgba(0, 255, 240, 0.1));
+        }
+
+        .node-name {
+            font-weight: 600;
+            color: var(--electric-cyan);
+            margin-bottom: 0.5rem;
+        }
+
+        .node-tier {
+            font-size: 0.85rem;
+            color: var(--neon-silver);
+            margin-bottom: 0.5rem;
+        }
+
+        .node-pv {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--luminous-blue);
+            font-size: 0.9rem;
+        }
+
+        .tree-children {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .tree-line {
+            width: 2px;
+            height: 30px;
+            background: var(--electric-cyan);
+            margin: 0 auto;
+        }
+
+        /* Button */
+        .btn {
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            background: linear-gradient(135deg, var(--electric-cyan), var(--quantum-purple));
+            color: var(--deep-space-black);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 255, 240, 0.4);
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-logo">🚀 ZYRONIQ</div>
+        <div class="nav-item active">
+            <i class="fas fa-chart-line"></i>
+            <span>Dashboard</span>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-dollar-sign"></i>
+            <span>Earnings</span>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-users"></i>
+            <span>My Team</span>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-sitemap"></i>
+            <span>Genealogy</span>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-trophy"></i>
+            <span>TLI Status</span>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-chart-bar"></i>
+            <span>Analytics</span>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-cog"></i>
+            <span>Settings</span>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div class="welcome">
+                <h1>Welcome Back, Legacy Builder</h1>
+                <p style="color: var(--neon-silver); margin-top: 0.5rem;">Intelligence calculating your legacy in real-time</p>
+            </div>
+            <div class="user-profile">
+                <div>
+                    <div style="font-weight: 600; color: var(--electric-cyan);">John Entrepreneur</div>
+                    <div style="font-size: 0.85rem; color: var(--quantum-purple);">Executive Tier</div>
+                </div>
+                <div class="avatar">JE</div>
+            </div>
+        </div>
+
+        <!-- Earnings Grid -->
+        <div class="earnings-grid">
+            <div class="earning-card">
+                <div class="earning-label"><i class="fas fa-coins"></i> Total Earnings</div>
+                <div class="earning-value">R <span id="totalEarnings" class="loading">...</span></div>
+                <div class="earning-change positive"><i class="fas fa-arrow-up"></i> +15.2% this month</div>
+            </div>
+
+            <div class="earning-card">
+                <div class="earning-label"><i class="fas fa-handshake"></i> ISP (Individual Sales)</div>
+                <div class="earning-value">R <span id="ispEarnings" class="loading">...</span></div>
+                <div class="earning-change positive"><i class="fas fa-arrow-up"></i> +8.5%</div>
+            </div>
+
+            <div class="earning-card">
+                <div class="earning-label"><i class="fas fa-rocket"></i> QPB (Quick Pathfinder)</div>
+                <div class="earning-value">R <span id="qpbEarnings" class="loading">...</span></div>
+                <div class="earning-change positive"><i class="fas fa-arrow-up"></i> +12.0%</div>
+            </div>
+
+            <div class="earning-card">
+                <div class="earning-label"><i class="fas fa-sitemap"></i> TSC (Team Sales)</div>
+                <div class="earning-value">R <span id="tscEarnings" class="loading">...</span></div>
+                <div class="earning-change positive"><i class="fas fa-arrow-up"></i> +20.3%</div>
+            </div>
+
+            <div class="earning-card">
+                <div class="earning-label"><i class="fas fa-trophy"></i> TPB (Team Performance)</div>
+                <div class="earning-value">R <span id="tpbEarnings" class="loading">...</span></div>
+                <div class="earning-change positive"><i class="fas fa-arrow-up"></i> +5.2%</div>
+            </div>
+
+            <div class="earning-card">
+                <div class="earning-label"><i class="fas fa-crown"></i> TLI (Leadership)</div>
+                <div class="earning-value">R <span id="tliEarnings" class="loading">...</span></div>
+                <div class="earning-change">Quarterly Award</div>
+            </div>
+        </div>
+
+        <!-- Chart Container -->
+        <div class="chart-container">
+            <h3 class="chart-title">📊 30-Day Earnings Trend</h3>
+            <canvas id="earningsChart" style="max-height: 300px;"></canvas>
+        </div>
+
+        <!-- Genealogy Tree -->
+        <div class="tree-container">
+            <h3 class="chart-title">🌳 Your Team Genealogy (10 Generations Deep)</h3>
+            <div class="tree" id="genealogyTree">
+                <div class="tree-node you">
+                    <div class="node-name"><i class="fas fa-user"></i> YOU</div>
+                    <div class="node-tier">Executive Tier</div>
+                    <div class="node-pv">Team PV: 45,280</div>
+                </div>
+                <div class="tree-line"></div>
+                <div class="tree-children">
+                    <div>
+                        <div class="tree-node">
+                            <div class="node-name">Sarah Johnson</div>
+                            <div class="node-tier">Professional Tier</div>
+                            <div class="node-pv">PV: 12,500</div>
+                        </div>
+                        <div class="tree-line"></div>
+                        <div style="text-align: center; color: var(--neon-silver); font-size: 0.85rem;">
+                            <i class="fas fa-users"></i> 8 members
+                        </div>
+                    </div>
+                    <div>
+                        <div class="tree-node">
+                            <div class="node-name">Michael Chen</div>
+                            <div class="node-tier">Builder Tier</div>
+                            <div class="node-pv">PV: 18,320</div>
+                        </div>
+                        <div class="tree-line"></div>
+                        <div style="text-align: center; color: var(--neon-silver); font-size: 0.85rem;">
+                            <i class="fas fa-users"></i> 12 members
+                        </div>
+                    </div>
+                    <div>
+                        <div class="tree-node">
+                            <div class="node-name">Emma Wilson</div>
+                            <div class="node-tier">Professional Tier</div>
+                            <div class="node-pv">PV: 14,460</div>
+                        </div>
+                        <div class="tree-line"></div>
+                        <div style="text-align: center; color: var(--neon-silver); font-size: 0.85rem;">
+                            <i class="fas fa-users"></i> 6 members
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="btn"><i class="fas fa-expand"></i> View Full Tree (47 Members)</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simulate real-time earnings data
+        function loadEarnings() {
+            setTimeout(() => {
+                document.getElementById('totalEarnings').textContent = '47,850';
+                document.getElementById('totalEarnings').classList.remove('loading');
+
+                document.getElementById('ispEarnings').textContent = '12,450';
+                document.getElementById('ispEarnings').classList.remove('loading');
+
+                document.getElementById('qpbEarnings').textContent = '6,720';
+                document.getElementById('qpbEarnings').classList.remove('loading');
+
+                document.getElementById('tscEarnings').textContent = '18,940';
+                document.getElementById('tscEarnings').classList.remove('loading');
+
+                document.getElementById('tpbEarnings').textContent = '4,740';
+                document.getElementById('tpbEarnings').classList.remove('loading');
+
+                document.getElementById('tliEarnings').textContent = '5,000';
+                document.getElementById('tliEarnings').classList.remove('loading');
+            }, 1000);
+        }
+
+        // Simulate chart (placeholder for Chart.js integration)
+        function drawChart() {
+            const canvas = document.getElementById('earningsChart');
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width = canvas.offsetWidth;
+            const height = canvas.height = 300;
+
+            // Simple gradient
+            const gradient = ctx.createLinearGradient(0, 0, 0, height);
+            gradient.addColorStop(0, 'rgba(0, 255, 240, 0.5)');
+            gradient.addColorStop(1, 'rgba(108, 99, 255, 0.1)');
+
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 100, width, 200);
+
+            ctx.strokeStyle = '#00FFF0';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            for (let i = 0; i < width; i += 30) {
+                const y = 150 + Math.sin(i / 30) * 50;
+                if (i === 0) ctx.moveTo(i, y);
+                else ctx.lineTo(i, y);
+            }
+            ctx.stroke();
+
+            ctx.fillStyle = '#00FFF0';
+            ctx.font = '14px Orbitron';
+            ctx.textAlign = 'center';
+            ctx.fillText('📈 Trending Up: +15.2% Growth', width / 2, 50);
+        }
+
+        // Initialize
+        loadEarnings();
+        drawChart();
+
+        // Add interactivity to tree nodes
+        document.querySelectorAll('.tree-node').forEach(node => {
+            node.addEventListener('click', function() {
+                alert('Detailed view for: ' + this.querySelector('.node-name').textContent);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SideGig Bingo - ZYRO</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Comic+Neue:wght@700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --success-color: #4ECDC4;
+            --success-dark: #3DBDB0;
+            --success-light: #A8E6CF;
+            --accent-color: #FFC857;
+            --dark-bg: #2C3E50;
+            --light-bg: #FFF8F0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #A8E6CF 0%, #7FD4C1 100%);
+            min-height: 100vh;
+            padding: 2rem 0;
+        }
+
+        /* Header */
+        .game-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .game-title {
+            font-family: 'Comic Neue', cursive;
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--success-dark);
+            text-shadow: 3px 3px 0px rgba(0,0,0,0.1);
+            margin-bottom: 0.5rem;
+        }
+
+        .game-subtitle {
+            color: var(--dark-bg);
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        /* Progress Section */
+        .progress-section {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            max-width: 1200px;
+            margin: 0 auto 2rem;
+        }
+
+        .progress-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .progress-card {
+            background: linear-gradient(135deg, rgba(76, 205, 196, 0.1), rgba(61, 189, 176, 0.1));
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            border: 2px solid var(--success-color);
+        }
+
+        .progress-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--success-color);
+        }
+
+        .progress-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 0.5rem;
+        }
+
+        /* Bingo Board */
+        .bingo-container {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            max-width: 1200px;
+            margin: 0 auto 2rem;
+        }
+
+        .bingo-board {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-bottom: 2rem;
+        }
+
+        .bingo-cell {
+            aspect-ratio: 1;
+            background: white;
+            border: 3px solid #E0E0E0;
+            border-radius: 15px;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bingo-cell:hover:not(.completed):not(.free-space) {
+            transform: scale(1.05);
+            border-color: var(--success-color);
+            box-shadow: 0 5px 20px rgba(76, 205, 196, 0.3);
+        }
+
+        .bingo-cell.completed {
+            background: linear-gradient(135deg, var(--success-color), var(--success-dark));
+            border-color: var(--success-dark);
+            color: white;
+        }
+
+        .bingo-cell.free-space {
+            background: linear-gradient(135deg, var(--accent-color), #F7931E);
+            border-color: var(--accent-color);
+            color: #2C3E50;
+            font-weight: 800;
+        }
+
+        .bingo-cell.completed::after {
+            content: '✓';
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            font-size: 2rem;
+            font-weight: 800;
+            color: white;
+        }
+
+        .cell-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .cell-text {
+            font-size: 0.85rem;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        .cell-points {
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+            opacity: 0.8;
+        }
+
+        /* Bingo Lines */
+        .bingo-lines {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 2px solid #E0E0E0;
+        }
+
+        .bingo-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--accent-color), #F7931E);
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            color: #2C3E50;
+            font-weight: 700;
+            margin: 0.5rem;
+            box-shadow: 0 5px 15px rgba(255, 200, 87, 0.3);
+        }
+
+        /* Buttons */
+        .btn-reset {
+            background: linear-gradient(135deg, #E74C3C, #C0392B);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+        }
+
+        .btn-reset:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(231, 76, 60, 0.5);
+        }
+
+        .btn-reset:disabled {
+            background: #CCCCCC;
+            cursor: not-allowed;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 3rem;
+            border-radius: 30px;
+            max-width: 500px;
+            text-align: center;
+            animation: zoomIn 0.5s;
+        }
+
+        @keyframes zoomIn {
+            from {
+                transform: scale(0.3);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .modal-icon {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+            animation: celebrate 1s infinite;
+        }
+
+        @keyframes celebrate {
+            0%, 100% { transform: rotate(-10deg) scale(1); }
+            50% { transform: rotate(10deg) scale(1.2); }
+        }
+
+        .modal-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--success-color);
+            margin-bottom: 1rem;
+        }
+
+        .modal-message {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .btn-close-modal {
+            background: linear-gradient(135deg, var(--success-color), var(--success-dark));
+            color: white;
+            border: none;
+            padding: 1rem 3rem;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .game-title {
+                font-size: 2rem;
+            }
+
+            .bingo-board {
+                gap: 5px;
+            }
+
+            .bingo-cell {
+                padding: 0.5rem;
+            }
+
+            .cell-icon {
+                font-size: 1.5rem;
+            }
+
+            .cell-text {
+                font-size: 0.7rem;
+            }
+
+            .cell-points {
+                font-size: 0.65rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="game-header">
+            <div class="game-title">📋 SideGig Bingo</div>
+            <div class="game-subtitle">Complete all 25 tasks to become a Bingo Legend!</div>
+        </div>
+
+        <!-- Progress Section -->
+        <div class="progress-section">
+            <div class="progress-grid">
+                <div class="progress-card">
+                    <div class="progress-value" id="completedTasks">0/25</div>
+                    <div class="progress-label">Tasks Complete</div>
+                </div>
+                <div class="progress-card">
+                    <div class="progress-value" id="progressPercent">0%</div>
+                    <div class="progress-label">Progress</div>
+                </div>
+                <div class="progress-card">
+                    <div class="progress-value" id="bingoCount">0</div>
+                    <div class="progress-label">Bingos</div>
+                </div>
+                <div class="progress-card">
+                    <div class="progress-value" id="totalPoints">0</div>
+                    <div class="progress-label">Points Earned</div>
+                </div>
+            </div>
+
+            <div class="progress-bar" style="height: 30px; border-radius: 15px; background: #E0E0E0; overflow: hidden;">
+                <div id="progressBar" style="height: 100%; background: linear-gradient(90deg, var(--success-color), var(--success-dark)); width: 0%; transition: width 1s ease; display: flex; align-items: center; justify-content: flex-end; padding-right: 1rem; color: white; font-weight: 700;"></div>
+            </div>
+        </div>
+
+        <!-- Bingo Board -->
+        <div class="bingo-container">
+            <h4 style="text-align: center; color: var(--dark-bg); margin-bottom: 2rem;">
+                <i class="fas fa-th"></i> Your Bingo Board
+            </h4>
+
+            <div class="bingo-board" id="bingoBoard">
+                <!-- Cells will be generated here -->
+            </div>
+
+            <!-- Bingo Lines -->
+            <div class="bingo-lines">
+                <h5 style="color: var(--dark-bg); margin-bottom: 1rem;">
+                    <i class="fas fa-trophy"></i> Bingos Completed
+                </h5>
+                <div id="bingoList">
+                    <p style="text-align: center; color: #999;">Complete a row, column, or diagonal to get a BINGO!</p>
+                </div>
+            </div>
+
+            <!-- Reset Button -->
+            <div class="text-center mt-4">
+                <button class="btn-reset" id="btnReset" onclick="resetBoard()" disabled>
+                    <i class="fas fa-redo"></i> Reset Board (Complete all 25 first!)
+                </button>
+            </div>
+        </div>
+
+        <!-- Back Button -->
+        <div class="text-center">
+            <a href="zyro.html" class="btn" style="background: white; color: var(--success-color); border: 2px solid var(--success-color); padding: 0.8rem 2rem; border-radius: 50px; font-weight: 700; text-decoration: none; display: inline-block; transition: all 0.3s;">
+                <i class="fas fa-arrow-left"></i> Back to ZYRO Dashboard
+            </a>
+        </div>
+    </div>
+
+    <!-- Completion Modal -->
+    <div class="modal-overlay" id="completionModal">
+        <div class="modal-content">
+            <div class="modal-icon" id="modalIcon">🎉</div>
+            <h2 class="modal-title" id="modalTitle">BINGO!</h2>
+            <p class="modal-message" id="modalMessage">You completed a line!</p>
+
+            <div style="background: linear-gradient(135deg, var(--accent-color), #F7931E); padding: 1.5rem; border-radius: 20px; margin-bottom: 2rem;">
+                <div style="color: #2C3E50; font-weight: 600; margin-bottom: 0.5rem;">Points Earned</div>
+                <div style="font-size: 3rem; font-weight: 800; color: #2C3E50;" id="modalPoints">+100</div>
+            </div>
+
+            <button class="btn-close-modal" onclick="closeModal()">
+                Awesome! 🎊
+            </button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="zyro-config.js"></script>
+    <script src="zyro-bingo.js"></script>
+
+    <script>
+        let bingoEngine;
+        let pointsAwarded = 0;
+
+        // Award points callback
+        function awardPoints(points, reason) {
+            pointsAwarded += points;
+            console.log(`Awarded ${points} points for: ${reason}`);
+        }
+
+        // Initialize
+        window.addEventListener('DOMContentLoaded', () => {
+            bingoEngine = new ZyroSideGigBingo(ZYRO_CONFIG, awardPoints);
+            bingoEngine.initialize();
+
+            renderBoard();
+            updateStats();
+        });
+
+        // Render bingo board
+        function renderBoard() {
+            const boardContainer = document.getElementById('bingoBoard');
+            boardContainer.innerHTML = '';
+
+            bingoEngine.board.forEach((row, rowIndex) => {
+                row.forEach((cell, colIndex) => {
+                    const cellDiv = document.createElement('div');
+                    cellDiv.className = 'bingo-cell';
+
+                    if (cell.completed) {
+                        cellDiv.classList.add('completed');
+                    }
+
+                    if (cell.isFreeSpace) {
+                        cellDiv.classList.add('free-space');
+                    }
+
+                    cellDiv.innerHTML = `
+                        <div class="cell-icon">${cell.icon}</div>
+                        <div class="cell-text">${cell.text}</div>
+                        ${!cell.isFreeSpace ? `<div class="cell-points">${cell.points} pts</div>` : ''}
+                    `;
+
+                    if (!cell.completed && !cell.isFreeSpace) {
+                        cellDiv.onclick = () => completeTask(cell.id);
+                    }
+
+                    boardContainer.appendChild(cellDiv);
+                });
+            });
+        }
+
+        // Complete task
+        function completeTask(taskId) {
+            if (confirm('Mark this task as complete?')) {
+                const result = bingoEngine.completeTask(taskId);
+
+                if (result.success) {
+                    renderBoard();
+                    updateStats();
+
+                    // Show modal if bingo or full board
+                    if (result.newBingos.length > 0 || result.isFullBoard) {
+                        showModal(result);
+                    }
+
+                    // Enable reset if full board
+                    if (result.isFullBoard) {
+                        document.getElementById('btnReset').disabled = false;
+                    }
+                } else {
+                    alert(result.message);
+                }
+            }
+        }
+
+        // Update stats
+        function updateStats() {
+            const stats = bingoEngine.getStatistics();
+
+            document.getElementById('completedTasks').textContent = `${stats.completed}/25`;
+            document.getElementById('progressPercent').textContent = stats.progress + '%';
+            document.getElementById('bingoCount').textContent = stats.bingos;
+            document.getElementById('totalPoints').textContent = stats.totalPoints;
+
+            // Update progress bar
+            const progressBar = document.getElementById('progressBar');
+            progressBar.style.width = stats.progress + '%';
+            progressBar.textContent = stats.progress + '%';
+
+            // Update bingo list
+            const bingoList = document.getElementById('bingoList');
+            if (stats.bingos > 0) {
+                const details = bingoEngine.getBingoDetails();
+                bingoList.innerHTML = details.map(bingo =>
+                    `<div class="bingo-badge">🎯 ${bingo.description}</div>`
+                ).join('');
+            } else {
+                bingoList.innerHTML = '<p style="text-align: center; color: #999;">Complete a row, column, or diagonal to get a BINGO!</p>';
+            }
+        }
+
+        // Show modal
+        function showModal(result) {
+            const modal = document.getElementById('completionModal');
+            const icon = document.getElementById('modalIcon');
+            const title = document.getElementById('modalTitle');
+            const message = document.getElementById('modalMessage');
+            const points = document.getElementById('modalPoints');
+
+            if (result.isFullBoard) {
+                icon.textContent = '🏆';
+                title.textContent = 'FULL BOARD COMPLETE!';
+                message.textContent = "You're a Bingo Legend! Amazing work! 🎊";
+            } else if (result.newBingos.length > 1) {
+                icon.textContent = '🔥';
+                title.textContent = `${result.newBingos.length} BINGOS!`;
+                message.textContent = "You're on fire! Multiple bingos at once!";
+            } else {
+                icon.textContent = '🎯';
+                title.textContent = 'BINGO!';
+                message.textContent = result.message;
+            }
+
+            points.textContent = '+' + result.totalPoints;
+
+            modal.classList.add('show');
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('completionModal').classList.remove('show');
+        }
+
+        // Reset board
+        function resetBoard() {
+            if (confirm('Reset your board and start fresh? This cannot be undone.')) {
+                const result = bingoEngine.resetBoard();
+
+                if (result.success) {
+                    renderBoard();
+                    updateStats();
+                    document.getElementById('btnReset').disabled = true;
+                    alert(result.message);
+                } else {
+                    alert(result.message);
+                }
+            }
+        }
+    </script>
+</body>
+</html>

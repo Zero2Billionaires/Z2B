@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>White-Label Configuration - Zyroniq Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --electric-cyan: #00FFF0;
+            --deep-space-black: #0C0C1C;
+            --quantum-purple: #6C63FF;
+            --neon-silver: #C0C0C0;
+            --success: #00FF88;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--deep-space-black);
+            color: var(--neon-silver);
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            background: linear-gradient(135deg, var(--electric-cyan), var(--quantum-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 1rem 2rem;
+            background: rgba(12, 12, 28, 0.6);
+            border: 2px solid rgba(0, 255, 240, 0.2);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+        }
+
+        .tab:hover, .tab.active {
+            background: rgba(0, 255, 240, 0.2);
+            border-color: var(--electric-cyan);
+            color: var(--electric-cyan);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .config-section {
+            background: rgba(12, 12, 28, 0.6);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(0, 255, 240, 0.2);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: var(--electric-cyan);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--neon-silver);
+            font-weight: 500;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="email"],
+        input[type="url"],
+        input[type="color"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(12, 12, 28, 0.8);
+            border: 2px solid rgba(0, 255, 240, 0.3);
+            border-radius: 8px;
+            color: var(--electric-cyan);
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        input[type="color"] {
+            height: 50px;
+            cursor: pointer;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--electric-cyan);
+            box-shadow: 0 0 20px rgba(0, 255, 240, 0.3);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .color-preview {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .color-box {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            border: 2px solid var(--neon-silver);
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--electric-cyan), var(--quantum-purple));
+            color: var(--deep-space-black);
+            border: none;
+            border-radius: 50px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 255, 240, 0.4);
+        }
+
+        .btn-success {
+            background: var(--success);
+        }
+
+        .tier-editor {
+            background: rgba(108, 99, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            border: 2px solid rgba(108, 99, 255, 0.3);
+        }
+
+        .tier-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .tier-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            color: var(--quantum-purple);
+        }
+
+        .preview-section {
+            background: rgba(12, 12, 28, 0.8);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 2px solid var(--electric-cyan);
+        }
+
+        .preview-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--electric-cyan);
+        }
+
+        .success-message {
+            background: rgba(0, 255, 136, 0.2);
+            border: 2px solid var(--success);
+            color: var(--success);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚙️ WHITE-LABEL CONFIGURATION</h1>
+            <p>Customize every aspect of your Zyroniq platform</p>
+        </div>
+
+        <div class="success-message" id="successMessage">
+            <i class="fas fa-check-circle"></i> Configuration saved successfully!
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('brand')">
+                <i class="fas fa-palette"></i> Brand Identity
+            </div>
+            <div class="tab" onclick="switchTab('design')">
+                <i class="fas fa-paint-brush"></i> Design System
+            </div>
+            <div class="tab" onclick="switchTab('tiers')">
+                <i class="fas fa-layer-group"></i> Membership Tiers
+            </div>
+            <div class="tab" onclick="switchTab('commissions')">
+                <i class="fas fa-percentage"></i> Commission Structure
+            </div>
+            <div class="tab" onclick="switchTab('tli')">
+                <i class="fas fa-trophy"></i> TLI Levels
+            </div>
+            <div class="tab" onclick="switchTab('preview')">
+                <i class="fas fa-eye"></i> Live Preview
+            </div>
+        </div>
+
+        <!-- Brand Identity Tab -->
+        <div class="tab-content active" id="brand">
+            <div class="config-section">
+                <h2 class="section-title"><i class="fas fa-building"></i> Company Information</h2>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>App Name</label>
+                        <input type="text" id="appName" value="Zyroniq" placeholder="Enter app name">
+                    </div>
+                    <div class="form-group">
+                        <label>Company Name</label>
+                        <input type="text" id="companyName" value="Z2B Legacy Builders" placeholder="Your company name">
+                    </div>
+                    <div class="form-group">
+                        <label>Tagline</label>
+                        <input type="text" id="tagline" value="Intelligence that Calculates Your Legacy" placeholder="Your tagline">
+                    </div>
+                    <div class="form-group">
+                        <label>Support Email</label>
+                        <input type="email" id="supportEmail" value="support@zyroniq.com" placeholder="support@yourcompany.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Website URL</label>
+                        <input type="url" id="websiteUrl" value="https://zyroniq.com" placeholder="https://yourcompany.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Logo URL</label>
+                        <input type="url" id="logoUrl" value="../assets/logo.png" placeholder="URL to your logo">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Design System Tab -->
+        <div class="tab-content" id="design">
+            <div class="config-section">
+                <h2 class="section-title"><i class="fas fa-palette"></i> Color Scheme</h2>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Primary Color (Main Brand Color)</label>
+                        <input type="color" id="primaryColor" value="#00FFF0">
+                        <div class="color-preview">
+                            <div class="color-box" style="background: #00FFF0;"></div>
+                            <span>Electric Cyan</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Secondary Color (Background)</label>
+                        <input type="color" id="secondaryColor" value="#0C0C1C">
+                        <div class="color-preview">
+                            <div class="color-box" style="background: #0C0C1C;"></div>
+                            <span>Deep Space Black</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Accent Color</label>
+                        <input type="color" id="accentColor" value="#6C63FF">
+                        <div class="color-preview">
+                            <div class="color-box" style="background: #6C63FF;"></div>
+                            <span>Quantum Purple</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Success Color</label>
+                        <input type="color" id="successColor" value="#00FF88">
+                        <div class="color-preview">
+                            <div class="color-box" style="background: #00FF88;"></div>
+                            <span>Neon Green</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="config-section">
+                <h2 class="section-title"><i class="fas fa-font"></i> Typography</h2>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Primary Font (Headings)</label>
+                        <select id="primaryFont">
+                            <option value="Orbitron">Orbitron (Futuristic)</option>
+                            <option value="Exo 2">Exo 2 (Modern)</option>
+                            <option value="Roboto">Roboto (Clean)</option>
+                            <option value="Montserrat">Montserrat (Professional)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Secondary Font (Body Text)</label>
+                        <select id="secondaryFont">
+                            <option value="Inter">Inter (Modern)</option>
+                            <option value="Poppins">Poppins (Friendly)</option>
+                            <option value="Open Sans">Open Sans (Readable)</option>
+                            <option value="Lato">Lato (Professional)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Membership Tiers Tab -->
+        <div class="tab-content" id="tiers">
+            <div class="config-section">
+                <h2 class="section-title"><i class="fas fa-layer-group"></i> Customize Membership Tiers</h2>
+
+                <div class="tier-editor">
+                    <div class="tier-header">
+                        <span class="tier-name">Tier 1: Starter</span>
+                        <button class="btn" style="padding: 0.5rem 1rem;">Edit</button>
+                    </div>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label>Tier Name</label>
+                            <input type="text" value="Starter">
+                        </div>
+                        <div class="form-group">
+                            <label>Monthly Price (R)</label>
+                            <input type="number" value="480">
+                        </div>
+                        <div class="form-group">
+                            <label>PV Value</label>
+                            <input type="number" value="100">
+                        </div>
+                        <div class="form-group">
+                            <label>ISP Percentage (%)</label>
+                            <input type="number" value="25">
+                        </div>
+                        <div class="form-group">
+                            <label>TSC Generations</label>
+                            <input type="number" value="3" min="0" max="10">
+                        </div>
+                        <div class="form-group">
+                            <label>TLI Max Level</label>
+                            <input type="number" value="0" min="0" max="10">
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 2rem;">
+                    <button class="btn"><i class="fas fa-plus"></i> Add New Tier</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Commission Structure Tab -->
+        <div class="tab-content" id="commissions">
+            <div class="config-section">
+                <h2 class="section-title"><i class="fas fa-percentage"></i> Quick Pathfinder Bonus (QPB)</h2>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>First 3 Recruits (%)</label>
+                        <input type="number" value="7.5" step="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label>Subsequent Recruits (%)</label>
+                        <input type="number" value="10" step="0.1">
+                    </div>
+                </div>
+            </div>
+
+            <div class="config-section">
+                <h2 class="section-title"><i class="fas fa-sitemap"></i> Team Sales Commission (TSC)</h2>
+                <p style="margin-bottom: 1rem; color: var(--neon-silver);">
+                    Set commission percentage for each generation (10 levels max)
+                </p>
+                <div class="grid-2">
+                    <div class="form-group"><label>Generation 1 (%)</label><input type="number" value="10"></div>
+                    <div class="form-group"><label>Generation 2 (%)</label><input type="number" value="5"></div>
+                    <div class="form-group"><label>Generation 3 (%)</label><input type="number" value="3"></div>
+                    <div class="form-group"><label>Generation 4 (%)</label><input type="number" value="2"></div>
+                    <div class="form-group"><label>Generation 5 (%)</label><input type="number" value="1"></div>
+                    <div class="form-group"><label>Generation 6 (%)</label><input type="number" value="1"></div>
+                    <div class="form-group"><label>Generation 7 (%)</label><input type="number" value="1"></div>
+                    <div class="form-group"><label>Generation 8 (%)</label><input type="number" value="1"></div>
+                    <div class="form-group"><label>Generation 9 (%)</label><input type="number" value="1"></div>
+                    <div class="form-group"><label>Generation 10 (%)</label><input type="number" value="1"></div>
+                </div>
+            </div>
+
+            <div class="config-section">
+                <h2 class="section-title"><i class="fas fa-trophy"></i> Other Income Streams</h2>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>TPB Pool Percentage (%)</label>
+                        <input type="number" value="5" step="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label>TLI Pool Percentage (%)</label>
+                        <input type="number" value="10" step="0.1">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TLI Levels Tab -->
+        <div class="tab-content" id="tli">
+            <div class="config-section">
+                <h2 class="section-title"><i class="fas fa-crown"></i> Team Leadership Incentive Levels</h2>
+                <p style="margin-bottom: 1.5rem; color: var(--neon-silver);">
+                    Configure 10 recognition levels with monthly TeamPV requirements and quarterly rewards
+                </p>
+
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background: rgba(0, 255, 240, 0.1); text-align: left;">
+                                <th style="padding: 1rem; color: var(--electric-cyan);">Level</th>
+                                <th style="padding: 1rem; color: var(--electric-cyan);">Name</th>
+                                <th style="padding: 1rem; color: var(--electric-cyan);">Monthly TeamPV</th>
+                                <th style="padding: 1rem; color: var(--electric-cyan);">Quarterly Reward (R)</th>
+                                <th style="padding: 1rem; color: var(--electric-cyan);">Leaders Required</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="border-bottom: 1px solid rgba(0, 255, 240, 0.2);">
+                                <td style="padding: 1rem;">1</td>
+                                <td style="padding: 1rem;"><input type="text" value="Bronze Achiever" style="width: 100%;"></td>
+                                <td style="padding: 1rem;"><input type="number" value="500" style="width: 100%;"></td>
+                                <td style="padding: 1rem;"><input type="number" value="2500" style="width: 100%;"></td>
+                                <td style="padding: 1rem;"><input type="number" value="0" style="width: 100%;"></td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid rgba(0, 255, 240, 0.2);">
+                                <td style="padding: 1rem;">2</td>
+                                <td style="padding: 1rem;"><input type="text" value="Silver Performer" style="width: 100%;"></td>
+                                <td style="padding: 1rem;"><input type="number" value="1000" style="width: 100%;"></td>
+                                <td style="padding: 1rem;"><input type="number" value="7500" style="width: 100%;"></td>
+                                <td style="padding: 1rem;"><input type="number" value="0" style="width: 100%;"></td>
+                            </tr>
+                            <!-- Additional rows would follow same pattern -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Live Preview Tab -->
+        <div class="tab-content" id="preview">
+            <div class="preview-section">
+                <h2 class="preview-title">Live Preview</h2>
+                <div style="text-align: center; padding: 3rem; background: rgba(12, 12, 28, 0.8); border-radius: 15px; margin-bottom: 2rem;">
+                    <h1 id="previewAppName" style="font-family: 'Orbitron', sans-serif; font-size: 3rem; color: var(--electric-cyan);">ZYRONIQ</h1>
+                    <p id="previewTagline" style="font-size: 1.2rem; color: var(--neon-silver); margin-top: 1rem;">Intelligence that Calculates Your Legacy</p>
+                </div>
+                <div style="text-align: center;">
+                    <p style="margin-bottom: 1rem;">Company: <span id="previewCompany">Z2B Legacy Builders</span></p>
+                    <p style="margin-bottom: 2rem;">Website: <span id="previewWebsite">https://zyroniq.com</span></p>
+                    <button class="btn" onclick="testConfiguration()"><i class="fas fa-rocket"></i> Test Configuration</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Save Button -->
+        <div style="text-align: center; margin-top: 3rem;">
+            <button class="btn btn-success" onclick="saveConfiguration()" style="font-size: 1.2rem; padding: 1.2rem 3rem;">
+                <i class="fas fa-save"></i> SAVE ALL CHANGES
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.closest('.tab').classList.add('active');
+
+            // Update preview if on preview tab
+            if (tabName === 'preview') {
+                updatePreview();
+            }
+        }
+
+        function updatePreview() {
+            document.getElementById('previewAppName').textContent = document.getElementById('appName').value;
+            document.getElementById('previewTagline').textContent = document.getElementById('tagline').value;
+            document.getElementById('previewCompany').textContent = document.getElementById('companyName').value;
+            document.getElementById('previewWebsite').textContent = document.getElementById('websiteUrl').value;
+        }
+
+        function saveConfiguration() {
+            // In production, this would POST to backend
+            const config = {
+                brand: {
+                    app_name: document.getElementById('appName').value,
+                    company_name: document.getElementById('companyName').value,
+                    tagline: document.getElementById('tagline').value,
+                    support_email: document.getElementById('supportEmail').value,
+                    website_url: document.getElementById('websiteUrl').value,
+                    logo_url: document.getElementById('logoUrl').value
+                },
+                design: {
+                    primary_color: document.getElementById('primaryColor').value,
+                    secondary_color: document.getElementById('secondaryColor').value,
+                    accent_color: document.getElementById('accentColor').value,
+                    success_color: document.getElementById('successColor').value,
+                    primary_font: document.getElementById('primaryFont').value,
+                    secondary_font: document.getElementById('secondaryFont').value
+                }
+            };
+
+            console.log('Saving configuration:', config);
+
+            // Show success message
+            const message = document.getElementById('successMessage');
+            message.classList.add('show');
+            setTimeout(() => message.classList.remove('show'), 3000);
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function testConfiguration() {
+            alert('Configuration test successful!\n\nYour white-labeled Zyroniq platform is ready to deploy.');
+        }
+
+        // Update color previews on change
+        document.querySelectorAll('input[type="color"]').forEach(input => {
+            input.addEventListener('change', function() {
+                const preview = this.parentElement.querySelector('.color-box');
+                if (preview) {
+                    preview.style.background = this.value;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

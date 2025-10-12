@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BENOWN - AI Content Creator | Z2B Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy-blue: #0A2647;
+            --gold: #FFD700;
+            --orange: #FF6B35;
+            --light-gold: #FFF4CC;
+            --dark-navy: #051428;
+            --purple: #9B59B6;
+            --success: #4ECDC4;
+            --white: #FFFFFF;
+            --light-gray: #F8F9FA;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--navy-blue) 0%, var(--dark-navy) 100%);
+            color: var(--white);
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            width: 280px;
+            background: rgba(10, 38, 71, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem 0;
+            border-right: 2px solid var(--gold);
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .sidebar-brand {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 0 1rem;
+        }
+
+        .sidebar-brand h2 {
+            color: var(--gold);
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-brand p {
+            color: var(--orange);
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            color: var(--white);
+            text-decoration: none;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+        }
+
+        .sidebar-nav a:hover,
+        .sidebar-nav a.active {
+            background: rgba(255, 215, 0, 0.1);
+            border-left-color: var(--gold);
+            color: var(--gold);
+        }
+
+        .sidebar-nav a i {
+            margin-right: 1rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .page-header {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-header p {
+            color: var(--white);
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.2);
+        }
+
+        .stat-card .icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-card h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card p {
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        /* Tabs */
+        .tabs-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 0;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .tabs-header {
+            display: flex;
+            background: rgba(0, 0, 0, 0.2);
+            border-bottom: 2px solid var(--gold);
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 1.2rem 2rem;
+            background: transparent;
+            border: none;
+            color: var(--white);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            background: rgba(255, 215, 0, 0.1);
+        }
+
+        .tab-btn.active {
+            background: rgba(255, 215, 0, 0.1);
+            border-bottom-color: var(--gold);
+            color: var(--gold);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 2rem;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Generator Form */
+        .generator-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .form-section {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 15px;
+            padding: 2rem;
+        }
+
+        .form-section h3 {
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        .form-group select,
+        .form-group textarea,
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border-radius: 10px;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s;
+        }
+
+        .form-group select:focus,
+        .form-group textarea:focus,
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--gold);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .platform-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        .platform-btn {
+            padding: 1rem;
+            border-radius: 10px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--white);
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .platform-btn:hover {
+            transform: scale(1.05);
+            border-color: var(--gold);
+        }
+
+        .platform-btn.active {
+            background: var(--gold);
+            color: var(--navy-blue);
+            border-color: var(--gold);
+        }
+
+        .platform-btn i {
+            font-size: 2rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Generate Button */
+        .btn-generate {
+            width: 100%;
+            padding: 1.2rem;
+            background: linear-gradient(135deg, var(--gold), var(--orange));
+            color: var(--navy-blue);
+            border: none;
+            border-radius: 15px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1.5rem;
+        }
+
+        .btn-generate:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
+        }
+
+        .btn-generate:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Preview Card */
+        .preview-card {
+            background: rgba(255, 255, 255, 0.95);
+            color: var(--navy-blue);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--gold);
+        }
+
+        .preview-header h3 {
+            color: var(--navy-blue);
+            font-size: 1.5rem;
+        }
+
+        .preview-content {
+            background: #F8F9FA;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            min-height: 200px;
+            white-space: pre-wrap;
+            line-height: 1.8;
+            font-size: 1rem;
+        }
+
+        .preview-hashtags {
+            background: #E8F4F8;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .preview-hashtags h4 {
+            color: var(--navy-blue);
+            font-size: 1rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .hashtag {
+            display: inline-block;
+            background: var(--gold);
+            color: var(--navy-blue);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .preview-meta {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .meta-item {
+            text-align: center;
+            padding: 1rem;
+            background: #F0F0F0;
+            border-radius: 10px;
+        }
+
+        .meta-item strong {
+            display: block;
+            color: var(--navy-blue);
+            font-size: 1.2rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .meta-item span {
+            color: #666;
+            font-size: 0.85rem;
+        }
+
+        .preview-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-action {
+            flex: 1;
+            padding: 0.8rem;
+            border-radius: 10px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-save {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-copy {
+            background: var(--purple);
+            color: white;
+        }
+
+        .btn-remix {
+            background: var(--orange);
+            color: white;
+        }
+
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Content Library Table */
+        .content-table {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .content-table thead {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .content-table th {
+            padding: 1rem;
+            text-align: left;
+            color: var(--gold);
+            font-weight: 700;
+        }
+
+        .content-table td {
+            padding: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .content-table tbody tr:hover {
+            background: rgba(255, 215, 0, 0.05);
+        }
+
+        .badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-draft { background: #6C757D; color: white; }
+        .badge-scheduled { background: #FFC107; color: #000; }
+        .badge-published { background: #28A745; color: white; }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            opacity: 0.7;
+        }
+
+        .empty-state i {
+            font-size: 5rem;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+
+        .empty-state h3 {
+            color: var(--white);
+            margin-bottom: 1rem;
+        }
+
+        .empty-state p {
+            color: var(--white);
+            opacity: 0.8;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 0;
+                overflow: hidden;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .generator-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .platform-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 576px) {
+            .platform-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .preview-meta {
+                grid-template-columns: 1fr;
+            }
+
+            .preview-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <h2><i class="fas fa-rocket"></i> Z2B</h2>
+            <p>Zero2Billionaires Platform</p>
+        </div>
+
+        <ul class="sidebar-nav">
+            <li><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="benown.html" class="active"><i class="fas fa-magic"></i> BENOWN</a></li>
+            <li><a href="zyra.html"><i class="fas fa-user-tie"></i> ZYRA</a></li>
+            <li><a href="zyro.html"><i class="fas fa-gamepad"></i> ZYRO</a></li>
+            <li><a href="glowie.html"><i class="fas fa-lightbulb"></i> GLOWIE</a></li>
+            <li><a href="coach-manlaw.html"><i class="fas fa-graduation-cap"></i> Coach Manlaw</a></li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1><i class="fas fa-magic"></i> BENOWN - AI Content Creator</h1>
+            <p>Generate viral content for all platforms in seconds</p>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="icon" style="color: var(--gold);"><i class="fas fa-file-alt"></i></div>
+                <h3 id="statTotalContent">0</h3>
+                <p>Content Generated</p>
+            </div>
+            <div class="stat-card">
+                <div class="icon" style="color: var(--success);"><i class="fas fa-calendar-check"></i></div>
+                <h3 id="statScheduled">0</h3>
+                <p>Scheduled Posts</p>
+            </div>
+            <div class="stat-card">
+                <div class="icon" style="color: var(--purple);"><i class="fas fa-chart-line"></i></div>
+                <h3 id="statPublished">0</h3>
+                <p>Published</p>
+            </div>
+            <div class="stat-card">
+                <div class="icon" style="color: var(--orange);"><i class="fas fa-fire"></i></div>
+                <h3 id="statEngagement">-</h3>
+                <p>Avg. Engagement</p>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs-container">
+            <div class="tabs-header">
+                <button class="tab-btn active" data-tab="generator"><i class="fas fa-magic"></i> Generate</button>
+                <button class="tab-btn" data-tab="library"><i class="fas fa-folder"></i> Library</button>
+                <button class="tab-btn" data-tab="calendar"><i class="fas fa-calendar"></i> Calendar</button>
+                <button class="tab-btn" data-tab="analytics"><i class="fas fa-chart-bar"></i> Analytics</button>
+                <button class="tab-btn" data-tab="settings"><i class="fas fa-cog"></i> Settings</button>
+            </div>
+
+            <!-- Generator Tab -->
+            <div id="generator" class="tab-content active">
+                <div class="generator-grid">
+                    <!-- Left Column: Settings -->
+                    <div>
+                        <div class="form-section">
+                            <h3><i class="fas fa-sliders-h"></i> Content Settings</h3>
+
+                            <!-- Platform Selection -->
+                            <div class="form-group">
+                                <label>Select Platform</label>
+                                <div class="platform-grid" id="platformGrid">
+                                    <!-- Populated by JS -->
+                                </div>
+                            </div>
+
+                            <!-- Content Type -->
+                            <div class="form-group">
+                                <label>Content Type</label>
+                                <select id="contentType">
+                                    <option value="SOCIAL_POST">Social Media Post</option>
+                                    <option value="VIDEO_SCRIPT">Video Script</option>
+                                    <option value="BLOG_POST">Blog Post</option>
+                                    <option value="EMAIL">Email Campaign</option>
+                                    <option value="CAROUSEL">Carousel Post</option>
+                                </select>
+                            </div>
+
+                            <!-- Template -->
+                            <div class="form-group">
+                                <label>Template</label>
+                                <select id="template">
+                                    <option value="MOTIVATIONAL">Motivational</option>
+                                    <option value="EDUCATIONAL">Educational</option>
+                                    <option value="PROMOTIONAL">Promotional</option>
+                                    <option value="ENGAGEMENT">Engagement</option>
+                                    <option value="TESTIMONIAL">Testimonial</option>
+                                    <option value="TUTORIAL">Tutorial</option>
+                                </select>
+                            </div>
+
+                            <!-- Brand Voice -->
+                            <div class="form-group">
+                                <label>Brand Voice</label>
+                                <select id="brandVoice">
+                                    <option value="CASUAL">Casual & Friendly</option>
+                                    <option value="PROFESSIONAL">Professional</option>
+                                    <option value="ENERGETIC">Energetic & Bold</option>
+                                    <option value="HUMOROUS">Humorous & Witty</option>
+                                    <option value="INSPIRATIONAL">Inspirational</option>
+                                </select>
+                            </div>
+
+                            <!-- Custom Prompt -->
+                            <div class="form-group">
+                                <label>Custom Prompt (Optional)</label>
+                                <textarea id="customPrompt" placeholder="Add specific instructions, topics, or requirements..."></textarea>
+                            </div>
+
+                            <!-- Generate Button -->
+                            <button class="btn-generate" id="btnGenerate">
+                                <i class="fas fa-magic"></i> Generate Content
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Preview -->
+                    <div>
+                        <div class="form-section">
+                            <h3><i class="fas fa-eye"></i> Preview</h3>
+                            <div id="previewArea">
+                                <div class="empty-state">
+                                    <i class="fas fa-rocket"></i>
+                                    <h3>Ready to Create Magic?</h3>
+                                    <p>Select your settings and click "Generate Content" to see AI-powered content appear here!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Library Tab -->
+            <div id="library" class="tab-content">
+                <div class="mb-3">
+                    <button class="btn-generate" style="width: auto; padding: 0.8rem 2rem;" onclick="showGeneratorTab()">
+                        <i class="fas fa-plus"></i> Create New Content
+                    </button>
+                </div>
+
+                <table class="content-table">
+                    <thead>
+                        <tr>
+                            <th>Content</th>
+                            <th>Platform</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="libraryTableBody">
+                        <tr>
+                            <td colspan="6">
+                                <div class="empty-state">
+                                    <i class="fas fa-folder-open"></i>
+                                    <h3>No Content Yet</h3>
+                                    <p>Generate your first piece of content to see it here!</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Calendar Tab -->
+            <div id="calendar" class="tab-content">
+                <div class="empty-state">
+                    <i class="fas fa-calendar-alt"></i>
+                    <h3>Content Calendar</h3>
+                    <p>Schedule and plan your content here. Feature coming soon!</p>
+                </div>
+            </div>
+
+            <!-- Analytics Tab -->
+            <div id="analytics" class="tab-content">
+                <div class="empty-state">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>Analytics Dashboard</h3>
+                    <p>Track your content performance here. Feature coming soon!</p>
+                </div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div id="settings" class="tab-content">
+                <div class="form-section">
+                    <h3><i class="fas fa-key"></i> API Settings</h3>
+
+                    <div class="form-group">
+                        <label>OpenAI API Key</label>
+                        <input type="password" id="openaiApiKey" placeholder="sk-...">
+                        <small style="color: var(--gold); display: block; margin-top: 0.5rem;">
+                            <i class="fas fa-info-circle"></i> Get your API key from <a href="https://platform.openai.com/api-keys" target="_blank" style="color: var(--gold);">platform.openai.com</a>
+                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>AI Model</label>
+                        <select id="aiModel">
+                            <option value="gpt-4">GPT-4 (Best Quality)</option>
+                            <option value="gpt-3.5-turbo">GPT-3.5 Turbo (Faster, Cheaper)</option>
+                        </select>
+                    </div>
+
+                    <button class="btn-generate" onclick="saveSettings()">
+                        <i class="fas fa-save"></i> Save Settings
+                    </button>
+                </div>
+
+                <div class="form-section" style="margin-top: 2rem;">
+                    <h3><i class="fas fa-palette"></i> Brand Settings</h3>
+
+                    <div class="form-group">
+                        <label>Brand Tagline</label>
+                        <input type="text" id="brandTagline" placeholder="From Employee to Entrepreneur">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Core Values</label>
+                        <input type="text" id="brandValues" placeholder="Freedom, Hustle, Community, Growth">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Unique Selling Point</label>
+                        <textarea id="brandUSP" placeholder="What makes your brand unique?"></textarea>
+                    </div>
+
+                    <button class="btn-generate" onclick="saveBrandSettings()">
+                        <i class="fas fa-save"></i> Save Brand Settings
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="benown-config.js"></script>
+    <script src="benown-ai.js"></script>
+    <script>
+        // Initialize
+        const currentUserId = 'user_' + (localStorage.getItem('benown_user_id') || Date.now());
+        localStorage.setItem('benown_user_id', currentUserId);
+
+        let aiEngine;
+        let selectedPlatform = 'INSTAGRAM';
+        let contentLibrary = JSON.parse(localStorage.getItem('benown_library')) || [];
+
+        // Initialize on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            aiEngine = new BenownAIEngine(BENOWN_CONFIG);
+            loadPlatforms();
+            loadSettings();
+            updateStats();
+            loadLibrary();
+        });
+
+        // Load platforms
+        function loadPlatforms() {
+            const grid = document.getElementById('platformGrid');
+            grid.innerHTML = '';
+
+            Object.entries(BENOWN_CONFIG.PLATFORMS).forEach(([key, platform]) => {
+                if (platform.enabled) {
+                    const btn = document.createElement('div');
+                    btn.className = 'platform-btn' + (key === 'INSTAGRAM' ? ' active' : '');
+                    btn.innerHTML = `
+                        <i class="${platform.icon}" style="color: ${platform.color};"></i>
+                        <div style="font-size: 0.85rem;">${platform.name}</div>
+                    `;
+                    btn.onclick = () => selectPlatform(key, btn);
+                    grid.appendChild(btn);
+                }
+            });
+        }
+
+        // Select platform
+        function selectPlatform(platform, btn) {
+            selectedPlatform = platform;
+            document.querySelectorAll('.platform-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        // Generate content
+        document.getElementById('btnGenerate').addEventListener('click', async function() {
+            const btn = this;
+            const contentType = document.getElementById('contentType').value;
+            const template = document.getElementById('template').value;
+            const brandVoice = document.getElementById('brandVoice').value;
+            const customPrompt = document.getElementById('customPrompt').value;
+
+            // Disable button
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
+
+            try {
+                // Generate content
+                const result = await aiEngine.generateContent(
+                    contentType,
+                    selectedPlatform,
+                    template,
+                    customPrompt,
+                    { voice: brandVoice }
+                );
+
+                // Display preview
+                displayPreview(result);
+
+                // Save to library
+                const libraryItem = {
+                    id: Date.now(),
+                    ...result,
+                    status: 'draft',
+                    createdAt: new Date().toISOString()
+                };
+                contentLibrary.unshift(libraryItem);
+                localStorage.setItem('benown_library', JSON.stringify(contentLibrary));
+
+                updateStats();
+                loadLibrary();
+
+            } catch (error) {
+                console.error('Generation error:', error);
+                alert('Error generating content. Please check your API settings.');
+            }
+
+            // Re-enable button
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-magic"></i> Generate Content';
+        });
+
+        // Display preview
+        function displayPreview(result) {
+            const previewArea = document.getElementById('previewArea');
+
+            previewArea.innerHTML = `
+                <div class="preview-card">
+                    <div class="preview-header">
+                        <h3><i class="${BENOWN_CONFIG.PLATFORMS[selectedPlatform].icon}"></i> ${BENOWN_CONFIG.PLATFORMS[selectedPlatform].name}</h3>
+                        <span class="badge badge-draft">Draft</span>
+                    </div>
+
+                    <div class="preview-content">${result.content}</div>
+
+                    <div class="preview-hashtags">
+                        <h4><i class="fas fa-hashtag"></i> Hashtags</h4>
+                        ${result.hashtags.map(tag => `<span class="hashtag">${tag}</span>`).join('')}
+                    </div>
+
+                    <div class="preview-meta">
+                        <div class="meta-item">
+                            <strong>${result.metadata.characterCount}</strong>
+                            <span>Characters</span>
+                        </div>
+                        <div class="meta-item">
+                            <strong>${result.metadata.estimatedReach}</strong>
+                            <span>Est. Reach</span>
+                        </div>
+                        <div class="meta-item">
+                            <strong>${result.hashtags.length}</strong>
+                            <span>Hashtags</span>
+                        </div>
+                    </div>
+
+                    ${result.metadata.suggestions.length > 0 ? `
+                        <div style="background: #FFF3CD; color: #856404; padding: 1rem; border-radius: 10px; margin-bottom: 1.5rem;">
+                            <strong><i class="fas fa-lightbulb"></i> Suggestions:</strong>
+                            <ul style="margin: 0.5rem 0 0 1.5rem; padding: 0;">
+                                ${result.metadata.suggestions.map(s => `<li>${s}</li>`).join('')}
+                            </ul>
+                        </div>
+                    ` : ''}
+
+                    <div class="preview-actions">
+                        <button class="btn-action btn-copy" onclick="copyContent()">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                        <button class="btn-action btn-save" onclick="alert('Saved to library!')">
+                            <i class="fas fa-save"></i> Save
+                        </button>
+                        <button class="btn-action btn-remix" onclick="alert('Remix feature coming soon!')">
+                            <i class="fas fa-sync"></i> Remix
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Copy content
+        function copyContent() {
+            const content = document.querySelector('.preview-content').textContent;
+            const hashtags = Array.from(document.querySelectorAll('.hashtag')).map(el => el.textContent).join(' ');
+            const fullContent = content + '\n\n' + hashtags;
+
+            navigator.clipboard.writeText(fullContent).then(() => {
+                alert('✅ Content copied to clipboard!');
+            });
+        }
+
+        // Update stats
+        function updateStats() {
+            const total = contentLibrary.length;
+            const scheduled = contentLibrary.filter(c => c.status === 'scheduled').length;
+            const published = contentLibrary.filter(c => c.status === 'published').length;
+
+            document.getElementById('statTotalContent').textContent = total;
+            document.getElementById('statScheduled').textContent = scheduled;
+            document.getElementById('statPublished').textContent = published;
+        }
+
+        // Load library
+        function loadLibrary() {
+            const tbody = document.getElementById('libraryTableBody');
+
+            if (contentLibrary.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6">
+                            <div class="empty-state">
+                                <i class="fas fa-folder-open"></i>
+                                <h3>No Content Yet</h3>
+                                <p>Generate your first piece of content to see it here!</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = contentLibrary.slice(0, 10).map(item => `
+                <tr>
+                    <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                        ${item.content.substring(0, 80)}...
+                    </td>
+                    <td>
+                        <i class="${BENOWN_CONFIG.PLATFORMS[item.platform].icon}" style="color: ${BENOWN_CONFIG.PLATFORMS[item.platform].color};"></i>
+                        ${item.platform}
+                    </td>
+                    <td>${item.metadata.contentType}</td>
+                    <td><span class="badge badge-${item.status}">${item.status}</span></td>
+                    <td>${new Date(item.createdAt).toLocaleDateString()}</td>
+                    <td>
+                        <button style="background: var(--gold); color: var(--navy-blue); border: none; padding: 0.3rem 0.8rem; border-radius: 5px; cursor: pointer; margin-right: 0.3rem;" onclick="viewContent(${item.id})">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button style="background: var(--orange); color: white; border: none; padding: 0.3rem 0.8rem; border-radius: 5px; cursor: pointer;" onclick="deleteContent(${item.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // View content
+        function viewContent(id) {
+            const item = contentLibrary.find(c => c.id === id);
+            if (item) {
+                selectedPlatform = item.platform;
+                displayPreview(item);
+                showGeneratorTab();
+            }
+        }
+
+        // Delete content
+        function deleteContent(id) {
+            if (confirm('Delete this content?')) {
+                contentLibrary = contentLibrary.filter(c => c.id !== id);
+                localStorage.setItem('benown_library', JSON.stringify(contentLibrary));
+                loadLibrary();
+                updateStats();
+            }
+        }
+
+        // Show generator tab
+        function showGeneratorTab() {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            document.querySelector('[data-tab="generator"]').classList.add('active');
+            document.getElementById('generator').classList.add('active');
+        }
+
+        // Tab switching
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.dataset.tab;
+
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+                btn.classList.add('active');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+
+        // Load settings
+        function loadSettings() {
+            const apiKey = localStorage.getItem('benown_openai_key');
+            const model = localStorage.getItem('benown_ai_model') || 'gpt-4';
+            const tagline = localStorage.getItem('benown_brand_tagline') || '';
+            const values = localStorage.getItem('benown_brand_values') || '';
+            const usp = localStorage.getItem('benown_brand_usp') || '';
+
+            if (apiKey) {
+                document.getElementById('openaiApiKey').value = apiKey;
+                BENOWN_CONFIG.OPENAI.apiKey = apiKey;
+            }
+
+            document.getElementById('aiModel').value = model;
+            document.getElementById('brandTagline').value = tagline;
+            document.getElementById('brandValues').value = values;
+            document.getElementById('brandUSP').value = usp;
+
+            BENOWN_CONFIG.OPENAI.model = model;
+        }
+
+        // Save settings
+        function saveSettings() {
+            const apiKey = document.getElementById('openaiApiKey').value;
+            const model = document.getElementById('aiModel').value;
+
+            localStorage.setItem('benown_openai_key', apiKey);
+            localStorage.setItem('benown_ai_model', model);
+
+            BENOWN_CONFIG.OPENAI.apiKey = apiKey;
+            BENOWN_CONFIG.OPENAI.model = model;
+
+            alert('✅ Settings saved!');
+        }
+
+        // Save brand settings
+        function saveBrandSettings() {
+            const tagline = document.getElementById('brandTagline').value;
+            const values = document.getElementById('brandValues').value;
+            const usp = document.getElementById('brandUSP').value;
+
+            localStorage.setItem('benown_brand_tagline', tagline);
+            localStorage.setItem('benown_brand_values', values);
+            localStorage.setItem('benown_brand_usp', usp);
+
+            alert('✅ Brand settings saved!');
+        }
+    </script>
+
+    <!-- Z2B Ecosystem Integration -->
+    <script src="../js/app-config.js"></script>
+    <script src="../js/ecosystem-footer.js"></script>
+</body>
+</html>

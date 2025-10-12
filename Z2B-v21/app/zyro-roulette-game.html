@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Idea Roulette - ZYRO</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Comic+Neue:wght@700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --purple-color: #9B59B6;
+            --purple-dark: #7D3C98;
+            --purple-light: #D7BDE2;
+            --accent-color: #FFC857;
+            --success-color: #4ECDC4;
+            --dark-bg: #2C3E50;
+            --light-bg: #FFF8F0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #E8DAEF 0%, #D7BDE2 100%);
+            min-height: 100vh;
+            padding: 2rem 0;
+        }
+
+        /* Header */
+        .game-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .game-title {
+            font-family: 'Comic Neue', cursive;
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--purple-color);
+            text-shadow: 3px 3px 0px rgba(0,0,0,0.1);
+            margin-bottom: 0.5rem;
+        }
+
+        .game-subtitle {
+            color: var(--dark-bg);
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        /* Spinner Container */
+        .spinner-container {
+            background: white;
+            border-radius: 30px;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            max-width: 900px;
+            margin: 0 auto 2rem;
+            text-align: center;
+        }
+
+        .spinner-wheel {
+            width: 300px;
+            height: 300px;
+            margin: 0 auto 2rem;
+            position: relative;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--purple-color), var(--purple-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 40px rgba(155, 89, 182, 0.4);
+            transition: transform 2s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        .spinner-wheel.spinning {
+            animation: spin 2s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(1440deg); }
+        }
+
+        .spinner-icon {
+            font-size: 8rem;
+            color: white;
+            text-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .btn-spin {
+            background: linear-gradient(135deg, var(--purple-color), var(--purple-dark));
+            color: white;
+            border: none;
+            padding: 1.5rem 4rem;
+            border-radius: 50px;
+            font-size: 1.5rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(155, 89, 182, 0.4);
+            margin-bottom: 2rem;
+        }
+
+        .btn-spin:hover:not(:disabled) {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(155, 89, 182, 0.6);
+        }
+
+        .btn-spin:disabled {
+            background: #CCCCCC;
+            cursor: not-allowed;
+        }
+
+        /* Result Card */
+        .result-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin-top: 2rem;
+            border-left: 5px solid var(--purple-color);
+            display: none;
+        }
+
+        .result-card.show {
+            display: block;
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-idea {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--purple-color);
+            margin-bottom: 1.5rem;
+            line-height: 1.4;
+        }
+
+        .result-scores {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .score-card {
+            background: linear-gradient(135deg, rgba(155, 89, 182, 0.1), rgba(125, 60, 152, 0.1));
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .score-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .score-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--purple-color);
+        }
+
+        .score-bar {
+            height: 10px;
+            background: #E0E0E0;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .score-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--purple-color), var(--purple-dark));
+            transition: width 1s ease;
+        }
+
+        /* AI Enhancement Section */
+        .ai-enhancement {
+            background: linear-gradient(135deg, var(--purple-light), #E8DAEF);
+            padding: 2rem;
+            border-radius: 15px;
+            margin-top: 2rem;
+            display: none;
+        }
+
+        .ai-enhancement.show {
+            display: block;
+        }
+
+        .ai-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .ai-section h5 {
+            color: var(--purple-dark);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .ai-section p {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .btn-action {
+            flex: 1;
+            min-width: 200px;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+
+        .btn-favorite {
+            background: linear-gradient(135deg, #E74C3C, #C0392B);
+            color: white;
+        }
+
+        .btn-favorite:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(231, 76, 60, 0.4);
+        }
+
+        .btn-share {
+            background: linear-gradient(135deg, var(--success-color), #3DBDB0);
+            color: white;
+        }
+
+        .btn-share:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(76, 205, 196, 0.4);
+        }
+
+        .btn-report {
+            background: linear-gradient(135deg, #3498DB, #2980B9);
+            color: white;
+        }
+
+        .btn-report:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(52, 152, 219, 0.4);
+        }
+
+        /* History Section */
+        .history-section {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            max-width: 900px;
+            margin: 2rem auto;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #E0E0E0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .history-item:hover {
+            background: var(--purple-light);
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-idea {
+            flex: 1;
+            font-weight: 600;
+            color: var(--dark-bg);
+        }
+
+        .history-scores {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .history-score {
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            background: var(--purple-light);
+            color: var(--purple-dark);
+            font-weight: 700;
+        }
+
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-mini {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .stat-mini-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--purple-color);
+        }
+
+        .stat-mini-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 0.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .game-title {
+                font-size: 2rem;
+            }
+
+            .spinner-wheel {
+                width: 200px;
+                height: 200px;
+            }
+
+            .spinner-icon {
+                font-size: 5rem;
+            }
+
+            .btn-spin {
+                padding: 1rem 2rem;
+                font-size: 1.2rem;
+            }
+
+            .result-idea {
+                font-size: 1.5rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn-action {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="game-header">
+            <div class="game-title">🎲 Idea Roulette</div>
+            <div class="game-subtitle">Spin for your next billion-dollar idea!</div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-mini">
+                <div class="stat-mini-value" id="totalSpins">0</div>
+                <div class="stat-mini-label">Total Spins</div>
+            </div>
+            <div class="stat-mini">
+                <div class="stat-mini-value" id="viralIdeas">0</div>
+                <div class="stat-mini-label">Viral Ideas</div>
+            </div>
+            <div class="stat-mini">
+                <div class="stat-mini-value" id="favorites">0</div>
+                <div class="stat-mini-label">Favorites</div>
+            </div>
+            <div class="stat-mini">
+                <div class="stat-mini-value" id="avgAbsurdity">0</div>
+                <div class="stat-mini-label">Avg Absurdity</div>
+            </div>
+        </div>
+
+        <!-- Spinner -->
+        <div class="spinner-container">
+            <div class="spinner-wheel" id="spinnerWheel">
+                <div class="spinner-icon">💡</div>
+            </div>
+
+            <button class="btn-spin" id="btnSpin" onclick="spinRoulette()">
+                <i class="fas fa-dice"></i> SPIN THE WHEEL!
+            </button>
+
+            <p style="color: #666; margin-bottom: 1rem;">
+                Click to generate your next absurd business idea!
+            </p>
+
+            <!-- Category Selection -->
+            <div class="mb-3">
+                <label style="font-weight: 600; color: var(--dark-bg); margin-bottom: 0.5rem; display: block;">
+                    Choose Category:
+                </label>
+                <select id="categorySelect" class="form-select" style="max-width: 300px; margin: 0 auto;">
+                    <option value="">Random</option>
+                </select>
+            </div>
+
+            <div class="form-check" style="display: inline-block;">
+                <input class="form-check-input" type="checkbox" id="useAI" disabled>
+                <label class="form-check-label" for="useAI">
+                    Use AI Enhancement (requires OpenAI API key)
+                </label>
+            </div>
+
+            <!-- Result Card -->
+            <div class="result-card" id="resultCard">
+                <div class="result-idea" id="resultIdea">Your idea will appear here...</div>
+
+                <div class="result-scores">
+                    <div class="score-card">
+                        <div class="score-label">Absurdity Score</div>
+                        <div class="score-value" id="absurdityScore">0</div>
+                        <div class="score-bar">
+                            <div class="score-fill" id="absurdityBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="score-card">
+                        <div class="score-label">Viability Score</div>
+                        <div class="score-value" id="viabilityScore">0</div>
+                        <div class="score-bar">
+                            <div class="score-fill" id="viabilityBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="viralBadge" style="display: none;">
+                    <div style="background: linear-gradient(135deg, #F39C12, #E67E22); padding: 1rem 2rem; border-radius: 50px; display: inline-block; color: white; font-weight: 700;">
+                        🔥 VIRAL POTENTIAL!
+                    </div>
+                </div>
+
+                <!-- AI Enhancement -->
+                <div class="ai-enhancement" id="aiEnhancement">
+                    <h4 style="color: var(--purple-dark); margin-bottom: 1.5rem;">
+                        <i class="fas fa-robot"></i> AI Enhancement
+                    </h4>
+
+                    <div class="ai-section">
+                        <h5>💫 Tagline</h5>
+                        <p id="aiTagline">-</p>
+                    </div>
+
+                    <div class="ai-section">
+                        <h5>🎯 Elevator Pitch</h5>
+                        <p id="aiPitch">-</p>
+                    </div>
+
+                    <div class="ai-section">
+                        <h5>⭐ Genius Feature</h5>
+                        <p id="aiFeature">-</p>
+                    </div>
+
+                    <div class="ai-section">
+                        <h5>💡 Why It Might Work</h5>
+                        <p id="aiInsight">-</p>
+                    </div>
+
+                    <div class="ai-section">
+                        <h5>😂 First Customer Story</h5>
+                        <p id="aiStory">-</p>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button class="btn-action btn-favorite" onclick="toggleFavorite()">
+                        <i class="fas fa-heart"></i> <span id="favText">Favorite</span>
+                    </button>
+                    <button class="btn-action btn-share" onclick="shareIdea()">
+                        <i class="fas fa-share-alt"></i> Share
+                    </button>
+                    <button class="btn-action btn-report" onclick="viewReport()">
+                        <i class="fas fa-chart-line"></i> Full Report
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- History -->
+        <div class="history-section">
+            <h4 style="color: var(--dark-bg); margin-bottom: 1.5rem;">
+                <i class="fas fa-history"></i> Recent Ideas
+            </h4>
+            <div id="historyContainer">
+                <p style="text-align: center; color: #999;">Spin the wheel to start generating ideas!</p>
+            </div>
+        </div>
+
+        <!-- Back Button -->
+        <div class="text-center">
+            <a href="zyro.html" class="btn" style="background: white; color: var(--purple-color); border: 2px solid var(--purple-color); padding: 0.8rem 2rem; border-radius: 50px; font-weight: 700; text-decoration: none; display: inline-block; transition: all 0.3s;">
+                <i class="fas fa-arrow-left"></i> Back to ZYRO Dashboard
+            </a>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="zyro-config.js"></script>
+    <script src="zyro-idea-roulette.js"></script>
+
+    <script>
+        let rouletteEngine;
+        let currentIdea = null;
+
+        // Initialize
+        window.addEventListener('DOMContentLoaded', () => {
+            rouletteEngine = new ZyroIdeaRoulette(ZYRO_CONFIG);
+            rouletteEngine.initialize();
+
+            loadCategories();
+            updateStats();
+            loadHistory();
+        });
+
+        // Load categories
+        function loadCategories() {
+            const select = document.getElementById('categorySelect');
+            ZYRO_CONFIG.IDEA_ROULETTE.categories.forEach(cat => {
+                const option = document.createElement('option');
+                option.value = cat.name;
+                option.textContent = cat.name;
+                select.appendChild(option);
+            });
+        }
+
+        // Spin the roulette
+        async function spinRoulette() {
+            const btn = document.getElementById('btnSpin');
+            const wheel = document.getElementById('spinnerWheel');
+            const category = document.getElementById('categorySelect').value;
+            const useAI = document.getElementById('useAI').checked;
+
+            // Disable button
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Spinning...';
+
+            // Animate wheel
+            wheel.classList.add('spinning');
+
+            // Wait for animation
+            await new Promise(resolve => setTimeout(resolve, 2000));
+
+            // Generate idea
+            const result = await rouletteEngine.spin(category || null, useAI);
+
+            if (result.success) {
+                currentIdea = result.idea;
+                displayResult(result);
+            } else {
+                alert(result.message);
+            }
+
+            // Reset
+            wheel.classList.remove('spinning');
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-dice"></i> SPIN AGAIN!';
+
+            updateStats();
+            loadHistory();
+        }
+
+        // Display result
+        function displayResult(result) {
+            const idea = result.idea;
+
+            // Show result card
+            const resultCard = document.getElementById('resultCard');
+            resultCard.classList.add('show');
+
+            // Set idea text
+            document.getElementById('resultIdea').textContent = `"${idea.text}"`;
+
+            // Set scores
+            document.getElementById('absurdityScore').textContent = idea.absurdityScore;
+            document.getElementById('viabilityScore').textContent = idea.viabilityScore;
+
+            // Animate bars
+            setTimeout(() => {
+                document.getElementById('absurdityBar').style.width = idea.absurdityScore + '%';
+                document.getElementById('viabilityBar').style.width = idea.viabilityScore + '%';
+            }, 100);
+
+            // Show viral badge if applicable
+            const viralBadge = document.getElementById('viralBadge');
+            viralBadge.style.display = idea.isViralWorthy ? 'block' : 'none';
+
+            // Show AI enhancement if available
+            const aiSection = document.getElementById('aiEnhancement');
+            if (idea.aiEnhanced && idea.enhancement) {
+                aiSection.classList.add('show');
+                document.getElementById('aiTagline').textContent = idea.enhancement.tagline;
+                document.getElementById('aiPitch').textContent = idea.enhancement.pitch;
+                document.getElementById('aiFeature').textContent = idea.enhancement.feature;
+                document.getElementById('aiInsight').textContent = idea.enhancement.insight;
+                document.getElementById('aiStory').textContent = idea.enhancement.story;
+            } else {
+                aiSection.classList.remove('show');
+            }
+
+            // Scroll to result
+            resultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // Update stats
+        function updateStats() {
+            const stats = rouletteEngine.getStatistics();
+
+            document.getElementById('totalSpins').textContent = stats.totalSpins;
+            document.getElementById('viralIdeas').textContent = stats.viralIdeas;
+            document.getElementById('favorites').textContent = stats.favoriteCount;
+            document.getElementById('avgAbsurdity').textContent = stats.avgAbsurdity;
+        }
+
+        // Load history
+        function loadHistory() {
+            const history = rouletteEngine.getHistory(5);
+            const container = document.getElementById('historyContainer');
+
+            if (history.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #999;">Spin the wheel to start generating ideas!</p>';
+                return;
+            }
+
+            container.innerHTML = history.map(idea => `
+                <div class="history-item" onclick="viewIdea(${idea.id})">
+                    <div class="history-idea">${idea.text}</div>
+                    <div class="history-scores">
+                        <span class="history-score">😂 ${idea.absurdityScore}</span>
+                        <span class="history-score">💡 ${idea.viabilityScore}</span>
+                        ${idea.favorited ? '<span class="history-score">❤️</span>' : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // View idea from history
+        function viewIdea(ideaId) {
+            const idea = rouletteEngine.getIdeaById(ideaId);
+            if (idea) {
+                currentIdea = idea;
+                displayResult({ success: true, idea: idea });
+            }
+        }
+
+        // Toggle favorite
+        function toggleFavorite() {
+            if (!currentIdea) return;
+
+            const isFavorited = currentIdea.favorited;
+
+            if (isFavorited) {
+                rouletteEngine.unfavoriteIdea(currentIdea.id);
+                document.getElementById('favText').textContent = 'Favorite';
+            } else {
+                rouletteEngine.favoriteIdea(currentIdea.id);
+                document.getElementById('favText').textContent = 'Unfavorite';
+            }
+
+            currentIdea.favorited = !isFavorited;
+            updateStats();
+            loadHistory();
+        }
+
+        // Share idea
+        function shareIdea() {
+            if (!currentIdea) return;
+
+            const shareText = `💡 Just spun this business idea on ZYRO!\n\n"${currentIdea.text}"\n\n😂 Absurdity: ${currentIdea.absurdityScore}/100\n💡 Viability: ${currentIdea.viabilityScore}/100\n\nTry ZYRO: https://zero2billionaires.com/zyro`;
+
+            if (navigator.share) {
+                navigator.share({
+                    title: 'My ZYRO Business Idea',
+                    text: shareText
+                });
+            } else {
+                navigator.clipboard.writeText(shareText);
+                alert('📋 Idea copied to clipboard! Share it on social media!');
+            }
+        }
+
+        // View full report
+        function viewReport() {
+            if (!currentIdea) return;
+
+            const report = rouletteEngine.generateValidationReport(currentIdea.id);
+
+            if (report) {
+                alert(`🎯 IDEA VALIDATION REPORT\n\n` +
+                      `Idea: "${report.idea}"\n\n` +
+                      `📊 SCORES:\n` +
+                      `Absurdity: ${report.scores.absurdity}/100\n` +
+                      `Viability: ${report.scores.viability}/100\n` +
+                      `Viral: ${report.scores.viral}/100\n\n` +
+                      `⭐ Rating: ${report.rating.stars} stars - ${report.rating.label}\n\n` +
+                      `💡 Recommendation:\n${report.recommendation}\n\n` +
+                      `Next Steps:\n${report.nextSteps.map((s, i) => `${i + 1}. ${s}`).join('\n')}`);
+            }
+        }
+    </script>
+</body>
+</html>

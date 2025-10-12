@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marketplace - Z2B Legacy Builders</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --navy-blue: #0A2647;
+            --gold: #FFD700;
+            --orange: #FF6B35;
+            --light-gold: #FFF4CC;
+            --dark-navy: #051428;
+            --white: #FFFFFF;
+            --light-bg: #F8F9FA;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--light-bg);
+            color: var(--dark-navy);
+        }
+
+        .top-navbar {
+            background: linear-gradient(135deg, var(--navy-blue), var(--dark-navy));
+            padding: 1.5rem 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            margin-bottom: 2rem;
+        }
+
+        .back-btn {
+            color: var(--gold);
+            font-size: 1.1rem;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            color: var(--orange);
+        }
+
+        .marketplace-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .marketplace-header h1 {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--navy-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .marketplace-header p {
+            font-size: 1.2rem;
+            color: var(--dark-navy);
+            opacity: 0.8;
+        }
+
+        .filter-section {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+        }
+
+        .filter-section h5 {
+            color: var(--navy-blue);
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .category-btn {
+            background: var(--light-gold);
+            border: 2px solid transparent;
+            padding: 0.7rem 1.5rem;
+            border-radius: 50px;
+            color: var(--navy-blue);
+            font-weight: 600;
+            margin: 0.3rem;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .category-btn:hover,
+        .category-btn.active {
+            background: linear-gradient(135deg, var(--gold), var(--orange));
+            border-color: var(--navy-blue);
+            color: var(--white);
+        }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 2px solid var(--light-gold);
+            border-radius: 50px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 1.2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--navy-blue);
+            font-size: 1.2rem;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .product-card {
+            background: var(--white);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.15);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 220px;
+            background: linear-gradient(135deg, var(--navy-blue), var(--dark-navy));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .product-image i {
+            font-size: 5rem;
+            color: var(--gold);
+            opacity: 0.9;
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: linear-gradient(135deg, var(--orange), var(--gold));
+            color: var(--white);
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        .product-creator {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .creator-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold), var(--orange));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--navy-blue);
+            margin-right: 10px;
+            font-size: 0.9rem;
+        }
+
+        .creator-name {
+            color: var(--dark-navy);
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        .product-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--navy-blue);
+            margin-bottom: 0.8rem;
+        }
+
+        .product-description {
+            color: var(--dark-navy);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            opacity: 0.8;
+        }
+
+        .product-stats {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.2rem;
+            font-size: 0.9rem;
+            color: var(--dark-navy);
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .stat-item i {
+            color: var(--gold);
+        }
+
+        .product-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid var(--light-gold);
+        }
+
+        .product-price {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--orange);
+        }
+
+        .btn-buy {
+            background: linear-gradient(135deg, var(--navy-blue), var(--dark-navy));
+            color: var(--gold);
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .btn-buy:hover {
+            background: linear-gradient(135deg, var(--gold), var(--orange));
+            color: var(--navy-blue);
+            transform: scale(1.05);
+        }
+
+        .create-product-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold), var(--orange));
+            border: none;
+            color: var(--navy-blue);
+            font-size: 2rem;
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .create-product-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.6);
+        }
+
+        .stats-banner {
+            background: linear-gradient(135deg, var(--navy-blue), var(--dark-navy));
+            padding: 2rem;
+            border-radius: 20px;
+            color: var(--white);
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .stats-banner h3 {
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-box {
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--gold);
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .marketplace-header h1 {
+                font-size: 2rem;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-navbar">
+        <div class="container">
+            <a href="dashboard.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="marketplace-header">
+            <div style="background: linear-gradient(135deg, var(--gold), var(--orange)); color: var(--navy-blue); padding: 0.6rem 1.5rem; border-radius: 50px; display: inline-block; margin-bottom: 1.5rem; font-weight: bold; font-size: 0.95rem;">
+                <i class="fas fa-rocket"></i> Transforming Employees to Entrepreneurs
+            </div>
+            <h1><i class="fas fa-store"></i> Marketplace</h1>
+            <p class="lead" style="color: var(--orange); font-weight: 600; margin-bottom: 0.5rem;">List and Buy Digital Products, Physical Products and Services</p>
+            <p>Discover and sell products created by our thriving community</p>
+        </div>
+
+        <!-- Stats Banner -->
+        <div class="stats-banner">
+            <h3>Marketplace Stats</h3>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-value">247</div>
+                    <div class="stat-label">Products</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">189</div>
+                    <div class="stat-label">Creators</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">5.2K</div>
+                    <div class="stat-label">Total Sales</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">R2.8M</div>
+                    <div class="stat-label">Revenue Generated</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search & Filter -->
+        <div class="filter-section">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search for courses, ebooks, templates...">
+            </div>
+
+            <h5>Categories</h5>
+            <div class="d-flex flex-wrap">
+                <button class="category-btn active">All Products</button>
+                <button class="category-btn">Courses</button>
+                <button class="category-btn">E-books</button>
+                <button class="category-btn">Templates</button>
+                <button class="category-btn">Marketing Tools</button>
+                <button class="category-btn">Software</button>
+                <button class="category-btn">Coaching</button>
+            </div>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="products-grid">
+            <!-- Product 1 -->
+            <div class="product-card">
+                <div class="product-image">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span class="product-badge">Bestseller</span>
+                </div>
+                <div class="product-info">
+                    <div class="product-creator">
+                        <div class="creator-avatar">SM</div>
+                        <span class="creator-name">Sarah Mogul</span>
+                    </div>
+                    <h3 class="product-title">Social Media Mastery Course</h3>
+                    <p class="product-description">Learn how to build a massive following and convert followers into customers using proven strategies.</p>
+                    <div class="product-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-star"></i>
+                            <span>4.9 (127)</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>342 sales</span>
+                        </div>
+                    </div>
+                    <div class="product-footer">
+                        <div class="product-price">R497</div>
+                        <button class="btn-buy">Buy Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 2 - Video Creator Tools -->
+            <div class="product-card">
+                <div class="product-image" style="background: linear-gradient(135deg, #FFD700, #FF6B35);">
+                    <i class="fas fa-video" style="font-size: 3rem; color: #0A2647;"></i>
+                    <span class="product-badge" style="background: #4CAF50;">🔥 HOT</span>
+                </div>
+                <div class="product-info">
+                    <div class="product-creator">
+                        <div class="creator-avatar" style="background: linear-gradient(135deg, #0A2647, #051428); color: #FFD700;">Z2B</div>
+                        <span class="creator-name">Z2B Legacy Builders</span>
+                    </div>
+                    <h3 class="product-title">Video Creator Tools + 100 AI Fuel</h3>
+                    <p class="product-description">Professional video creation suite with templates, editing tools, and 100 non-expiring AI Fuel credits. Create stunning videos to grow your business!</p>
+                    <div style="background: rgba(255, 215, 0, 0.1); padding: 0.8rem; border-radius: 8px; margin: 0.8rem 0; border-left: 3px solid #FFD700;">
+                        <strong style="color: #FF6B35;">✨ Included in Gold, Platinum & Diamond tiers</strong><br>
+                        <span style="font-size: 0.85rem; opacity: 0.9;">Purchase separately if you're on Bronze, Copper, or Silver tier</span>
+                    </div>
+                    <div class="product-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-star"></i>
+                            <span>4.9 (342)</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-fire"></i>
+                            <span>100 AI Fuel</span>
+                        </div>
+                    </div>
+                    <div class="product-footer">
+                        <div class="product-price">R399</div>
+                        <button class="btn-buy" style="background: linear-gradient(135deg, #FFD700, #FF6B35);">Buy Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 3 - ZYRONIQ (Premium Enterprise Product) -->
+            <div class="product-card" style="border: 3px solid #00FFF0; box-shadow: 0 8px 40px rgba(0, 255, 240, 0.3);">
+                <div class="product-image" style="background: linear-gradient(135deg, #00FFF0, #6C63FF); position: relative; overflow: hidden;">
+                    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px); animation: gridMove 20s linear infinite;"></div>
+                    <i class="fas fa-rocket" style="font-size: 4rem; color: #0C0C1C; position: relative; z-index: 2;"></i>
+                    <span class="product-badge" style="background: linear-gradient(135deg, #6C63FF, #00FFF0); color: #0C0C1C; font-weight: 900;">⭐ ENTERPRISE</span>
+                </div>
+                <div class="product-info">
+                    <div class="product-creator">
+                        <div class="creator-avatar" style="background: linear-gradient(135deg, #00FFF0, #6C63FF); color: #0C0C1C;">Z2B</div>
+                        <span class="creator-name">Z2B Legacy Builders</span>
+                    </div>
+                    <h3 class="product-title" style="background: linear-gradient(135deg, #00FFF0, #6C63FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">🚀 Zyroniq - Pay Intelligence Engine</h3>
+                    <p class="product-description">Complete white-label MLM platform with 6 income calculators, 10-generation tracking, TLI system, and futuristic UI. Deploy your branded network marketing platform in days!</p>
+                    <div style="background: linear-gradient(135deg, rgba(0, 255, 240, 0.1), rgba(108, 99, 255, 0.1)); padding: 0.8rem; border-radius: 8px; margin: 0.8rem 0; border-left: 3px solid #00FFF0;">
+                        <strong style="color: #6C63FF;">💎 WHITE-LABEL LICENSE</strong><br>
+                        <span style="font-size: 0.85rem; opacity: 0.9;">• Unlimited Members • Full Customization • Priority Support</span>
+                    </div>
+                    <div class="product-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-infinity" style="color: #00FFF0;"></i>
+                            <span>Unlimited</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-layer-group" style="color: #6C63FF;"></i>
+                            <span>10 Generations</span>
+                        </div>
+                    </div>
+                    <div class="product-footer">
+                        <div class="product-price" style="color: #6C63FF;">R19,980<span style="font-size: 1rem; color: #0A2647; opacity: 0.7;">/mo</span></div>
+                        <button class="btn-buy" onclick="window.location.href='../marketplace/products/zyroniq/index.html'" style="background: linear-gradient(135deg, #00FFF0, #6C63FF); color: #0C0C1C; font-weight: 900;">View Details</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 4 -->
+            <div class="product-card">
+                <div class="product-image">
+                    <i class="fas fa-book"></i>
+                    <span class="product-badge">New</span>
+                </div>
+                <div class="product-info">
+                    <div class="product-creator">
+                        <div class="creator-avatar">JK</div>
+                        <span class="creator-name">John Khumalo</span>
+                    </div>
+                    <h3 class="product-title">The Billionaire Mindset E-book</h3>
+                    <p class="product-description">Transform your thinking with this comprehensive guide to developing a wealth-building mindset.</p>
+                    <div class="product-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-star"></i>
+                            <span>5.0 (89)</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>215 sales</span>
+                        </div>
+                    </div>
+                    <div class="product-footer">
+                        <div class="product-price">R147</div>
+                        <button class="btn-buy">Buy Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 4 -->
+            <div class="product-card">
+                <div class="product-image">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <div class="product-info">
+                    <div class="product-creator">
+                        <div class="creator-avatar">TN</div>
+                        <span class="creator-name">Thandi Nkosi</span>
+                    </div>
+                    <h3 class="product-title">Sales Funnel Templates</h3>
+                    <p class="product-description">Done-for-you funnel templates that convert prospects into team members automatically.</p>
+                    <div class="product-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-star"></i>
+                            <span>4.8 (156)</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>298 sales</span>
+                        </div>
+                    </div>
+                    <div class="product-footer">
+                        <div class="product-price">R297</div>
+                        <button class="btn-buy">Buy Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 5 -->
+            <div class="product-card">
+                <div class="product-image">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span class="product-badge">Popular</span>
+                </div>
+                <div class="product-info">
+                    <div class="product-creator">
+                        <div class="creator-avatar">MP</div>
+                        <span class="creator-name">Michael Power</span>
+                    </div>
+                    <h3 class="product-title">Marketing Mastery Masterclass</h3>
+                    <p class="product-description">Master the art of marketing and create compelling campaigns that sell your products and invite team members effortlessly.</p>
+                    <div class="product-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-star"></i>
+                            <span>4.9 (203)</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>412 sales</span>
+                        </div>
+                    </div>
+                    <div class="product-footer">
+                        <div class="product-price">R697</div>
+                        <button class="btn-buy">Buy Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 5 -->
+            <div class="product-card">
+                <div class="product-image">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="product-info">
+                    <div class="product-creator">
+                        <div class="creator-avatar">LM</div>
+                        <span class="creator-name">Lisa Mabena</span>
+                    </div>
+                    <h3 class="product-title">Financial Freedom Blueprint</h3>
+                    <p class="product-description">Step-by-step system to manage money, invest wisely, and build generational wealth.</p>
+                    <div class="product-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-star"></i>
+                            <span>5.0 (178)</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>389 sales</span>
+                        </div>
+                    </div>
+                    <div class="product-footer">
+                        <div class="product-price">R397</div>
+                        <button class="btn-buy">Buy Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 6 -->
+            <div class="product-card">
+                <div class="product-image">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="product-info">
+                    <div class="product-creator">
+                        <div class="creator-avatar">DM</div>
+                        <span class="creator-name">David Matshego</span>
+                    </div>
+                    <h3 class="product-title">Team Building Accelerator</h3>
+                    <p class="product-description">Proven strategies to invite, train, and lead a high-performing MLM team that duplicates success.</p>
+                    <div class="product-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-star"></i>
+                            <span>4.9 (145)</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>267 sales</span>
+                        </div>
+                    </div>
+                    <div class="product-footer">
+                        <div class="product-price">R547</div>
+                        <button class="btn-buy">Buy Now</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Your Products Section -->
+        <div class="stats-banner" style="margin-top: 3rem;">
+            <h3><i class="fas fa-box"></i> Your Products</h3>
+            <p style="text-align: center; opacity: 0.8; margin-bottom: 1.5rem;">
+                You have 2 products listed in the marketplace
+            </p>
+            <div class="text-center">
+                <button class="btn-buy" style="padding: 1rem 2rem; font-size: 1.1rem;">
+                    <i class="fas fa-eye"></i> View My Products
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Product Button -->
+    <button class="create-product-btn" title="Create New Product">
+        <i class="fas fa-plus"></i>
+    </button>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Category filtering
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Buy button handler
+        document.querySelectorAll('.btn-buy').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const card = this.closest('.product-card');
+                const title = card.querySelector('.product-title').textContent;
+
+                // Check if this is a Z2B app product
+                if (window.Z2BAppAccess) {
+                    // Try to match product to app
+                    const appMap = {
+                        'ZYRO': 'zyro',
+                        'Coach Manlaw': 'coach-manlaw',
+                        'GLOWIE': 'glowie',
+                        'ZYRA': 'zyra',
+                        'BENOWN': 'benown'
+                    };
+
+                    let matchedAppId = null;
+                    for (const [appName, appId] of Object.entries(appMap)) {
+                        if (title.toLowerCase().includes(appName.toLowerCase())) {
+                            matchedAppId = appId;
+                            break;
+                        }
+                    }
+
+                    if (matchedAppId) {
+                        // Check if user has access to this app
+                        const hasAccess = window.Z2BAppAccess.hasAppAccess(matchedAppId);
+                        if (hasAccess) {
+                            alert(`✓ You already have access to this app!\\n\\nThis is included in your current tier.\\n\\nRedirecting to the app...`);
+                            const app = window.Z2B_APPS[matchedAppId];
+                            if (app) {
+                                window.location.href = app.url;
+                            }
+                            return;
+                        } else {
+                            // Show upgrade prompt
+                            const tierComparison = window.Z2BAppAccess.getTierComparison(matchedAppId);
+                            if (tierComparison && tierComparison.length > 0) {
+                                const tiersText = tierComparison.map(t => `${t.tierName} (${t.price})`).join('\\n');
+                                if (confirm(`🔒 This app is locked in your current tier.\\n\\nUpgrade to unlock this app:\\n\\n${tiersText}\\n\\nGo to Tiers page to upgrade?`)) {
+                                    window.location.href = 'tiers.html';
+                                }
+                                return;
+                            }
+                        }
+                    }
+                }
+
+                alert(`Adding "${title}" to cart. This will redirect to checkout.`);
+            });
+        });
+
+        // Create product button
+        document.querySelector('.create-product-btn').addEventListener('click', function() {
+            alert('Opening product creation form...');
+        });
+
+        // Add tier comparison badges to Z2B app products when app-config loads
+        window.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                if (window.Z2BAppAccess && window.Z2B_APPS) {
+                    addTierComparisonBadges();
+                }
+            }, 200);
+        });
+
+        function addTierComparisonBadges() {
+            const appAccess = window.Z2BAppAccess;
+            const appProducts = {
+                'zyro': 'ZYRO',
+                'coach-manlaw': 'Coach Manlaw',
+                'glowie': 'GLOWIE',
+                'zyra': 'ZYRA',
+                'benown': 'BENOWN'
+            };
+
+            // Loop through all product cards
+            document.querySelectorAll('.product-card').forEach(card => {
+                const title = card.querySelector('.product-title')?.textContent || '';
+
+                // Check if this product matches a Z2B app
+                for (const [appId, appName] of Object.entries(appProducts)) {
+                    if (title.toLowerCase().includes(appName.toLowerCase())) {
+                        // Add tier comparison badge
+                        const tierComparison = appAccess.getTierComparison(appId);
+                        const hasAccess = appAccess.hasAppAccess(appId);
+
+                        // Check if badge already exists
+                        if (card.querySelector('.tier-comparison-badge')) {
+                            continue;
+                        }
+
+                        const badge = document.createElement('div');
+                        badge.className = 'tier-comparison-badge';
+                        badge.style.cssText = `
+                            background: ${hasAccess ? 'rgba(76, 205, 196, 0.1)' : 'rgba(255, 215, 0, 0.1)'};
+                            padding: 0.8rem;
+                            border-radius: 8px;
+                            margin: 0.8rem 0;
+                            border-left: 3px solid ${hasAccess ? '#4ECDC4' : '#FFD700'};
+                        `;
+
+                        if (hasAccess) {
+                            const accessLevel = appAccess.getAppAccessLevel(appId);
+                            badge.innerHTML = `
+                                <strong style="color: #4ECDC4;">✓ You have access!</strong><br>
+                                <span style="font-size: 0.85rem; opacity: 0.9;">
+                                    ${accessLevel === 'demo' ? 'Demo access included in your tier' : 'Full access included in your tier'}
+                                </span>
+                            `;
+                        } else {
+                            if (tierComparison && tierComparison.length > 0) {
+                                const tiersText = tierComparison.map(t => t.tierName).join(', ');
+                                badge.innerHTML = `
+                                    <strong style="color: #FF6B35;">🔒 Upgrade to unlock</strong><br>
+                                    <span style="font-size: 0.85rem; opacity: 0.9;">
+                                        Available in: ${tiersText}
+                                    </span>
+                                `;
+                            } else {
+                                badge.innerHTML = `
+                                    <strong style="color: #FFD700;">✨ Available for purchase</strong><br>
+                                    <span style="font-size: 0.85rem; opacity: 0.9;">
+                                        Not included in any tier
+                                    </span>
+                                `;
+                            }
+                        }
+
+                        // Insert badge before product stats
+                        const productStats = card.querySelector('.product-stats');
+                        if (productStats) {
+                            productStats.parentNode.insertBefore(badge, productStats);
+                        }
+
+                        // Update button text if user has access
+                        if (hasAccess) {
+                            const buyBtn = card.querySelector('.btn-buy');
+                            if (buyBtn) {
+                                buyBtn.textContent = 'Launch App';
+                                buyBtn.style.background = 'linear-gradient(135deg, #4ECDC4, #44A08D)';
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+
+    <!-- Z2B Ecosystem Integration -->
+    <script src="../js/app-config.js"></script>
+    <script src="../js/ecosystem-footer.js"></script>
+</body>
+</html>

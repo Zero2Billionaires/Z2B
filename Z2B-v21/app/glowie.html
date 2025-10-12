@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GLOWIE - AI App Builder | Z2B Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy-blue: #0A2647;
+            --gold: #FFD700;
+            --orange: #FF6B35;
+            --light-gold: #FFF4CC;
+            --dark-navy: #051428;
+            --purple: #9B59B6;
+            --success: #4ECDC4;
+            --white: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--navy-blue) 0%, var(--dark-navy) 100%);
+            color: var(--white);
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            width: 280px;
+            background: rgba(10, 38, 71, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem 0;
+            border-right: 2px solid var(--gold);
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .sidebar-brand {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 0 1rem;
+        }
+
+        .sidebar-brand h2 {
+            color: var(--gold);
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-brand p {
+            color: var(--orange);
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            color: var(--white);
+            text-decoration: none;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+        }
+
+        .sidebar-nav a:hover,
+        .sidebar-nav a.active {
+            background: rgba(255, 215, 0, 0.1);
+            border-left-color: var(--gold);
+            color: var(--gold);
+        }
+
+        .sidebar-nav a i {
+            margin-right: 1rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .page-header {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-header p {
+            color: var(--white);
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        /* Builder Grid */
+        .builder-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .builder-panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .builder-panel h3 {
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        .form-group textarea,
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border-radius: 10px;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s;
+        }
+
+        .form-group textarea:focus,
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--gold);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        /* App Type Grid */
+        .app-type-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .app-type-btn {
+            padding: 1rem;
+            border-radius: 10px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--white);
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .app-type-btn:hover {
+            transform: scale(1.05);
+            border-color: var(--gold);
+        }
+
+        .app-type-btn.active {
+            background: var(--gold);
+            color: var(--navy-blue);
+            border-color: var(--gold);
+        }
+
+        .app-type-btn i {
+            display: block;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Features Checklist */
+        .features-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.8rem;
+        }
+
+        .feature-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .feature-checkbox input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .feature-checkbox label {
+            cursor: pointer;
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        /* Generate Button */
+        .btn-generate {
+            width: 100%;
+            padding: 1.2rem;
+            background: linear-gradient(135deg, var(--gold), var(--orange));
+            color: var(--navy-blue);
+            border: none;
+            border-radius: 15px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1.5rem;
+        }
+
+        .btn-generate:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
+        }
+
+        .btn-generate:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Preview Area */
+        .preview-container {
+            position: relative;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            min-height: 600px;
+        }
+
+        .preview-header {
+            background: var(--navy-blue);
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .preview-iframe {
+            width: 100%;
+            height: 550px;
+            border: none;
+            background: white;
+        }
+
+        .preview-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .btn-action {
+            flex: 1;
+            padding: 0.8rem;
+            border-radius: 10px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+        }
+
+        .btn-download {
+            background: var(--success);
+        }
+
+        .btn-code {
+            background: var(--purple);
+        }
+
+        .btn-new {
+            background: var(--orange);
+        }
+
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Code Modal */
+        .code-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .code-modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .code-content {
+            background: var(--dark-navy);
+            border-radius: 15px;
+            padding: 2rem;
+            max-width: 900px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .code-header h3 {
+            color: var(--gold);
+            margin: 0;
+        }
+
+        .btn-close-modal {
+            background: var(--orange);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            border-radius: 10px;
+            padding: 1.5rem;
+            overflow-x: auto;
+        }
+
+        .code-block pre {
+            margin: 0;
+            color: #d4d4d4;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #666;
+        }
+
+        .empty-state i {
+            font-size: 5rem;
+            color: #ccc;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state h3 {
+            color: #999;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 0;
+                overflow: hidden;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .builder-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .app-type-grid,
+            .features-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <h2><i class="fas fa-rocket"></i> Z2B</h2>
+            <p>Zero2Billionaires Platform</p>
+        </div>
+
+        <ul class="sidebar-nav">
+            <li><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="benown.html"><i class="fas fa-magic"></i> BENOWN</a></li>
+            <li><a href="zyra.html"><i class="fas fa-user-tie"></i> ZYRA</a></li>
+            <li><a href="zyro.html"><i class="fas fa-gamepad"></i> ZYRO</a></li>
+            <li><a href="glowie.html" class="active"><i class="fas fa-lightbulb"></i> GLOWIE</a></li>
+            <li><a href="coach-manlaw.html"><i class="fas fa-graduation-cap"></i> Coach Manlaw</a></li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1><i class="fas fa-lightbulb"></i> GLOWIE - AI App Builder</h1>
+            <p>Build instant apps with AI in seconds</p>
+        </div>
+
+        <!-- Builder Grid -->
+        <div class="builder-grid">
+            <!-- Left Panel: Builder -->
+            <div class="builder-panel">
+                <h3><i class="fas fa-cog"></i> App Builder</h3>
+
+                <!-- App Description -->
+                <div class="form-group">
+                    <label>Describe Your App</label>
+                    <textarea id="appDescription" placeholder="Example: Build me a task manager app with a clean design. Users should be able to add tasks, mark them complete, and delete them. Include a dark mode toggle and make it mobile responsive."></textarea>
+                    <small style="color: var(--gold); display: block; margin-top: 0.5rem;">
+                        <i class="fas fa-info-circle"></i> Be specific! The more detail you provide, the better your app will be.
+                    </small>
+                </div>
+
+                <!-- App Type -->
+                <div class="form-group">
+                    <label>App Type</label>
+                    <div class="app-type-grid">
+                        <div class="app-type-btn active" data-type="landing">
+                            <i class="fas fa-home"></i>
+                            <div>Landing Page</div>
+                        </div>
+                        <div class="app-type-btn" data-type="dashboard">
+                            <i class="fas fa-chart-line"></i>
+                            <div>Dashboard</div>
+                        </div>
+                        <div class="app-type-btn" data-type="form">
+                            <i class="fas fa-clipboard-list"></i>
+                            <div>Form/Survey</div>
+                        </div>
+                        <div class="app-type-btn" data-type="game">
+                            <i class="fas fa-gamepad"></i>
+                            <div>Game</div>
+                        </div>
+                        <div class="app-type-btn" data-type="tool">
+                            <i class="fas fa-tools"></i>
+                            <div>Tool/Utility</div>
+                        </div>
+                        <div class="app-type-btn" data-type="other">
+                            <i class="fas fa-star"></i>
+                            <div>Other</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Features -->
+                <div class="form-group">
+                    <label>Features to Include</label>
+                    <div class="features-list">
+                        <div class="feature-checkbox">
+                            <input type="checkbox" id="featureMobile" checked>
+                            <label for="featureMobile">Mobile Responsive</label>
+                        </div>
+                        <div class="feature-checkbox">
+                            <input type="checkbox" id="featureDark">
+                            <label for="featureDark">Dark Mode</label>
+                        </div>
+                        <div class="feature-checkbox">
+                            <input type="checkbox" id="featureStorage" checked>
+                            <label for="featureStorage">Local Storage</label>
+                        </div>
+                        <div class="feature-checkbox">
+                            <input type="checkbox" id="featureAnimations">
+                            <label for="featureAnimations">Animations</label>
+                        </div>
+                        <div class="feature-checkbox">
+                            <input type="checkbox" id="featureIcons" checked>
+                            <label for="featureIcons">Icons</label>
+                        </div>
+                        <div class="feature-checkbox">
+                            <input type="checkbox" id="featureModern" checked>
+                            <label for="featureModern">Modern Design</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Color Scheme -->
+                <div class="form-group">
+                    <label>Color Scheme</label>
+                    <select id="colorScheme">
+                        <option value="z2b">Z2B (Navy & Gold)</option>
+                        <option value="modern">Modern (Blue & Purple)</option>
+                        <option value="vibrant">Vibrant (Orange & Teal)</option>
+                        <option value="minimal">Minimal (Black & White)</option>
+                        <option value="custom">Custom (Describe in prompt)</option>
+                    </select>
+                </div>
+
+                <!-- Generate Button -->
+                <button class="btn-generate" id="btnGenerate">
+                    <i class="fas fa-magic"></i> Generate App with AI
+                </button>
+
+                <!-- API Settings -->
+                <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+                    <div class="form-group">
+                        <label>AI API Key</label>
+                        <input type="password" id="claudeApiKey" placeholder="Enter your API key...">
+                        <small style="color: var(--gold); display: block; margin-top: 0.5rem;">
+                            <i class="fas fa-lock"></i> Required to enable AI app generation
+                        </small>
+                    </div>
+                    <button class="btn-generate" style="margin-top: 1rem;" onclick="saveApiKey()">
+                        <i class="fas fa-save"></i> Save API Key
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right Panel: Preview -->
+            <div class="builder-panel">
+                <h3><i class="fas fa-eye"></i> Live Preview</h3>
+
+                <div class="preview-container">
+                    <div class="preview-header">
+                        <span><i class="fas fa-desktop"></i> App Preview</span>
+                        <span id="previewStatus">Ready to build</span>
+                    </div>
+                    <div id="previewContent">
+                        <div class="empty-state">
+                            <i class="fas fa-rocket"></i>
+                            <h3>No App Yet</h3>
+                            <p>Describe your app and click "Generate" to see the magic happen!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="preview-actions">
+                    <button class="btn-action btn-download" id="btnDownload" disabled>
+                        <i class="fas fa-download"></i> Download
+                    </button>
+                    <button class="btn-action btn-code" id="btnViewCode" disabled>
+                        <i class="fas fa-code"></i> View Code
+                    </button>
+                    <button class="btn-action btn-new" id="btnNew">
+                        <i class="fas fa-plus"></i> New App
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Code Modal -->
+    <div class="code-modal" id="codeModal">
+        <div class="code-content">
+            <div class="code-header">
+                <h3><i class="fas fa-code"></i> Generated Code</h3>
+                <button class="btn-close-modal" onclick="closeCodeModal()">
+                    <i class="fas fa-times"></i> Close
+                </button>
+            </div>
+            <div class="code-block">
+                <pre id="codeDisplay"></pre>
+            </div>
+            <button class="btn-generate" style="margin-top: 1.5rem;" onclick="copyCode()">
+                <i class="fas fa-copy"></i> Copy Code
+            </button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // State
+        let selectedAppType = 'landing';
+        let generatedCode = '';
+
+        // Initialize
+        window.addEventListener('DOMContentLoaded', () => {
+            loadApiKey();
+            setupEventListeners();
+        });
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // App type selection
+            document.querySelectorAll('.app-type-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.app-type-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    selectedAppType = btn.dataset.type;
+                });
+            });
+
+            // Generate button
+            document.getElementById('btnGenerate').addEventListener('click', generateApp);
+
+            // Download button
+            document.getElementById('btnDownload').addEventListener('click', downloadApp);
+
+            // View code button
+            document.getElementById('btnViewCode').addEventListener('click', viewCode);
+
+            // New app button
+            document.getElementById('btnNew').addEventListener('click', newApp);
+        }
+
+        // Generate app
+        async function generateApp() {
+            const btn = document.getElementById('btnGenerate');
+            const description = document.getElementById('appDescription').value.trim();
+            const colorScheme = document.getElementById('colorScheme').value;
+            const apiKey = document.getElementById('claudeApiKey').value.trim();
+
+            // Validation
+            if (!description) {
+                alert('Please describe your app!');
+                return;
+            }
+
+            if (!apiKey || apiKey === '') {
+                alert('Please enter your AI API key in the settings below.');
+                return;
+            }
+
+            // Get selected features
+            const features = {
+                mobile: document.getElementById('featureMobile').checked,
+                darkMode: document.getElementById('featureDark').checked,
+                localStorage: document.getElementById('featureStorage').checked,
+                animations: document.getElementById('featureAnimations').checked,
+                icons: document.getElementById('featureIcons').checked,
+                modern: document.getElementById('featureModern').checked
+            };
+
+            // Disable button
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Building with AI...';
+            document.getElementById('previewStatus').textContent = 'Generating...';
+
+            try {
+                // Build prompt
+                const prompt = buildClaudePrompt(description, selectedAppType, features, colorScheme);
+
+                // Call AI API
+                const code = await callClaudeAPI(prompt, apiKey);
+
+                // Display preview
+                displayPreview(code);
+
+                // Enable actions
+                document.getElementById('btnDownload').disabled = false;
+                document.getElementById('btnViewCode').disabled = false;
+
+                document.getElementById('previewStatus').textContent = 'App Generated!';
+
+            } catch (error) {
+                console.error('Generation error:', error);
+                alert('Error generating app: ' + error.message);
+                document.getElementById('previewStatus').textContent = 'Error';
+            }
+
+            // Re-enable button
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-magic"></i> Generate App with Claude';
+        }
+
+        // Build Claude prompt
+        function buildClaudePrompt(description, appType, features, colorScheme) {
+            const featuresList = Object.entries(features)
+                .filter(([key, value]) => value)
+                .map(([key]) => key)
+                .join(', ');
+
+            return `You are an expert web developer. Create a complete, production-ready, single-file HTML application based on the following requirements:
+
+APP DESCRIPTION:
+${description}
+
+APP TYPE: ${appType}
+
+REQUIRED FEATURES:
+${featuresList || 'None specified'}
+
+COLOR SCHEME: ${colorScheme}
+
+INSTRUCTIONS:
+1. Create a COMPLETE, SELF-CONTAINED HTML file with embedded CSS and JavaScript
+2. The app must be fully functional and production-ready
+3. Use modern HTML5, CSS3, and vanilla JavaScript (ES6+)
+4. Include Bootstrap 5 and Font Awesome 6 from CDN
+5. Make it visually stunning with smooth animations and modern design
+6. Add proper error handling and user feedback
+7. Include helpful comments in the code
+8. Make sure all interactive features work perfectly
+9. Use the Z2B color scheme if specified: Navy Blue (#0A2647), Gold (#FFD700), Orange (#FF6B35)
+
+RESPOND WITH ONLY THE COMPLETE HTML CODE. No explanations, no markdown, just the raw HTML file content that can be saved and opened directly in a browser.`;
+        }
+
+        // Call Claude API
+        async function callClaudeAPI(prompt, apiKey) {
+            try {
+                const response = await fetch('https://api.anthropic.com/v1/messages', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-api-key': apiKey,
+                        'anthropic-version': '2023-06-01'
+                    },
+                    body: JSON.stringify({
+                        model: 'claude-sonnet-4-20250514',
+                        max_tokens: 4096,
+                        messages: [{
+                            role: 'user',
+                            content: prompt
+                        }]
+                    })
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error?.message || 'API request failed');
+                }
+
+                const data = await response.json();
+
+                if (data.content && data.content[0] && data.content[0].text) {
+                    return data.content[0].text.trim();
+                } else {
+                    throw new Error('Invalid response from Claude API');
+                }
+
+            } catch (error) {
+                console.error('Claude API error:', error);
+                throw error;
+            }
+        }
+
+        // Display preview
+        function displayPreview(code) {
+            generatedCode = code;
+
+            // Create iframe to display the app
+            const previewContent = document.getElementById('previewContent');
+            previewContent.innerHTML = `
+                <iframe class="preview-iframe" id="previewIframe"></iframe>
+            `;
+
+            // Write code to iframe
+            const iframe = document.getElementById('previewIframe');
+            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+            iframeDoc.open();
+            iframeDoc.write(code);
+            iframeDoc.close();
+        }
+
+        // Download app
+        function downloadApp() {
+            if (!generatedCode) {
+                alert('No app to download!');
+                return;
+            }
+
+            // Create blob
+            const blob = new Blob([generatedCode], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+
+            // Create download link
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'my-app-' + Date.now() + '.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            alert('✅ App downloaded successfully!');
+        }
+
+        // View code
+        function viewCode() {
+            if (!generatedCode) {
+                alert('No code to view!');
+                return;
+            }
+
+            document.getElementById('codeDisplay').textContent = generatedCode;
+            document.getElementById('codeModal').classList.add('show');
+        }
+
+        // Close code modal
+        function closeCodeModal() {
+            document.getElementById('codeModal').classList.remove('show');
+        }
+
+        // Copy code
+        function copyCode() {
+            navigator.clipboard.writeText(generatedCode).then(() => {
+                alert('✅ Code copied to clipboard!');
+            });
+        }
+
+        // New app
+        function newApp() {
+            if (generatedCode && !confirm('Start a new app? Current app will be lost if not downloaded.')) {
+                return;
+            }
+
+            // Reset
+            document.getElementById('appDescription').value = '';
+            document.getElementById('previewContent').innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-rocket"></i>
+                    <h3>No App Yet</h3>
+                    <p>Describe your app and click "Generate" to see the magic happen!</p>
+                </div>
+            `;
+            generatedCode = '';
+            document.getElementById('btnDownload').disabled = true;
+            document.getElementById('btnViewCode').disabled = true;
+            document.getElementById('previewStatus').textContent = 'Ready to build';
+        }
+
+        // Save API key
+        function saveApiKey() {
+            const apiKey = document.getElementById('claudeApiKey').value.trim();
+            if (apiKey) {
+                localStorage.setItem('glowie_claude_api_key', apiKey);
+                alert('✅ API key saved!');
+            }
+        }
+
+        // Load API key
+        function loadApiKey() {
+            const apiKey = localStorage.getItem('glowie_claude_api_key');
+            if (apiKey) {
+                document.getElementById('claudeApiKey').value = apiKey;
+            }
+        }
+    </script>
+
+    <!-- Z2B Ecosystem Integration -->
+    <script src="../js/app-config.js"></script>
+    <script src="../js/ecosystem-footer.js"></script>
+</body>
+</html>

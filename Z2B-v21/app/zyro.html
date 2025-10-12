@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZYRO - Play. Fail. Hustle. Share. Repeat.</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Comic+Neue:wght@700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #FF6B35;
+            --secondary-color: #F7931E;
+            --accent-color: #FFC857;
+            --success-color: #4ECDC4;
+            --purple-color: #9B59B6;
+            --pink-color: #E84855;
+            --blue-color: #3498DB;
+            --dark-bg: #2C3E50;
+            --light-bg: #FFF8F0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--light-bg) 0%, #FFE5D4 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated background elements */
+        .bg-decoration {
+            position: fixed;
+            opacity: 0.1;
+            animation: float 6s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        /* Header */
+        .zyro-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            padding: 1.5rem 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .zyro-logo {
+            font-family: 'Comic Neue', cursive;
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: white;
+            text-shadow: 3px 3px 0px rgba(0,0,0,0.2);
+        }
+
+        .zyro-tagline {
+            color: rgba(255,255,255,0.9);
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        /* User Stats Bar */
+        .user-stats {
+            background: white;
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .user-stats::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--accent-color), var(--success-color));
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary-color);
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Game Cards */
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .game-card {
+            background: white;
+            border-radius: 25px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+        }
+
+        .game-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .game-card:hover::before {
+            opacity: 1;
+        }
+
+        .game-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .game-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            font-family: 'Comic Neue', cursive;
+        }
+
+        .game-description {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .game-cta {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 700;
+            text-decoration: none;
+            color: white;
+            transition: all 0.3s;
+        }
+
+        .game-cta:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        /* Color variations for games */
+        .game-challenges { border-left: 5px solid var(--primary-color); }
+        .game-challenges .game-cta { background: var(--primary-color); }
+
+        .game-roulette { border-left: 5px solid var(--purple-color); }
+        .game-roulette .game-cta { background: var(--purple-color); }
+
+        .game-bingo { border-left: 5px solid var(--success-color); }
+        .game-bingo .game-cta { background: var(--success-color); }
+
+        .game-madlibs { border-left: 5px solid var(--pink-color); }
+        .game-madlibs .game-cta { background: var(--pink-color); }
+
+        .game-quiz { border-left: 5px solid var(--blue-color); }
+        .game-quiz .game-cta { background: var(--blue-color); }
+
+        /* Leaderboard */
+        .leaderboard-section {
+            background: white;
+            border-radius: 25px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-radius: 15px;
+            background: var(--light-bg);
+            transition: all 0.3s;
+        }
+
+        .leaderboard-item:hover {
+            transform: translateX(10px);
+            background: linear-gradient(90deg, var(--light-bg), #FFE5D4);
+        }
+
+        .leaderboard-rank {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-right: 1rem;
+            min-width: 40px;
+        }
+
+        .leaderboard-user {
+            flex: 1;
+            font-weight: 600;
+        }
+
+        .leaderboard-score {
+            font-weight: 800;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+
+        /* Z2B Apps Navigation */
+        .z2b-apps {
+            background: linear-gradient(135deg, var(--dark-bg), #34495E);
+            border-radius: 25px;
+            padding: 2rem;
+            margin: 2rem 0;
+            color: white;
+        }
+
+        .app-link {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 0.75rem 0;
+            text-decoration: none;
+            color: white;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .app-link:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateX(10px);
+            color: white;
+        }
+
+        .app-icon {
+            font-size: 2rem;
+            margin-right: 1rem;
+        }
+
+        .app-info h4 {
+            margin: 0;
+            font-weight: 700;
+        }
+
+        .app-info p {
+            margin: 0;
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+
+        /* Modals */
+        .modal-content {
+            border-radius: 25px;
+            border: none;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 25px 25px 0 0;
+            border: none;
+        }
+
+        /* Buttons */
+        .btn-zyro {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 0.75rem 2rem;
+            font-weight: 700;
+            transition: all 0.3s;
+        }
+
+        .btn-zyro:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.3);
+            color: white;
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 107, 53, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .zyro-logo {
+                font-size: 2rem;
+            }
+
+            .game-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-card {
+                padding: 0.5rem;
+            }
+
+            .stat-value {
+                font-size: 1.4rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes bounceIn {
+            from {
+                opacity: 0;
+                transform: scale(0.3);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .animate-in {
+            animation: bounceIn 0.6s ease;
+        }
+
+        /* Badge Display */
+        .badge-display {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--accent-color), var(--success-color));
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: 700;
+            margin: 0.25rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Decorations -->
+    <div class="bg-decoration" style="top: 10%; left: 10%; font-size: 5rem;">🎮</div>
+    <div class="bg-decoration" style="top: 20%; right: 15%; font-size: 4rem; animation-delay: 1s;">🎯</div>
+    <div class="bg-decoration" style="bottom: 15%; left: 20%; font-size: 6rem; animation-delay: 2s;">💡</div>
+    <div class="bg-decoration" style="bottom: 25%; right: 10%; font-size: 5rem; animation-delay: 3s;">🔥</div>
+
+    <!-- Header -->
+    <header class="zyro-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="zyro-logo">🎲 ZYRO</div>
+                    <div class="zyro-tagline">Play. Fail. Hustle. Share. Repeat.</div>
+                </div>
+                <div class="col-md-6 text-end">
+                    <button class="btn btn-light me-2" onclick="openLeaderboard()">
+                        <i class="fas fa-trophy"></i> Leaderboard
+                    </button>
+                    <button class="btn btn-light" onclick="openProfile()">
+                        <i class="fas fa-user"></i> Profile
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container" style="position: relative; z-index: 1;">
+        <!-- User Stats -->
+        <div class="user-stats animate-in">
+            <div class="row">
+                <div class="col-md-2 col-6 stat-card">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-value" id="totalPoints">0</div>
+                    <div class="stat-label">Points</div>
+                </div>
+                <div class="col-md-2 col-6 stat-card">
+                    <div class="stat-icon" id="levelIcon">🐣</div>
+                    <div class="stat-value" id="levelName">Wannapreneur</div>
+                    <div class="stat-label">Level</div>
+                </div>
+                <div class="col-md-2 col-6 stat-card">
+                    <div class="stat-icon">🔥</div>
+                    <div class="stat-value" id="currentStreak">0</div>
+                    <div class="stat-label">Day Streak</div>
+                </div>
+                <div class="col-md-2 col-6 stat-card">
+                    <div class="stat-icon">🏆</div>
+                    <div class="stat-value" id="badgeCount">0</div>
+                    <div class="stat-label">Badges</div>
+                </div>
+                <div class="col-md-2 col-6 stat-card">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-value" id="challengesCompleted">0</div>
+                    <div class="stat-label">Challenges</div>
+                </div>
+                <div class="col-md-2 col-6 stat-card">
+                    <div class="stat-icon">📈</div>
+                    <div class="stat-value" id="userRank">#-</div>
+                    <div class="stat-label">Rank</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Cards -->
+        <h2 class="text-center mb-4" style="font-family: 'Comic Neue', cursive; font-size: 2.5rem; color: var(--dark-bg);">
+            Choose Your Game! 🎮
+        </h2>
+
+        <div class="game-grid">
+            <!-- Daily Hustle Challenges -->
+            <div class="game-card game-challenges animate-in" onclick="openGame('challenges')">
+                <span class="game-icon">🎯</span>
+                <h3 class="game-title">Daily Hustle Challenges</h3>
+                <p class="game-description">Complete fun daily tasks to build your entrepreneur habits!</p>
+                <a href="#" class="game-cta" onclick="event.preventDefault(); openGame('challenges')">
+                    Start Today's Challenge!
+                </a>
+            </div>
+
+            <!-- Idea Roulette -->
+            <div class="game-card game-roulette animate-in" style="animation-delay: 0.1s;" onclick="openGame('roulette')">
+                <span class="game-icon">🎲</span>
+                <h3 class="game-title">Idea Roulette</h3>
+                <p class="game-description">Spin for absurd (and sometimes brilliant) business ideas!</p>
+                <a href="#" class="game-cta" onclick="event.preventDefault(); openGame('roulette')">
+                    Spin the Wheel!
+                </a>
+            </div>
+
+            <!-- SideGig Bingo -->
+            <div class="game-card game-bingo animate-in" style="animation-delay: 0.2s;" onclick="openGame('bingo')">
+                <span class="game-icon">📋</span>
+                <h3 class="game-title">SideGig Bingo</h3>
+                <p class="game-description">Complete the 5x5 board of entrepreneurial tasks for massive points!</p>
+                <a href="#" class="game-cta" onclick="event.preventDefault(); openGame('bingo')">
+                    Play Bingo!
+                </a>
+            </div>
+
+            <!-- Hustle MadLibs -->
+            <div class="game-card game-madlibs animate-in" style="animation-delay: 0.3s;" onclick="openGame('madlibs')">
+                <span class="game-icon">🎭</span>
+                <h3 class="game-title">Hustle MadLibs</h3>
+                <p class="game-description">Fill in the blanks for hilarious business pitches!</p>
+                <a href="#" class="game-cta" onclick="event.preventDefault(); openGame('madlibs')">
+                    Create Pitch!
+                </a>
+            </div>
+
+            <!-- CEO or Minion Quiz -->
+            <div class="game-card game-quiz animate-in" style="animation-delay: 0.4s;" onclick="openGame('quiz')">
+                <span class="game-icon">🧠</span>
+                <h3 class="game-title">CEO or Minion Quiz</h3>
+                <p class="game-description">Discover your entrepreneur personality type!</p>
+                <a href="#" class="game-cta" onclick="event.preventDefault(); openGame('quiz')">
+                    Take Quiz!
+                </a>
+            </div>
+        </div>
+
+        <!-- Leaderboard Preview -->
+        <div class="leaderboard-section animate-in" style="animation-delay: 0.5s;">
+            <h2 class="mb-4" style="font-family: 'Comic Neue', cursive; color: var(--dark-bg);">
+                🏆 Top Hustlers
+            </h2>
+            <div id="leaderboardPreview">
+                <div class="text-center">
+                    <div class="loading"></div>
+                    <p class="mt-3">Loading leaderboard...</p>
+                </div>
+            </div>
+            <div class="text-center mt-4">
+                <button class="btn btn-zyro" onclick="openLeaderboard()">
+                    View Full Leaderboard
+                </button>
+            </div>
+        </div>
+
+        <!-- Z2B Apps -->
+        <div class="z2b-apps animate-in" style="animation-delay: 0.6s;">
+            <h2 class="mb-4" style="font-family: 'Comic Neue', cursive;">
+                🚀 Explore Z2B Ecosystem
+            </h2>
+            <p style="opacity: 0.9; margin-bottom: 2rem;">
+                Your complete suite of AI-powered tools to transform from employee to entrepreneur
+            </p>
+            <div class="row">
+                <!-- Row 1: Core Apps -->
+                <div class="col-md-6">
+                    <a href="dashboard.html" class="app-link">
+                        <div class="app-icon">📊</div>
+                        <div class="app-info">
+                            <h4>Dashboard - Command Center</h4>
+                            <p>Your central hub for tracking income, team, and performance</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-6">
+                    <a href="marketplace.html" class="app-link">
+                        <div class="app-icon">🛒</div>
+                        <div class="app-info">
+                            <h4>Marketplace - Buy & Sell</h4>
+                            <p>Universal marketplace for digital, physical & service products</p>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Row 2: AI Apps -->
+                <div class="col-md-6">
+                    <a href="zyra.html" class="app-link">
+                        <div class="app-icon">🤖</div>
+                        <div class="app-info">
+                            <h4>ZYRA - AI Sales Agent</h4>
+                            <p>24/7 lead capture, qualification & closing powered by AI</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-6">
+                    <a href="benown.html" class="app-link">
+                        <div class="app-icon">🎨</div>
+                        <div class="app-info">
+                            <h4>BENOWN - AI Content Creator</h4>
+                            <p>Generate viral social media content in seconds</p>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Row 3: Gamification & Growth -->
+                <div class="col-md-6">
+                    <a href="zyro.html" class="app-link" style="background: rgba(255, 107, 53, 0.2); border: 2px solid rgba(255, 107, 53, 0.5);">
+                        <div class="app-icon">🎲</div>
+                        <div class="app-info">
+                            <h4>ZYRO - Gamification Hub</h4>
+                            <p>Play. Fail. Hustle. Share. Repeat. (You are here!)</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-6">
+                    <a href="glowie.html" class="app-link">
+                        <div class="app-icon">✨</div>
+                        <div class="app-info">
+                            <h4>GLOWIE - Personal Brand Builder</h4>
+                            <p>Build your magnetic personal brand & authority</p>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Row 4: Mentorship & Training -->
+                <div class="col-md-6">
+                    <a href="coach-manlaw.html" class="app-link">
+                        <div class="app-icon">⚖️</div>
+                        <div class="app-info">
+                            <h4>Coach MANLAW - Mentor System</h4>
+                            <p>Access wisdom, training & mentorship from top leaders</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-6">
+                    <a href="income.html" class="app-link">
+                        <div class="app-icon">💰</div>
+                        <div class="app-info">
+                            <h4>Income Streams - Earnings Hub</h4>
+                            <p>Track all 6 income streams: ISP, QPB, TSC, TPB, TLI, CEO</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Premium Marketplace Product -->
+            <div style="margin-top: 2rem; padding: 2rem; background: rgba(255, 255, 255, 0.1); border-radius: 15px; border: 2px solid rgba(0, 255, 240, 0.3);">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h3 style="margin: 0 0 0.5rem 0; color: #00FFF0; font-family: 'Comic Neue', cursive;">
+                            <i class="fas fa-rocket"></i> Zyroniq - Enterprise MLM Platform
+                        </h3>
+                        <p style="margin: 0; opacity: 0.9; font-size: 0.95rem;">
+                            White-label network marketing platform with 6 income calculators, 10-generation tracking & futuristic UI.
+                            Perfect for launching your own MLM business or selling to companies at R21,500/month!
+                        </p>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <a href="../marketplace/products/zyroniq/index.html" class="btn" style="background: linear-gradient(135deg, #00FFF0, #6C63FF); color: white; padding: 1rem 2rem; border-radius: 50px; font-weight: 700; text-decoration: none; display: inline-block;">
+                            <i class="fas fa-store"></i> View Product
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ecosystem Stats -->
+            <div style="margin-top: 2rem; text-align: center;">
+                <div class="row">
+                    <div class="col-md-3 col-6 mb-3">
+                        <div style="font-size: 2rem; font-weight: 800; color: #00FFF0;">10+</div>
+                        <div style="opacity: 0.8; font-size: 0.9rem;">Apps & Tools</div>
+                    </div>
+                    <div class="col-md-3 col-6 mb-3">
+                        <div style="font-size: 2rem; font-weight: 800; color: #00FFF0;">6</div>
+                        <div style="opacity: 0.8; font-size: 0.9rem;">Income Streams</div>
+                    </div>
+                    <div class="col-md-3 col-6 mb-3">
+                        <div style="font-size: 2rem; font-weight: 800; color: #00FFF0;">24/7</div>
+                        <div style="opacity: 0.8; font-size: 0.9rem;">AI Automation</div>
+                    </div>
+                    <div class="col-md-3 col-6 mb-3">
+                        <div style="font-size: 2rem; font-weight: 800; color: #00FFF0;">∞</div>
+                        <div style="opacity: 0.8; font-size: 0.9rem;">Growth Potential</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center py-5" style="color: #666;">
+        <p style="font-weight: 600;">Built with ❤️ for the Z2B Community</p>
+        <p style="font-size: 0.9rem;">"From Employee to Entrepreneur - Gamified."</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- ZYRO Configuration -->
+    <script src="zyro-config.js"></script>
+
+    <!-- ZYRO Game Engines -->
+    <script src="zyro-daily-challenges.js"></script>
+    <script src="zyro-idea-roulette.js"></script>
+    <script src="zyro-bingo.js"></script>
+    <script src="zyro-madlibs.js"></script>
+    <script src="zyro-quiz.js"></script>
+    <script src="zyro-social-sharing.js"></script>
+    <script src="zyro-leaderboards.js"></script>
+    <script src="zyro-z2b-integration.js"></script>
+
+    <!-- Main App Script -->
+    <script>
+        // Initialize ZYRO
+        const currentUserId = 'user_' + Date.now(); // In production, get from auth
+
+        let dailyChallenges;
+        let ideaRoulette;
+        let sideGigBingo;
+        let hustleMadLibs;
+        let quizEngine;
+        let socialSharing;
+        let leaderboards;
+        let z2bIntegration;
+
+        // Initialize on page load
+        window.addEventListener('DOMContentLoaded', async () => {
+            try {
+                // Initialize all game engines
+                dailyChallenges = new ZyroDailyChallenges(ZYRO_CONFIG);
+                await dailyChallenges.initialize(currentUserId);
+
+                ideaRoulette = new ZyroIdeaRoulette(ZYRO_CONFIG);
+                ideaRoulette.initialize();
+
+                sideGigBingo = new ZyroSideGigBingo(ZYRO_CONFIG, awardPoints);
+                sideGigBingo.initialize();
+
+                hustleMadLibs = new ZyroHustleMadLibs(ZYRO_CONFIG, awardPoints);
+                hustleMadLibs.initialize();
+
+                quizEngine = new ZyroQuizEngine(ZYRO_CONFIG, awardPoints);
+                quizEngine.initialize();
+
+                socialSharing = new ZyroSocialSharing(ZYRO_CONFIG, awardPoints);
+                socialSharing.initialize();
+
+                leaderboards = new ZyroLeaderboards(ZYRO_CONFIG);
+
+                z2bIntegration = new ZyroZ2BIntegration(ZYRO_CONFIG);
+                await z2bIntegration.initialize(currentUserId);
+
+                // Update UI with user stats
+                updateDashboard();
+
+                // Load leaderboard preview
+                loadLeaderboardPreview();
+
+            } catch (error) {
+                console.error('Initialization error:', error);
+            }
+        });
+
+        // Award points callback
+        function awardPoints(points, reason) {
+            console.log(`Awarded ${points} points for: ${reason}`);
+            updateDashboard();
+        }
+
+        // Update dashboard with user stats
+        function updateDashboard() {
+            const stats = dailyChallenges.getStatistics();
+
+            document.getElementById('totalPoints').textContent = stats.totalPoints.toLocaleString();
+            document.getElementById('levelIcon').textContent = stats.levelIcon;
+            document.getElementById('levelName').textContent = stats.level;
+            document.getElementById('currentStreak').textContent = stats.currentStreak;
+            document.getElementById('badgeCount').textContent = stats.badgeCount;
+            document.getElementById('challengesCompleted').textContent = stats.totalChallenges;
+
+            // Update leaderboard with current user stats
+            if (leaderboards) {
+                leaderboards.updateUserStats(stats);
+                const rank = leaderboards.getUserRank('global');
+                document.getElementById('userRank').textContent = rank.rank ? `#${rank.rank}` : '#-';
+            }
+        }
+
+        // Load leaderboard preview
+        async function loadLeaderboardPreview() {
+            try {
+                await leaderboards.initialize(currentUserId, dailyChallenges.getStatistics());
+                const topPlayers = leaderboards.getTopPlayers('global', 5);
+
+                const preview = document.getElementById('leaderboardPreview');
+                preview.innerHTML = '';
+
+                topPlayers.forEach((player, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'leaderboard-item';
+                    item.innerHTML = `
+                        <div class="leaderboard-rank">${player.rankBadge}</div>
+                        <div class="leaderboard-user">
+                            ${player.levelIcon} ${player.displayName}
+                        </div>
+                        <div class="leaderboard-score">${player.totalPoints} pts</div>
+                    `;
+                    preview.appendChild(item);
+                });
+
+                if (topPlayers.length === 0) {
+                    preview.innerHTML = '<p class="text-center text-muted">Be the first on the leaderboard!</p>';
+                }
+
+            } catch (error) {
+                console.error('Leaderboard error:', error);
+                document.getElementById('leaderboardPreview').innerHTML =
+                    '<p class="text-center text-muted">Leaderboard coming soon!</p>';
+            }
+        }
+
+        // Open game (redirect to game page - to be built)
+        function openGame(gameType) {
+            const messages = {
+                challenges: 'Daily Challenges game opening...',
+                roulette: 'Idea Roulette spinning up...',
+                bingo: 'SideGig Bingo loading...',
+                madlibs: 'Hustle MadLibs ready...',
+                quiz: 'CEO or Minion Quiz starting...'
+            };
+
+            alert(messages[gameType] + '\n\n(Game interface coming in next update!)');
+
+            // In production, redirect to game page:
+            // window.location.href = `zyro-${gameType}.html`;
+        }
+
+        // Open leaderboard modal
+        function openLeaderboard() {
+            alert('Full leaderboard interface coming soon!\n\nFor now, check the preview below.');
+        }
+
+        // Open user profile
+        function openProfile() {
+            const stats = dailyChallenges.getStatistics();
+            const rank = leaderboards.getUserRank('global');
+
+            alert(`🎮 Your ZYRO Profile\n\n` +
+                  `💰 Points: ${stats.totalPoints}\n` +
+                  `${stats.levelIcon} Level: ${stats.level}\n` +
+                  `🔥 Streak: ${stats.currentStreak} days\n` +
+                  `🏆 Badges: ${stats.badgeCount}\n` +
+                  `📈 Rank: ${rank.rank ? '#' + rank.rank : 'Unranked'}\n` +
+                  `🎯 Challenges: ${stats.totalChallenges}\n\n` +
+                  `Keep hustling! 💪`);
+        }
+    </script>
+
+    <!-- Z2B Ecosystem Integration -->
+    <script src="../js/app-config.js"></script>
+    <script src="../js/ecosystem-footer.js"></script>
+</body>
+</html>

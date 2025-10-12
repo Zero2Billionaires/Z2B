@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Income Streams - Z2B Legacy Builders</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        :root {
+            --navy-blue: #0A2647;
+            --gold: #FFD700;
+            --orange: #FF6B35;
+            --light-gold: #FFF4CC;
+            --dark-navy: #051428;
+            --white: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to bottom, var(--navy-blue), var(--dark-navy));
+            color: var(--white);
+            min-height: 100vh;
+            padding: 2rem 0 4rem;
+        }
+
+        .back-btn {
+            color: var(--gold);
+            font-size: 1.1rem;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-block;
+            margin-bottom: 2rem;
+        }
+
+        .back-btn:hover {
+            color: var(--orange);
+            transform: translateX(-5px);
+        }
+
+        .header-section {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .header-section h1 {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: var(--gold);
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .header-section p {
+            font-size: 1.3rem;
+            color: var(--white);
+            opacity: 0.9;
+        }
+
+        .income-streams-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 4rem;
+        }
+
+        .income-stream-card {
+            background: var(--white);
+            border-radius: 25px;
+            padding: 2.5rem;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .income-stream-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.1), transparent);
+            transition: all 0.6s;
+        }
+
+        .income-stream-card:hover::before {
+            top: -60%;
+            right: -60%;
+        }
+
+        .income-stream-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.5);
+        }
+
+        .stream-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .stream-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--stream-color), var(--orange));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1.5rem;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .stream-icon i {
+            font-size: 2.5rem;
+            color: var(--white);
+        }
+
+        .stream-title-section {
+            flex: 1;
+        }
+
+        .stream-abbr {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--navy-blue);
+            margin-bottom: 0.3rem;
+        }
+
+        .stream-name {
+            font-size: 0.85rem;
+            color: var(--dark-navy);
+            opacity: 0.7;
+            font-weight: 500;
+        }
+
+        .stream-description {
+            color: var(--dark-navy);
+            font-size: 1.1rem;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .stream-earning-potential {
+            background: linear-gradient(135deg, var(--navy-blue), var(--dark-navy));
+            padding: 1.2rem;
+            border-radius: 15px;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .earning-label {
+            color: var(--gold);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .earning-amount {
+            color: var(--white);
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        .stream-details {
+            position: relative;
+            z-index: 2;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            padding: 0.7rem 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            color: var(--dark-navy);
+        }
+
+        .detail-item i {
+            color: var(--stream-color);
+            margin-right: 12px;
+            font-size: 1.2rem;
+        }
+
+        /* Individual Stream Colors */
+        .isp { --stream-color: #FF6B35; }
+        .qpb { --stream-color: #FFD700; }
+        .tsc { --stream-color: #0A2647; }
+        .tpb { --stream-color: #FF8C42; }
+        .tli { --stream-color: #B87333; }
+        .ceo { --stream-color: #C0C0C0; }
+
+        /* Calculator Section */
+        .calculator-section {
+            background: var(--white);
+            border-radius: 25px;
+            padding: 3rem;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
+            margin-top: 3rem;
+        }
+
+        .calculator-section h2 {
+            color: var(--navy-blue);
+            font-weight: bold;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .calculator-input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .calculator-input-group label {
+            color: var(--navy-blue);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .calculator-input-group input,
+        .calculator-input-group select {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--light-gold);
+            border-radius: 10px;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+
+        .calculator-input-group input:focus,
+        .calculator-input-group select:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        .btn-calculate {
+            width: 100%;
+            padding: 1.2rem;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(135deg, var(--gold), var(--orange));
+            color: var(--navy-blue);
+            font-weight: bold;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+            margin-top: 1rem;
+        }
+
+        .btn-calculate:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
+        }
+
+        .results-panel {
+            background: linear-gradient(135deg, var(--navy-blue), var(--dark-navy));
+            padding: 2rem;
+            border-radius: 20px;
+            margin-top: 2rem;
+            display: none;
+        }
+
+        .results-panel.show {
+            display: block;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+            padding-top: 1.5rem;
+            margin-top: 1rem;
+            border-top: 2px solid var(--gold);
+        }
+
+        .result-label {
+            color: var(--white);
+            font-size: 1.1rem;
+        }
+
+        .result-value {
+            color: var(--gold);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .total-label {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--gold);
+        }
+
+        .total-value {
+            font-size: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .header-section h1 {
+                font-size: 2.5rem;
+            }
+
+            .income-streams-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="dashboard.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+
+        <div class="header-section" data-aos="fade-down">
+            <div style="background: linear-gradient(135deg, var(--gold), var(--orange)); color: var(--navy-blue); padding: 0.6rem 1.5rem; border-radius: 50px; display: inline-block; margin-bottom: 1.5rem; font-weight: bold; font-size: 0.95rem;">
+                <i class="fas fa-rocket"></i> Transforming Employees to Entrepreneurs
+            </div>
+            <h1><i class="fas fa-chart-line"></i> Income Streams</h1>
+            <p class="lead" style="color: var(--gold); font-weight: 600; margin-bottom: 0.5rem;">Multiple ways to build your billion-dollar legacy</p>
+            <p>Discover 6 revolutionary income streams designed for your financial freedom</p>
+        </div>
+
+        <div class="income-streams-grid">
+            <!-- ISP Stream -->
+            <div class="income-stream-card isp" data-aos="zoom-in" data-aos-delay="100">
+                <div class="stream-header">
+                    <div class="stream-icon">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <div class="stream-title-section">
+                        <div class="stream-abbr">ISP</div>
+                        <div class="stream-name">Individual Sales Profit</div>
+                    </div>
+                </div>
+                <p class="stream-description">
+                    Earn commission when you sell Z2B and members' digital products, physical products and services or invite new legacy builders to join our movement. Your direct sales commission ranges from 20% to 40% based on your membership tier.
+                </p>
+                <div class="stream-earning-potential">
+                    <div class="earning-label">Earning Potential</div>
+                    <div class="earning-amount">20% - 40%</div>
+                    <div style="color: var(--gold); font-size: 0.85rem; margin-top: 0.3rem; font-weight: 600;">💰 Paid Monthly</div>
+                </div>
+                <div class="stream-details">
+                    <div class="detail-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Instant commission on invited builders</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Higher tiers earn higher %</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Unlimited earning potential</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- QPB Stream -->
+            <div class="income-stream-card qpb" data-aos="zoom-in" data-aos-delay="200">
+                <div class="stream-header">
+                    <div class="stream-icon">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <div class="stream-title-section">
+                        <div class="stream-abbr">QPB</div>
+                        <div class="stream-name">Quick Pathfinder Bonus</div>
+                    </div>
+                </div>
+                <p class="stream-description">
+                    Fast-start bonus designed to reward immediate action. Earn 7.5% on your first 3 invited builders, then 10% on each subsequent set of 3.
+                </p>
+                <div class="stream-earning-potential">
+                    <div class="earning-label">Earning Potential</div>
+                    <div class="earning-amount">7.5% - 10%</div>
+                    <div style="color: var(--gold); font-size: 0.85rem; margin-top: 0.3rem; font-weight: 600;">💰 Paid Monthly</div>
+                </div>
+                <div class="stream-details">
+                    <div class="detail-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>7.5% on first 3 invited builders</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>10% on subsequent sets</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Rewards momentum building</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TSC Stream -->
+            <div class="income-stream-card tsc" data-aos="zoom-in" data-aos-delay="300">
+                <div class="stream-header">
+                    <div class="stream-icon">
+                        <i class="fas fa-sitemap"></i>
+                    </div>
+                    <div class="stream-title-section">
+                        <div class="stream-abbr">TSC</div>
+                        <div class="stream-name">Team Sales Commission</div>
+                    </div>
+                </div>
+                <p class="stream-description">
+                    Passive income from your entire team structure. Earn from up to 10 generations deep with our revolutionary commission breakdown.
+                </p>
+                <div class="stream-earning-potential">
+                    <div class="earning-label">Earning Potential</div>
+                    <div class="earning-amount">Up to 10 Levels</div>
+                    <div style="color: var(--gold); font-size: 0.85rem; margin-top: 0.3rem; font-weight: 600;">💰 Paid Monthly</div>
+                </div>
+                <div class="stream-details">
+                    <div class="detail-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>G1: 10% | G2: 5% | G3: 3%</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>G4: 2% | G5-G10: 1% each</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>True residual income</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TPB Stream -->
+            <div class="income-stream-card tpb" data-aos="zoom-in" data-aos-delay="400">
+                <div class="stream-header">
+                    <div class="stream-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="stream-title-section">
+                        <div class="stream-abbr">TPB</div>
+                        <div class="stream-name">Team Performance Bonus</div>
+                    </div>
+                </div>
+                <p class="stream-description">
+                    Quarterly bonus for active team building. Qualify by having 2 or more active legacy builders in your team each month.
+                </p>
+                <div class="stream-earning-potential">
+                    <div class="earning-label">Earning Potential</div>
+                    <div class="earning-amount">Up to 10% subject to your Tier</div>
+                    <div style="color: var(--orange); font-size: 0.85rem; margin-top: 0.3rem; font-weight: 600;">📅 Paid Quarterly</div>
+                </div>
+                <div class="stream-details">
+                    <div class="detail-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Requires 2+ active builders</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Monthly recurring bonus</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Team growth incentive</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TLI Stream -->
+            <div class="income-stream-card tli" data-aos="zoom-in" data-aos-delay="500">
+                <div class="stream-header">
+                    <div class="stream-icon">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    <div class="stream-title-section">
+                        <div class="stream-abbr">TLI</div>
+                        <div class="stream-name">Team Leadership Incentive</div>
+                    </div>
+                </div>
+                <p class="stream-description">
+                    <strong>Updated Jan 2026:</strong> Elite quarterly recognition for Silver+ tiers. 10 achievement levels from R2,500 to R5,000,000 based on consistent team performance, leadership development, and tier qualification. Pool: 10% of Total Member TeamPV.
+                </p>
+                <div class="stream-earning-potential">
+                    <div class="earning-label">Earning Potential</div>
+                    <div class="earning-amount">R2.5K - R5M</div>
+                    <div style="color: var(--orange); font-size: 0.85rem; margin-top: 0.3rem; font-weight: 600;">📅 Paid Quarterly (CEO Approved)</div>
+                </div>
+                <div class="stream-details">
+                    <div class="detail-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>10% quarterly pool from Total TeamPV</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Silver-tier minimum (upgrade required)</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>600 PV monthly × 3 consecutive months</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Monthly TeamPV: 500-200K based on level</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>2-3 TLI-qualified leaders required (Level 4+)</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Silver: Up to L6 | Gold: Up to L8 | Platinum: All 10</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-info-circle"></i>
+                        <span style="font-size: 0.85rem; opacity: 0.8;">Conference announced 3 months in advance</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CEO Awards Stream -->
+            <div class="income-stream-card ceo" data-aos="zoom-in" data-aos-delay="600">
+                <div class="stream-header">
+                    <div class="stream-icon">
+                        <i class="fas fa-award"></i>
+                    </div>
+                    <div class="stream-title-section">
+                        <div class="stream-abbr">CEO</div>
+                        <div class="stream-name">CEO Awards & Competitions</div>
+                    </div>
+                </div>
+                <p class="stream-description">
+                    Special competitions and bonuses throughout the year. Luxury trips, cash bonuses, and exclusive recognition for top performers.
+                </p>
+                <div class="stream-earning-potential">
+                    <div class="earning-label">Earning Potential</div>
+                    <div class="earning-amount">Variable</div>
+                    <div style="color: var(--orange); font-size: 0.85rem; margin-top: 0.3rem; font-weight: 600;">📅 Paid Quarterly</div>
+                </div>
+                <div class="stream-details">
+                    <div class="detail-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Quarterly competitions</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Luxury incentive trips</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Special recognition awards</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Income Calculator -->
+        <div class="calculator-section" data-aos="fade-up">
+            <h2><i class="fas fa-calculator"></i> Income Calculator</h2>
+            <p style="text-align: center; color: var(--dark-navy); margin-bottom: 2rem;">
+                Calculate your potential monthly earnings based on your goals
+            </p>
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="calculator-input-group">
+                        <label>Your Membership Tier</label>
+                        <select id="tierSelect">
+                            <option value="25">Bronze (25% ISP)</option>
+                            <option value="28">Copper (28% ISP)</option>
+                            <option value="30">Silver (30% ISP)</option>
+                            <option value="35" selected>Gold (35% ISP)</option>
+                            <option value="40">Platinum (40% ISP)</option>
+                            <option value="50">Diamond (50% ISP)</option>
+                        </select>
+                    </div>
+
+                    <div class="calculator-input-group">
+                        <label>Personal Invites Per Month</label>
+                        <input type="number" id="personalRecruits" value="5" min="0">
+                    </div>
+
+                    <div class="calculator-input-group">
+                        <label>Average Builder Tier (R)</label>
+                        <input type="number" id="avgTierPrice" value="2980" min="480">
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="calculator-input-group">
+                        <label>Team Size</label>
+                        <input type="number" id="teamSize" value="50" min="0">
+                    </div>
+
+                    <div class="calculator-input-group">
+                        <label>Team Monthly Sales Volume (R)</label>
+                        <input type="number" id="teamSales" value="25000" min="0">
+                    </div>
+
+                    <div class="calculator-input-group">
+                        <label>Active Builders in Team</label>
+                        <input type="number" id="activeBuilders" value="10" min="0">
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn-calculate" onclick="calculateIncome()">
+                <i class="fas fa-chart-line"></i> Calculate My Potential Income
+            </button>
+
+            <div class="results-panel" id="resultsPanel">
+                <div class="result-item">
+                    <span class="result-label">ISP (Personal Sales):</span>
+                    <span class="result-value" id="ispResult">R 0</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">QPB (Quick Pathfinder):</span>
+                    <span class="result-value" id="qpbResult">R 0</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">TSC (Team Commissions):</span>
+                    <span class="result-value" id="tscResult">R 0</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">TPB (Performance Bonus):</span>
+                    <span class="result-value" id="tpbResult">R 0</span>
+                </div>
+                <div class="result-item">
+                    <span class="total-label">TOTAL MONTHLY INCOME:</span>
+                    <span class="result-value total-value" id="totalResult">R 0</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true
+        });
+
+        function calculateIncome() {
+            // Get input values
+            const ispPercentage = parseInt(document.getElementById('tierSelect').value);
+            const personalRecruits = parseInt(document.getElementById('personalRecruits').value);
+            const avgTierPrice = parseInt(document.getElementById('avgTierPrice').value);
+            const teamSize = parseInt(document.getElementById('teamSize').value);
+            const teamSales = parseInt(document.getElementById('teamSales').value);
+            const activeBuilders = parseInt(document.getElementById('activeBuilders').value);
+
+            // Calculate ISP
+            const isp = (personalRecruits * avgTierPrice * ispPercentage) / 100;
+
+            // Calculate QPB (simplified - first 3 at 7.5%, rest at 10%)
+            let qpb = 0;
+            if (personalRecruits <= 3) {
+                qpb = (personalRecruits * avgTierPrice * 7.5) / 100;
+            } else {
+                qpb = (3 * avgTierPrice * 7.5) / 100 + ((personalRecruits - 3) * avgTierPrice * 10) / 100;
+            }
+
+            // Calculate TSC (simplified - average 3% of team sales)
+            const tsc = teamSales * 0.03;
+
+            // Calculate TPB (bonus if 2+ active builders)
+            const tpb = activeBuilders >= 2 ? 1500 : 0;
+
+            // Total
+            const total = isp + qpb + tsc + tpb;
+
+            // Display results
+            document.getElementById('ispResult').textContent = `R ${isp.toLocaleString('en-ZA', {maximumFractionDigits: 0})}`;
+            document.getElementById('qpbResult').textContent = `R ${qpb.toLocaleString('en-ZA', {maximumFractionDigits: 0})}`;
+            document.getElementById('tscResult').textContent = `R ${tsc.toLocaleString('en-ZA', {maximumFractionDigits: 0})}`;
+            document.getElementById('tpbResult').textContent = `R ${tpb.toLocaleString('en-ZA', {maximumFractionDigits: 0})}`;
+            document.getElementById('totalResult').textContent = `R ${total.toLocaleString('en-ZA', {maximumFractionDigits: 0})}`;
+
+            // Show results panel
+            document.getElementById('resultsPanel').classList.add('show');
+        }
+    </script>
+
+    <!-- Z2B Ecosystem Integration -->
+    <script src="../js/app-config.js"></script>
+    <script src="../js/ecosystem-footer.js"></script>
+</body>
+</html>

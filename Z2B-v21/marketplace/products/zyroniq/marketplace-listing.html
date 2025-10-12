@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zyroniq - Marketplace Listing</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --electric-cyan: #00FFF0;
+            --deep-space-black: #0C0C1C;
+            --quantum-purple: #6C63FF;
+            --neon-silver: #C0C0C0;
+            --success: #00FF88;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        .product-card {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0C0C1C, #1a1a2e);
+            border: 3px solid var(--electric-cyan);
+            border-radius: 20px;
+            overflow: hidden;
+            max-width: 900px;
+            margin: 2rem auto;
+            box-shadow: 0 20px 60px rgba(0, 255, 240, 0.4);
+        }
+
+        .product-header {
+            background: linear-gradient(135deg, rgba(0, 255, 240, 0.2), rgba(108, 99, 255, 0.2));
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 2px solid var(--electric-cyan);
+        }
+
+        .product-badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background: rgba(0, 255, 136, 0.2);
+            border: 2px solid var(--success);
+            border-radius: 50px;
+            color: var(--success);
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .product-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--electric-cyan), var(--quantum-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-tagline {
+            color: var(--neon-silver);
+            font-size: 1.1rem;
+            font-style: italic;
+        }
+
+        .product-body {
+            padding: 2rem;
+            color: var(--neon-silver);
+        }
+
+        .product-description {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .feature-item {
+            background: rgba(0, 255, 240, 0.1);
+            border: 2px solid rgba(0, 255, 240, 0.3);
+            border-radius: 10px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .feature-item i {
+            font-size: 1.5rem;
+            color: var(--electric-cyan);
+        }
+
+        .pricing-section {
+            background: rgba(12, 12, 28, 0.8);
+            border: 2px solid var(--quantum-purple);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .price {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: var(--electric-cyan);
+            margin-bottom: 0.5rem;
+        }
+
+        .price-period {
+            color: var(--neon-silver);
+            font-size: 1.2rem;
+        }
+
+        .value-prop {
+            background: rgba(108, 99, 255, 0.2);
+            border: 2px solid var(--quantum-purple);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .value-prop h3 {
+            color: var(--quantum-purple);
+            font-family: 'Orbitron', sans-serif;
+            margin-bottom: 1rem;
+        }
+
+        .value-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .value-list li {
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .value-list li i {
+            color: var(--success);
+        }
+
+        .btn-purchase {
+            width: 100%;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, var(--electric-cyan), var(--quantum-purple));
+            color: var(--deep-space-black);
+            border: none;
+            border-radius: 50px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 900;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            box-shadow: 0 10px 30px rgba(0, 255, 240, 0.4);
+        }
+
+        .btn-purchase:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(0, 255, 240, 0.6);
+        }
+
+        .product-footer {
+            background: rgba(12, 12, 28, 0.8);
+            padding: 1.5rem;
+            text-align: center;
+            border-top: 2px solid rgba(0, 255, 240, 0.2);
+            color: var(--neon-silver);
+            font-size: 0.9rem;
+        }
+
+        .testimonial {
+            background: rgba(0, 255, 136, 0.1);
+            border-left: 4px solid var(--success);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 10px;
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+
+        .testimonial-author {
+            font-weight: 600;
+            color: var(--electric-cyan);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            color: var(--electric-cyan);
+            font-weight: 900;
+        }
+
+        .stat-label {
+            color: var(--neon-silver);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body style="background: #0A1628; padding: 2rem;">
+    <div class="product-card">
+        <!-- Header -->
+        <div class="product-header">
+            <div class="product-badge">
+                <i class="fas fa-star"></i> FEATURED PRODUCT
+            </div>
+            <h1 class="product-title">🚀 ZYRONIQ</h1>
+            <p class="product-tagline">"Intelligence that Calculates Your Legacy"</p>
+        </div>
+
+        <!-- Body -->
+        <div class="product-body">
+            <p class="product-description">
+                The <strong>Futuristic Pay Intelligence Engine</strong> — A complete, white-labelable network marketing platform
+                designed for MLM companies to deploy under their own brand. Built on the proven Z2B Legacy Builders framework,
+                Zyroniq offers 6 income stream calculators, 10-generation tracking, and real-time earnings intelligence.
+            </p>
+
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-value">∞</div>
+                    <div class="stat-label">Members Supported</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">6</div>
+                    <div class="stat-label">Income Streams</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">10</div>
+                    <div class="stat-label">Generation Tracking</div>
+                </div>
+            </div>
+
+            <!-- Features -->
+            <h3 style="font-family: 'Orbitron', sans-serif; color: var(--electric-cyan); margin-bottom: 1rem;">
+                🎯 Core Features
+            </h3>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <i class="fas fa-brain"></i>
+                    <span>Real-Time Earnings</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-sitemap"></i>
+                    <span>Genealogy Tree</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Performance Analytics</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-palette"></i>
+                    <span>100% White-Label</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-trophy"></i>
+                    <span>TLI Recognition</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Enterprise Security</span>
+                </div>
+            </div>
+
+            <!-- Value Proposition -->
+            <div class="value-prop">
+                <h3><i class="fas fa-gift"></i> What's Included</h3>
+                <ul class="value-list">
+                    <li><i class="fas fa-check-circle"></i> Unlimited Members Support</li>
+                    <li><i class="fas fa-check-circle"></i> Complete White-Label Rights</li>
+                    <li><i class="fas fa-check-circle"></i> Custom Branding & Logo Upload</li>
+                    <li><i class="fas fa-check-circle"></i> 6 Income Stream Calculators (ISP, QPB, TSC, TPB, TLI, CEO)</li>
+                    <li><i class="fas fa-check-circle"></i> Configurable Commission Plans</li>
+                    <li><i class="fas fa-check-circle"></i> 10-Level TLI Recognition System</li>
+                    <li><i class="fas fa-check-circle"></i> Real-Time Dashboard & Analytics</li>
+                    <li><i class="fas fa-check-circle"></i> Member Portal + Admin Panel</li>
+                    <li><i class="fas fa-check-circle"></i> API Access & Webhooks</li>
+                    <li><i class="fas fa-check-circle"></i> Priority Email & Chat Support</li>
+                    <li><i class="fas fa-check-circle"></i> Lifetime Platform Updates</li>
+                    <li><i class="fas fa-check-circle"></i> Deployment Assistance</li>
+                </ul>
+            </div>
+
+            <!-- Testimonial -->
+            <div class="testimonial">
+                <p class="testimonial-text">
+                    "Zyroniq saved us R500,000 in development costs and 8 months of build time. We had our white-labeled
+                    platform live in just 3 days. The commission calculator is spot-on and the futuristic UI impresses our members!"
+                </p>
+                <p class="testimonial-author">— Network Marketing CEO, South Africa</p>
+            </div>
+
+            <!-- Pricing -->
+            <div class="pricing-section">
+                <h3 style="font-family: 'Orbitron', sans-serif; color: var(--quantum-purple); margin-bottom: 1rem;">
+                    White-Label License
+                </h3>
+                <div class="price">R19,980<span class="price-period">/month</span></div>
+                <p style="color: var(--success); margin-top: 1rem; font-weight: 600;">
+                    <i class="fas fa-badge-check"></i> Enterprise Solution | Cancel Anytime
+                </p>
+                <p style="color: var(--neon-silver); margin-top: 0.5rem; font-size: 0.9rem;">
+                    Estimated ROI: Save R500K+ in development costs
+                </p>
+            </div>
+
+            <!-- Purchase Button -->
+            <button class="btn-purchase" onclick="purchaseZyroniq()">
+                <i class="fas fa-shopping-cart"></i> Purchase License Now
+            </button>
+
+            <!-- Additional Info -->
+            <div style="text-align: center; margin-top: 2rem; padding: 1.5rem; background: rgba(108, 99, 255, 0.1); border-radius: 10px;">
+                <h4 style="color: var(--quantum-purple); margin-bottom: 1rem;">💡 Perfect For:</h4>
+                <p style="color: var(--neon-silver); line-height: 1.8;">
+                    ✓ Network Marketing Companies<br>
+                    ✓ MLM Startups<br>
+                    ✓ Direct Sales Organizations<br>
+                    ✓ Entrepreneurs Launching MLM Ventures<br>
+                    ✓ Existing Companies Needing System Upgrades
+                </p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="product-footer">
+            <p><strong>Developer:</strong> Z2B Legacy Builders</p>
+            <p style="margin-top: 0.5rem;">
+                <i class="fas fa-envelope"></i> sales@z2blegacybuilders.co.za |
+                <i class="fas fa-globe"></i> zyroniq.com |
+                <i class="fas fa="fas fa-question-circle"></i> Full support included
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function purchaseZyroniq() {
+            // In production, this would redirect to checkout or open payment modal
+            if (confirm('🚀 Ready to launch your white-labeled Zyroniq platform?\n\nPrice: R19,980/month\n\nClick OK to proceed to checkout.')) {
+                // Redirect to purchase flow
+                alert('🎉 Redirecting to secure checkout...\n\nYou will receive:\n✅ Instant license key\n✅ Download link\n✅ Setup instructions\n✅ Priority support access');
+                // window.location.href = '/marketplace/checkout?product=zyroniq';
+            }
+        }
+    </script>
+</body>
+</html>
