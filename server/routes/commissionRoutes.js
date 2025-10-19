@@ -39,6 +39,15 @@ const commissionRates = {
     platinum: 4980,
     diamond: 11980  // White-label tier: R11,980/month + 7.5% royalties
   },
+  tierPV: {
+    fam: 0,        // R0 / 20 = 0 PV
+    bronze: 24,    // R480 / 20 = 24 PV
+    copper: 50,    // R999 / 20 = 49.95 ≈ 50 PV
+    silver: 74,    // R1480 / 20 = 74 PV
+    gold: 149,     // R2980 / 20 = 149 PV
+    platinum: 249, // R4980 / 20 = 249 PV
+    diamond: 599   // R11980 / 20 = 599 PV (members who generate Diamond sales get credited)
+  },
   diamondRules: {
     // Diamond tier is WHITE-LABEL - they don't earn from network
     whiteLabel: true,
@@ -72,6 +81,12 @@ const getEffectiveEarningTier = (member) => {
 
   // Otherwise return actual tier (lowercase for consistency)
   return member.tier?.toLowerCase() || 'fam'
+}
+
+// Helper function: Get PV for a tier
+const getPVForTier = (tier) => {
+  const tierLower = tier?.toLowerCase() || 'fam'
+  return commissionRates.tierPV[tierLower] || 0
 }
 
 // Helper function: Calculate ISP commission
@@ -217,6 +232,67 @@ router.post('/calculate', (req, res) => {
     details,
     isDiamond: member.tier === 'Diamond' || member.tier === 'diamond'
   })
+})
+
+// New endpoint: Get PV for a tier
+router.get('/pv/:tier', (req, res) => {
+  const tier = req.params.tier
+  const pv = getPVForTier(tier)
+  const price = commissionRates.tierPrices[tier.toLowerCase()] || 0
+
+  res.json({
+    tier,
+    price,
+    pv,
+    formula: 'PV = Price ÷ 20 (rounded to nearest unit)'
+  })
+})
+
+// New endpoint: Get all tier PV values
+router.get('/pv', (req, res) => {
+  const allTierPV = Object.keys(commissionRates.tierPV).map(tier => ({
+    tier,
+    price: commissionRates.tierPrices[tier],
+    pv: commissionRates.tierPV[tier]
+  }))
+
+  res.json({
+    formula: 'PV = Price ÷ 20 (rounded to nearest unit)',
+    tiers: allTierPV
+  })
+})
+
+// New endpoint: Allocate PV for a sale (including Diamond sales)
+router.post('/allocate-pv', async (req, res) => {
+  const { memberId, tierSold } = req.body
+
+  try {
+    const Member = (await import('../models/Member.js')).default
+    const member = await Member.findById(memberId)
+
+    if (!member) {
+      return res.status(404).json({ error: 'Member not found' })
+    }
+
+    // Get PV for the tier sold (works for all tiers including Diamond)
+    const pvToAllocate = getPVForTier(tierSold)
+
+    // Add PV to member's account
+    member.pv = (member.pv || 0) + pvToAllocate
+    await member.save()
+
+    res.json({
+      success: true,
+      memberId: member._id,
+      memberName: member.fullName,
+      tierSold,
+      pvAllocated: pvToAllocate,
+      totalPV: member.pv,
+      message: `${pvToAllocate} PV allocated for ${tierSold} sale`
+    })
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
 })
 
 export default router

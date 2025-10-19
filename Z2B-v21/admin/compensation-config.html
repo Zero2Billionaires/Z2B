@@ -267,6 +267,7 @@
                             <tr>
                                 <th>Tier</th>
                                 <th>Price</th>
+                                <th>PV Points</th>
                                 <th>ISP Commission %</th>
                                 <th>Estimated Earning</th>
                             </tr>
@@ -275,42 +276,49 @@
                             <tr>
                                 <td><strong>FAM (Free)</strong></td>
                                 <td>R 0</td>
+                                <td style="color: #ff6b6b; font-weight: bold;">0 PV</td>
                                 <td><input type="number" id="isp_fam" value="20" min="0" max="100" step="1"></td>
                                 <td class="config-value">R 0</td>
                             </tr>
                             <tr>
                                 <td><strong>Bronze</strong></td>
                                 <td>R 480</td>
+                                <td style="color: #065f46; font-weight: bold;">24 PV</td>
                                 <td><input type="number" id="isp_bronze" value="25" min="0" max="100" step="1"></td>
                                 <td class="config-value">R 120</td>
                             </tr>
                             <tr>
                                 <td><strong>Copper</strong></td>
                                 <td>R 999</td>
+                                <td style="color: #065f46; font-weight: bold;">50 PV</td>
                                 <td><input type="number" id="isp_copper" value="28" min="0" max="100" step="1"></td>
                                 <td class="config-value">R 280</td>
                             </tr>
                             <tr>
                                 <td><strong>Silver</strong></td>
                                 <td>R 1,480</td>
+                                <td style="color: #065f46; font-weight: bold;">74 PV</td>
                                 <td><input type="number" id="isp_silver" value="30" min="0" max="100" step="1"></td>
                                 <td class="config-value">R 444</td>
                             </tr>
                             <tr>
                                 <td><strong>Gold</strong></td>
                                 <td>R 2,980</td>
+                                <td style="color: #065f46; font-weight: bold;">149 PV</td>
                                 <td><input type="number" id="isp_gold" value="35" min="0" max="100" step="1"></td>
                                 <td class="config-value">R 1,043</td>
                             </tr>
                             <tr>
                                 <td><strong>Platinum</strong></td>
                                 <td>R 4,980</td>
+                                <td style="color: #065f46; font-weight: bold;">249 PV</td>
                                 <td><input type="number" id="isp_platinum" value="40" min="0" max="100" step="1"></td>
                                 <td class="config-value">R 1,992</td>
                             </tr>
                             <tr style="background: #fef3c7;">
                                 <td><strong>Diamond (White Label)</strong></td>
                                 <td>R 11,980 + 7.5% royalties</td>
+                                <td style="color: #065f46; font-weight: bold;">599 PV*<br><small style="color: #92400e; font-weight: normal;">Credited to seller</small></td>
                                 <td>
                                     <input type="number" id="isp_diamond" value="0" min="0" max="0" step="1" readonly style="background: #fee;cursor: not-allowed;">
                                     <small style="display:block;color:#92400e;margin-top:5px;">❌ No ISP - White Label Tier Only</small>
@@ -320,6 +328,13 @@
                             </tr>
                         </tbody>
                     </table>
+                    <div style="margin-top: 15px; padding: 12px; background: #f0fdf4; border-left: 4px solid #065f46; border-radius: 5px;">
+                        <strong style="color: #065f46;">📊 PV Calculation Formula:</strong>
+                        <p style="color: #374151; margin: 8px 0 0 0; font-size: 0.9rem;">
+                            PV (Personal Volume) = Tier Price ÷ 20 (rounded to nearest unit)<br>
+                            <strong style="color: #92400e;">* Diamond Note:</strong> Members who generate a Diamond sale receive 599 PV points credited to their account, even though Diamond members themselves don't participate in the network commission structure.
+                        </p>
+                    </div>
                 </div>
             </div>
 
