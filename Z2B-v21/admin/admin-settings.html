@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Settings - Z2B</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --navy-blue: #0A2647;
+            --gold: #FFD700;
+            --orange: #FF6B35;
+            --dark-navy: #051428;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--navy-blue), var(--dark-navy));
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .settings-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .settings-header {
+            background: linear-gradient(135deg, var(--navy-blue), var(--dark-navy));
+            color: white;
+            padding: 2rem;
+            border-bottom: 3px solid var(--gold);
+        }
+
+        .settings-header h1 {
+            margin: 0;
+            font-size: 2rem;
+            color: var(--gold);
+        }
+
+        .settings-body {
+            padding: 2rem;
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .form-section:last-child {
+            border-bottom: none;
+        }
+
+        .form-section h3 {
+            color: var(--navy-blue);
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--navy-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 0.8rem;
+        }
+
+        .form-control:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 0.2rem rgba(255, 215, 0, 0.25);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold), #B8960D);
+            border: none;
+            color: var(--navy-blue);
+            font-weight: 700;
+            padding: 0.8rem 2rem;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 0.8rem 2rem;
+            border-radius: 10px;
+        }
+
+        .alert {
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .back-link {
+            color: var(--gold);
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .back-link:hover {
+            color: var(--orange);
+        }
+
+        .info-box {
+            background: #f8f9fa;
+            border-left: 4px solid var(--gold);
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="settings-container">
+        <div class="settings-header">
+            <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Admin Panel</a>
+            <h1><i class="fas fa-cog"></i> Admin Settings</h1>
+            <p style="margin: 0.5rem 0 0 0; opacity: 0.9;">Manage your admin account and security settings</p>
+        </div>
+
+        <div class="settings-body">
+            <div id="alertContainer"></div>
+
+            <!-- Profile Information -->
+            <div class="form-section">
+                <h3><i class="fas fa-user-shield"></i> Profile Information</h3>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Username</label>
+                        <input type="text" id="username" class="form-control" readonly>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" id="email" class="form-control" placeholder="admin@z2b.co.za">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Role</label>
+                        <input type="text" id="role" class="form-control" readonly>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Last Login</label>
+                        <input type="text" id="lastLogin" class="form-control" readonly>
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="updateProfile()">
+                    <i class="fas fa-save"></i> Update Profile
+                </button>
+            </div>
+
+            <!-- Change Password -->
+            <div class="form-section">
+                <h3><i class="fas fa-lock"></i> Change Password</h3>
+                <div class="info-box">
+                    <i class="fas fa-info-circle"></i> <strong>Password Requirements:</strong>
+                    <ul style="margin: 0.5rem 0 0 1.5rem;">
+                        <li>Minimum 8 characters</li>
+                        <li>Recommended: Mix of uppercase, lowercase, numbers, and special characters</li>
+                    </ul>
+                </div>
+
+                <form id="passwordForm" onsubmit="return false;">
+                    <div class="mb-3">
+                        <label class="form-label">Current Password</label>
+                        <input type="password" id="currentPassword" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">New Password</label>
+                        <input type="password" id="newPassword" class="form-control" required minlength="8">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Confirm New Password</label>
+                        <input type="password" id="confirmPassword" class="form-control" required minlength="8">
+                    </div>
+                    <button type="submit" class="btn btn-primary" onclick="changePassword()">
+                        <i class="fas fa-key"></i> Change Password
+                    </button>
+                </form>
+            </div>
+
+            <!-- Logout -->
+            <div class="form-section">
+                <h3><i class="fas fa-sign-out-alt"></i> Session Management</h3>
+                <p>End your current admin session and return to the dashboard.</p>
+                <button class="btn btn-secondary" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '/api/admin-auth';
+        let adminToken = localStorage.getItem('adminToken');
+
+        // Check authentication on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!adminToken) {
+                window.location.href = '/app/dashboard.html';
+                return;
+            }
+            loadAdminProfile();
+        });
+
+        async function loadAdminProfile() {
+            try {
+                const response = await fetch(`${API_BASE}/verify`, {
+                    headers: {
+                        'Authorization': `Bearer ${adminToken}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Not authenticated');
+                }
+
+                const data = await response.json();
+                const admin = data.admin;
+
+                document.getElementById('username').value = admin.username;
+                document.getElementById('email').value = admin.email || '';
+                document.getElementById('role').value = admin.role.toUpperCase();
+
+                // Format last login
+                const adminData = JSON.parse(localStorage.getItem('adminUser') || '{}');
+                if (adminData.lastLogin) {
+                    const date = new Date(adminData.lastLogin);
+                    document.getElementById('lastLogin').value = date.toLocaleString();
+                } else {
+                    document.getElementById('lastLogin').value = 'First login';
+                }
+            } catch (error) {
+                console.error('Error loading profile:', error);
+                showAlert('Authentication failed. Redirecting to login...', 'danger');
+                setTimeout(() => {
+                    logout();
+                }, 2000);
+            }
+        }
+
+        async function updateProfile() {
+            const email = document.getElementById('email').value;
+
+            try {
+                const response = await fetch(`${API_BASE}/profile`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${adminToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    showAlert('Profile updated successfully!', 'success');
+                    // Update local storage
+                    localStorage.setItem('adminUser', JSON.stringify(data.admin));
+                } else {
+                    showAlert(data.error || 'Failed to update profile', 'danger');
+                }
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                showAlert('Connection error. Please try again.', 'danger');
+            }
+        }
+
+        async function changePassword() {
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            // Validation
+            if (!currentPassword || !newPassword || !confirmPassword) {
+                showAlert('Please fill in all password fields', 'warning');
+                return false;
+            }
+
+            if (newPassword.length < 8) {
+                showAlert('New password must be at least 8 characters long', 'warning');
+                return false;
+            }
+
+            if (newPassword !== confirmPassword) {
+                showAlert('New passwords do not match', 'warning');
+                return false;
+            }
+
+            if (newPassword === currentPassword) {
+                showAlert('New password must be different from current password', 'warning');
+                return false;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/change-password`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${adminToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        currentPassword,
+                        newPassword
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    showAlert('Password changed successfully! You will be logged out.', 'success');
+
+                    // Clear form
+                    document.getElementById('passwordForm').reset();
+
+                    // Logout after 2 seconds
+                    setTimeout(() => {
+                        logout();
+                    }, 2000);
+                } else {
+                    showAlert(data.error || 'Failed to change password', 'danger');
+                }
+            } catch (error) {
+                console.error('Error changing password:', error);
+                showAlert('Connection error. Please try again.', 'danger');
+            }
+
+            return false;
+        }
+
+        function logout() {
+            // Clear local storage
+            localStorage.removeItem('adminToken');
+            localStorage.removeItem('adminUser');
+
+            // Call logout endpoint (optional)
+            fetch(`${API_BASE}/logout`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${adminToken}`
+                }
+            }).catch(() => {});
+
+            // Redirect to dashboard
+            window.location.href = '/app/dashboard.html';
+        }
+
+        function showAlert(message, type) {
+            const alertContainer = document.getElementById('alertContainer');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type} alert-dismissible fade show`;
+            alert.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            alertContainer.innerHTML = '';
+            alertContainer.appendChild(alert);
+
+            // Auto dismiss after 5 seconds
+            setTimeout(() => {
+                alert.remove();
+            }, 5000);
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -2002,6 +2002,242 @@
         });
     </script>
 
+    <!-- Admin Login Modal -->
+    <div id="adminLoginModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; align-items: center; justify-content: center;">
+        <div style="background: linear-gradient(135deg, var(--navy-blue), var(--dark-navy)); padding: 3rem; border-radius: 20px; max-width: 450px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.5); border: 2px solid var(--royal-gold);">
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <i class="fas fa-shield-alt" style="font-size: 3rem; color: var(--royal-gold); margin-bottom: 1rem;"></i>
+                <h2 style="color: var(--royal-gold-shine); margin: 0; font-size: 1.8rem; text-shadow: 0 0 20px rgba(212,175,55,0.5);">Admin Access</h2>
+                <p style="color: var(--royal-gold-light); margin: 0.5rem 0 0 0; font-size: 0.9rem;">Secure Authentication Required</p>
+            </div>
+
+            <form id="adminLoginForm" onsubmit="return false;">
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; color: var(--royal-gold-light); margin-bottom: 0.5rem; font-weight: 600;">
+                        <i class="fas fa-user"></i> Username
+                    </label>
+                    <input type="text" id="adminUsername" required style="width: 100%; padding: 0.8rem; border: 2px solid var(--royal-gold); border-radius: 10px; background: rgba(255,255,255,0.1); color: white; font-size: 1rem;">
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; color: var(--royal-gold-light); margin-bottom: 0.5rem; font-weight: 600;">
+                        <i class="fas fa-lock"></i> Password
+                    </label>
+                    <input type="password" id="adminPassword" required style="width: 100%; padding: 0.8rem; border: 2px solid var(--royal-gold); border-radius: 10px; background: rgba(255,255,255,0.1); color: white; font-size: 1rem;">
+                </div>
+
+                <div id="adminLoginError" style="display: none; background: rgba(255,0,0,0.2); border: 1px solid #ff4444; color: #ff6666; padding: 0.8rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.9rem;">
+                </div>
+
+                <button type="submit" onclick="handleAdminLogin()" style="width: 100%; padding: 1rem; background: linear-gradient(135deg, var(--royal-gold), var(--royal-gold-dark)); border: none; border-radius: 10px; color: var(--navy-blue); font-weight: 700; font-size: 1.1rem; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 15px rgba(212,175,55,0.4);">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+
+                <button type="button" onclick="closeAdminLoginModal()" style="width: 100%; padding: 0.8rem; background: transparent; border: 2px solid rgba(255,255,255,0.2); border-radius: 10px; color: rgba(255,255,255,0.6); font-weight: 600; font-size: 1rem; cursor: pointer; margin-top: 1rem; transition: all 0.3s;">
+                    Cancel
+                </button>
+            </form>
+
+            <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center;">
+                <p style="color: rgba(255,255,255,0.4); font-size: 0.75rem; margin: 0;">
+                    🔒 Secure Admin Portal • Z2B Legacy Builders
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Login Script -->
+    <script>
+        // Secret access trigger - Triple click on logo in sidebar
+        let clickCount = 0;
+        let clickTimer = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebarBrand = document.querySelector('.sidebar-brand');
+            if (sidebarBrand) {
+                sidebarBrand.addEventListener('click', function() {
+                    clickCount++;
+
+                    if (clickTimer) clearTimeout(clickTimer);
+
+                    if (clickCount === 3) {
+                        // Triple click detected - check if already logged in
+                        const adminToken = localStorage.getItem('adminToken');
+                        if (adminToken) {
+                            // Already logged in, go directly to admin panel
+                            window.location.href = '/admin/index.html';
+                        } else {
+                            // Not logged in, show login modal
+                            showAdminLoginModal();
+                        }
+                        clickCount = 0;
+                    }
+
+                    clickTimer = setTimeout(() => {
+                        clickCount = 0;
+                    }, 500);
+                });
+
+                // Add visual hint (very subtle)
+                sidebarBrand.style.cursor = 'pointer';
+                sidebarBrand.setAttribute('title', 'Z2B Legacy Builders');
+            }
+
+            // Check if already authenticated and add admin indicator
+            checkAdminAuth();
+        });
+
+        function showAdminLoginModal() {
+            const modal = document.getElementById('adminLoginModal');
+            modal.style.display = 'flex';
+            document.getElementById('adminUsername').focus();
+        }
+
+        function closeAdminLoginModal() {
+            const modal = document.getElementById('adminLoginModal');
+            modal.style.display = 'none';
+            document.getElementById('adminUsername').value = '';
+            document.getElementById('adminPassword').value = '';
+            hideAdminLoginError();
+        }
+
+        function showAdminLoginError(message) {
+            const errorDiv = document.getElementById('adminLoginError');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+
+        function hideAdminLoginError() {
+            const errorDiv = document.getElementById('adminLoginError');
+            errorDiv.style.display = 'none';
+        }
+
+        async function handleAdminLogin() {
+            const username = document.getElementById('adminUsername').value;
+            const password = document.getElementById('adminPassword').value;
+
+            if (!username || !password) {
+                showAdminLoginError('Please enter both username and password');
+                return false;
+            }
+
+            hideAdminLoginError();
+
+            // Show loading state
+            const submitBtn = event.target;
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Authenticating...';
+            submitBtn.disabled = true;
+
+            try {
+                const response = await fetch('/api/admin-auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    // Store token
+                    localStorage.setItem('adminToken', data.token);
+                    localStorage.setItem('adminUser', JSON.stringify(data.admin));
+
+                    // Success message
+                    submitBtn.innerHTML = '<i class="fas fa-check"></i> Success!';
+                    submitBtn.style.background = 'linear-gradient(135deg, #4ECDC4, #44A08D)';
+
+                    // Redirect to admin panel
+                    setTimeout(() => {
+                        window.location.href = '/admin/index.html';
+                    }, 500);
+                } else {
+                    // Show error
+                    showAdminLoginError(data.error || 'Login failed. Please try again.');
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showAdminLoginError('Connection error. Please check your network and try again.');
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+
+            return false;
+        }
+
+        async function checkAdminAuth() {
+            const adminToken = localStorage.getItem('adminToken');
+            if (adminToken) {
+                try {
+                    const response = await fetch('/api/admin-auth/verify', {
+                        headers: {
+                            'Authorization': `Bearer ${adminToken}`
+                        }
+                    });
+
+                    if (response.ok) {
+                        // Admin is authenticated, add indicator
+                        addAdminIndicator();
+                    } else {
+                        // Token invalid, clear it
+                        localStorage.removeItem('adminToken');
+                        localStorage.removeItem('adminUser');
+                    }
+                } catch (error) {
+                    console.error('Auth check error:', error);
+                }
+            }
+        }
+
+        function addAdminIndicator() {
+            const sidebarBrand = document.querySelector('.sidebar-brand');
+            if (sidebarBrand && !document.getElementById('adminIndicator')) {
+                const indicator = document.createElement('div');
+                indicator.id = 'adminIndicator';
+                indicator.style.cssText = `
+                    position: absolute;
+                    top: 10px;
+                    right: 10px;
+                    background: linear-gradient(135deg, var(--royal-gold), var(--royal-gold-dark));
+                    color: var(--navy-blue);
+                    padding: 0.3rem 0.7rem;
+                    border-radius: 15px;
+                    font-size: 0.7rem;
+                    font-weight: 700;
+                    box-shadow: 0 2px 10px rgba(212,175,55,0.5);
+                    cursor: pointer;
+                `;
+                indicator.innerHTML = '<i class="fas fa-shield-alt"></i> ADMIN';
+                indicator.title = 'Click to access admin panel';
+                indicator.onclick = () => window.location.href = '/admin/index.html';
+
+                sidebarBrand.style.position = 'relative';
+                sidebarBrand.appendChild(indicator);
+            }
+        }
+
+        // Allow Enter key to submit
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const modal = document.getElementById('adminLoginModal');
+                if (modal && modal.style.display === 'flex') {
+                    handleAdminLogin();
+                }
+            }
+        });
+
+        // Close modal on ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeAdminLoginModal();
+            }
+        });
+    </script>
+
     <!-- Z2B Ecosystem Integration -->
     <script src="../js/app-config.js"></script>
     <script src="../js/ecosystem-footer.js"></script>
