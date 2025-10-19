@@ -9,17 +9,22 @@
     <link href="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.min.css" rel="stylesheet">
     <style>
         :root {
-            --z2b-primary: #2c3e50;
-            --z2b-secondary: #34495e;
+            --navy-blue: #0A2647;
+            --gold: #FFD700;
+            --royal-gold: #D4AF37;
+            --orange: #FF6B35;
+            --dark-navy: #051428;
+            --z2b-primary: #0A2647;
+            --z2b-secondary: #051428;
             --z2b-success: #27ae60;
-            --z2b-warning: #f39c12;
+            --z2b-warning: #FF6B35;
             --z2b-danger: #e74c3c;
-            --z2b-info: #3498db;
+            --z2b-info: #FFD700;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #0A2647 0%, #051428 100%);
             min-height: 100vh;
         }
 
@@ -267,8 +272,9 @@
         <!-- Sidebar -->
         <div class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <h4>Z2B Admin</h4>
-                <small>Legacy Builders v21</small>
+                <h4><i class="fas fa-gem" style="color: var(--gold);"></i> Z2B LEGACY BUILDERS</h4>
+                <small style="font-size: 0.65rem; text-transform: uppercase; color: var(--gold);">Transforming Employees to Entrepreneurs</small>
+                <div style="margin-top: 8px; font-size: 0.7rem; opacity: 0.8;">Admin Panel v21</div>
             </div>
             <ul class="sidebar-menu">
                 <li>
@@ -278,7 +284,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="menu-item" data-tab="members">
+                    <a href="membership-management.html" class="menu-item">
                         <i class="fas fa-users"></i>
                         <span>Members</span>
                     </a>
@@ -290,33 +296,114 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="menu-item" data-tab="commissions">
+                    <a href="commission-tracking.html" class="menu-item">
                         <i class="fas fa-dollar-sign"></i>
                         <span>Commissions</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="menu-item" data-tab="subscriptions">
+                    <a href="membership-management.html" class="menu-item">
                         <i class="fas fa-sync"></i>
-                        <span>Subscriptions</span>
+                        <span>Tier Subscriptions</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="menu-item" data-tab="ai-coach">
-                        <i class="fas fa-robot"></i>
-                        <span>Coach Manlaw</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="menu-item" data-tab="app-management">
+                    <a href="#app-admin-section" class="menu-item" onclick="scrollToAppAdmins(event)">
                         <i class="fas fa-apps"></i>
                         <span>App Management</span>
                     </a>
                 </li>
+                <li style="padding: 10px 20px; color: var(--gold); font-size: 12px; text-transform: uppercase; font-weight: 700; letter-spacing: 1px;">
+                    MLM Management
+                </li>
                 <li>
-                    <a href="#" class="menu-item" data-tab="payouts">
+                    <a href="compensation-config.html" class="menu-item">
+                        <i class="fas fa-percentage"></i>
+                        <span>Compensation Plan</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="commission-tracking.html" class="menu-item">
+                        <i class="fas fa-coins"></i>
+                        <span>Commission Tracking</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="genealogy-viewer.html" class="menu-item">
+                        <i class="fas fa-sitemap"></i>
+                        <span>Genealogy Viewer</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="payout-management.html" class="menu-item">
                         <i class="fas fa-money-check-alt"></i>
-                        <span>Payouts</span>
+                        <span>Payout Management</span>
+                    </a>
+                </li>
+                <li style="padding: 10px 20px; color: var(--gold); font-size: 12px; text-transform: uppercase; font-weight: 700; letter-spacing: 1px;">
+                    App Admins
+                </li>
+                <li>
+                    <a href="coach-manlaw-admin.html" class="menu-item">
+                        <i class="fas fa-graduation-cap"></i>
+                        <span>Coach ManLaw</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="zyro-admin.html" class="menu-item">
+                        <i class="fas fa-gamepad"></i>
+                        <span>ZYRO Games</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="glowie-admin.html" class="menu-item">
+                        <i class="fas fa-lightbulb"></i>
+                        <span>GLOWIE AI</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="zyra-admin.html" class="menu-item">
+                        <i class="fas fa-user-tie"></i>
+                        <span>ZYRA Sales</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="benown-admin.html" class="menu-item">
+                        <i class="fas fa-magic"></i>
+                        <span>BENOWN Content</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="zynect-admin.html" class="menu-item">
+                        <i class="fas fa-network-wired"></i>
+                        <span>ZYNECT Network</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="vidzie-dashboard.html" class="menu-item">
+                        <i class="fas fa-video"></i>
+                        <span>VIDZIE Videos</span>
+                    </a>
+                </li>
+                <li style="padding: 10px 20px; color: var(--gold); font-size: 12px; text-transform: uppercase; font-weight: 700; letter-spacing: 1px;">
+                    System Management
+                </li>
+                <li>
+                    <a href="ceo-competitions.html" class="menu-item">
+                        <i class="fas fa-trophy"></i>
+                        <span>CEO Competitions</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="ceo-targets.html" class="menu-item">
+                        <i class="fas fa-bullseye"></i>
+                        <span>CEO Sales Targets</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="marketplace-products.html" class="menu-item">
+                        <i class="fas fa-store-alt"></i>
+                        <span>Marketplace Products</span>
                     </a>
                 </li>
                 <li>
@@ -1061,5 +1148,20 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     <script src="../js/admin.js"></script>
+    <script>
+        // Scroll to App Admins section
+        function scrollToAppAdmins(event) {
+            event.preventDefault();
+            const appAdminLinks = document.querySelectorAll('a[href="coach-manlaw-admin.html"]');
+            if (appAdminLinks.length > 0) {
+                appAdminLinks[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                // Highlight the section briefly
+                appAdminLinks[0].parentElement.style.background = 'rgba(255, 215, 0, 0.2)';
+                setTimeout(() => {
+                    appAdminLinks[0].parentElement.style.background = '';
+                }, 2000);
+            }
+        }
+    </script>
 </body>
 </html>

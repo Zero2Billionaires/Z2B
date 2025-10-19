@@ -74,6 +74,34 @@ const Z2B_APPS = {
             duration: 7,
             limitations: 'Limited to 5 content pieces per day'
         }
+    },
+    ZYNECT: {
+        id: 'zynect',
+        name: 'ZYNECT',
+        description: 'Complete CRM - SMS, WhatsApp & Email Communication',
+        icon: 'fas fa-network-wired',
+        url: 'zynect.html',
+        category: 'CRM',
+        features: ['Contact Management', 'SMS Campaigns', 'WhatsApp Integration', 'Email Marketing', 'Analytics'],
+        demoMode: {
+            enabled: true,
+            duration: 7,
+            limitations: 'Limited to 50 contacts'
+        }
+    },
+    VIDZIE: {
+        id: 'vidzie',
+        name: 'VIDZIE',
+        description: 'AI Video Creation Platform - Generate Professional Videos with D-ID',
+        icon: 'fas fa-video',
+        url: 'vidzie.html',
+        category: 'Video Marketing',
+        features: ['AI Avatar Videos', 'Text-to-Video', 'Video Templates', 'D-ID Integration', 'Video Library'],
+        demoMode: {
+            enabled: true,
+            duration: 7,
+            limitations: 'Limited to 3 video generations'
+        }
     }
 };
 
@@ -85,7 +113,7 @@ const Z2B_TIERS = {
         price: 0,
         period: 'Trial',
         apps: {
-            zyro: { access: 'demo', aiF uel: 10 },
+            zyro: { access: 'demo', aiFuel: 10 },
             'coach-manlaw': { access: 'demo', aiFuel: 10 }
         },
         tscGenerations: 0,
@@ -94,7 +122,7 @@ const Z2B_TIERS = {
     },
     STARTER: {
         id: 'STARTER',
-        name: 'Starter',
+        name: 'Bronze',
         price: 299,
         period: 'month',
         apps: {
@@ -103,37 +131,72 @@ const Z2B_TIERS = {
         },
         tscGenerations: 3,
         tliLevels: 0,
-        features: ['3 Generations TSC', '100 AI Fuel/month', 'Referral Tracking', 'Team Building']
+        features: ['2 AI Apps', '3 Generations TSC', '100 AI Fuel/month', 'Referral Tracking', 'Team Building']
     },
     PRO: {
         id: 'PRO',
-        name: 'Pro',
+        name: 'Copper',
         price: 999,
         period: 'month',
         apps: {
-            zyro: { access: 'full', aiFuel: 300 },
-            'coach-manlaw': { access: 'pro', aiFuel: 300 },
-            glowie: { access: 'full', aiFuel: 300 }
+            zyro: { access: 'full', aiFuel: 200 },
+            'coach-manlaw': { access: 'pro', aiFuel: 200 },
+            zyra: { access: 'full', aiFuel: 200 }
         },
         tscGenerations: 5,
-        tliLevels: 7,
-        features: ['5 Generations TSC', '300 AI Fuel/month', 'TLI Access (7 Levels)', 'Advanced Analytics']
+        tliLevels: 0,
+        features: ['3 AI Apps', '5 Generations TSC', '200 AI Fuel/month', 'Referral Tracking', 'Advanced Analytics']
     },
-    ELITE: {
-        id: 'ELITE',
-        name: 'Elite',
-        price: 2999,
+    SILVER: {
+        id: 'SILVER',
+        name: 'Silver',
+        price: 1480,
+        period: 'month',
+        apps: {
+            zyro: { access: 'full', aiFuel: 300 },
+            'coach-manlaw': { access: 'elite', aiFuel: 300 },
+            zyra: { access: 'full', aiFuel: 300 },
+            benown: { access: 'full', aiFuel: 300 }
+        },
+        tscGenerations: 7,
+        tliLevels: 6,
+        features: ['4 AI Apps', '7 Generations TSC', 'TLI Access (6 Levels)', '300 AI Fuel/month', 'Advanced Features']
+    },
+    GOLD: {
+        id: 'GOLD',
+        name: 'Gold',
+        price: 2980,
+        period: 'month',
+        apps: {
+            zyro: { access: 'full', aiFuel: 600 },
+            'coach-manlaw': { access: 'elite', aiFuel: 600 },
+            glowie: { access: 'unlimited', aiFuel: 600 },
+            zyra: { access: 'full', aiFuel: 600 },
+            benown: { access: 'full', aiFuel: 600 },
+            zynect: { access: 'full', aiFuel: 600 },
+            vidzie: { access: 'full', aiFuel: 600 }
+        },
+        tscGenerations: 9,
+        tliLevels: 8,
+        features: ['Zyronic Suite (7 Apps)', '9 Generations TSC', 'TLI (8 Levels)', '600 AI Fuel/month', 'Profit Pool', 'Sales Funnel']
+    },
+    PLATINUM: {
+        id: 'PLATINUM',
+        name: 'Platinum',
+        price: 4980,
         period: 'month',
         apps: {
             zyro: { access: 'full', aiFuel: 1000 },
-            'coach-manlaw': { access: 'elite', aiFuel: 1000 },
+            'coach-manlaw': { access: 'unlimited', aiFuel: 1000 },
             glowie: { access: 'unlimited', aiFuel: 1000 },
             zyra: { access: 'full', aiFuel: 1000 },
-            benown: { access: 'full', aiFuel: 1000 }
+            benown: { access: 'full', aiFuel: 1000 },
+            zynect: { access: 'unlimited', aiFuel: 1000 },
+            vidzie: { access: 'unlimited', aiFuel: 1000 }
         },
         tscGenerations: 10,
         tliLevels: 10,
-        features: ['10 Generations TSC', '1000 AI Fuel/month', 'Full TLI', 'Profit Pool', 'Priority Support']
+        features: ['Zyronic Suite (7 Apps)', '10 Generations TSC', 'Full TLI (10 Levels)', '1000 AI Fuel/month', 'Profit Pool', 'DFY Campaigns', 'Personal Coach']
     },
     LIFETIME: {
         id: 'LIFETIME',
@@ -145,11 +208,13 @@ const Z2B_TIERS = {
             'coach-manlaw': { access: 'unlimited', aiFuel: 'unlimited' },
             glowie: { access: 'unlimited', aiFuel: 'unlimited' },
             zyra: { access: 'full', aiFuel: 'unlimited' },
-            benown: { access: 'full', aiFuel: 'unlimited' }
+            benown: { access: 'full', aiFuel: 'unlimited' },
+            zynect: { access: 'unlimited', aiFuel: 'unlimited' },
+            vidzie: { access: 'unlimited', aiFuel: 'unlimited' }
         },
         tscGenerations: 10,
         tliLevels: 10,
-        features: ['ALL APPS Forever', 'Unlimited AI Fuel', 'Full TLI Forever', 'Profit Pool Forever', 'VIP Support', 'Legacy Builder Status']
+        features: ['Zyronic Suite Forever (7 Apps)', 'Unlimited AI Fuel', 'Full TLI Forever', 'Profit Pool Forever', 'VIP Support', 'Legacy Builder Status']
     }
 };
 

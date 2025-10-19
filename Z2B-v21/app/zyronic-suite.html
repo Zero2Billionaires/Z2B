@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zyronic APP Suite - Enterprise | Z2B Legacy Builders</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0A2647;
+            --secondary: #144272;
+            --accent: #205295;
+            --gold: #FFD700;
+            --orange: #FF6B35;
+            --white: #FFFFFF;
+            --light-bg: #F8F9FA;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--light-bg);
+            color: var(--primary);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+            color: var(--white);
+            padding: 5rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: rgba(255, 215, 0, 0.1);
+            border-radius: 50%;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -5%;
+            width: 400px;
+            height: 400px;
+            background: rgba(255, 107, 53, 0.1);
+            border-radius: 50%;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--white), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero .subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            background: linear-gradient(135deg, var(--gold), var(--orange));
+            color: var(--primary);
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .hero-stat-value {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--gold);
+        }
+
+        .hero-stat-label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        /* Navigation Bar */
+        .top-nav {
+            background: var(--white);
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .top-nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-back {
+            padding: 0.6rem 1.5rem;
+            background: linear-gradient(135deg, var(--accent), var(--gold));
+            color: var(--white);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 600;
+        }
+
+        .btn-back:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+            color: var(--white);
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1400px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        /* Section Title */
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .section-title p {
+            font-size: 1.2rem;
+            color: var(--primary);
+            opacity: 0.8;
+        }
+
+        /* App Cards Grid */
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .app-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s;
+            border: 3px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .app-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--gold), var(--orange), var(--accent));
+        }
+
+        .app-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            border-color: var(--gold);
+        }
+
+        .app-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, var(--accent), var(--gold));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
+        }
+
+        .app-icon i {
+            font-size: 2.5rem;
+            color: var(--white);
+        }
+
+        .app-card h3 {
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .app-card .description {
+            font-size: 1.1rem;
+            color: var(--primary);
+            opacity: 0.8;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .features-list {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .features-list li {
+            padding: 0.5rem 0;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .features-list li i {
+            color: var(--gold);
+        }
+
+        .btn-launch {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--accent), var(--gold));
+            color: var(--white);
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.3);
+        }
+
+        .btn-launch:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(255, 215, 0, 0.5);
+        }
+
+        /* Features Section */
+        .features-section {
+            background: linear-gradient(135deg, rgba(10, 38, 71, 0.05), rgba(255, 215, 0, 0.05));
+            padding: 4rem 2rem;
+            border-radius: 20px;
+            margin-bottom: 4rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-item {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold), var(--orange));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+        }
+
+        .feature-icon i {
+            font-size: 2rem;
+            color: var(--white);
+        }
+
+        .feature-item h4 {
+            font-size: 1.3rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-item p {
+            color: var(--primary);
+            opacity: 0.8;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--white);
+            padding: 4rem 2rem;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .cta-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .cta-section p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .btn-cta {
+            padding: 1.2rem 3rem;
+            background: linear-gradient(135deg, var(--gold), var(--orange));
+            color: var(--primary);
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 8px 30px rgba(255, 215, 0, 0.4);
+        }
+
+        .btn-cta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(255, 215, 0, 0.6);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero .subtitle {
+                font-size: 1.2rem;
+            }
+
+            .apps-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-stats {
+                gap: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <div class="top-nav">
+        <div class="top-nav-content">
+            <div>
+                <h4 style="margin: 0; color: var(--primary);">
+                    <i class="fas fa-layer-group" style="color: var(--gold);"></i>
+                    Zyronic APP Suite
+                </h4>
+            </div>
+            <a href="dashboard.html" class="btn-back">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <div class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <i class="fas fa-crown"></i> ENTERPRISE EDITION
+            </div>
+            <h1>Zyronic APP Suite</h1>
+            <p class="subtitle">The Complete AI-Powered Business Automation Platform</p>
+            <p style="max-width: 800px; margin: 0 auto; font-size: 1.1rem; opacity: 0.9;">
+                Transform your business with 7 powerful AI applications designed to automate, optimize, and scale every aspect of your operations. From gamification to video creation, from sales to CRM - we've got you covered.
+            </p>
+
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <div class="hero-stat-value">7</div>
+                    <div class="hero-stat-label">Powerful Apps</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-value">120+</div>
+                    <div class="hero-stat-label">Features</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-value">24/7</div>
+                    <div class="hero-stat-label">AI Automation</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Section Title -->
+        <div class="section-title">
+            <h2>Explore the Suite</h2>
+            <p>Click on any app to launch and start automating your business</p>
+        </div>
+
+        <!-- Apps Grid -->
+        <div class="apps-grid">
+            <!-- ZYRO -->
+            <div class="app-card">
+                <div class="app-icon">
+                    <i class="fas fa-gamepad"></i>
+                </div>
+                <h3>ZYRO</h3>
+                <p class="description">Gamification Hub - Engage, Compete & Earn Rewards</p>
+                <ul class="features-list">
+                    <li><i class="fas fa-check-circle"></i> Daily Challenges</li>
+                    <li><i class="fas fa-check-circle"></i> Idea Roulette Game</li>
+                    <li><i class="fas fa-check-circle"></i> SideGig Bingo</li>
+                    <li><i class="fas fa-check-circle"></i> Leaderboards & Badges</li>
+                    <li><i class="fas fa-check-circle"></i> Points & Rewards System</li>
+                </ul>
+                <button class="btn-launch" onclick="window.location.href='zyro.html'">
+                    <i class="fas fa-rocket"></i> Launch ZYRO
+                </button>
+            </div>
+
+            <!-- ZYRA -->
+            <div class="app-card">
+                <div class="app-icon">
+                    <i class="fas fa-headset"></i>
+                </div>
+                <h3>ZYRA</h3>
+                <p class="description">AI Sales Agent - Close Deals 24/7 on Autopilot</p>
+                <ul class="features-list">
+                    <li><i class="fas fa-check-circle"></i> Lead Management</li>
+                    <li><i class="fas fa-check-circle"></i> AI Conversations</li>
+                    <li><i class="fas fa-check-circle"></i> Sales Pipeline Tracking</li>
+                    <li><i class="fas fa-check-circle"></i> Revenue Analytics</li>
+                    <li><i class="fas fa-check-circle"></i> Sales Templates</li>
+                </ul>
+                <button class="btn-launch" onclick="window.location.href='zyra.html'">
+                    <i class="fas fa-rocket"></i> Launch ZYRA
+                </button>
+            </div>
+
+            <!-- BENOWN -->
+            <div class="app-card">
+                <div class="app-icon">
+                    <i class="fas fa-magic"></i>
+                </div>
+                <h3>BENOWN</h3>
+                <p class="description">AI Content Creator - Generate Viral Content Effortlessly</p>
+                <ul class="features-list">
+                    <li><i class="fas fa-check-circle"></i> Multi-Platform Content</li>
+                    <li><i class="fas fa-check-circle"></i> AI Content Generation</li>
+                    <li><i class="fas fa-check-circle"></i> Hashtag Optimization</li>
+                    <li><i class="fas fa-check-circle"></i> Content Library</li>
+                    <li><i class="fas fa-check-circle"></i> Scheduling & Publishing</li>
+                </ul>
+                <button class="btn-launch" onclick="window.location.href='benown.html'">
+                    <i class="fas fa-rocket"></i> Launch BENOWN
+                </button>
+            </div>
+
+            <!-- GLOWIE -->
+            <div class="app-card">
+                <div class="app-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <h3>GLOWIE</h3>
+                <p class="description">Instant App Builder - Create Apps in Minutes, No Code Required</p>
+                <ul class="features-list">
+                    <li><i class="fas fa-check-circle"></i> AI-Powered Generation</li>
+                    <li><i class="fas fa-check-circle"></i> Instant App Creation</li>
+                    <li><i class="fas fa-check-circle"></i> No-Code Builder</li>
+                    <li><i class="fas fa-check-circle"></i> Download & Deploy</li>
+                    <li><i class="fas fa-check-circle"></i> Professional Templates</li>
+                </ul>
+                <button class="btn-launch" onclick="window.location.href='glowie.html'">
+                    <i class="fas fa-rocket"></i> Launch GLOWIE
+                </button>
+            </div>
+
+            <!-- ZYNECT -->
+            <div class="app-card">
+                <div class="app-icon">
+                    <i class="fas fa-network-wired"></i>
+                </div>
+                <h3>ZYNECT</h3>
+                <p class="description">Complete CRM - SMS, WhatsApp & Email in One Platform</p>
+                <ul class="features-list">
+                    <li><i class="fas fa-check-circle"></i> Contact Management</li>
+                    <li><i class="fas fa-check-circle"></i> SMS Campaigns</li>
+                    <li><i class="fas fa-check-circle"></i> WhatsApp Integration</li>
+                    <li><i class="fas fa-check-circle"></i> Email Marketing</li>
+                    <li><i class="fas fa-check-circle"></i> Communication Analytics</li>
+                </ul>
+                <button class="btn-launch" onclick="window.location.href='zynect.html'">
+                    <i class="fas fa-rocket"></i> Launch ZYNECT
+                </button>
+            </div>
+
+            <!-- Coach ManLaw -->
+            <div class="app-card">
+                <div class="app-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <h3>Coach ManLaw</h3>
+                <p class="description">AI Billionaire Coach - Master the 4M Framework</p>
+                <ul class="features-list">
+                    <li><i class="fas fa-check-circle"></i> 24/7 AI Coaching</li>
+                    <li><i class="fas fa-check-circle"></i> BTSS Assessment</li>
+                    <li><i class="fas fa-check-circle"></i> Four Legs Framework</li>
+                    <li><i class="fas fa-check-circle"></i> Progress Tracking</li>
+                    <li><i class="fas fa-check-circle"></i> Personalized Strategies</li>
+                </ul>
+                <button class="btn-launch" onclick="window.location.href='coach-manlaw.html'">
+                    <i class="fas fa-rocket"></i> Launch Coach ManLaw
+                </button>
+            </div>
+
+            <!-- VIDZIE -->
+            <div class="app-card">
+                <div class="app-icon">
+                    <i class="fas fa-video"></i>
+                </div>
+                <h3>VIDZIE</h3>
+                <p class="description">AI Video Creation - Generate Professional Videos with AI Avatars</p>
+                <ul class="features-list">
+                    <li><i class="fas fa-check-circle"></i> AI Avatar Videos</li>
+                    <li><i class="fas fa-check-circle"></i> Text-to-Video</li>
+                    <li><i class="fas fa-check-circle"></i> Video Templates</li>
+                    <li><i class="fas fa-check-circle"></i> Professional Editing</li>
+                    <li><i class="fas fa-check-circle"></i> Video Library</li>
+                </ul>
+                <button class="btn-launch" onclick="window.location.href='vidzie.html'">
+                    <i class="fas fa-rocket"></i> Launch VIDZIE
+                </button>
+            </div>
+        </div>
+
+        <!-- Custom Compensation Plans Section -->
+        <div class="cta-section" style="background: linear-gradient(135deg, #FFD700, #FF6B35); color: var(--primary); margin-bottom: 4rem;">
+            <div class="section-title">
+                <h2 style="color: var(--primary);">💼 Custom Network Marketing Systems</h2>
+                <p style="color: var(--primary); font-weight: 600;">We Can Build & Configure Any Compensation Plan for Your MLM Business</p>
+            </div>
+
+            <div style="background: rgba(255, 255, 255, 0.95); padding: 2rem; border-radius: 15px; max-width: 1000px; margin: 2rem auto; text-align: left;">
+                <h3 style="color: var(--primary); text-align: center; margin-bottom: 1.5rem;">
+                    <i class="fas fa-sitemap"></i> Compensation Plan Types We Build
+                </h3>
+
+                <div class="features-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem;">
+                    <div style="background: linear-gradient(135deg, rgba(10, 38, 71, 0.05), rgba(255, 215, 0, 0.05)); padding: 1.5rem; border-radius: 10px; border-left: 4px solid var(--gold);">
+                        <h4 style="color: var(--primary); margin-bottom: 0.5rem;">
+                            <i class="fas fa-chart-line"></i> Unilevel
+                        </h4>
+                        <p style="font-size: 0.9rem; opacity: 0.8; margin: 0;">Unlimited width, fixed depth commission structure</p>
+                    </div>
+
+                    <div style="background: linear-gradient(135deg, rgba(10, 38, 71, 0.05), rgba(255, 215, 0, 0.05)); padding: 1.5rem; border-radius: 10px; border-left: 4px solid var(--orange);">
+                        <h4 style="color: var(--primary); margin-bottom: 0.5rem;">
+                            <i class="fas fa-code-branch"></i> Binary
+                        </h4>
+                        <p style="font-size: 0.9rem; opacity: 0.8; margin: 0;">Two-leg structure with spillover and balance bonuses</p>
+                    </div>
+
+                    <div style="background: linear-gradient(135deg, rgba(10, 38, 71, 0.05), rgba(255, 215, 0, 0.05)); padding: 1.5rem; border-radius: 10px; border-left: 4px solid var(--accent);">
+                        <h4 style="color: var(--primary); margin-bottom: 0.5rem;">
+                            <i class="fas fa-th"></i> Matrix Plans
+                        </h4>
+                        <p style="font-size: 0.9rem; opacity: 0.8; margin: 0;">Fixed width and depth (3x7, 5x7, custom) with spillover</p>
+                    </div>
+
+                    <div style="background: linear-gradient(135deg, rgba(10, 38, 71, 0.05), rgba(255, 215, 0, 0.05)); padding: 1.5rem; border-radius: 10px; border-left: 4px solid var(--gold);">
+                        <h4 style="color: var(--primary); margin-bottom: 0.5rem;">
+                            <i class="fas fa-level-up-alt"></i> Stairstep Breakaway
+                        </h4>
+                        <p style="font-size: 0.9rem; opacity: 0.8; margin: 0;">Rank advancement with leadership breakaway bonuses</p>
+                    </div>
+
+                    <div style="background: linear-gradient(135deg, rgba(10, 38, 71, 0.05), rgba(255, 215, 0, 0.05)); padding: 1.5rem; border-radius: 10px; border-left: 4px solid var(--orange);">
+                        <h4 style="color: var(--primary); margin-bottom: 0.5rem;">
+                            <i class="fas fa-project-diagram"></i> Generation Plans
+                        </h4>
+                        <p style="font-size: 0.9rem; opacity: 0.8; margin: 0;">Multi-generation tracking up to 10 generations deep</p>
+                    </div>
+
+                    <div style="background: linear-gradient(135deg, rgba(10, 38, 71, 0.05), rgba(255, 215, 0, 0.05)); padding: 1.5rem; border-radius: 10px; border-left: 4px solid var(--accent);">
+                        <h4 style="color: var(--primary); margin-bottom: 0.5rem;">
+                            <i class="fas fa-puzzle-piece"></i> Hybrid Systems
+                        </h4>
+                        <p style="font-size: 0.9rem; opacity: 0.8; margin: 0;">Combine multiple plan types for unique structures</p>
+                    </div>
+
+                    <div style="background: linear-gradient(135deg, rgba(10, 38, 71, 0.05), rgba(255, 215, 0, 0.05)); padding: 1.5rem; border-radius: 10px; border-left: 4px solid var(--gold);">
+                        <h4 style="color: var(--primary); margin-bottom: 0.5rem;">
+                            <i class="fas fa-layer-group"></i> Board/Cycler
+                        </h4>
+                        <p style="font-size: 0.9rem; opacity: 0.8; margin: 0;">Position-based progression with board cycling</p>
+                    </div>
+
+                    <div style="background: linear-gradient(135deg, rgba(10, 38, 71, 0.05), rgba(255, 215, 0, 0.05)); padding: 1.5rem; border-radius: 10px; border-left: 4px solid var(--orange);">
+                        <h4 style="color: var(--primary); margin-bottom: 0.5rem;">
+                            <i class="fas fa-wallet"></i> Pool Distributions
+                        </h4>
+                        <p style="font-size: 0.9rem; opacity: 0.8; margin: 0;">Company profit pools, TLI, quarterly bonuses</p>
+                    </div>
+                </div>
+
+                <div style="background: linear-gradient(135deg, var(--primary), var(--secondary)); color: var(--white); padding: 2rem; border-radius: 10px; margin-top: 2rem;">
+                    <h4 style="color: var(--gold); margin-bottom: 1rem; text-align: center;">
+                        <i class="fas fa-cog"></i> What We Build For You
+                    </h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                        <div style="display: flex; align-items: start; gap: 0.5rem;">
+                            <i class="fas fa-check-circle" style="color: var(--gold); margin-top: 0.3rem;"></i>
+                            <span>Custom income calculators for your plan structure</span>
+                        </div>
+                        <div style="display: flex; align-items: start; gap: 0.5rem;">
+                            <i class="fas fa-check-circle" style="color: var(--gold); margin-top: 0.3rem;"></i>
+                            <span>Multi-generation genealogy tree visualization</span>
+                        </div>
+                        <div style="display: flex; align-items: start; gap: 0.5rem;">
+                            <i class="fas fa-check-circle" style="color: var(--gold); margin-top: 0.3rem;"></i>
+                            <span>Real-time commission calculations & tracking</span>
+                        </div>
+                        <div style="display: flex; align-items: start; gap: 0.5rem;">
+                            <i class="fas fa-check-circle" style="color: var(--gold); margin-top: 0.3rem;"></i>
+                            <span>Configurable rank/tier/qualification systems</span>
+                        </div>
+                        <div style="display: flex; align-items: start; gap: 0.5rem;">
+                            <i class="fas fa-check-circle" style="color: var(--gold); margin-top: 0.3rem;"></i>
+                            <span>Team performance analytics & dashboards</span>
+                        </div>
+                        <div style="display: flex; align-items: start; gap: 0.5rem;">
+                            <i class="fas fa-check-circle" style="color: var(--gold); margin-top: 0.3rem;"></i>
+                            <span>Recognition & leadership awards system</span>
+                        </div>
+                        <div style="display: flex; align-items: start; gap: 0.5rem;">
+                            <i class="fas fa-check-circle" style="color: var(--gold); margin-top: 0.3rem;"></i>
+                            <span>Payout management & withdrawal processing</span>
+                        </div>
+                        <div style="display: flex; align-items: start; gap: 0.5rem;">
+                            <i class="fas fa-check-circle" style="color: var(--gold); margin-top: 0.3rem;"></i>
+                            <span>Member portal with earnings reports</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 2rem; padding: 1.5rem; background: rgba(32, 82, 149, 0.1); border-radius: 10px; border: 2px solid var(--accent);">
+                    <h4 style="color: var(--primary); margin-bottom: 0.5rem;">
+                        <i class="fas fa-handshake"></i> Custom Development Available
+                    </h4>
+                    <p style="margin: 0; opacity: 0.8;">Tell us your compensation plan structure and we'll build it into your Zyronic Suite white-label platform</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="features-section">
+            <div class="section-title">
+                <h2>Why Choose Zyronic Suite?</h2>
+                <p>Built for entrepreneurs who demand excellence</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h4>AI-Powered</h4>
+                    <p>Harness cutting-edge AI technology to automate and optimize your business operations</p>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h4>Lightning Fast</h4>
+                    <p>Built for speed and performance to keep your business running at maximum efficiency</p>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h4>Enterprise Security</h4>
+                    <p>Bank-level encryption and security to protect your valuable business data</p>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-sync"></i>
+                    </div>
+                    <h4>Seamless Integration</h4>
+                    <p>All apps work together perfectly to create a unified business ecosystem</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="cta-section">
+            <h2>Ready to Transform Your Business?</h2>
+            <p>Join thousands of entrepreneurs who are already using Zyronic Suite to build their billion-dollar legacy</p>
+            <button class="btn-cta" onclick="window.location.href='../admin/index.html'">
+                <i class="fas fa-crown"></i> Upgrade to Access All Apps
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Add smooth scroll behavior
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Animate cards on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.app-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            card.style.transition = 'all 0.6s ease-out';
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>

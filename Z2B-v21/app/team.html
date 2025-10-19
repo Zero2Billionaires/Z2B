@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Team - Z2B Legacy Builders</title>
+    <title>My Team & Referrals - Z2B Legacy Builders</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -25,6 +25,10 @@
             padding: 2rem 0;
         }
 
+        .container {
+            max-width: 1400px;
+        }
+
         .back-btn {
             color: var(--gold);
             font-size: 1.1rem;
@@ -39,49 +43,228 @@
             transform: translateX(-5px);
         }
 
-        .header-section {
+        .page-header {
             text-align: center;
-            margin-bottom: 4rem;
+            margin-bottom: 3rem;
         }
 
-        .header-section h1 {
-            font-size: 3.5rem;
+        .page-header h1 {
+            font-size: 3rem;
             font-weight: bold;
             color: var(--gold);
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
 
-        .header-section .subtitle {
-            font-size: 1.5rem;
+        .page-header p {
+            font-size: 1.2rem;
             color: var(--orange);
             font-weight: 600;
-            margin-bottom: 0.8rem;
         }
 
-        .header-section p {
-            font-size: 1.2rem;
+        .stats-card {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border: 2px solid var(--gold);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s;
+        }
+
+        .stats-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.4);
+        }
+
+        .stats-card h3 {
+            color: var(--gold);
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--orange);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
             color: var(--white);
+            font-size: 1rem;
             opacity: 0.9;
         }
 
-        .feature-icon {
-            font-size: 8rem;
-            color: var(--gold);
-            margin: 2rem 0;
-            opacity: 0.8;
+        .income-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
         }
 
-        .coming-soon-badge {
-            background: linear-gradient(135deg, var(--orange), var(--gold));
-            color: var(--navy-blue);
-            padding: 1rem 2rem;
-            border-radius: 50px;
+        .income-item {
+            background: rgba(255, 215, 0, 0.1);
+            padding: 1rem;
+            border-radius: 10px;
+            border-left: 4px solid var(--gold);
+        }
+
+        .income-label {
+            color: var(--light-gold);
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .income-value {
+            color: var(--white);
+            font-size: 1.5rem;
             font-weight: bold;
+        }
+
+        .section-header {
+            background: linear-gradient(135deg, var(--gold), var(--orange));
+            color: var(--navy-blue);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .section-header h2 {
+            margin: 0;
+            font-weight: bold;
+            font-size: 1.8rem;
+        }
+
+        .team-member-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+        }
+
+        .team-member-card:hover {
+            background: rgba(255, 215, 0, 0.1);
+            border-color: var(--gold);
+            transform: translateX(10px);
+        }
+
+        .member-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .member-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold), var(--orange));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--navy-blue);
+        }
+
+        .member-details {
+            flex: 1;
+        }
+
+        .member-name {
             font-size: 1.2rem;
-            display: inline-block;
-            margin: 2rem 0;
-            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
+            font-weight: bold;
+            color: var(--gold);
+            margin-bottom: 0.3rem;
+        }
+
+        .member-meta {
+            color: var(--white);
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        .generation-badge {
+            background: var(--orange);
+            color: var(--white);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .tier-badge {
+            background: var(--gold);
+            color: var(--navy-blue);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .generation-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .gen-tab {
+            padding: 0.8rem 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid var(--gold);
+            border-radius: 50px;
+            color: var(--white);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .gen-tab:hover, .gen-tab.active {
+            background: linear-gradient(135deg, var(--gold), var(--orange));
+            color: var(--navy-blue);
+            transform: scale(1.05);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            font-size: 1.2rem;
+            color: var(--gold);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--white);
+            opacity: 0.7;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: var(--gold);
+        }
+
+        @media (max-width: 768px) {
+            .page-header h1 {
+                font-size: 2rem;
+            }
+
+            .stat-value {
+                font-size: 2rem;
+            }
+
+            .member-info {
+                flex-direction: column;
+                text-align: center;
+            }
         }
     </style>
 </head>
@@ -92,28 +275,389 @@
             <i class="fas fa-arrow-left"></i> Back to Dashboard
         </a>
 
-        <div class="header-section">
-            <div
-                style="background: linear-gradient(135deg, var(--gold), var(--orange)); color: var(--navy-blue); padding: 0.8rem 2rem; border-radius: 50px; display: inline-block; margin-bottom: 1.5rem; font-weight: bold; font-size: 1.1rem;">
-                <i class="fas fa-rocket"></i> Transforming Employees to Entrepreneurs
-            </div>
-            <h1><i class="fas fa-users"></i> My Team</h1>
-            <p class="subtitle">Together Everyone Achieves More</p>
-            <p>Build, manage, and grow your legacy building team</p>
+        <div class="page-header">
+            <h1><i class="fas fa-users"></i> My Team & Referrals</h1>
+            <p>Together Everyone Achieves More</p>
+        </div>
 
-            <div class="feature-icon">
-                <i class="fas fa-users"></i>
+        <!-- Overview Stats -->
+        <div class="row">
+            <div class="col-md-4">
+                <div class="stats-card">
+                    <h3><i class="fas fa-users"></i> Team Size</h3>
+                    <div class="stat-value" id="totalTeamSize">-</div>
+                    <div class="stat-label">Total Team Members</div>
+                    <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255, 215, 0, 0.3);">
+                        <small style="color: var(--light-gold);">
+                            <i class="fas fa-user-plus"></i> Direct Referrals: <strong id="directReferrals">-</strong>
+                        </small>
+                    </div>
+                </div>
             </div>
 
-            <div class="coming-soon-badge">
-                <i class="fas fa-rocket"></i> Coming Soon!
+            <div class="col-md-4">
+                <div class="stats-card">
+                    <h3><i class="fas fa-chart-line"></i> Team Depth</h3>
+                    <div class="stat-value" id="teamDepth">-</div>
+                    <div class="stat-label">Generations Deep</div>
+                    <div style="margin-top: 1rem;">
+                        <small style="color: var(--light-gold);">
+                            Gen 1: <strong id="gen1Count">-</strong> |
+                            Gen 2: <strong id="gen2Count">-</strong> |
+                            Gen 3: <strong id="gen3Count">-</strong>
+                        </small>
+                    </div>
+                </div>
             </div>
 
-            <p style="margin-top: 2rem; font-size: 1.1rem;">
-                View your team genealogy, track performance, and communicate with your downline all in one place!
+            <div class="col-md-4">
+                <div class="stats-card">
+                    <h3><i class="fas fa-dollar-sign"></i> Potential Income</h3>
+                    <div class="stat-value" id="estimatedIncome">R-</div>
+                    <div class="stat-label">Monthly Estimate</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Income Breakdown -->
+        <div class="section-header">
+            <h2><i class="fas fa-money-bill-wave"></i> Income Breakdown</h2>
+        </div>
+
+        <div class="stats-card">
+            <h3>💰 Income Streams from Your Team</h3>
+            <div style="margin-bottom: 1.5rem; padding: 1rem; background: rgba(255, 215, 0, 0.15); border-radius: 10px; border-left: 4px solid var(--orange);">
+                <p style="color: var(--light-gold); font-size: 0.9rem; margin: 0;">
+                    <strong>Your Tier:</strong> <span id="userTier">-</span> |
+                    <strong>ISP Rate:</strong> <span id="ispRate">-%</span>
+                </p>
+            </div>
+            <div class="income-grid">
+                <div class="income-item">
+                    <div class="income-label">ISP (Individual Sales)</div>
+                    <div class="income-value" id="ispIncome">R-</div>
+                    <small style="color: var(--light-gold); display: block; margin-top: 0.3rem;">Based on tier percentage</small>
+                </div>
+                <div class="income-item">
+                    <div class="income-label">TSC (Team Sales)</div>
+                    <div class="income-value" id="tscIncome">R-</div>
+                    <small style="color: var(--light-gold); display: block; margin-top: 0.3rem;">Multi-generation commissions</small>
+                </div>
+                <div class="income-item">
+                    <div class="income-label">QPB Bonus</div>
+                    <div class="income-value" id="qpbBonus">R-</div>
+                    <small style="color: var(--light-gold); display: block; margin-top: 0.3rem;" id="qpbStatus">-</small>
+                    <small style="color: var(--light-gold); display: block; margin-top: 0.3rem; font-size: 0.75rem;" id="qpbCycle">-</small>
+                </div>
+                <div class="income-item">
+                    <div class="income-label">Total Potential</div>
+                    <div class="income-value" id="totalPotential">R-</div>
+                    <small style="color: var(--light-gold); display: block; margin-top: 0.3rem;">Monthly estimate</small>
+                </div>
+            </div>
+            <p style="margin-top: 1.5rem; color: var(--light-gold); font-size: 0.9rem;">
+                <i class="fas fa-info-circle"></i> <strong>ISP rates:</strong> FAM 20%, Bronze 25%, Copper 30%, Silver 35%, Gold 40%, Platinum 45%, Diamond 0% (Whitelabel)<br>
+                <i class="fas fa-trophy"></i> <strong>QPB (Quick Pathfinder Bonus):</strong> First 3 sales = 8%, each additional set of 3 = 10% | Cycle: 4th-3rd monthly
             </p>
         </div>
+
+        <!-- Team Members -->
+        <div class="section-header">
+            <h2><i class="fas fa-sitemap"></i> Team Members</h2>
+        </div>
+
+        <!-- Generation Filter Tabs -->
+        <div class="generation-tabs">
+            <div class="gen-tab active" data-gen="all" onclick="filterByGeneration('all')">
+                <i class="fas fa-users"></i> All Members
+            </div>
+            <div class="gen-tab" data-gen="1" onclick="filterByGeneration('1')">
+                <i class="fas fa-user"></i> Generation 1
+            </div>
+            <div class="gen-tab" data-gen="2" onclick="filterByGeneration('2')">
+                <i class="fas fa-user-friends"></i> Generation 2
+            </div>
+            <div class="gen-tab" data-gen="3" onclick="filterByGeneration('3')">
+                <i class="fas fa-users"></i> Generation 3
+            </div>
+        </div>
+
+        <!-- Team Members List -->
+        <div id="teamMembersList">
+            <div class="loading">
+                <i class="fas fa-spinner fa-spin"></i> Loading your team...
+            </div>
+        </div>
     </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:5000/api';
+        let teamData = null;
+        let currentGeneration = 'all';
+
+        // Load referral stats
+        async function loadReferralStats() {
+            const token = localStorage.getItem('z2b_auth_token') || localStorage.getItem('authToken');
+
+            if (!token) {
+                showDemoData();
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/referrals/stats`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    teamData = data.data;
+                    displayStats(data.data);
+                    loadTeamMembers();
+                } else {
+                    showDemoData();
+                }
+            } catch (error) {
+                console.error('Error loading referral stats:', error);
+                showDemoData();
+            }
+        }
+
+        // Display stats
+        function displayStats(data) {
+            document.getElementById('totalTeamSize').textContent = data.stats.totalTeamSize || 0;
+            document.getElementById('directReferrals').textContent = data.stats.directReferrals || 0;
+            document.getElementById('teamDepth').textContent = '3'; // Max 3 generations currently
+
+            document.getElementById('gen1Count').textContent = data.stats.generation1 || 0;
+            document.getElementById('gen2Count').textContent = data.stats.generation2 || 0;
+            document.getElementById('gen3Count').textContent = data.stats.generation3 || 0;
+
+            // Display tier and ISP rate
+            document.getElementById('userTier').textContent = data.tier || 'FAM';
+            document.getElementById('ispRate').textContent = data.tierISPRate || '20%';
+
+            const ispIncome = data.stats.potentialIncome.ISP || 0;
+            const tscIncome = data.stats.potentialIncome.TSC || 0;
+            const qpbBonus = data.stats.potentialIncome.QPB || 0;
+            const totalIncome = data.stats.potentialIncome.estimated || 0;
+
+            document.getElementById('ispIncome').textContent = `R${ispIncome}`;
+            document.getElementById('tscIncome').textContent = `R${tscIncome}`;
+            document.getElementById('qpbBonus').textContent = `R${qpbBonus}`;
+            document.getElementById('totalPotential').textContent = `R${totalIncome}`;
+            document.getElementById('estimatedIncome').textContent = `R${totalIncome}`;
+
+            // Display QPB status
+            const qpbProgress = data.stats.qpbProgress;
+            if (qpbProgress) {
+                // Build status text
+                let statusText = '';
+                if (qpbProgress.completeSets > 0) {
+                    statusText = `✅ ${qpbProgress.completeSets} set(s) earned! `;
+                    if (qpbProgress.remainingSales > 0) {
+                        statusText += `${qpbProgress.remainingSales}/3 toward next set`;
+                    } else {
+                        statusText += `Ready for next set!`;
+                    }
+                } else {
+                    statusText = `${qpbProgress.totalSalesThisCycle}/3 sales this cycle`;
+                }
+                document.getElementById('qpbStatus').textContent = statusText;
+
+                // Show cycle dates
+                const cycleStart = new Date(qpbProgress.cycleStart).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short' });
+                const cycleEnd = new Date(qpbProgress.cycleEnd).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short' });
+                document.getElementById('qpbCycle').textContent = `Cycle: ${cycleStart} - ${cycleEnd} (${qpbProgress.daysRemaining} days left)`;
+            }
+        }
+
+        // Load team members
+        async function loadTeamMembers() {
+            const token = localStorage.getItem('z2b_auth_token') || localStorage.getItem('authToken');
+
+            if (!token) {
+                showDemoTeam();
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/referrals/team`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    displayTeamMembers(data.data.members);
+                } else {
+                    showDemoTeam();
+                }
+            } catch (error) {
+                console.error('Error loading team members:', error);
+                showDemoTeam();
+            }
+        }
+
+        // Display team members
+        function displayTeamMembers(members) {
+            const container = document.getElementById('teamMembersList');
+
+            if (!members || members.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-user-plus"></i>
+                        <h3>No Team Members Yet</h3>
+                        <p>Start building your team by sharing your referral link!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            members.forEach((member, index) => {
+                const initials = getInitials(member.fullName);
+                const joinDate = new Date(member.joinedDate).toLocaleDateString();
+
+                html += `
+                    <div class="team-member-card">
+                        <div class="member-info">
+                            <div class="member-avatar">${initials}</div>
+                            <div class="member-details">
+                                <div class="member-name">${member.fullName}</div>
+                                <div class="member-meta">
+                                    <span class="generation-badge">Gen 1</span>
+                                    <span class="tier-badge">${member.tier}</span>
+                                    <span style="margin-left: 0.5rem;">
+                                        <i class="fas fa-calendar"></i> Joined ${joinDate}
+                                    </span>
+                                    <span style="margin-left: 0.5rem;">
+                                        <i class="fas fa-id-card"></i> ${member.membershipNumber}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // Get initials from name
+        function getInitials(name) {
+            const parts = name.split(' ');
+            return parts.map(p => p[0]).join('').toUpperCase().substring(0, 2);
+        }
+
+        // Filter by generation
+        function filterByGeneration(gen) {
+            currentGeneration = gen;
+
+            // Update active tab
+            document.querySelectorAll('.gen-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelector(`[data-gen="${gen}"]`).classList.add('active');
+
+            // Reload members with filter
+            if (gen === 'all') {
+                loadTeamMembers();
+            } else {
+                loadGenerationMembers(gen);
+            }
+        }
+
+        // Load specific generation
+        async function loadGenerationMembers(gen) {
+            const token = localStorage.getItem('z2b_auth_token') || localStorage.getItem('authToken');
+
+            if (!token) {
+                showDemoTeam();
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/referrals/team?generation=${gen}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    displayTeamMembers(data.data.members);
+                } else {
+                    showDemoTeam();
+                }
+            } catch (error) {
+                console.error('Error loading generation members:', error);
+                showDemoTeam();
+            }
+        }
+
+        // Show demo data
+        function showDemoData() {
+            // Example: User made 4 sales this cycle (1 complete set + 1 toward next)
+            // Set 1 (3 Bronze @ R480 each): R1,440 x 8% = R115.20
+            const demoStats = {
+                tier: 'Bronze',
+                tierISPRate: '25%',
+                stats: {
+                    totalTeamSize: 7,
+                    directReferrals: 4,
+                    generation1: 4,
+                    generation2: 3,
+                    generation3: 1,
+                    potentialIncome: {
+                        ISP: 480,  // 4 referrals x R480 x 25%
+                        TSC: 350,  // Team sales commission
+                        QPB: 115,  // First set of 3: (3 x R480) x 8%
+                        estimated: 945
+                    },
+                    qpbProgress: {
+                        cycleStart: new Date(new Date().getFullYear(), new Date().getMonth(), 4),
+                        cycleEnd: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 3),
+                        totalSalesThisCycle: 4,
+                        completeSets: 1,
+                        remainingSales: 1,
+                        nextSetNeeds: 2,
+                        qpbEarned: 115,
+                        qpbSets: [
+                            { setNumber: 1, rate: '8%', description: 'Set 1 (Sales 1-3): 8%' }
+                        ],
+                        daysRemaining: 15,
+                        explanation: "You've earned 1 QPB set(s) this cycle! Next set pays 10%."
+                    }
+                }
+            };
+
+            displayStats(demoStats);
+            showDemoTeam();
+        }
+
+        // Show demo team
+        function showDemoTeam() {
+            const demoMembers = [
+                { fullName: 'Sarah Johnson', membershipNumber: 'Z2B0000002', tier: 'Bronze', joinedDate: new Date('2024-12-01') },
+                { fullName: 'Mike Williams', membershipNumber: 'Z2B0000003', tier: 'FAM', joinedDate: new Date('2024-12-05') },
+                { fullName: 'Lisa Davis', membershipNumber: 'Z2B0000004', tier: 'Silver', joinedDate: new Date('2024-12-10') }
+            ];
+
+            displayTeamMembers(demoMembers);
+        }
+
+        // Load data on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadReferralStats();
+        });
+    </script>
 
     <!-- Z2B Ecosystem Integration -->
     <script src="../js/app-config.js"></script>

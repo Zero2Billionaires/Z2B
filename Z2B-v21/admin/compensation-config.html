@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compensation Plan Configuration - Z2B Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0A2647 0%, #051428 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1400px; margin: 0 auto; }
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h1 { color: #0A2647; font-size: 32px; display: flex; align-items: center; gap: 15px; }
+        .back-btn {
+            padding: 10px 20px;
+            background: #6b7280;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .alert {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .alert-info { background: #dbeafe; color: #1e40af; border-left: 4px solid #3b82f6; }
+        .alert-success { background: #d1fae5; color: #065f46; border-left: 4px solid #10b981; }
+        .alert-warning { background: #fef3c7; color: #92400e; border-left: 4px solid #f59e0b; }
+        .content-section { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); margin-bottom: 20px; }
+        .section-title { color: #0A2647; font-size: 24px; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #e5e7eb; }
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e5e7eb;
+            overflow-x: auto;
+        }
+        .tab {
+            padding: 12px 24px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            color: #6b7280;
+            font-weight: 600;
+            white-space: nowrap;
+            transition: all 0.3s;
+        }
+        .tab.active { color: #0A2647; border-bottom: 3px solid #0A2647; margin-bottom: -2px; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .config-card {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 2px solid #e5e7eb;
+        }
+        .config-card h3 {
+            color: #0A2647;
+            margin-bottom: 15px;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .config-row {
+            display: grid;
+            grid-template-columns: 250px 1fr auto;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+        }
+        .config-row:last-child { margin-bottom: 0; }
+        .config-label { font-weight: 600; color: #374151; }
+        .config-input {
+            padding: 10px 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        .config-input:focus { outline: none; border-color: #0A2647; }
+        .config-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0A2647;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-primary { background: #0A2647; color: white; }
+        .btn-success { background: #10b981; color: white; }
+        .btn-warning { background: #f59e0b; color: white; }
+        .btn-danger { background: #ef4444; color: white; }
+        .btn-secondary { background: #6b7280; color: white; }
+        .btn:hover { opacity: 0.9; transform: translateY(-1px); }
+        .save-bar {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .tier-matrix {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .tier-matrix th,
+        .tier-matrix td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #e5e7eb;
+        }
+        .tier-matrix th {
+            background: #0A2647;
+            color: white;
+            font-weight: 600;
+        }
+        .tier-matrix td input {
+            width: 80px;
+            padding: 8px;
+            border: 2px solid #e5e7eb;
+            border-radius: 6px;
+            text-align: center;
+        }
+        .generation-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+        }
+        .generation-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 2px solid #e5e7eb;
+        }
+        .generation-item label {
+            display: block;
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        .generation-item input {
+            width: 100%;
+            padding: 8px;
+            border: 2px solid #e5e7eb;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .tli-level-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid #0A2647;
+        }
+        .tli-level-card h4 {
+            color: #0A2647;
+            margin-bottom: 10px;
+        }
+        .tli-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 10px;
+        }
+        .tli-field {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .tli-field label {
+            font-size: 12px;
+            color: #6b7280;
+            font-weight: 600;
+        }
+        .tli-field input {
+            padding: 8px;
+            border: 2px solid #e5e7eb;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-cog"></i> Compensation Plan Configuration</h1>
+            <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Admin</a>
+        </div>
+
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i>
+            <div>
+                <strong>Configure your 6 income streams:</strong> Changes will affect commission calculations immediately. Make sure to save after making changes.
+            </div>
+        </div>
+
+        <div id="successAlert" class="alert alert-success" style="display: none;">
+            <i class="fas fa-check-circle"></i>
+            <span id="successMessage">Configuration saved successfully!</span>
+        </div>
+
+        <div class="content-section">
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('isp')">1. ISP</button>
+                <button class="tab" onclick="switchTab('qpb')">2. QPB</button>
+                <button class="tab" onclick="switchTab('tsc')">3. TSC</button>
+                <button class="tab" onclick="switchTab('tpb')">4. TPB</button>
+                <button class="tab" onclick="switchTab('tli')">5. TLI</button>
+                <button class="tab" onclick="switchTab('ceo')">6. CEO</button>
+            </div>
+
+            <!-- ISP Tab -->
+            <div class="tab-content active" id="isp-tab">
+                <h2 class="section-title">Individual Sales Profit (ISP)</h2>
+                <p style="color: #6b7280; margin-bottom: 20px;">
+                    Direct commission from personal sales based on member's tier. Configure the percentage each tier earns from their direct sales.
+                </p>
+
+                <div class="config-card">
+                    <h3><i class="fas fa-percentage"></i> ISP Commission Rates by Tier</h3>
+                    <table class="tier-matrix">
+                        <thead>
+                            <tr>
+                                <th>Tier</th>
+                                <th>Price</th>
+                                <th>ISP Commission %</th>
+                                <th>Estimated Earning</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>FAM (Free)</strong></td>
+                                <td>R 0</td>
+                                <td><input type="number" id="isp_fam" value="20" min="0" max="100" step="1"></td>
+                                <td class="config-value">R 0</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Bronze</strong></td>
+                                <td>R 480</td>
+                                <td><input type="number" id="isp_bronze" value="25" min="0" max="100" step="1"></td>
+                                <td class="config-value">R 120</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Copper</strong></td>
+                                <td>R 999</td>
+                                <td><input type="number" id="isp_copper" value="28" min="0" max="100" step="1"></td>
+                                <td class="config-value">R 280</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Silver</strong></td>
+                                <td>R 1,480</td>
+                                <td><input type="number" id="isp_silver" value="30" min="0" max="100" step="1"></td>
+                                <td class="config-value">R 444</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Gold</strong></td>
+                                <td>R 2,980</td>
+                                <td><input type="number" id="isp_gold" value="35" min="0" max="100" step="1"></td>
+                                <td class="config-value">R 1,043</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Platinum</strong></td>
+                                <td>R 4,980</td>
+                                <td><input type="number" id="isp_platinum" value="40" min="0" max="100" step="1"></td>
+                                <td class="config-value">R 1,992</td>
+                            </tr>
+                            <tr style="background: #fef3c7;">
+                                <td><strong>Diamond (White Label)</strong></td>
+                                <td>R 11,980 + 7.5% royalties</td>
+                                <td>
+                                    <input type="number" id="isp_diamond" value="0" min="0" max="0" step="1" readonly style="background: #fee;cursor: not-allowed;">
+                                    <small style="display:block;color:#92400e;margin-top:5px;">❌ No ISP - White Label Tier Only</small>
+                                    <small style="display:block;color:#065f46;margin-top:3px;">✓ Max earnings: Platinum (if qualified)</small>
+                                </td>
+                                <td class="config-value" style="color:#dc2626;">R 0</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- QPB Tab -->
+            <div class="tab-content" id="qpb-tab">
+                <h2 class="section-title">Quick Pathfinder Bonus (QPB)</h2>
+                <p style="color: #6b7280; margin-bottom: 20px;">
+                    Bonus for recruiting in sets of 3. First set earns one rate, subsequent sets earn a higher rate.
+                </p>
+
+                <div class="config-card">
+                    <h3><i class="fas fa-rocket"></i> QPB Configuration</h3>
+                    <div class="config-row">
+                        <div class="config-label">First Set Rate (First 3 Recruits)</div>
+                        <input type="number" id="qpb_first" class="config-input" value="8" min="0" max="100" step="0.5">
+                        <span style="color: #6b7280;">%</span>
+                    </div>
+                    <div class="config-row">
+                        <div class="config-label">Additional Set Rate (Subsequent Sets)</div>
+                        <input type="number" id="qpb_additional" class="config-input" value="10" min="0" max="100" step="0.5">
+                        <span style="color: #6b7280;">%</span>
+                    </div>
+                    <div class="config-row">
+                        <div class="config-label">Required Sales per Set</div>
+                        <input type="number" id="qpb_required" class="config-input" value="3" min="1" max="10" step="1">
+                        <span style="color: #6b7280;">recruits</span>
+                    </div>
+                    <div class="config-row">
+                        <div class="config-label">Cycle Start Day</div>
+                        <input type="number" id="qpb_cycle_start" class="config-input" value="4" min="1" max="31" step="1">
+                        <span style="color: #6b7280;">of month</span>
+                    </div>
+                    <div class="config-row">
+                        <div class="config-label">Cycle End Day</div>
+                        <input type="number" id="qpb_cycle_end" class="config-input" value="3" min="1" max="31" step="1">
+                        <span style="color: #6b7280;">of next month</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TSC Tab -->
+            <div class="tab-content" id="tsc-tab">
+                <h2 class="section-title">Team Sales Commission (TSC)</h2>
+                <p style="color: #6b7280; margin-bottom: 20px;">
+                    10-generation deep commission structure. Configure percentage for each generation level.
+                </p>
+
+                <div class="config-card">
+                    <h3><i class="fas fa-sitemap"></i> TSC Generation Percentages</h3>
+                    <div class="generation-grid">
+                        <div class="generation-item">
+                            <label>Generation 1</label>
+                            <input type="number" id="tsc_gen1" value="10" min="0" max="100" step="0.5">
+                            <small style="color: #6b7280; font-size: 11px;">Direct recruits</small>
+                        </div>
+                        <div class="generation-item">
+                            <label>Generation 2</label>
+                            <input type="number" id="tsc_gen2" value="6" min="0" max="100" step="0.5">
+                        </div>
+                        <div class="generation-item">
+                            <label>Generation 3</label>
+                            <input type="number" id="tsc_gen3" value="4" min="0" max="100" step="0.5">
+                        </div>
+                        <div class="generation-item">
+                            <label>Generation 4</label>
+                            <input type="number" id="tsc_gen4" value="3" min="0" max="100" step="0.5">
+                        </div>
+                        <div class="generation-item">
+                            <label>Generation 5</label>
+                            <input type="number" id="tsc_gen5" value="2" min="0" max="100" step="0.5">
+                        </div>
+                        <div class="generation-item">
+                            <label>Generation 6</label>
+                            <input type="number" id="tsc_gen6" value="1" min="0" max="100" step="0.5">
+                        </div>
+                        <div class="generation-item">
+                            <label>Generation 7</label>
+                            <input type="number" id="tsc_gen7" value="1" min="0" max="100" step="0.5">
+                        </div>
+                        <div class="generation-item">
+                            <label>Generation 8</label>
+                            <input type="number" id="tsc_gen8" value="1" min="0" max="100" step="0.5">
+                        </div>
+                        <div class="generation-item">
+                            <label>Generation 9</label>
+                            <input type="number" id="tsc_gen9" value="1" min="0" max="100" step="0.5">
+                        </div>
+                        <div class="generation-item">
+                            <label>Generation 10</label>
+                            <input type="number" id="tsc_gen10" value="1" min="0" max="100" step="0.5">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="config-card" style="margin-top: 20px;">
+                    <h3><i class="fas fa-layer-group"></i> TSC Depth Limits by Tier</h3>
+                    <p style="color: #6b7280; margin-bottom: 15px; font-size: 14px;">
+                        Configure how many generations each tier can earn from (tier qualification depth).
+                    </p>
+                    <div class="config-row">
+                        <div class="config-label">Bronze</div>
+                        <input type="number" id="tsc_depth_bronze" class="config-input" value="3" min="0" max="10" step="1">
+                        <span style="color: #6b7280;">generations</span>
+                    </div>
+                    <div class="config-row">
+                        <div class="config-label">Copper</div>
+                        <input type="number" id="tsc_depth_copper" class="config-input" value="5" min="0" max="10" step="1">
+                        <span style="color: #6b7280;">generations</span>
+                    </div>
+                    <div class="config-row">
+                        <div class="config-label">Silver</div>
+                        <input type="number" id="tsc_depth_silver" class="config-input" value="7" min="0" max="10" step="1">
+                        <span style="color: #6b7280;">generations</span>
+                    </div>
+                    <div class="config-row">
+                        <div class="config-label">Gold</div>
+                        <input type="number" id="tsc_depth_gold" class="config-input" value="9" min="0" max="10" step="1">
+                        <span style="color: #6b7280;">generations</span>
+                    </div>
+                    <div class="config-row">
+                        <div class="config-label">Platinum</div>
+                        <input type="number" id="tsc_depth_platinum" class="config-input" value="10" min="0" max="10" step="1">
+                        <span style="color: #6b7280;">generations</span>
+                    </div>
+                    <div class="config-row">
+                        <div class="config-label">Diamond</div>
+                        <input type="number" id="tsc_depth_diamond" class="config-input" value="10" min="0" max="10" step="1">
+                        <span style="color: #6b7280;">generations</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TPB Tab -->
+            <div class="tab-content" id="tpb-tab">
+                <h2 class="section-title">Team Performance Bonus (TPB)</h2>
+                <p style="color: #6b7280; margin-bottom: 20px;">
+                    Pool distribution based on team performance. Members must have required number of active builders monthly.
+                </p>
+
+                <div class="config-card">
+                    <h3><i class="fas fa-users-cog"></i> TPB Pool Configuration</h3>
+                    <div class="config-row">
+                        <div class="config-label">Pool Percentage</div>
+                        <input type="number" id="tpb_pool" class="config-input" value="10" min="0" max="100" step="0.5">
+                        <span style="color: #6b7280;">% of total team PV</span>
+                    </div>
+                    <div class="config-row">
+                        <div class="config-label">Per Generation Distribution</div>
+                        <input type="number" id="tpb_per_gen" class="config-input" value="1" min="0" max="100" step="0.5">
+                        <span style="color: #6b7280;">% per generation</span>
+                    </div>
+                </div>
+
+                <div class="config-card" style="margin-top: 20px;">
+                    <h3><i class="fas fa-check-circle"></i> Required Active Builders by Tier</h3>
+                    <p style="color: #6b7280; margin-bottom: 15px; font-size: 14px;">
+                        Number of active builders required monthly to qualify for TPB.
+                    </p>
+                    <div class="config-row">
+                        <div class="config-label">Bronze</div>
+                        <input type="number" id="tpb_req_bronze" class="config-input" value="2" min="0" max="50" step="1">
+                        <span style="color: #6b7280;">builders</span>
+                    </div>
+                    <div class="config-row">
+                        <div class="config-label">Copper</div>
+                        <input type="number" id="tpb_req_copper" class="config-input" value="3" min="0" max="50" step="1">
+                        <span style="color: #6b7280;">builders</span>
+                    </div>
+                    <div class="config-row">
+                        <div class="config-label">Silver</div>
+                        <input type="number" id="tpb_req_silver" class="config-input" value="4" min="0" max="50" step="1">
+                        <span style="color: #6b7280;">builders</span>
+                    </div>
+                    <div class="config-row">
+                        <div class="config-label">Gold</div>
+                        <input type="number" id="tpb_req_gold" class="config-input" value="6" min="0" max="50" step="1">
+                        <span style="color: #6b7280;">builders</span>
+                    </div>
+                    <div class="config-row">
+                        <div class="config-label">Platinum</div>
+                        <input type="number" id="tpb_req_platinum" class="config-input" value="8" min="0" max="50" step="1">
+                        <span style="color: #6b7280;">builders</span>
+                    </div>
+                    <div class="config-row">
+                        <div class="config-label">Diamond</div>
+                        <input type="number" id="tpb_req_diamond" class="config-input" value="9" min="0" max="50" step="1">
+                        <span style="color: #6b7280;">builders</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TLI Tab -->
+            <div class="tab-content" id="tli-tab">
+                <h2 class="section-title">Team Leadership Incentive (TLI)</h2>
+                <p style="color: #6b7280; margin-bottom: 20px;">
+                    Achievement-based recognition program. Configure all 10 levels with requirements and rewards.
+                </p>
+
+                <div id="tliLevels">
+                    <!-- Will be populated with TLI levels -->
+                </div>
+
+                <button class="btn btn-primary" onclick="addTLILevel()" style="margin-top: 15px;">
+                    <i class="fas fa-plus"></i> Add TLI Level
+                </button>
+            </div>
+
+            <!-- CEO Tab -->
+            <div class="tab-content" id="ceo-tab">
+                <h2 class="section-title">CEO Competition Awards</h2>
+                <p style="color: #6b7280; margin-bottom: 20px;">
+                    Configure default prize distribution for CEO competitions.
+                </p>
+
+                <div class="config-card">
+                    <h3><i class="fas fa-trophy"></i> Default Prize Distribution</h3>
+                    <div class="config-row">
+                        <div class="config-label">1st Place</div>
+                        <input type="number" id="ceo_first" class="config-input" value="50" min="0" max="100" step="1">
+                        <span style="color: #6b7280;">% of prize pool</span>
+                    </div>
+                    <div class="config-row">
+                        <div class="config-label">2nd Place</div>
+                        <input type="number" id="ceo_second" class="config-input" value="30" min="0" max="100" step="1">
+                        <span style="color: #6b7280;">% of prize pool</span>
+                    </div>
+                    <div class="config-row">
+                        <div class="config-label">3rd Place</div>
+                        <input type="number" id="ceo_third" class="config-input" value="20" min="0" max="100" step="1">
+                        <span style="color: #6b7280;">% of prize pool</span>
+                    </div>
+                </div>
+
+                <div class="alert alert-warning" style="margin-top: 20px;">
+                    <i class="fas fa-info-circle"></i>
+                    <div>
+                        <strong>Note:</strong> Individual competitions can override these defaults when created. This serves as a template for new competitions.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Save Bar -->
+    <div class="save-bar">
+        <span style="color: #6b7280;">Unsaved changes</span>
+        <button class="btn btn-success" onclick="saveAllConfigurations()">
+            <i class="fas fa-save"></i> Save All Changes
+        </button>
+        <button class="btn btn-secondary" onclick="location.reload()">
+            <i class="fas fa-undo"></i> Reset
+        </button>
+    </div>
+
+    <script src="../js/app-config.js"></script>
+    <script>
+        let tliLevels = [];
+
+        // Load TLI levels on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadConfigurations();
+            loadTLILevels();
+        });
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            event.target.classList.add('active');
+            document.getElementById(tabName + '-tab').classList.add('active');
+        }
+
+        async function loadConfigurations() {
+            try {
+                const response = await fetch(`${API_CONFIG.BASE_URL}/commissions/rates`);
+                const data = await response.json();
+
+                if (data.success || data) {
+                    // Populate ISP rates
+                    if (data.isp) {
+                        document.getElementById('isp_fam').value = data.isp.fam || 20;
+                        document.getElementById('isp_bronze').value = data.isp.bronze || 25;
+                        document.getElementById('isp_copper').value = data.isp.copper || 30;
+                        document.getElementById('isp_silver').value = data.isp.silver || 35;
+                        document.getElementById('isp_gold').value = data.isp.gold || 40;
+                        document.getElementById('isp_platinum').value = data.isp.platinum || 45;
+                        document.getElementById('isp_diamond').value = data.isp.diamond || 0;
+                    }
+
+                    // Populate other configurations...
+                    console.log('Configurations loaded:', data);
+                }
+            } catch (error) {
+                console.error('Error loading configurations:', error);
+            }
+        }
+
+        async function loadTLILevels() {
+            // Load from API or use defaults
+            tliLevels = [
+                { level: 1, name: 'Ignite Pathfinder 🔥', pv: 50, reward: 600, requiredInvites: 2, requiredInviteLevel: 'active' },
+                { level: 2, name: 'Guardian of Growth 🌱', pv: 150, reward: 1500, requiredInvites: 2, requiredInviteLevel: 1 },
+                { level: 3, name: 'Cash Catalyst 💰', pv: 300, reward: 3000, requiredInvites: 2, requiredInviteLevel: 2 },
+                { level: 4, name: 'Freedom Architect 🏛️', pv: 1500, reward: 15000, requiredInvites: 2, requiredInviteLevel: 3 },
+                { level: 5, name: 'Lifestyle Ambassador ✈️', pv: 3000, reward: 30000, requiredInvites: 2, requiredInviteLevel: 4 },
+                { level: 6, name: 'Mama I Made It 🚗', pv: 15000, reward: 150000, requiredInvites: 3, requiredInviteLevel: 5 },
+                { level: 7, name: 'Estate Pioneer 🏠', pv: 40000, reward: 375000, requiredInvites: 3, requiredInviteLevel: 6 },
+                { level: 8, name: 'Capital Visionary 💼', pv: 80000, reward: 600000, requiredInvites: 3, requiredInviteLevel: 7 },
+                { level: 9, name: 'Mega Estate Builder 🏰', pv: 100000, reward: 750000, requiredInvites: 3, requiredInviteLevel: 8 },
+                { level: 10, name: 'Titan Capitalist 💎', pv: 200000, reward: 1500000, requiredInvites: 3, requiredInviteLevel: 9 }
+            ];
+
+            renderTLILevels();
+        }
+
+        function renderTLILevels() {
+            const container = document.getElementById('tliLevels');
+            container.innerHTML = tliLevels.map((level, index) => `
+                <div class="tli-level-card">
+                    <h4>Level ${level.level}: ${level.name}</h4>
+                    <div class="tli-grid">
+                        <div class="tli-field">
+                            <label>Level #</label>
+                            <input type="number" value="${level.level}" onchange="updateTLILevel(${index}, 'level', this.value)">
+                        </div>
+                        <div class="tli-field">
+                            <label>Name</label>
+                            <input type="text" value="${level.name}" onchange="updateTLILevel(${index}, 'name', this.value)">
+                        </div>
+                        <div class="tli-field">
+                            <label>PV Required</label>
+                            <input type="number" value="${level.pv}" onchange="updateTLILevel(${index}, 'pv', this.value)">
+                        </div>
+                        <div class="tli-field">
+                            <label>Reward (R)</label>
+                            <input type="number" value="${level.reward}" onchange="updateTLILevel(${index}, 'reward', this.value)">
+                        </div>
+                        <div class="tli-field">
+                            <label>Required Invites</label>
+                            <input type="number" value="${level.requiredInvites}" onchange="updateTLILevel(${index}, 'requiredInvites', this.value)">
+                        </div>
+                        <div class="tli-field">
+                            <label>Invite Level Req</label>
+                            <input type="text" value="${level.requiredInviteLevel}" onchange="updateTLILevel(${index}, 'requiredInviteLevel', this.value)">
+                        </div>
+                    </div>
+                    <button class="btn btn-danger btn-sm" onclick="removeTLILevel(${index})" style="margin-top: 10px;">
+                        <i class="fas fa-trash"></i> Remove Level
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function updateTLILevel(index, field, value) {
+            tliLevels[index][field] = isNaN(value) ? value : parseFloat(value);
+        }
+
+        function addTLILevel() {
+            const newLevel = {
+                level: tliLevels.length + 1,
+                name: `New Level ${tliLevels.length + 1}`,
+                pv: 0,
+                reward: 0,
+                requiredInvites: 0,
+                requiredInviteLevel: 0
+            };
+            tliLevels.push(newLevel);
+            renderTLILevels();
+        }
+
+        function removeTLILevel(index) {
+            if (confirm('Are you sure you want to remove this TLI level?')) {
+                tliLevels.splice(index, 1);
+                renderTLILevels();
+            }
+        }
+
+        async function saveAllConfigurations() {
+            const config = {
+                isp: {
+                    fam: parseFloat(document.getElementById('isp_fam').value),
+                    bronze: parseFloat(document.getElementById('isp_bronze').value),
+                    copper: parseFloat(document.getElementById('isp_copper').value),
+                    silver: parseFloat(document.getElementById('isp_silver').value),
+                    gold: parseFloat(document.getElementById('isp_gold').value),
+                    platinum: parseFloat(document.getElementById('isp_platinum').value),
+                    diamond: parseFloat(document.getElementById('isp_diamond').value)
+                },
+                qpb: {
+                    firstSetRate: parseFloat(document.getElementById('qpb_first').value),
+                    additionalSetRate: parseFloat(document.getElementById('qpb_additional').value),
+                    requiredSales: parseInt(document.getElementById('qpb_required').value),
+                    cycleStart: parseInt(document.getElementById('qpb_cycle_start').value),
+                    cycleEnd: parseInt(document.getElementById('qpb_cycle_end').value)
+                },
+                tsc: {
+                    generations: [
+                        parseFloat(document.getElementById('tsc_gen1').value),
+                        parseFloat(document.getElementById('tsc_gen2').value),
+                        parseFloat(document.getElementById('tsc_gen3').value),
+                        parseFloat(document.getElementById('tsc_gen4').value),
+                        parseFloat(document.getElementById('tsc_gen5').value),
+                        parseFloat(document.getElementById('tsc_gen6').value),
+                        parseFloat(document.getElementById('tsc_gen7').value),
+                        parseFloat(document.getElementById('tsc_gen8').value),
+                        parseFloat(document.getElementById('tsc_gen9').value),
+                        parseFloat(document.getElementById('tsc_gen10').value)
+                    ],
+                    depthLimits: {
+                        bronze: parseInt(document.getElementById('tsc_depth_bronze').value),
+                        copper: parseInt(document.getElementById('tsc_depth_copper').value),
+                        silver: parseInt(document.getElementById('tsc_depth_silver').value),
+                        gold: parseInt(document.getElementById('tsc_depth_gold').value),
+                        platinum: parseInt(document.getElementById('tsc_depth_platinum').value),
+                        diamond: parseInt(document.getElementById('tsc_depth_diamond').value)
+                    }
+                },
+                tpb: {
+                    poolPercentage: parseFloat(document.getElementById('tpb_pool').value),
+                    perGeneration: parseFloat(document.getElementById('tpb_per_gen').value),
+                    requiredBuilders: {
+                        bronze: parseInt(document.getElementById('tpb_req_bronze').value),
+                        copper: parseInt(document.getElementById('tpb_req_copper').value),
+                        silver: parseInt(document.getElementById('tpb_req_silver').value),
+                        gold: parseInt(document.getElementById('tpb_req_gold').value),
+                        platinum: parseInt(document.getElementById('tpb_req_platinum').value),
+                        diamond: parseInt(document.getElementById('tpb_req_diamond').value)
+                    }
+                },
+                tli: tliLevels,
+                ceo: {
+                    first: parseFloat(document.getElementById('ceo_first').value),
+                    second: parseFloat(document.getElementById('ceo_second').value),
+                    third: parseFloat(document.getElementById('ceo_third').value)
+                }
+            };
+
+            try {
+                const response = await fetch(`${API_CONFIG.BASE_URL}/commissions/rates`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(config)
+                });
+
+                const data = await response.json();
+
+                if (data.success || data) {
+                    showSuccess('Configuration saved successfully!');
+                } else {
+                    alert('Error saving configuration: ' + (data.message || 'Unknown error'));
+                }
+            } catch (error) {
+                console.error('Error saving configuration:', error);
+                alert('Error saving configuration. Please try again.');
+            }
+        }
+
+        function showSuccess(message) {
+            const alert = document.getElementById('successAlert');
+            document.getElementById('successMessage').textContent = message;
+            alert.style.display = 'flex';
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

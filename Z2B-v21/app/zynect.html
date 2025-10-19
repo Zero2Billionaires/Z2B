@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zynect CRM - Z2B Legacy Builders</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0A2647;
+            --secondary: #144272;
+            --accent: #205295;
+            --gold: #FFD700;
+            --orange: #FF6B35;
+            --success: #4CAF50;
+            --info: #2196F3;
+            --warning: #FF9800;
+            --white: #FFFFFF;
+            --light-bg: #F8F9FA;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--light-bg);
+            color: var(--primary);
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--white);
+            padding: 1.5rem 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo i {
+            font-size: 2.5rem;
+            color: var(--gold);
+        }
+
+        .logo-text h1 {
+            font-size: 1.8rem;
+            margin: 0;
+            color: var(--gold);
+        }
+
+        .logo-text p {
+            margin: 0;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-header {
+            padding: 0.6rem 1.5rem;
+            border: 2px solid var(--gold);
+            background: transparent;
+            color: var(--white);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-header:hover {
+            background: var(--gold);
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        /* Tab Navigation */
+        .tab-nav {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #e0e0e0;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            padding: 1rem 2rem;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            color: var(--primary);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            background: rgba(10, 38, 71, 0.05);
+        }
+
+        .tab-btn.active {
+            border-bottom-color: var(--gold);
+            color: var(--accent);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(145deg, var(--white), #f5f5f5);
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid var(--gold);
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-card h3 {
+            font-size: 2rem;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card p {
+            color: var(--primary);
+            opacity: 0.8;
+            margin: 0;
+        }
+
+        .stat-icon {
+            float: right;
+            font-size: 2.5rem;
+            color: var(--gold);
+            opacity: 0.3;
+        }
+
+        /* Card */
+        .card-custom {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+        }
+
+        .card-custom h2 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--gold);
+        }
+
+        /* Contact List */
+        .contact-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            padding: 1.5rem;
+            background: linear-gradient(145deg, #ffffff, #f9f9f9);
+            border-radius: 12px;
+            border-left: 4px solid var(--accent);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .contact-item:hover {
+            background: linear-gradient(145deg, #f9f9f9, #f0f0f0);
+            transform: translateX(5px);
+            border-left-color: var(--gold);
+        }
+
+        .contact-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--gold));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--white);
+            font-weight: bold;
+            margin-right: 1.5rem;
+        }
+
+        .contact-info {
+            flex: 1;
+        }
+
+        .contact-name {
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .contact-details {
+            color: var(--primary);
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+
+        .contact-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: var(--accent);
+            color: var(--white);
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .action-btn.email {
+            background: #EA4335;
+        }
+
+        .action-btn.whatsapp {
+            background: #25D366;
+        }
+
+        .action-btn.sms {
+            background: #2196F3;
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .form-control-custom {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-control-custom:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
+        }
+
+        textarea.form-control-custom {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(135deg, var(--accent), var(--gold));
+            color: var(--white);
+            border: none;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.5);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal-content-custom {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header-custom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--gold);
+        }
+
+        .modal-header-custom h3 {
+            color: var(--primary);
+            margin: 0;
+        }
+
+        .btn-close-custom {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--primary);
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+
+        .btn-close-custom:hover {
+            background: rgba(0, 0, 0, 0.1);
+            transform: rotate(90deg);
+        }
+
+        /* Conversation View */
+        .conversation-container {
+            display: flex;
+            gap: 1.5rem;
+            height: 600px;
+        }
+
+        .conversation-list {
+            width: 300px;
+            background: var(--white);
+            border-radius: 15px;
+            padding: 1rem;
+            overflow-y: auto;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .conversation-item {
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+        }
+
+        .conversation-item:hover {
+            background: var(--light-bg);
+            border-left-color: var(--gold);
+        }
+
+        .conversation-item.active {
+            background: linear-gradient(145deg, rgba(255, 215, 0, 0.1), rgba(32, 82, 149, 0.1));
+            border-left-color: var(--accent);
+        }
+
+        .conversation-window {
+            flex: 1;
+            background: var(--white);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .messages-area {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: var(--light-bg);
+            border-radius: 10px;
+        }
+
+        .message {
+            margin-bottom: 1rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .message.sent {
+            flex-direction: row-reverse;
+        }
+
+        .message-bubble {
+            max-width: 70%;
+            padding: 0.8rem 1.2rem;
+            border-radius: 15px;
+            background: var(--white);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .message.sent .message-bubble {
+            background: linear-gradient(135deg, var(--accent), var(--gold));
+            color: var(--white);
+        }
+
+        .message-input-area {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .message-input-area input {
+            flex: 1;
+        }
+
+        /* Campaign Section */
+        .campaign-card {
+            background: linear-gradient(145deg, #ffffff, #f9f9f9);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--success);
+        }
+
+        .campaign-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .campaign-title {
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        .campaign-status {
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .campaign-status.active {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .campaign-status.scheduled {
+            background: #2196F3;
+            color: white;
+        }
+
+        .campaign-status.completed {
+            background: #9E9E9E;
+            color: white;
+        }
+
+        .campaign-stats {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .campaign-stat {
+            text-align: center;
+        }
+
+        .campaign-stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent);
+        }
+
+        .campaign-stat-label {
+            font-size: 0.85rem;
+            color: var(--primary);
+            opacity: 0.7;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .conversation-container {
+                flex-direction: column;
+                height: auto;
+            }
+
+            .conversation-list {
+                width: 100%;
+                height: 200px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-network-wired"></i>
+                <div class="logo-text">
+                    <h1>Zynect CRM</h1>
+                    <p>Connect, Communicate, Convert</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <a href="dashboard.html" class="btn-header">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <i class="fas fa-users stat-icon"></i>
+                <h3>1,247</h3>
+                <p>Total Contacts</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-envelope stat-icon"></i>
+                <h3>3,456</h3>
+                <p>Emails Sent</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-sms stat-icon"></i>
+                <h3>892</h3>
+                <p>SMS Sent</p>
+            </div>
+            <div class="stat-card">
+                <i class="fab fa-whatsapp stat-icon"></i>
+                <h3>1,234</h3>
+                <p>WhatsApp Messages</p>
+            </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="tab-nav">
+            <button class="tab-btn active" onclick="switchTab('contacts')">
+                <i class="fas fa-address-book"></i> Contacts
+            </button>
+            <button class="tab-btn" onclick="switchTab('messages')">
+                <i class="fas fa-comments"></i> Messages
+            </button>
+            <button class="tab-btn" onclick="switchTab('campaigns')">
+                <i class="fas fa-bullhorn"></i> Campaigns
+            </button>
+            <button class="tab-btn" onclick="switchTab('analytics')">
+                <i class="fas fa-chart-bar"></i> Analytics
+            </button>
+        </div>
+
+        <!-- Contacts Tab -->
+        <div id="contacts" class="tab-content active">
+            <div class="card-custom">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <h2 style="margin: 0; border: none; padding: 0;">Your Contacts</h2>
+                    <button class="btn-primary-custom" onclick="openAddContactModal()">
+                        <i class="fas fa-user-plus"></i> Add Contact
+                    </button>
+                </div>
+
+                <div class="form-group">
+                    <input type="text" class="form-control-custom" placeholder="🔍 Search contacts..." id="searchContacts" oninput="searchContacts()">
+                </div>
+
+                <div class="contact-list" id="contactList">
+                    <!-- Contacts will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Messages Tab -->
+        <div id="messages" class="tab-content">
+            <div class="card-custom">
+                <h2>Messages & Conversations</h2>
+
+                <div class="conversation-container">
+                    <div class="conversation-list" id="conversationList">
+                        <!-- Conversation list will be populated here -->
+                    </div>
+
+                    <div class="conversation-window">
+                        <div class="messages-area" id="messagesArea">
+                            <p style="text-align: center; color: #999; margin-top: 50%;">Select a conversation to view messages</p>
+                        </div>
+
+                        <div class="message-input-area">
+                            <input type="text" class="form-control-custom" placeholder="Type your message..." id="messageInput">
+                            <button class="btn-primary-custom" onclick="sendMessage()">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Campaigns Tab -->
+        <div id="campaigns" class="tab-content">
+            <div class="card-custom">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <h2 style="margin: 0; border: none; padding: 0;">Marketing Campaigns</h2>
+                    <button class="btn-primary-custom" onclick="openCampaignModal()">
+                        <i class="fas fa-plus"></i> New Campaign
+                    </button>
+                </div>
+
+                <div id="campaignList">
+                    <!-- Campaigns will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics Tab -->
+        <div id="analytics" class="tab-content">
+            <div class="card-custom">
+                <h2>Communication Analytics</h2>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i class="fas fa-envelope-open stat-icon"></i>
+                        <h3>68%</h3>
+                        <p>Email Open Rate</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-mouse-pointer stat-icon"></i>
+                        <h3>24%</h3>
+                        <p>Click-Through Rate</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-reply stat-icon"></i>
+                        <h3>45%</h3>
+                        <p>Response Rate</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-user-check stat-icon"></i>
+                        <h3>32%</h3>
+                        <p>Conversion Rate</p>
+                    </div>
+                </div>
+
+                <div style="margin-top: 2rem; padding: 2rem; background: linear-gradient(135deg, rgba(10, 38, 71, 0.05), rgba(255, 215, 0, 0.05)); border-radius: 15px; text-align: center;">
+                    <i class="fas fa-chart-line" style="font-size: 4rem; color: var(--gold); margin-bottom: 1rem;"></i>
+                    <h3>Advanced Analytics Coming Soon</h3>
+                    <p>Detailed insights, campaign performance tracking, and AI-powered recommendations will be available in the next update.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Contact Modal -->
+    <div class="modal-overlay" id="addContactModal">
+        <div class="modal-content-custom">
+            <div class="modal-header-custom">
+                <h3><i class="fas fa-user-plus"></i> Add New Contact</h3>
+                <button class="btn-close-custom" onclick="closeAddContactModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <form onsubmit="addContact(event)">
+                <div class="form-group">
+                    <label>Full Name *</label>
+                    <input type="text" class="form-control-custom" id="contactName" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" class="form-control-custom" id="contactEmail">
+                </div>
+
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" class="form-control-custom" id="contactPhone">
+                </div>
+
+                <div class="form-group">
+                    <label>WhatsApp Number</label>
+                    <input type="tel" class="form-control-custom" id="contactWhatsApp">
+                </div>
+
+                <div class="form-group">
+                    <label>Tags (comma-separated)</label>
+                    <input type="text" class="form-control-custom" id="contactTags" placeholder="e.g., Lead, VIP, Customer">
+                </div>
+
+                <div class="form-group">
+                    <label>Notes</label>
+                    <textarea class="form-control-custom" id="contactNotes"></textarea>
+                </div>
+
+                <button type="submit" class="btn-primary-custom" style="width: 100%;">
+                    <i class="fas fa-save"></i> Save Contact
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Campaign Modal -->
+    <div class="modal-overlay" id="campaignModal">
+        <div class="modal-content-custom">
+            <div class="modal-header-custom">
+                <h3><i class="fas fa-bullhorn"></i> Create Campaign</h3>
+                <button class="btn-close-custom" onclick="closeCampaignModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <form onsubmit="createCampaign(event)">
+                <div class="form-group">
+                    <label>Campaign Name *</label>
+                    <input type="text" class="form-control-custom" id="campaignName" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Channel *</label>
+                    <select class="form-control-custom" id="campaignChannel" required>
+                        <option value="">Select Channel</option>
+                        <option value="email">Email</option>
+                        <option value="sms">SMS</option>
+                        <option value="whatsapp">WhatsApp</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Message *</label>
+                    <textarea class="form-control-custom" id="campaignMessage" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Target Audience</label>
+                    <select class="form-control-custom" id="campaignAudience">
+                        <option value="all">All Contacts</option>
+                        <option value="leads">Leads Only</option>
+                        <option value="customers">Customers Only</option>
+                        <option value="vip">VIP Contacts</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Schedule</label>
+                    <select class="form-control-custom" id="campaignSchedule">
+                        <option value="now">Send Now</option>
+                        <option value="later">Schedule for Later</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-primary-custom" style="width: 100%;">
+                    <i class="fas fa-rocket"></i> Launch Campaign
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Sample Data
+        let contacts = [
+            { id: 1, name: 'John Smith', email: 'john@example.com', phone: '+27123456789', whatsapp: '+27123456789', tags: ['Lead', 'VIP'], notes: 'Interested in Gold tier' },
+            { id: 2, name: 'Sarah Johnson', email: 'sarah@example.com', phone: '+27987654321', whatsapp: '+27987654321', tags: ['Customer'], notes: 'Active member' },
+            { id: 3, name: 'Michael Brown', email: 'michael@example.com', phone: '+27111222333', whatsapp: '+27111222333', tags: ['Lead'], notes: 'Requested more info' },
+            { id: 4, name: 'Emily Davis', email: 'emily@example.com', phone: '+27444555666', whatsapp: '+27444555666', tags: ['Customer', 'VIP'], notes: 'Platinum member' },
+            { id: 5, name: 'David Wilson', email: 'david@example.com', phone: '+27777888999', whatsapp: '+27777888999', tags: ['Lead'], notes: 'Follow up next week' }
+        ];
+
+        let campaigns = [
+            { id: 1, name: 'Summer Promotion', channel: 'email', status: 'active', sent: 1247, opened: 847, clicked: 299 },
+            { id: 2, name: 'New Feature Launch', channel: 'sms', status: 'scheduled', sent: 0, opened: 0, clicked: 0 },
+            { id: 3, name: 'Customer Appreciation', channel: 'whatsapp', status: 'completed', sent: 892, opened: 765, clicked: 234 }
+        ];
+
+        let conversations = [
+            { id: 1, contactName: 'John Smith', lastMessage: 'Thanks for the information!', time: '10:45 AM', unread: 2 },
+            { id: 2, contactName: 'Sarah Johnson', lastMessage: 'Can we schedule a call?', time: 'Yesterday', unread: 0 },
+            { id: 3, contactName: 'Michael Brown', lastMessage: 'I\'m interested in learning more', time: '2 days ago', unread: 1 }
+        ];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            renderContacts();
+            renderCampaigns();
+            renderConversations();
+        });
+
+        // Tab Switching
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Remove active class from all buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+
+            // Add active class to clicked button
+            event.target.closest('.tab-btn').classList.add('active');
+        }
+
+        // Render Contacts
+        function renderContacts() {
+            const contactList = document.getElementById('contactList');
+            contactList.innerHTML = '';
+
+            contacts.forEach(contact => {
+                const initial = contact.name.charAt(0).toUpperCase();
+                const contactHTML = `
+                    <div class="contact-item">
+                        <div class="contact-avatar">${initial}</div>
+                        <div class="contact-info">
+                            <div class="contact-name">${contact.name}</div>
+                            <div class="contact-details">
+                                ${contact.email ? `<i class="fas fa-envelope"></i> ${contact.email}` : ''}
+                                ${contact.phone ? `<i class="fas fa-phone" style="margin-left: 1rem;"></i> ${contact.phone}` : ''}
+                            </div>
+                            <div style="margin-top: 0.3rem;">
+                                ${contact.tags.map(tag => `<span style="background: var(--gold); color: var(--primary); padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.75rem; margin-right: 0.3rem;">${tag}</span>`).join('')}
+                            </div>
+                        </div>
+                        <div class="contact-actions">
+                            <button class="action-btn email" onclick="sendEmail('${contact.email}')" title="Send Email">
+                                <i class="fas fa-envelope"></i>
+                            </button>
+                            <button class="action-btn sms" onclick="sendSMS('${contact.phone}')" title="Send SMS">
+                                <i class="fas fa-sms"></i>
+                            </button>
+                            <button class="action-btn whatsapp" onclick="sendWhatsApp('${contact.whatsapp}')" title="Send WhatsApp">
+                                <i class="fab fa-whatsapp"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                contactList.innerHTML += contactHTML;
+            });
+        }
+
+        // Search Contacts
+        function searchContacts() {
+            const searchTerm = document.getElementById('searchContacts').value.toLowerCase();
+            const filteredContacts = contacts.filter(contact =>
+                contact.name.toLowerCase().includes(searchTerm) ||
+                contact.email.toLowerCase().includes(searchTerm) ||
+                contact.tags.some(tag => tag.toLowerCase().includes(searchTerm))
+            );
+
+            const contactList = document.getElementById('contactList');
+            contactList.innerHTML = '';
+
+            filteredContacts.forEach(contact => {
+                const initial = contact.name.charAt(0).toUpperCase();
+                const contactHTML = `
+                    <div class="contact-item">
+                        <div class="contact-avatar">${initial}</div>
+                        <div class="contact-info">
+                            <div class="contact-name">${contact.name}</div>
+                            <div class="contact-details">
+                                ${contact.email ? `<i class="fas fa-envelope"></i> ${contact.email}` : ''}
+                                ${contact.phone ? `<i class="fas fa-phone" style="margin-left: 1rem;"></i> ${contact.phone}` : ''}
+                            </div>
+                            <div style="margin-top: 0.3rem;">
+                                ${contact.tags.map(tag => `<span style="background: var(--gold); color: var(--primary); padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.75rem; margin-right: 0.3rem;">${tag}</span>`).join('')}
+                            </div>
+                        </div>
+                        <div class="contact-actions">
+                            <button class="action-btn email" onclick="sendEmail('${contact.email}')" title="Send Email">
+                                <i class="fas fa-envelope"></i>
+                            </button>
+                            <button class="action-btn sms" onclick="sendSMS('${contact.phone}')" title="Send SMS">
+                                <i class="fas fa-sms"></i>
+                            </button>
+                            <button class="action-btn whatsapp" onclick="sendWhatsApp('${contact.whatsapp}')" title="Send WhatsApp">
+                                <i class="fab fa-whatsapp"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                contactList.innerHTML += contactHTML;
+            });
+        }
+
+        // Render Campaigns
+        function renderCampaigns() {
+            const campaignList = document.getElementById('campaignList');
+            campaignList.innerHTML = '';
+
+            campaigns.forEach(campaign => {
+                const campaignHTML = `
+                    <div class="campaign-card">
+                        <div class="campaign-header">
+                            <div class="campaign-title">
+                                <i class="fas fa-${campaign.channel === 'email' ? 'envelope' : campaign.channel === 'sms' ? 'sms' : 'whatsapp'}"></i>
+                                ${campaign.name}
+                            </div>
+                            <div class="campaign-status ${campaign.status}">${campaign.status.toUpperCase()}</div>
+                        </div>
+                        <div class="campaign-stats">
+                            <div class="campaign-stat">
+                                <div class="campaign-stat-value">${campaign.sent}</div>
+                                <div class="campaign-stat-label">Sent</div>
+                            </div>
+                            <div class="campaign-stat">
+                                <div class="campaign-stat-value">${campaign.opened}</div>
+                                <div class="campaign-stat-label">Opened</div>
+                            </div>
+                            <div class="campaign-stat">
+                                <div class="campaign-stat-value">${campaign.clicked}</div>
+                                <div class="campaign-stat-label">Clicked</div>
+                            </div>
+                            <div class="campaign-stat">
+                                <div class="campaign-stat-value">${campaign.sent > 0 ? Math.round((campaign.clicked / campaign.sent) * 100) : 0}%</div>
+                                <div class="campaign-stat-label">CTR</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                campaignList.innerHTML += campaignHTML;
+            });
+        }
+
+        // Render Conversations
+        function renderConversations() {
+            const conversationList = document.getElementById('conversationList');
+            conversationList.innerHTML = '';
+
+            conversations.forEach(convo => {
+                const initial = convo.contactName.charAt(0).toUpperCase();
+                const convoHTML = `
+                    <div class="conversation-item" onclick="loadConversation(${convo.id})">
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--gold)); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                                ${initial}
+                            </div>
+                            <div style="flex: 1;">
+                                <div style="font-weight: 600; margin-bottom: 0.2rem;">${convo.contactName}</div>
+                                <div style="font-size: 0.85rem; color: #666; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${convo.lastMessage}</div>
+                            </div>
+                        </div>
+                        <div style="text-align: right; margin-top: 0.5rem;">
+                            <div style="font-size: 0.75rem; color: #999;">${convo.time}</div>
+                            ${convo.unread > 0 ? `<span style="background: var(--orange); color: white; padding: 0.2rem 0.5rem; border-radius: 10px; font-size: 0.7rem; margin-top: 0.3rem; display: inline-block;">${convo.unread}</span>` : ''}
+                        </div>
+                    </div>
+                `;
+                conversationList.innerHTML += convoHTML;
+            });
+        }
+
+        // Load Conversation
+        function loadConversation(id) {
+            const messagesArea = document.getElementById('messagesArea');
+            messagesArea.innerHTML = `
+                <div class="message">
+                    <div class="message-bubble">
+                        Hi! I'm interested in learning more about the Z2B platform.
+                    </div>
+                </div>
+                <div class="message sent">
+                    <div class="message-bubble">
+                        Great! I'd be happy to help. What would you like to know?
+                    </div>
+                </div>
+                <div class="message">
+                    <div class="message-bubble">
+                        What are the different membership tiers available?
+                    </div>
+                </div>
+                <div class="message sent">
+                    <div class="message-bubble">
+                        We have Bronze, Copper, Silver, Gold, and Platinum tiers. Each tier unlocks more AI apps and features. Would you like me to share more details?
+                    </div>
+                </div>
+            `;
+
+            // Mark conversation as active
+            document.querySelectorAll('.conversation-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.closest('.conversation-item').classList.add('active');
+        }
+
+        // Send Message
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+
+            if (message) {
+                const messagesArea = document.getElementById('messagesArea');
+                const messageHTML = `
+                    <div class="message sent">
+                        <div class="message-bubble">
+                            ${message}
+                        </div>
+                    </div>
+                `;
+                messagesArea.innerHTML += messageHTML;
+                messagesArea.scrollTop = messagesArea.scrollHeight;
+                input.value = '';
+            }
+        }
+
+        // Communication Functions
+        function sendEmail(email) {
+            alert(`Opening email composer for ${email}...`);
+        }
+
+        function sendSMS(phone) {
+            alert(`Opening SMS composer for ${phone}...`);
+        }
+
+        function sendWhatsApp(phone) {
+            alert(`Opening WhatsApp for ${phone}...`);
+        }
+
+        // Modal Functions
+        function openAddContactModal() {
+            document.getElementById('addContactModal').classList.add('show');
+        }
+
+        function closeAddContactModal() {
+            document.getElementById('addContactModal').classList.remove('show');
+        }
+
+        function openCampaignModal() {
+            document.getElementById('campaignModal').classList.add('show');
+        }
+
+        function closeCampaignModal() {
+            document.getElementById('campaignModal').classList.remove('show');
+        }
+
+        // Add Contact
+        function addContact(event) {
+            event.preventDefault();
+
+            const newContact = {
+                id: contacts.length + 1,
+                name: document.getElementById('contactName').value,
+                email: document.getElementById('contactEmail').value,
+                phone: document.getElementById('contactPhone').value,
+                whatsapp: document.getElementById('contactWhatsApp').value,
+                tags: document.getElementById('contactTags').value.split(',').map(t => t.trim()).filter(t => t),
+                notes: document.getElementById('contactNotes').value
+            };
+
+            contacts.push(newContact);
+            renderContacts();
+            closeAddContactModal();
+
+            // Reset form
+            event.target.reset();
+
+            alert('Contact added successfully!');
+        }
+
+        // Create Campaign
+        function createCampaign(event) {
+            event.preventDefault();
+
+            const newCampaign = {
+                id: campaigns.length + 1,
+                name: document.getElementById('campaignName').value,
+                channel: document.getElementById('campaignChannel').value,
+                status: document.getElementById('campaignSchedule').value === 'now' ? 'active' : 'scheduled',
+                sent: 0,
+                opened: 0,
+                clicked: 0
+            };
+
+            campaigns.push(newCampaign);
+            renderCampaigns();
+            closeCampaignModal();
+
+            // Reset form
+            event.target.reset();
+
+            alert('Campaign created successfully!');
+        }
+
+        // Enter key to send message
+        document.addEventListener('DOMContentLoaded', function() {
+            const messageInput = document.getElementById('messageInput');
+            if (messageInput) {
+                messageInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        sendMessage();
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

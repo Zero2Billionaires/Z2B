@@ -1235,7 +1235,7 @@
             </div>
 
             <div class="assessment-item">
-                <h4><i class="fas fa-book"></i> Lesson</h4>
+                <h4><i class="fas fa-book"></i> Content</h4>
                 <p id="modalLessonContent" style="white-space: pre-line;">
                     Understanding the psychological chains of employment...
                 </p>
@@ -1246,16 +1246,6 @@
                 <p id="modalLessonActivity">
                     Write down 5 employee beliefs holding you back...
                 </p>
-                <div id="activityResponseSection" style="margin-top: 1rem; display: none;">
-                    <textarea id="activityResponseInput" placeholder="Type your response here..." style="width: 100%; min-height: 120px; padding: 1rem; border: 2px solid var(--purple); border-radius: 12px; background: rgba(0,0,0,0.3); color: white; font-family: inherit; font-size: 0.95rem; resize: vertical;"></textarea>
-                    <button type="button" onclick="submitActivityResponse()" class="sidebar-btn" style="margin-top: 0.8rem; width: 100%; background: linear-gradient(135deg, var(--orange), var(--gold)); padding: 1rem; font-weight: 600;">
-                        <i class="fas fa-paper-plane"></i> Submit to Coach ManLaw
-                    </button>
-                    <div id="activityFeedback" style="display: none; margin-top: 1rem; padding: 1.5rem; background: linear-gradient(135deg, rgba(76, 236, 196, 0.15), rgba(155, 89, 182, 0.15)); border-left: 4px solid var(--purple); border-radius: 12px;">
-                        <h5 style="margin: 0 0 0.8rem 0; color: var(--gold); font-size: 1rem;"><i class="fas fa-comments"></i> Coach ManLaw Says:</h5>
-                        <p id="activityFeedbackText" style="margin: 0; line-height: 1.6; color: rgba(255,255,255,0.9);"></p>
-                    </div>
-                </div>
             </div>
 
             <div class="assessment-item">
@@ -1263,16 +1253,6 @@
                 <p id="modalLessonAssignment">
                     BTSS Assessment - Baseline measurement...
                 </p>
-                <div id="assignmentResponseSection" style="margin-top: 1rem; display: none;">
-                    <textarea id="assignmentResponseInput" placeholder="Type your response here..." style="width: 100%; min-height: 120px; padding: 1rem; border: 2px solid var(--orange); border-radius: 12px; background: rgba(0,0,0,0.3); color: white; font-family: inherit; font-size: 0.95rem; resize: vertical;"></textarea>
-                    <button type="button" onclick="submitAssignmentResponse()" class="sidebar-btn" style="margin-top: 0.8rem; width: 100%; background: linear-gradient(135deg, var(--gold), var(--orange)); padding: 1rem; font-weight: 600;">
-                        <i class="fas fa-paper-plane"></i> Submit to Coach ManLaw
-                    </button>
-                    <div id="assignmentFeedback" style="display: none; margin-top: 1rem; padding: 1.5rem; background: linear-gradient(135deg, rgba(255, 107, 53, 0.15), rgba(212, 175, 55, 0.15)); border-left: 4px solid var(--orange); border-radius: 12px;">
-                        <h5 style="margin: 0 0 0.8rem 0; color: var(--gold); font-size: 1rem;"><i class="fas fa-comments"></i> Coach ManLaw Says:</h5>
-                        <p id="assignmentFeedbackText" style="margin: 0; line-height: 1.6; color: rgba(255,255,255,0.9);"></p>
-                    </div>
-                </div>
             </div>
 
             <div class="assessment-item" id="modalAppConnection" style="display: none; background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(212, 175, 55, 0.1));">
@@ -1686,16 +1666,6 @@
                 appSection.style.display = 'none';
             }
 
-            // Show response sections
-            document.getElementById("activityResponseSection").style.display = "block";
-            document.getElementById("assignmentResponseSection").style.display = "block";
-            
-            // Clear previous responses and feedback
-            document.getElementById("activityResponseInput").value = "";
-            document.getElementById("assignmentResponseInput").value = "";
-            document.getElementById("activityFeedback").style.display = "none";
-            document.getElementById("assignmentFeedback").style.display = "none";
-
             // Open modal
             const modal = document.getElementById('lessonModal');
             console.log('🎯 Modal element found:', !!modal);
@@ -1706,128 +1676,6 @@
             } else {
                 console.error('❌ lessonModal element not found in DOM!');
                 alert('⚠️ Modal element not found. Page may be corrupted.');
-            }
-        }
-
-        // Submit activity response to Coach ManLaw
-        async function submitActivityResponse() {
-            const lesson = getLessonByDay(currentDay);
-            if (!lesson) {
-                alert('Unable to determine current lesson');
-                return;
-            }
-
-            const userResponse = document.getElementById('activityResponseInput').value.trim();
-            if (!userResponse || userResponse.length < 10) {
-                alert('Please write at least 10 characters in your response');
-                return;
-            }
-
-            // Show loading state
-            const button = event.target;
-            const originalText = button.innerHTML;
-            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
-            button.disabled = true;
-
-            try {
-                const response = await fetch('/api/coach/activity-response', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        userId: currentUserId || 'demo-user',
-                        day: currentDay,
-                        lessonTitle: lesson.title,
-                        responseType: 'activity',
-                        userResponse: userResponse,
-                        btssImpact: lesson.btssImpact || 'all',
-                        activity: lesson.activity
-                    })
-                });
-
-                const data = await response.json();
-
-                if (data.success) {
-                    // Show feedback
-                    document.getElementById('activityFeedbackText').textContent = data.feedback;
-                    document.getElementById('activityFeedback').style.display = 'block';
-
-                    // Clear input
-                    document.getElementById('activityResponseInput').value = '';
-
-                    // Scroll to feedback
-                    document.getElementById('activityFeedback').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                } else {
-                    alert('Error: ' + (data.message || 'Failed to submit response'));
-                }
-            } catch (error) {
-                console.error('Submit error:', error);
-                alert('Failed to submit your response. Please try again.');
-            } finally {
-                button.innerHTML = originalText;
-                button.disabled = false;
-            }
-        }
-
-        // Submit assignment response to Coach ManLaw
-        async function submitAssignmentResponse() {
-            const lesson = getLessonByDay(currentDay);
-            if (!lesson) {
-                alert('Unable to determine current lesson');
-                return;
-            }
-
-            const userResponse = document.getElementById('assignmentResponseInput').value.trim();
-            if (!userResponse || userResponse.length < 10) {
-                alert('Please write at least 10 characters in your response');
-                return;
-            }
-
-            // Show loading state
-            const button = event.target;
-            const originalText = button.innerHTML;
-            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
-            button.disabled = true;
-
-            try {
-                const response = await fetch('/api/coach/activity-response', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        userId: currentUserId || 'demo-user',
-                        day: currentDay,
-                        lessonTitle: lesson.title,
-                        responseType: 'assignment',
-                        userResponse: userResponse,
-                        btssImpact: lesson.btssImpact || 'all',
-                        activity: lesson.assignment
-                    })
-                });
-
-                const data = await response.json();
-
-                if (data.success) {
-                    // Show feedback
-                    document.getElementById('assignmentFeedbackText').textContent = data.feedback;
-                    document.getElementById('assignmentFeedback').style.display = 'block';
-
-                    // Clear input
-                    document.getElementById('assignmentResponseInput').value = '';
-
-                    // Scroll to feedback
-                    document.getElementById('assignmentFeedback').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                } else {
-                    alert('Error: ' + (data.message || 'Failed to submit response'));
-                }
-            } catch (error) {
-                console.error('Submit error:', error);
-                alert('Failed to submit your response. Please try again.');
-            } finally {
-                button.innerHTML = originalText;
-                button.disabled = false;
             }
         }
 

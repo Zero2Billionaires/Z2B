@@ -7,16 +7,18 @@
 const MANLAW_CURRICULUM = {
     programName: "90-Day Legacy Builder Transformation",
     totalDays: 90,
-    totalWeeks: 13,
+    totalWeeks: 18,
 
-    // Program Structure: 85% 4 Legs, 10% Apps, 5% Reflection
+    // Program Structure: 75% 4 Legs Core, 15% Advanced Mastery, 10% Integration
     structure: {
-        mindsetMystery: { weeks: 4, percentage: 30 },      // Weeks 1-4
-        moneyMoves: { weeks: 3, percentage: 25 },          // Weeks 5-7
-        legacyMissions: { weeks: 3, percentage: 20 },      // Weeks 8-10
-        momentumMovement: { weeks: 3, percentage: 20 },    // Weeks 11-13
-        appIntegration: { percentage: 10 },                 // Woven throughout
-        reflection: { percentage: 5 }                       // Weekly check-ins
+        mindsetMystery: { weeks: 4, days: 20, percentage: 22 },      // Weeks 1-4 (Days 1-20)
+        moneyMoves: { weeks: 3, days: 15, percentage: 17 },          // Weeks 5-7 (Days 21-35)
+        legacyMissions: { weeks: 3, days: 15, percentage: 17 },      // Weeks 8-10 (Days 36-50)
+        momentumMovement: { weeks: 3, days: 15, percentage: 17 },    // Weeks 11-13 (Days 51-65)
+        integration: { weeks: 2, days: 10, percentage: 11 },         // Weeks 14-15 (Days 66-75)
+        advancedMastery: { weeks: 3, days: 15, percentage: 16 },     // Weeks 16-18 (Days 76-90)
+        appIntegration: { percentage: "Throughout" },                // Woven into all phases
+        reflection: { percentage: "Weekly" }                         // Weekly check-ins
     },
 
     // PHASE 1: MINDSET MYSTERY (Weeks 1-4) - 30 Days
@@ -32,7 +34,7 @@ const MANLAW_CURRICULUM = {
                     {
                         day: 1,
                         title: "The Employee Trap: Why You're Stuck",
-                        content: "Understanding the psychological chains of employment. Biblical foundation: Proverbs 23:7 'As a man thinks, so is he.'",
+                        content: "The Employee Trap is a psychological prison most people don't even know they're in. It's built on three foundational lies you've been told since childhood: (1) Security comes from a steady paycheck, (2) Trading time for money is the only way to earn, and (3) Someone else must validate your worth and pay you what you're worth.\n\nHere's the truth: Proverbs 23:7 tells us 'As a man thinks in his heart, so is he.' Your identity shapes your reality. If you think like an employee, you'll remain one. If you think like a billionaire, you'll become one. The employee mindset is characterized by permission-seeking behavior, fear of risk, and external validation dependency. Employees wait to be told what to do, when to do it, and how much they're worth. Entrepreneurs decide these things for themselves.\n\nConsider this: Warren Buffett started investing at age 11. Mark Zuckerberg launched Facebook from his dorm room. Neither waited for permission. They thought differently from day one. The shift begins when you stop asking 'Will my boss approve?' and start asking 'Does this create value?' When you stop thinking about job security and start thinking about income diversity. When you stop being a cost center in someone else's business and become a profit center in your own.\n\nThe psychological chains of employment are invisible but powerful. They include: learned helplessness (believing you can't succeed alone), artificial ceilings (accepting income caps), time-for-money slavery (believing hours worked equals value created), and risk aversion (seeing entrepreneurship as dangerous rather than employment as risky). Breaking these chains requires conscious awareness, deliberate reprogramming, and courageous action.\n\nToday, you begin that transformation. You're not reading this by accident. You're here because something inside you knows there's more. You're right. There is. And over the next 90 days, we're going to unlock it together.",
                         activity: "Write down 5 employee beliefs holding you back. Example: 'I trade time for money.'",
                         assignment: "BTSS Assessment - Baseline measurement. Rate your current Mindset Mystery (0-100)",
                         btssImpact: "mindset",
@@ -41,7 +43,7 @@ const MANLAW_CURRICULUM = {
                     {
                         day: 2,
                         title: "Billionaire Thinking: The Mental Shift",
-                        content: "How billionaires think differently. Identity vs. Behavior. The power of 'I am' statements.",
+                        content: "Billionaires don't think incrementally—they think exponentially. While employees ask 'How can I get a raise?', billionaires ask 'How can I create value at scale?' This fundamental difference in thinking determines everything: your income ceiling, your impact radius, and your legacy potential.\n\nThe billionaire mindset operates on three core principles: (1) Identity precedes behavior—who you are determines what you do, not the other way around. (2) Abundance thinking—there's enough for everyone, and helping others win helps you win bigger. (3) Long-term compounding—small daily actions create exponential results over time. These aren't just nice ideas; they're the operating system of every wealthy person who's ever lived.\n\nConsider the power of 'I am' statements. When you say 'I am an employee,' you subconsciously look for jobs, bosses, and paychecks. When you say 'I am a wealth creator,' you subconsciously look for opportunities, problems to solve, and value to deliver. Your brain is a goal-seeking missile—it will find evidence for whatever identity you claim. Muhammad Ali didn't say 'I hope to be the greatest.' He declared 'I am the greatest' long before the world agreed.\n\nHere's the shift: Employees focus on tasks and hours. Entrepreneurs focus on results and impact. Billionaires focus on systems and legacy. Employees trade time for money. Entrepreneurs trade value for money. Billionaires build assets that create money while they sleep. The identity you adopt determines which game you play.\n\nToday's work is about rewiring your identity at the neurological level. Repetition creates belief. Belief creates behavior. Behavior creates results. Your 'I am' declarations aren't affirmations—they're identity installations. Speak them with conviction, even if you don't fully believe them yet. Your subconscious doesn't know the difference between imagination and reality. Use that to your advantage.",
                         activity: "Create 5 'I am' declarations. Example: 'I am a wealth creator.' Say them 10x daily.",
                         assignment: "Journal: What would a billionaire version of me do today?",
                         btssImpact: "mindset",
@@ -50,7 +52,7 @@ const MANLAW_CURRICULUM = {
                     {
                         day: 3,
                         title: "Vision Clarity: Seeing Your Billion-Dollar Future",
-                        content: "The power of crystal-clear vision. Matthew 6:22 - Where your focus goes, energy flows.",
+                        content: "Matthew 6:22 says 'The eye is the lamp of the body. If your eyes are healthy, your whole body will be full of light.' Where your focus goes, energy flows—and eventually, results follow. Vision isn't wishful thinking; it's strategic foresight combined with emotional clarity. It's seeing the future so vividly that your present actions automatically align with it.\n\nThe science is clear: your brain's reticular activating system (RAS) filters millions of data points every second, showing you only what matches your internal programming. If you're programmed to see scarcity, you'll spot every problem and threat. If you're programmed to see abundance and opportunity, you'll notice doors opening everywhere. Vision clarity is about programming your RAS to work for you instead of against you.\n\nBillionaires don't just have vague goals like 'be successful.' They have crystal-clear, multi-sensory visions of their future. Elon Musk sees humanity as a multi-planetary species. Oprah saw herself empowering millions through media before she had a show. Jeff Bezos envisioned the 'everything store' when Amazon was just selling books. Clarity creates conviction. Conviction creates commitment. Commitment creates results.\n\nYour vision must be specific enough to be compelling and flexible enough to evolve. It should answer: What does your life look like? Who are you serving? What impact are you making? How do you feel when you wake up? What legacy are you building? Write it in present tense, as if it's already happening. Your subconscious responds to present-tense reality.\n\nToday, you're not daydreaming—you're designing. Every building starts as a blueprint. Every business starts as a vision. Every empire starts in one person's mind. Make yours so vivid that turning back to employee life becomes impossible.",
                         activity: "Vision Board Exercise: Draw/write your life 5 years from now as a Legacy Builder",
                         assignment: "Define your 'Why' in one sentence. Example: 'To create generational wealth for my family.'",
                         btssImpact: "mindset",
@@ -59,7 +61,7 @@ const MANLAW_CURRICULUM = {
                     {
                         day: 4,
                         title: "Spiritual Alignment: Faith Meets Finance",
-                        content: "Philippians 4:13 - God's abundance mindset. Aligning purpose with profit.",
+                        content: "Philippians 4:13 declares 'I can do all things through Christ who strengthens me.' This isn't just a motivational quote—it's a wealth-building principle. When your business aligns with God's purpose, you tap into supernatural provision, divine connections, and favor that can't be earned through hustle alone. Faith and finance aren't opposites; they're partners.\n\nMany people have been taught that money is evil or that desiring wealth is ungodly. But 1 Timothy 6:10 clarifies: it's the LOVE of money that's the root of evil, not money itself. Money is a tool, a resource, a form of energy. In the right hands, it funds missions, builds orphanages, feeds the hungry, and creates jobs. The question isn't 'Should I pursue wealth?' It's 'What will I do with wealth once I have it?'\n\nConsider biblical wealth builders: Abraham was called a friend of God and was extremely wealthy. Solomon asked God for wisdom and received riches as a bonus. Joseph went from prison to prime minister, managing Egypt's economy. David built wealth that funded the temple his son Solomon would build. These weren't accidents—they were assignments. Wealth creation can be ministry when done with the right heart.\n\nSpiritual alignment means asking before every business decision: 'Does this honor God? Does this serve people? Is this building something eternal or just temporal?' It means tithing from your increase, being generous with your resources, and stewarding wealth as a tool for kingdom expansion. When you build with God's blueprint instead of your own ego, you build something that lasts beyond your lifetime.\n\nToday's lesson: You don't have to choose between faith and finance. You can have both, and when combined, they create unstoppable momentum. Proverbs 10:22 promises 'The blessing of the Lord brings wealth, without painful toil for it.' Align your purpose with His purpose, and watch doors open that no human could close.",
                         activity: "Answer: How can my wealth serve God's purpose? Write 3 ways.",
                         assignment: "Morning prayer/meditation: 'God, align my business with your purpose.'",
                         btssImpact: "mindset",
@@ -68,7 +70,7 @@ const MANLAW_CURRICULUM = {
                     {
                         day: 5,
                         title: "Overcoming Limiting Beliefs",
-                        content: "Identifying and crushing mental barriers. The lies you've been told about money.",
+                        content: "You've been lied to. About money. About success. About what's possible for someone like you. These lies—planted by family, culture, media, and past experiences—have become your operating system. And until you delete the malware, you'll keep getting the same corrupted results. Today, we're debugging your belief system.\n\nLimiting beliefs sound like truth because you've repeated them so many times: 'Money doesn't grow on trees.' 'Rich people are greedy.' 'You have to work hard for every dollar.' 'I'm not smart enough to run a business.' 'Success requires sacrifice.' These aren't facts—they're viruses that infected your mind before you could defend against them. The good news? Beliefs can be updated, replaced, and deleted.\n\nHere's the framework: Every belief has a root (where it came from), a reinforcement pattern (what keeps it alive), and a result (what it creates in your life). For example: Belief: 'Rich people are greedy.' Root: Heard parents complain about wealthy neighbors. Reinforcement: Media portrays billionaires as villains. Result: Subconsciously sabotage your own wealth creation to avoid becoming 'one of them.' See how sneaky this is?\n\nThe billionaire counter-beliefs sound radical at first: 'Money flows to me effortlessly.' 'Wealth is my birthright.' 'I create value and deserve abundance.' 'The more I have, the more I can give.' 'Success creates freedom, not sacrifice.' These feel uncomfortable because they contradict your old programming. That discomfort is proof the upgrade is working. Muhammad Ali said 'To be a great champion, you must believe you are the best. If you're not, pretend you are.' Fake it till you make it isn't lying—it's reprogramming.\n\nToday's assignment is critical. For every limiting belief you identify, you must install a new empowering belief. Don't just identify the problem—implement the solution. Your mind is the soil. Your beliefs are the seeds. What you plant today determines what you harvest tomorrow. Plant billionaire seeds.",
                         activity: "Belief Inventory: List 10 beliefs about money. Mark helpful vs. harmful.",
                         assignment: "For each harmful belief, write the billionaire counter-belief",
                         btssImpact: "mindset",
@@ -92,7 +94,7 @@ const MANLAW_CURRICULUM = {
                     {
                         day: 6,
                         title: "Confidence Formula: Believing Before Seeing",
-                        content: "Hebrews 11:1 - Faith is confidence in what we hope for. How self-belief creates reality.",
+                        content: "Hebrews 11:1 declares 'Faith is confidence in what we hope for and assurance about what we do not see.' This isn't just theology—it's the confidence formula every billionaire uses. You don't need to see the entire staircase to take the first step. You don't need proof before you believe. You need belief before you'll ever see proof. This is the confidence paradox that separates achievers from dreamers.\n\nConfidence doesn't come from never failing—it comes from knowing you've survived failure before. Every accomplishment in your past, no matter how small, is evidence of your capability. You learned to walk after falling hundreds of times. You learned to read after struggling with letters. You overcame challenges you once thought impossible. Your past is filled with proof that you're capable of learning, adapting, and conquering. The problem? You've forgotten your track record.\n\nNeuroscience confirms this: your brain has a negativity bias, remembering failures 5x more strongly than successes. This kept our ancestors alive (remember the lion, forget the berries), but it destroys entrepreneurial confidence. The solution? Deliberately reprogram your internal database by cataloging your wins. When you list 20 accomplishments, you're not being arrogant—you're correcting the distortion. You're reminding your subconscious: 'I've done hard things before. I can do hard things again.'\n\nAffirmations work not because they're magic words, but because repetition creates neural pathways. When you say 'I am capable of building a billion-dollar legacy' 100 times, your brain starts looking for evidence to support that identity. It's called the Reticular Activating System—your brain's search engine. Program it with confidence, and it will find confidence-building opportunities everywhere. Program it with doubt, and it will find reasons to quit.\n\nToday's assignment is about building an unshakeable foundation of self-belief based on evidence, not wishful thinking. You're not faking confidence—you're acknowledging the truth of your past victories and projecting that pattern into your future. Champions do this daily. Now you will too.",
                         activity: "Past Wins Inventory: List 20 things you've already accomplished. Prove to yourself you CAN.",
                         assignment: "Daily affirmation: 'I am capable of building a billion-dollar legacy.'",
                         btssImpact: "mindset",
@@ -101,7 +103,7 @@ const MANLAW_CURRICULUM = {
                     {
                         day: 7,
                         title: "Decision-Making Like a Billionaire",
-                        content: "How successful people make fast, confident decisions. The 80/20 decision matrix.",
+                        content: "Jeff Bezos makes high-quality decisions fast by categorizing them into two types: Type 1 (irreversible, slow down) and Type 2 (reversible, move fast). Most people treat every decision like Type 1, creating analysis paralysis. Billionaires understand that speed of decision-making directly correlates with speed of wealth accumulation. While you're gathering 100% information, your competitor with 80% information has already captured the market.\n\nThe 80/20 decision matrix is simple: If you have 80% of the information you need and the decision is reversible, make it NOW. Waiting for perfect clarity is a luxury you can't afford. Perfect information doesn't exist, and by the time you think you have it, the opportunity has passed. Barack Obama wore the same suit every day to eliminate decision fatigue, reserving his mental energy for decisions that mattered. What small decisions are draining your energy that should be automated or eliminated?\n\nDecision velocity is a skill you can train. Your brain is like a muscle—the more you practice fast decision-making, the better you get. Start with low-stakes decisions: what to eat, what to wear, which email to answer first. Train your decisiveness muscle on small things so it's strong when big opportunities arrive. Entrepreneurs who can't decide what to have for breakfast will struggle to decide which business model to pursue.\n\nFear of making the wrong decision keeps most people stuck. But here's the truth: a good decision executed quickly beats a perfect decision executed slowly. And most 'wrong' decisions can be corrected. The only truly wrong decision is no decision at all—that's guaranteed stagnation. Proverbs 21:5 says 'The plans of the diligent lead to profit as surely as haste leads to poverty.' Notice it says 'plans of the diligent,' not plans of the perfect. Diligence includes decisive action.\n\nToday you're going to rewire your decision-making speed. The 10-second decision drill forces your intuition to activate. Your gut knows more than your conscious mind gives it credit for. That big decision you've been avoiding? You already know what to do. The delay isn't about gathering information—it's about avoiding responsibility for the outcome. Make the decision. Own it. Move forward.",
                         activity: "Practice rapid decision-making: Make 10 small decisions in 10 seconds each",
                         assignment: "Identify 1 big decision you've been avoiding. Make it today with 80% information.",
                         btssImpact: "mindset",
@@ -110,7 +112,7 @@ const MANLAW_CURRICULUM = {
                     {
                         day: 8,
                         title: "Failure Reframing: Failing Forward",
-                        content: "How billionaires view failure. Thomas Edison's 10,000 attempts. Romans 8:28 - All things work together for good.",
+                        content: "Thomas Edison didn't fail 10,000 times—he discovered 10,000 ways that didn't work. Each 'failure' brought him closer to the breakthrough that changed the world. Romans 8:28 promises 'All things work together for good for those who love God.' This includes your failures, setbacks, and mistakes. They're not roadblocks—they're stepping stones disguised as stumbling blocks.\n\nThe difference between successful people and everyone else isn't that successful people don't fail—it's that they reframe failure as feedback. When most people hit an obstacle, they interpret it as evidence they're not good enough. When billionaires hit an obstacle, they interpret it as data showing them what to adjust. Same event, completely different meaning. Your interpretation determines your trajectory.\n\nConsider Sara Blakely, founder of Spanx and one of the world's youngest self-made female billionaires. At her family dinner table growing up, her father would ask 'What did you fail at today?' If she didn't have a failure to share, he'd be disappointed. He taught her that failure isn't something to fear or hide—it's evidence you're pushing boundaries and trying new things. This reframe gave her permission to take massive risks, which led to massive rewards.\n\nNeuroscience backs this up: Your brain learns more from failure than success. Failure creates cognitive dissonance that forces your brain to rewire and find new solutions. Success reinforces existing patterns. If you're not failing regularly, you're not growing. You're just repeating what you already know. The fastest path to mastery is rapid experimentation and rapid failure correction.\n\nToday's assignment is about building a new relationship with failure. Your 'Failure Resume' will remind you that every setback in your past equipped you with skills, resilience, and wisdom you didn't have before. Stop running from failure. Start running toward it. The person who fails the most—and learns the fastest—wins.",
                         activity: "Failure Resume: List 5 past 'failures' and what you learned from each",
                         assignment: "Commit to trying something new this week, expecting to fail first",
                         btssImpact: "mindset",
@@ -122,7 +124,7 @@ const MANLAW_CURRICULUM = {
                     {
                         day: 9,
                         title: "Thought Leadership: Becoming the Expert",
-                        content: "You don't need permission to be a leader. Teaching what you're learning builds authority.",
+                        content: "Nobody grants you permission to be a thought leader—you claim it through consistent value delivery. The world is full of people waiting for credentials, degrees, or approval before they share what they know. Meanwhile, the person who teaches becomes the authority. Matthew 5:14-16 reminds us 'You are the light of the world... let your light shine before others.' Your knowledge is meant to be shared, not hoarded.\n\nHere's the paradox: You don't need to know everything to teach something. You just need to be one step ahead of the person you're helping. If you've learned something valuable this week—about mindset shifts, decision-making, or overcoming limiting beliefs—there's someone behind you who desperately needs that exact lesson. Teaching what you're learning serves two purposes: it cements your own understanding (we retain 90% of what we teach), and it positions you as a guide worth following.\n\nThink about how Gary Vaynerchuk built his empire: by documenting his journey and teaching what he learned in real-time. He didn't wait until he was a billionaire to start sharing business lessons. He shared the process, the failures, the pivots, and the wins. People don't just want polished perfection—they want authentic expertise. When you teach from the trenches, you build trust faster than any credential ever could.\n\nThought leadership isn't about being the smartest person in the room—it's about being the most helpful. It's about taking complex concepts and making them simple. Taking your hard-won lessons and packaging them so others don't have to suffer the same mistakes. Every piece of content you create, every lesson you share, every insight you post builds your authority compound interest. One person shares it with two. Two share with four. Before you know it, you're influencing thousands.\n\nToday's exercise isn't optional—it's the beginning of your thought leadership journey. That one-minute voice note might feel small, but it's the first brick in building your empire of influence. Don't wait until you're perfect. Start before you're ready. Teach while you're learning. Lead while you're growing.",
                         activity: "Create a 1-minute voice note teaching ONE concept from this week",
                         assignment: "Share that voice note on your social media or with 5 people",
                         btssImpact: "mindset",
@@ -134,7 +136,7 @@ const MANLAW_CURRICULUM = {
                     {
                         day: 10,
                         title: "The Millionaire Morning Routine",
-                        content: "How you start your day determines your success. Proverbs 31 - She rises while it is night.",
+                        content: "Proverbs 31:15 describes the virtuous woman: 'She rises while it is night and provides food for her household.' The wealthiest, most successful people on earth don't sleep in—they own their mornings. Tim Cook wakes at 3:45 AM. Oprah at 6:00 AM. Dwayne 'The Rock' Johnson at 4:00 AM. Why? Because how you start your day determines how you live your life. Your morning routine is your competitive advantage.\n\nThe science is clear: your brain's prefrontal cortex (responsible for decision-making, focus, and willpower) is strongest in the morning. This is your peak performance window. Waste it scrolling social media or hitting snooze, and you've squandered your most valuable mental resource. Win your morning, and the rest of the day falls in line. Lose your morning, and you're playing catch-up until bedtime.\n\nThe Millionaire Morning Formula has four non-negotiables: (1) Spiritual alignment—prayer, meditation, or scripture reading to center your purpose, (2) Physical activation—exercise to flood your brain with endorphins and energy, (3) Mental expansion—reading, learning, or reviewing your goals to sharpen your mind, (4) Strategic planning—reviewing your priorities and setting your top 3 intentions for the day. This isn't a suggestion—it's the operating system of excellence.\n\nConsider Hal Elrod's 'Miracle Morning' concept, used by millions of high achievers: Silence (meditation), Affirmations (identity declarations), Visualization (mental rehearsal), Exercise (movement), Reading (growth), Scribing (journaling). Just one hour executing these six practices transforms your entire day—and compounded over weeks, transforms your entire life. Your morning ritual isn't about productivity—it's about identity reinforcement. Every morning you show up for yourself, you're declaring 'I am someone who honors commitments.'\n\nHere's the truth most people miss: You don't need more time—you need more discipline in the time you have. Waking at 5:00 AM might feel impossible today, but so did starting a business, overcoming your limiting beliefs, and declaring yourself a Legacy Builder. You've already done impossible things this week. This is just the next one. Seven days from now, this routine will feel natural. Ninety days from now, you won't recognize the person who used to sleep until 7:30 AM.",
                         activity: "Design your ideal morning routine (5:00-7:00 AM): Prayer, Exercise, Learning, Planning",
                         assignment: "Execute your new morning routine for 7 days straight. No excuses.",
                         btssImpact: "mindset",
@@ -879,10 +881,10 @@ const MANLAW_CURRICULUM = {
         ]
     },
 
-    // WEEKS 14-15: Integration, Reflection & Mastery (Final 14 Days)
+    // WEEKS 14-18: Integration, Mastery & Advanced Implementation (Final 25 Days)
     finalPhase_integration: {
         title: "🏆 MASTERY & INTEGRATION: Cementing Your Transformation",
-        objective: "Integrate all 4 Legs, solidify habits, create your personalized growth plan, and graduate as a certified Legacy Builder",
+        objective: "Integrate all 4 Legs, solidify habits, scale to next level, and become an unstoppable Legacy Builder",
         weeks: [
             {
                 week: 14,
@@ -1005,9 +1007,210 @@ const MANLAW_CURRICULUM = {
                     }
                 ],
                 weekend: {
-                    reflection: "PROGRAM COMPLETE! 🎉 You're a certified Legacy Builder. Who have you become?",
+                    reflection: "Certification achieved! But we're not done yet. 3 more weeks of advanced mastery await.",
                     application: "Host a graduation celebration. Invite your community. Share your story. Inspire action.",
-                    btssCheck: "Final overall BTSS score. Target: 75%+ (mastery level). You've built a billion-dollar table!"
+                    btssCheck: "Certification BTSS score. Target: 75%+ (mastery level). Now push toward 90%!"
+                }
+            },
+            {
+                week: 16,
+                theme: "Advanced Implementation: Simultaneous Execution",
+                focus: "Operating all 4 Legs at peak performance simultaneously - the mark of true mastery",
+                lessons: [
+                    {
+                        day: 76,
+                        title: "The Billionaire Juggle: All 4 Legs at Once",
+                        content: "James 1:4 - Let perseverance finish its work so that you may be mature and complete. Masters run all 4 systems simultaneously without dropping the ball.",
+                        activity: "Daily Quadrant Check: Morning ritual checking all 4 Legs. Mindset practice, money action, system improvement, influence activity.",
+                        assignment: "Execute 1 significant action in EACH of the 4 Legs today. Prove you can juggle mastery.",
+                        btssImpact: "all",
+                        appConnection: {
+                            app: "Z2B Dashboard",
+                            how: "Dashboard tracks all 4 Legs. Use it to monitor daily actions across Mindset, Money, Legacy, Movement. Stay balanced."
+                        }
+                    },
+                    {
+                        day: 77,
+                        title: "Speed of Implementation: From Learning to Earning",
+                        content: "Knowledge without action is worthless. The speed of your execution determines the speed of your wealth creation.",
+                        activity: "Implementation Sprint: Take 1 idea from this program and implement it FULLY in 24 hours. No excuses.",
+                        assignment: "Document your sprint. What did you build/launch/create in 24 hours? Share the results.",
+                        btssImpact: "legacy",
+                        appConnection: {
+                            app: "GLOWIE",
+                            how: "Use GLOWIE for rapid implementation. Need a landing page? Build it in 60 seconds. Speed wins."
+                        }
+                    },
+                    {
+                        day: 78,
+                        title: "Decision Velocity: The Billionaire Superpower",
+                        content: "Billionaires make decisions 10x faster than average people. Slow decisions = slow wealth.",
+                        activity: "Speed Decision Day: Make 20 business decisions today. No overthinking. Trust your instincts.",
+                        assignment: "Track decision outcomes over 7 days. You'll be surprised how many fast decisions were correct.",
+                        btssImpact: "mindset",
+                        appConnection: null
+                    },
+                    {
+                        day: 79,
+                        title: "Revenue Optimization: Maximizing Every Stream",
+                        content: "Proverbs 10:4 - Lazy hands make for poverty, but diligent hands bring wealth. Optimize what's working.",
+                        activity: "Revenue Audit: Review all income streams. Which can you 2x with minor tweaks? Identify 3 quick wins.",
+                        assignment: "Implement 1 revenue optimization this week. Raise prices, upsell, bundle, or increase volume.",
+                        btssImpact: "money",
+                        appConnection: {
+                            app: "Z2B Dashboard",
+                            how: "Analyze income stream performance. See which streams are underperforming. Focus energy there."
+                        }
+                    },
+                    {
+                        day: 80,
+                        title: "Influence Amplification: Going Viral",
+                        content: "1 viral moment can create more impact than 10 years of slow posting. Strategic virality is a skill.",
+                        activity: "Viral Content Challenge: Create your most bold, controversial, or inspiring content yet. Take a risk.",
+                        assignment: "Post it. Promote it. Get 1000+ views. Track engagement. Learn what resonates.",
+                        btssImpact: "movement",
+                        appConnection: {
+                            app: "BENOWN",
+                            how: "BENOWN analyzes viral trends. Use it to craft content that taps into current conversations. Ride the wave!"
+                        }
+                    }
+                ],
+                weekend: {
+                    reflection: "Can you now operate all 4 Legs simultaneously? Are you implementing at lightning speed?",
+                    application: "Challenge: Execute 10 high-value tasks across all 4 Legs this weekend. Prove mastery.",
+                    btssCheck: "All 4 Legs should be 80%+. If not, identify the bottleneck and break through it."
+                }
+            },
+            {
+                week: 17,
+                theme: "Exponential Scaling: 10x Your Results",
+                focus: "Moving from linear growth to exponential multiplication",
+                lessons: [
+                    {
+                        day: 81,
+                        title: "10x Thinking: Beyond Incremental Improvement",
+                        content: "2x goals = incremental. 10x goals = transformational. 10x thinking forces you to find entirely new strategies.",
+                        activity: "10x Vision: Look at your biggest current goal. Now make it 10x bigger. How would you achieve THAT?",
+                        assignment: "Identify 1 strategy that could 10x your income, impact, or reach. Start building it.",
+                        btssImpact: "mindset",
+                        appConnection: null
+                    },
+                    {
+                        day: 82,
+                        title: "Leverage Mastery: OPM, OPT, OPA",
+                        content: "Other People's Money. Other People's Time. Other People's Audience. Billionaires master all 3.",
+                        activity: "Leverage Inventory: List ways you could leverage OPM, OPT, and OPA. Who could you partner with?",
+                        assignment: "Secure 1 leverage partnership this week. Borrow money, hire help, or co-promote.",
+                        btssImpact: "legacy",
+                        appConnection: {
+                            app: "Z2B Network",
+                            how: "Your Z2B team = OPT (Other People's Time). Their audiences = OPA. Leverage the network for explosive growth."
+                        }
+                    },
+                    {
+                        day: 83,
+                        title: "Product Multiplication: 1 to Many",
+                        content: "Create once, sell forever. Digital products scale infinitely. Physical effort does not.",
+                        activity: "Product Brainstorm: List 5 digital products you could create based on your expertise",
+                        assignment: "Create 1 simple digital product this week. Ebook, template, course, toolkit. Price it. Sell it.",
+                        btssImpact: "money",
+                        appConnection: {
+                            app: "Marketplace + GLOWIE",
+                            how: "Use GLOWIE to build product (app, template, tool). Sell on Z2B Marketplace. Passive income unlocked."
+                        }
+                    },
+                    {
+                        day: 84,
+                        title: "Authority Multiplication: Media Domination",
+                        content: "Get featured once, get opportunities forever. Press, podcasts, and platforms create lasting credibility.",
+                        activity: "Media Pitch Blitz: Pitch yourself to 10 podcasts/media outlets today. Use a template. Send fast.",
+                        assignment: "Secure 1 media feature within 2 weeks. Be relentless. Follow up. Make it happen.",
+                        btssImpact: "movement",
+                        appConnection: {
+                            app: "BENOWN",
+                            how: "Use BENOWN to create compelling media pitch. Turn your story into irresistible content for hosts."
+                        }
+                    },
+                    {
+                        day: 85,
+                        title: "Team Multiplication: Building Leaders Who Build",
+                        content: "Deuteronomy 1:13 - Choose wise leaders. Your team's growth capacity determines your business's ceiling.",
+                        activity: "Leadership Pipeline: Identify 3 people on your team who could become leaders. What do they need?",
+                        assignment: "Invest in 1 emerging leader. Give them a growth opportunity, training, or new responsibility.",
+                        btssImpact: "legacy",
+                        appConnection: {
+                            app: "Z2B TLI",
+                            how: "Team Leadership Incentive rewards you for developing leaders. The more leaders you build, the more you earn. Win-win."
+                        }
+                    }
+                ],
+                weekend: {
+                    reflection: "What's your 10x goal? What leverage are you using? Are you thinking exponentially?",
+                    application: "Map your 10x strategy. What would it take to 10x your results in 12 months? Create the roadmap.",
+                    btssCheck: "Mastery level check. All 4 Legs should be 85%+. You're approaching billionaire-level performance!"
+                }
+            },
+            {
+                week: 18,
+                theme: "Unstoppable Legacy Builder: Living the Lifestyle",
+                focus: "Cementing your identity, lifestyle, and legacy as a permanent transformation",
+                lessons: [
+                    {
+                        day: 86,
+                        title: "Identity Permanence: This Is Who You Are Now",
+                        content: "You're not becoming a billionaire. You ARE a billionaire in training. Identity shift is permanent.",
+                        activity: "Identity Declaration: Write 'I AM' statements for all 4 Legs. Read them daily for life.",
+                        assignment: "Burn the bridges. Publicly declare your new identity. No going back to employee mindset.",
+                        btssImpact: "mindset",
+                        appConnection: null
+                    },
+                    {
+                        day: 87,
+                        title: "The Billionaire Lifestyle: Time, Health, Wealth, Relationships",
+                        content: "1 Timothy 4:8 - Physical training has some value, but godliness has value for all things. Billionaires optimize all life areas.",
+                        activity: "Lifestyle Audit: Rate 1-10 in Time Freedom, Health, Wealth, Relationships. Which needs attention?",
+                        assignment: "Upgrade 1 lifestyle area this week. Hire help, join gym, invest money, schedule date nights.",
+                        btssImpact: "all",
+                        appConnection: null
+                    },
+                    {
+                        day: 88,
+                        title: "Generational Wealth Transfer: Building for 100 Years",
+                        content: "Proverbs 13:22 - A good person leaves an inheritance for their children's children. Think 3 generations ahead.",
+                        activity: "Legacy Plan: How will your wealth, wisdom, and systems transfer to your children and grandchildren?",
+                        assignment: "Set up 1 generational structure: Will, trust, investment account, or business succession plan.",
+                        btssImpact: "legacy",
+                        appConnection: null
+                    },
+                    {
+                        day: 89,
+                        title: "The Movement Continues: Leading the Next Generation",
+                        content: "Your movement doesn't end with you. Train others to carry the torch. Legacy multiplies through disciples.",
+                        activity: "Disciple Identification: Who are 3 people you could mentor into Legacy Builders?",
+                        assignment: "Invite them to start their 90-day journey. Give them access to Coach Manlaw. Pass the torch.",
+                        btssImpact: "movement",
+                        appConnection: {
+                            app: "Z2B Platform",
+                            how: "Invite others to Z2B. Give them access to all 7 apps and Coach Manlaw. Build the next generation of Legacy Builders."
+                        }
+                    },
+                    {
+                        day: 90,
+                        title: "90-Day Transformation Complete: The Billionaire You've Become",
+                        content: "Philippians 1:6 - He who began a good work in you will carry it to completion. You're transformed. Forever.",
+                        activity: "Final Transformation Review: Day 1 vs Day 90. Measure BTSS. Document every change. Celebrate massively.",
+                        assignment: "Create your transformation story. Video, article, or presentation. Share it widely. Inspire thousands.",
+                        btssImpact: "all",
+                        appConnection: {
+                            app: "BENOWN + ZYRO + VIDZIE",
+                            how: "Use BENOWN to write story. VIDZIE to create video. Share on ZYRO to inspire the community. Complete the cycle!"
+                        }
+                    }
+                ],
+                weekend: {
+                    reflection: "THE COMPLETE 90-DAY TRANSFORMATION! You did it! Who were you on Day 1? Who are you now on Day 90?",
+                    application: "Host a MASSIVE celebration. Graduation ceremony. Invite everyone. Showcase transformation. Launch your next chapter!",
+                    btssCheck: "FINAL MASTERY ASSESSMENT. Target: 90%+ on all 4 Legs. You're officially a BILLIONAIRE-LEVEL Legacy Builder!"
                 }
             }
         ]
@@ -1044,11 +1247,14 @@ const MANLAW_CURRICULUM = {
         },
         progressMilestones: [
             { day: 1, milestone: "Baseline BTSS - Know where you start" },
-            { day: 20, milestone: "Phase 1 Check - Mindset shifting?" },
-            { day: 35, milestone: "Phase 2 Check - Money flowing?" },
-            { day: 50, milestone: "Phase 3 Check - Systems building?" },
-            { day: 65, milestone: "Phase 4 Check - Influence growing?" },
-            { day: 75, milestone: "Final Assessment - Certification score" }
+            { day: 20, milestone: "Phase 1 Complete - Mindset Mystery mastered" },
+            { day: 35, milestone: "Phase 2 Complete - Money Moves flowing" },
+            { day: 50, milestone: "Phase 3 Complete - Legacy systems built" },
+            { day: 65, milestone: "Phase 4 Complete - Movement leadership active" },
+            { day: 75, milestone: "Certification Achieved - Legacy Builder status" },
+            { day: 80, milestone: "Advanced Implementation - All 4 Legs simultaneous" },
+            { day: 85, milestone: "Exponential Scaling - 10x thinking activated" },
+            { day: 90, milestone: "Billionaire-Level Mastery - Transformation complete" }
         ],
         weeklyReflections: [
             "What was your biggest win this week?",

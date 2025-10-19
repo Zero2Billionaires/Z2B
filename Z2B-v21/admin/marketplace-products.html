@@ -8,11 +8,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #6C63FF;
-            --success: #00FF88;
-            --warning: #FFB800;
+            --navy-blue: #0A2647;
+            --gold: #FFD700;
+            --royal-gold: #D4AF37;
+            --orange: #FF6B35;
+            --dark-navy: #051428;
+            --primary: #0A2647;
+            --success: #27ae60;
+            --warning: #FF6B35;
             --danger: #FF6B6B;
-            --dark: #1a1a2e;
+            --dark: #0A2647;
             --light: #f8f9fa;
             --border: #dee2e6;
         }
@@ -20,8 +25,8 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0A2647 0%, #051428 100%);
             color: #333;
             min-height: 100vh;
         }
@@ -457,10 +462,15 @@
     <div class="admin-container">
         <!-- Header -->
         <div class="header">
-            <h1>
-                <i class="fas fa-store"></i>
-                Marketplace Products Management
-            </h1>
+            <div>
+                <h1>
+                    <i class="fas fa-gem" style="color: var(--gold);"></i> Z2B LEGACY BUILDERS
+                </h1>
+                <small style="font-size: 0.7rem; text-transform: uppercase; color: var(--gold); display: block; margin-top: 0.3rem;">Transforming Employees to Entrepreneurs</small>
+                <div style="margin-top: 0.8rem; font-size: 1.1rem; color: var(--primary); font-weight: 600;">
+                    <i class="fas fa-store"></i> Marketplace Products Management
+                </div>
+            </div>
             <button class="btn btn-primary" onclick="openAddProductModal()">
                 <i class="fas fa-plus"></i> Add New Product
             </button>

@@ -770,8 +770,17 @@
                     alert(`Great choice! You've selected ${tierName}.\\n\\nThis will redirect to payment processing.`);
                 }
 
-                // Redirect to payment page (placeholder)
-                // window.location.href = \`payment.html?tier=\${tierCode}&ref=\${referrerId || ''}\`;
+                // Store tier selection for payment tracking
+                localStorage.setItem('z2b_selected_tier', tierCode);
+                localStorage.setItem('z2b_selected_tier_name', tierName);
+                if (referrerId) {
+                    localStorage.setItem('z2b_referrer', referrerId);
+                }
+
+                // Redirect to Yoco payment page
+                setTimeout(() => {
+                    window.location.href = 'https://pay.yoco.com/zero2billionaires-amavulandlela';
+                }, 2000);
             });
         });
 

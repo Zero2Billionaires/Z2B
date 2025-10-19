@@ -9,14 +9,28 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
+            /* Royal Gold - Main Brand Colors */
+            --royal-gold: #D4AF37;
+            --royal-gold-light: #F4E4C1;
+            --royal-gold-dark: #B8960D;
+            --royal-gold-shine: #FFE5A0;
+            --royal-gold-deep: #9B7E0D;
+
+            /* Supporting Colors */
+            --deep-navy: #0B1A2A;
             --navy-blue: #0A2647;
-            --gold: #FFD700;
-            --orange: #FF6B35;
-            --light-gold: #FFF4CC;
             --dark-navy: #051428;
+            --accent-orange: #FF6B35;
             --purple: #9B59B6;
             --success: #4ECDC4;
             --white: #FFFFFF;
+            --light-bg: #FAF8F3;
+
+            /* Legacy aliases for gradual transition */
+            --gold: var(--royal-gold);
+            --light-gold: var(--royal-gold-light);
+            --orange: var(--accent-orange);
+            --border-color: rgba(212, 175, 55, 0.3);
         }
 
         * {
@@ -27,7 +41,7 @@
 
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, var(--navy-blue) 0%, var(--dark-navy) 100%);
+            background: linear-gradient(135deg, var(--deep-navy) 0%, var(--navy-blue) 100%);
             color: var(--white);
             min-height: 100vh;
         }
@@ -39,7 +53,7 @@
             top: 0;
             height: 100vh;
             width: 280px;
-            background: rgba(10, 38, 71, 0.95);
+            background: rgba(11, 26, 42, 0.95);
             backdrop-filter: blur(10px);
             padding: 2rem 0;
             border-right: 2px solid var(--gold);
@@ -50,20 +64,31 @@
         .sidebar-brand {
             text-align: center;
             margin-bottom: 2rem;
-            padding: 0 1rem;
+            padding: 0 1.5rem 2rem;
+            border-bottom: 3px solid var(--royal-gold);
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(184, 150, 13, 0.05));
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
         }
 
         .sidebar-brand h2 {
-            color: var(--gold);
+            color: var(--royal-gold-shine);
             font-size: 2rem;
-            font-weight: 800;
+            font-weight: 900;
             margin-bottom: 0.5rem;
+            text-shadow:
+                0 0 20px rgba(212, 175, 55, 0.8),
+                0 0 30px rgba(255, 229, 160, 0.5),
+                0 2px 4px rgba(0, 0, 0, 0.3);
+            letter-spacing: 1.5px;
+            animation: glow 2s ease-in-out infinite alternate;
         }
 
         .sidebar-brand p {
-            color: var(--orange);
+            color: var(--royal-gold-light);
             font-size: 0.85rem;
             font-weight: 600;
+            margin: 0;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
         }
 
         .sidebar-nav {
@@ -112,20 +137,56 @@
             border-radius: 20px;
             padding: 2rem;
             margin-bottom: 2rem;
-            border: 1px solid rgba(255, 215, 0, 0.2);
+            border: 1px solid var(--border-color);
         }
 
         .page-header h1 {
             font-size: 2.5rem;
             font-weight: 800;
-            color: var(--gold);
+            color: var(--royal-gold-shine);
             margin-bottom: 0.5rem;
+            text-shadow: 0 0 25px rgba(212, 175, 55, 0.9),
+                         0 0 50px rgba(255, 229, 160, 0.7),
+                         0 0 75px rgba(212, 175, 55, 0.5);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        .page-header h1 i {
+            filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.8))
+                    drop-shadow(0 0 30px rgba(255, 229, 160, 0.6));
+            animation: bulbGlow 1.5s ease-in-out infinite alternate;
         }
 
         .page-header p {
             color: var(--white);
             opacity: 0.9;
             font-size: 1.1rem;
+        }
+
+        /* Royal Gold Glow Animations */
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 20px rgba(212, 175, 55, 0.8),
+                             0 0 40px rgba(212, 175, 55, 0.6),
+                             0 0 60px rgba(212, 175, 55, 0.4);
+            }
+            to {
+                text-shadow: 0 0 30px rgba(212, 175, 55, 1),
+                             0 0 60px rgba(255, 229, 160, 0.8),
+                             0 0 90px rgba(212, 175, 55, 0.6);
+            }
+        }
+
+        @keyframes bulbGlow {
+            from {
+                filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.7))
+                        drop-shadow(0 0 20px rgba(212, 175, 55, 0.5));
+            }
+            to {
+                filter: drop-shadow(0 0 20px rgba(212, 175, 55, 1))
+                        drop-shadow(0 0 40px rgba(255, 229, 160, 0.8))
+                        drop-shadow(0 0 60px rgba(212, 175, 55, 0.6));
+            }
         }
 
         /* Builder Grid */
@@ -141,7 +202,7 @@
             backdrop-filter: blur(10px);
             border-radius: 20px;
             padding: 2rem;
-            border: 1px solid rgba(255, 215, 0, 0.2);
+            border: 1px solid var(--border-color);
         }
 
         .builder-panel h3 {
@@ -171,7 +232,7 @@
             width: 100%;
             padding: 0.8rem;
             border-radius: 10px;
-            border: 2px solid rgba(255, 215, 0, 0.3);
+            border: 2px solid var(--border-color);
             background: rgba(255, 255, 255, 0.1);
             color: var(--white);
             font-family: 'Poppins', sans-serif;
@@ -272,7 +333,7 @@
 
         .btn-generate:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.5);
         }
 
         .btn-generate:disabled {
@@ -290,7 +351,7 @@
         }
 
         .preview-header {
-            background: var(--navy-blue);
+            background: var(--deep-navy);
             color: white;
             padding: 1rem;
             display: flex;
@@ -360,7 +421,7 @@
         }
 
         .code-content {
-            background: var(--dark-navy);
+            background: var(--deep-navy);
             border-radius: 15px;
             padding: 2rem;
             max-width: 900px;
@@ -449,17 +510,16 @@
     <!-- Sidebar -->
     <aside class="sidebar">
         <div class="sidebar-brand">
-            <h2><i class="fas fa-rocket"></i> Z2B</h2>
-            <p>Zero2Billionaires Platform</p>
+            <h2><i class="fas fa-gem"></i> Z2B LEGACY BUILDERS</h2>
+            <p>Transforming Employees to Entrepreneurs</p>
         </div>
 
         <ul class="sidebar-nav">
+            <li><a href="#" class="active"><i class="fas fa-plus-circle"></i> New App</a></li>
+            <li><a href="#my-apps"><i class="fas fa-folder"></i> My Apps</a></li>
+            <li><a href="#examples"><i class="fas fa-star"></i> Examples</a></li>
+            <li><a href="#tips"><i class="fas fa-lightbulb"></i> Tips & Guide</a></li>
             <li><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
-            <li><a href="benown.html"><i class="fas fa-magic"></i> BENOWN</a></li>
-            <li><a href="zyra.html"><i class="fas fa-user-tie"></i> ZYRA</a></li>
-            <li><a href="zyro.html"><i class="fas fa-gamepad"></i> ZYRO</a></li>
-            <li><a href="glowie.html" class="active"><i class="fas fa-lightbulb"></i> GLOWIE</a></li>
-            <li><a href="coach-manlaw.html"><i class="fas fa-graduation-cap"></i> Coach Manlaw</a></li>
         </ul>
     </aside>
 
@@ -469,6 +529,138 @@
         <div class="page-header">
             <h1><i class="fas fa-lightbulb"></i> GLOWIE - AI App Builder</h1>
             <p>Build instant apps with AI in seconds</p>
+        </div>
+
+        <!-- Sales Pitch Section -->
+        <div class="builder-panel" style="margin-bottom: 2rem; background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 107, 53, 0.1)); border: 2px solid var(--gold);">
+            <div style="text-align: center;">
+                <h2 style="color: var(--gold); font-size: 2rem; margin-bottom: 1rem; font-weight: 800;">
+                    <i class="fas fa-bolt"></i> Turn Ideas Into Reality in Seconds
+                </h2>
+                <p style="font-size: 1.2rem; margin-bottom: 1.5rem; line-height: 1.8;">
+                    While your competitors spend <strong style="color: #ff4444;">weeks struggling</strong> with developers, designers, and endless revisions...
+                    <br><strong style="color: var(--gold); font-size: 1.3rem;">GLOWIE builds your app in under 60 seconds.</strong>
+                </p>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 2rem;">
+                    <div style="text-align: center; padding: 1.5rem; background: rgba(255, 255, 255, 0.05); border-radius: 15px; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                        <i class="fas fa-rocket" style="font-size: 3rem; color: var(--gold); margin-bottom: 1rem;"></i>
+                        <h4 style="color: var(--gold); margin-bottom: 0.5rem;">Lightning Speed</h4>
+                        <p style="opacity: 0.9;">From idea to working app in 30-60 seconds. Not days. Not hours. <strong>Seconds.</strong></p>
+                    </div>
+                    <div style="text-align: center; padding: 1.5rem; background: rgba(255, 255, 255, 0.05); border-radius: 15px; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                        <i class="fas fa-trophy" style="font-size: 3rem; color: var(--orange); margin-bottom: 1rem;"></i>
+                        <h4 style="color: var(--orange); margin-bottom: 0.5rem;">Outrun Competition</h4>
+                        <p style="opacity: 0.9;">Launch faster, test more ideas, pivot instantly. <strong>Speed is your unfair advantage.</strong></p>
+                    </div>
+                    <div style="text-align: center; padding: 1.5rem; background: rgba(255, 255, 255, 0.05); border-radius: 15px; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                        <i class="fas fa-magic" style="font-size: 3rem; color: var(--success); margin-bottom: 1rem;"></i>
+                        <h4 style="color: var(--success); margin-bottom: 0.5rem;">Zero Code Required</h4>
+                        <p style="opacity: 0.9;">Just describe what you want. GLOWIE handles <strong>all the coding, design, and technical stuff.</strong></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Prompting Tips Section -->
+        <div class="builder-panel" style="margin-bottom: 2rem;">
+            <h3 style="color: var(--gold); margin-bottom: 1.5rem; text-align: center;">
+                <i class="fas fa-lightbulb"></i> Pro Tips: How to Prompt GLOWIE Like a Boss
+            </h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                <div>
+                    <h4 style="color: var(--success); margin-bottom: 1rem;"><i class="fas fa-check-circle"></i> DO This:</h4>
+                    <ul style="list-style: none; padding: 0; line-height: 2;">
+                        <li style="margin-bottom: 0.8rem;"><strong style="color: var(--gold);">Be specific:</strong> "Build a fitness tracker with calorie counter, workout timer, and progress charts"</li>
+                        <li style="margin-bottom: 0.8rem;"><strong style="color: var(--gold);">Mention colors:</strong> "Use blue and white theme with modern gradients"</li>
+                        <li style="margin-bottom: 0.8rem;"><strong style="color: var(--gold);">Define features:</strong> "Include dark mode toggle, save data locally, mobile responsive"</li>
+                        <li style="margin-bottom: 0.8rem;"><strong style="color: var(--gold);">State the purpose:</strong> "For busy professionals who need quick meal planning"</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="color: #ff4444; margin-bottom: 1rem;"><i class="fas fa-times-circle"></i> DON'T Do This:</h4>
+                    <ul style="list-style: none; padding: 0; line-height: 2;">
+                        <li style="margin-bottom: 0.8rem;"><span style="opacity: 0.6;">"Make me an app"</span> - Too vague!</li>
+                        <li style="margin-bottom: 0.8rem;"><span style="opacity: 0.6;">"Something for fitness"</span> - Not specific enough</li>
+                        <li style="margin-bottom: 0.8rem;"><span style="opacity: 0.6;">"Build it like that other app"</span> - GLOWIE doesn't know which one</li>
+                        <li style="margin-bottom: 0.8rem;"><span style="opacity: 0.6;">"Just do whatever"</span> - Be the director of your vision!</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- App Examples Section -->
+        <div class="builder-panel" style="margin-bottom: 2rem;">
+            <h3 style="color: var(--gold); margin-bottom: 1.5rem; text-align: center;">
+                <i class="fas fa-star"></i> What Can GLOWIE Build? (Literally Anything!)
+            </h3>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
+                <div style="background: rgba(255, 215, 0, 0.05); padding: 1.5rem; border-radius: 15px; border-left: 4px solid var(--gold);">
+                    <h4 style="color: var(--gold); margin-bottom: 0.8rem;"><i class="fas fa-tasks"></i> Productivity Apps</h4>
+                    <ul style="list-style: none; padding: 0; opacity: 0.9; line-height: 1.8;">
+                        <li>• Task managers & to-do lists</li>
+                        <li>• Habit trackers</li>
+                        <li>• Note-taking apps</li>
+                        <li>• Time trackers</li>
+                        <li>• Pomodoro timers</li>
+                    </ul>
+                </div>
+                <div style="background: rgba(255, 107, 53, 0.05); padding: 1.5rem; border-radius: 15px; border-left: 4px solid var(--orange);">
+                    <h4 style="color: var(--orange); margin-bottom: 0.8rem;"><i class="fas fa-store"></i> Business Tools</h4>
+                    <ul style="list-style: none; padding: 0; opacity: 0.9; line-height: 1.8;">
+                        <li>• Lead capture forms</li>
+                        <li>• Product catalogs</li>
+                        <li>• Quote calculators</li>
+                        <li>• Booking systems</li>
+                        <li>• Invoice generators</li>
+                    </ul>
+                </div>
+                <div style="background: rgba(78, 205, 196, 0.05); padding: 1.5rem; border-radius: 15px; border-left: 4px solid var(--success);">
+                    <h4 style="color: var(--success); margin-bottom: 0.8rem;"><i class="fas fa-heart"></i> Lifestyle & Fun</h4>
+                    <ul style="list-style: none; padding: 0; opacity: 0.9; line-height: 1.8;">
+                        <li>• Recipe organizers</li>
+                        <li>• Workout planners</li>
+                        <li>• Budget trackers</li>
+                        <li>• Quiz games</li>
+                        <li>• Daily journals</li>
+                    </ul>
+                </div>
+                <div style="background: rgba(155, 89, 182, 0.05); padding: 1.5rem; border-radius: 15px; border-left: 4px solid var(--purple);">
+                    <h4 style="color: var(--purple); margin-bottom: 0.8rem;"><i class="fas fa-chart-line"></i> Data & Analytics</h4>
+                    <ul style="list-style: none; padding: 0; opacity: 0.9; line-height: 1.8;">
+                        <li>• ROI calculators</li>
+                        <li>• Progress dashboards</li>
+                        <li>• Data visualizers</li>
+                        <li>• Report generators</li>
+                        <li>• Stat trackers</li>
+                    </ul>
+                </div>
+                <div style="background: rgba(255, 215, 0, 0.05); padding: 1.5rem; border-radius: 15px; border-left: 4px solid var(--gold);">
+                    <h4 style="color: var(--gold); margin-bottom: 0.8rem;"><i class="fas fa-graduation-cap"></i> Education</h4>
+                    <ul style="list-style: none; padding: 0; opacity: 0.9; line-height: 1.8;">
+                        <li>• Flashcard apps</li>
+                        <li>• Study planners</li>
+                        <li>• Quiz makers</li>
+                        <li>• Grade calculators</li>
+                        <li>• Learning trackers</li>
+                    </ul>
+                </div>
+                <div style="background: rgba(255, 107, 53, 0.05); padding: 1.5rem; border-radius: 15px; border-left: 4px solid var(--orange);">
+                    <h4 style="color: var(--orange); margin-bottom: 0.8rem;"><i class="fas fa-code"></i> Developer Tools</h4>
+                    <ul style="list-style: none; padding: 0; opacity: 0.9; line-height: 1.8;">
+                        <li>• API testers</li>
+                        <li>• Code snippets library</li>
+                        <li>• Regex builders</li>
+                        <li>• Color palette generators</li>
+                        <li>• JSON formatters</li>
+                    </ul>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 2rem; padding: 1.5rem; background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 107, 53, 0.1)); border-radius: 15px;">
+                <p style="font-size: 1.2rem; margin: 0;">
+                    <strong style="color: var(--gold);">And that's just scratching the surface!</strong>
+                    If you can describe it, GLOWIE can build it. 🚀
+                </p>
+            </div>
         </div>
 
         <!-- Builder Grid -->
@@ -548,36 +740,35 @@
                     </div>
                 </div>
 
-                <!-- Color Scheme -->
-                <div class="form-group">
-                    <label>Color Scheme</label>
-                    <select id="colorScheme">
-                        <option value="z2b">Z2B (Navy & Gold)</option>
-                        <option value="modern">Modern (Blue & Purple)</option>
-                        <option value="vibrant">Vibrant (Orange & Teal)</option>
-                        <option value="minimal">Minimal (Black & White)</option>
-                        <option value="custom">Custom (Describe in prompt)</option>
-                    </select>
+                <!-- Video Generation (NEW) -->
+                <div class="form-group" style="border-top: 2px solid rgba(255, 215, 0, 0.2); padding-top: 1.5rem; margin-top: 1.5rem;">
+                    <label style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-video" style="color: var(--orange);"></i>
+                        Generate Promotional Video (Optional)
+                    </label>
+                    <div class="feature-checkbox" style="margin-bottom: 1rem;">
+                        <input type="checkbox" id="featureVideo">
+                        <label for="featureVideo">Include AI Video Demo</label>
+                    </div>
+                    <div id="videoOptions" style="display: none; background: rgba(255, 255, 255, 0.05); padding: 1rem; border-radius: 10px;">
+                        <small style="color: var(--light-gold); display: block; margin-bottom: 1rem;">
+                            <i class="fas fa-info-circle"></i> We'll generate a talking avatar video to demo your app!
+                        </small>
+                        <input type="text" id="videoScript" placeholder="Video script (optional - we'll auto-generate)"
+                               style="width: 100%; padding: 0.6rem; margin-bottom: 0.8rem; border-radius: 5px; border: 1px solid rgba(255, 215, 0, 0.3); background: rgba(255, 255, 255, 0.1); color: white;">
+                        <select id="videoVoice" style="width: 100%; padding: 0.6rem; border-radius: 5px; border: 1px solid rgba(255, 215, 0, 0.3); background: rgba(255, 255, 255, 0.1); color: white;">
+                            <option value="en-US-JennyNeural">Jenny (US Female)</option>
+                            <option value="en-US-GuyNeural">Guy (US Male)</option>
+                            <option value="en-GB-SoniaNeural">Sonia (UK Female)</option>
+                            <option value="en-US-AriaNeural">Aria (US Female - Cheerful)</option>
+                        </select>
+                    </div>
                 </div>
 
                 <!-- Generate Button -->
                 <button class="btn-generate" id="btnGenerate">
                     <i class="fas fa-magic"></i> Generate App with AI
                 </button>
-
-                <!-- API Settings -->
-                <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid rgba(255, 255, 255, 0.1);">
-                    <div class="form-group">
-                        <label>AI API Key</label>
-                        <input type="password" id="claudeApiKey" placeholder="Enter your API key...">
-                        <small style="color: var(--gold); display: block; margin-top: 0.5rem;">
-                            <i class="fas fa-lock"></i> Required to enable AI app generation
-                        </small>
-                    </div>
-                    <button class="btn-generate" style="margin-top: 1rem;" onclick="saveApiKey()">
-                        <i class="fas fa-save"></i> Save API Key
-                    </button>
-                </div>
             </div>
 
             <!-- Right Panel: Preview -->
@@ -633,15 +824,66 @@
 
     <!-- Scripts -->
     <script>
+        // Configuration
+        const API_BASE_URL = 'http://localhost:5000/api';
+
         // State
         let selectedAppType = 'landing';
         let generatedCode = '';
+        let currentAppId = null;
+        let authToken = null;
 
         // Initialize
         window.addEventListener('DOMContentLoaded', () => {
-            loadApiKey();
+            loadAuthToken();
+            loadSettings();
             setupEventListeners();
         });
+
+        // Load auth token from localStorage
+        function loadAuthToken() {
+            authToken = localStorage.getItem('z2b_auth_token');
+            if (!authToken) {
+                alert('Please login to use Glowie. Redirecting to dashboard...');
+                // window.location.href = 'dashboard.html';
+            }
+        }
+
+        // Load user settings
+        async function loadSettings() {
+            if (!authToken) return;
+
+            try {
+                // Load usage stats only
+                loadUsageStats();
+            } catch (error) {
+                console.error('Load settings error:', error);
+            }
+        }
+
+        // Load usage statistics
+        async function loadUsageStats() {
+            if (!authToken) return;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/glowie/stats`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success) {
+                        const stats = data.data;
+                        console.log('Usage stats:', stats);
+                        // Could display this in UI
+                    }
+                }
+            } catch (error) {
+                console.error('Load stats error:', error);
+            }
+        }
 
         // Setup event listeners
         function setupEventListeners() {
@@ -652,6 +894,11 @@
                     btn.classList.add('active');
                     selectedAppType = btn.dataset.type;
                 });
+            });
+
+            // Video feature toggle
+            document.getElementById('featureVideo').addEventListener('change', (e) => {
+                document.getElementById('videoOptions').style.display = e.target.checked ? 'block' : 'none';
             });
 
             // Generate button
@@ -671,8 +918,6 @@
         async function generateApp() {
             const btn = document.getElementById('btnGenerate');
             const description = document.getElementById('appDescription').value.trim();
-            const colorScheme = document.getElementById('colorScheme').value;
-            const apiKey = document.getElementById('claudeApiKey').value.trim();
 
             // Validation
             if (!description) {
@@ -680,8 +925,8 @@
                 return;
             }
 
-            if (!apiKey || apiKey === '') {
-                alert('Please enter your AI API key in the settings below.');
+            if (!authToken) {
+                alert('Please login to use Glowie.');
                 return;
             }
 
@@ -701,20 +946,65 @@
             document.getElementById('previewStatus').textContent = 'Generating...';
 
             try {
-                // Build prompt
-                const prompt = buildClaudePrompt(description, selectedAppType, features, colorScheme);
+                // Call backend API (color scheme is set by admin)
+                const response = await fetch(`${API_BASE_URL}/glowie/generate`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        description,
+                        appType: selectedAppType,
+                        features,
+                        colorScheme: 'z2b' // Default Z2B branding
+                    })
+                });
 
-                // Call AI API
-                const code = await callClaudeAPI(prompt, apiKey);
+                const data = await response.json();
 
-                // Display preview
-                displayPreview(code);
+                if (!response.ok) {
+                    throw new Error(data.message || 'Failed to generate app');
+                }
 
-                // Enable actions
-                document.getElementById('btnDownload').disabled = false;
-                document.getElementById('btnViewCode').disabled = false;
+                if (!data.success) {
+                    throw new Error(data.message || 'Generation failed');
+                }
 
-                document.getElementById('previewStatus').textContent = 'App Generated!';
+                // Save the app ID
+                currentAppId = data.data.appId;
+
+                // Fetch the generated code
+                const codeResponse = await fetch(`${API_BASE_URL}/glowie/app/${currentAppId}/code`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+
+                const codeData = await codeResponse.json();
+
+                if (codeData.success) {
+                    generatedCode = codeData.data.code;
+
+                    // Display preview
+                    displayPreview(generatedCode);
+
+                    // Enable actions
+                    document.getElementById('btnDownload').disabled = false;
+                    document.getElementById('btnViewCode').disabled = false;
+
+                    document.getElementById('previewStatus').textContent = 'App Generated!';
+
+                    // Check if video generation is requested
+                    const generateVideo = document.getElementById('featureVideo').checked;
+
+                    if (generateVideo) {
+                        // Generate promotional video
+                        await generatePromoVideo(description, data.data.appName);
+                    } else {
+                        alert(`✅ App generated successfully! Time: ${data.data.generationTime}ms\nRemaining generations: ${data.data.remainingGenerations}`);
+                    }
+                }
 
             } catch (error) {
                 console.error('Generation error:', error);
@@ -724,79 +1014,7 @@
 
             // Re-enable button
             btn.disabled = false;
-            btn.innerHTML = '<i class="fas fa-magic"></i> Generate App with Claude';
-        }
-
-        // Build Claude prompt
-        function buildClaudePrompt(description, appType, features, colorScheme) {
-            const featuresList = Object.entries(features)
-                .filter(([key, value]) => value)
-                .map(([key]) => key)
-                .join(', ');
-
-            return `You are an expert web developer. Create a complete, production-ready, single-file HTML application based on the following requirements:
-
-APP DESCRIPTION:
-${description}
-
-APP TYPE: ${appType}
-
-REQUIRED FEATURES:
-${featuresList || 'None specified'}
-
-COLOR SCHEME: ${colorScheme}
-
-INSTRUCTIONS:
-1. Create a COMPLETE, SELF-CONTAINED HTML file with embedded CSS and JavaScript
-2. The app must be fully functional and production-ready
-3. Use modern HTML5, CSS3, and vanilla JavaScript (ES6+)
-4. Include Bootstrap 5 and Font Awesome 6 from CDN
-5. Make it visually stunning with smooth animations and modern design
-6. Add proper error handling and user feedback
-7. Include helpful comments in the code
-8. Make sure all interactive features work perfectly
-9. Use the Z2B color scheme if specified: Navy Blue (#0A2647), Gold (#FFD700), Orange (#FF6B35)
-
-RESPOND WITH ONLY THE COMPLETE HTML CODE. No explanations, no markdown, just the raw HTML file content that can be saved and opened directly in a browser.`;
-        }
-
-        // Call Claude API
-        async function callClaudeAPI(prompt, apiKey) {
-            try {
-                const response = await fetch('https://api.anthropic.com/v1/messages', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'x-api-key': apiKey,
-                        'anthropic-version': '2023-06-01'
-                    },
-                    body: JSON.stringify({
-                        model: 'claude-sonnet-4-20250514',
-                        max_tokens: 4096,
-                        messages: [{
-                            role: 'user',
-                            content: prompt
-                        }]
-                    })
-                });
-
-                if (!response.ok) {
-                    const error = await response.json();
-                    throw new Error(error.error?.message || 'API request failed');
-                }
-
-                const data = await response.json();
-
-                if (data.content && data.content[0] && data.content[0].text) {
-                    return data.content[0].text.trim();
-                } else {
-                    throw new Error('Invalid response from Claude API');
-                }
-
-            } catch (error) {
-                console.error('Claude API error:', error);
-                throw error;
-            }
+            btn.innerHTML = '<i class="fas fa-magic"></i> Generate App with AI';
         }
 
         // Display preview
@@ -818,10 +1036,24 @@ RESPOND WITH ONLY THE COMPLETE HTML CODE. No explanations, no markdown, just the
         }
 
         // Download app
-        function downloadApp() {
+        async function downloadApp() {
             if (!generatedCode) {
                 alert('No app to download!');
                 return;
+            }
+
+            // Track download in backend
+            if (currentAppId && authToken) {
+                try {
+                    await fetch(`${API_BASE_URL}/glowie/app/${currentAppId}/download`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${authToken}`
+                        }
+                    });
+                } catch (error) {
+                    console.error('Track download error:', error);
+                }
             }
 
             // Create blob
@@ -884,22 +1116,132 @@ RESPOND WITH ONLY THE COMPLETE HTML CODE. No explanations, no markdown, just the
             document.getElementById('previewStatus').textContent = 'Ready to build';
         }
 
-        // Save API key
-        function saveApiKey() {
-            const apiKey = document.getElementById('claudeApiKey').value.trim();
-            if (apiKey) {
-                localStorage.setItem('glowie_claude_api_key', apiKey);
-                alert('✅ API key saved!');
+        // Generate promotional video with VIDZIE
+        async function generatePromoVideo(appDescription, appName) {
+            try {
+                document.getElementById('previewStatus').textContent = 'Generating video...';
+
+                // Get user's video preferences
+                let videoScript = document.getElementById('videoScript').value.trim();
+                const videoVoice = document.getElementById('videoVoice').value;
+
+                // Auto-generate script if not provided
+                if (!videoScript) {
+                    videoScript = `Hi! I'm excited to show you ${appName}. ${appDescription.substring(0, 200)}. This app was built instantly with Glowie AI. Try it out and see how easy it is to create amazing applications!`;
+                }
+
+                // Default avatar image (Z2B branded avatar)
+                const defaultAvatar = 'https://api.dicebear.com/7.x/avataaars/svg?seed=Glowie';
+
+                // Call VIDZIE API
+                const videoResponse = await fetch(`${API_BASE_URL}/vidzie/generate`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        videoName: `${appName} - Demo Video`,
+                        description: `Promotional video for ${appName}`,
+                        videoType: 'marketing',
+                        purpose: 'glowie-app',
+                        sourceImage: defaultAvatar,
+                        script: videoScript,
+                        voiceId: videoVoice,
+                        settings: {
+                            resolution: 'HD'
+                        }
+                    })
+                });
+
+                const videoData = await videoResponse.json();
+
+                if (videoData.success) {
+                    const videoId = videoData.data.videoId;
+
+                    // Show video generation in progress
+                    alert(`✅ App generated!\n🎬 Video is being generated... This will take 10-30 seconds.`);
+
+                    // Poll for video completion
+                    pollVideoCompletion(videoId);
+                } else {
+                    throw new Error(videoData.message || 'Failed to generate video');
+                }
+
+            } catch (error) {
+                console.error('Video generation error:', error);
+                alert(`⚠️ App generated successfully but video generation failed: ${error.message}`);
             }
         }
 
-        // Load API key
-        function loadApiKey() {
-            const apiKey = localStorage.getItem('glowie_claude_api_key');
-            if (apiKey) {
-                document.getElementById('claudeApiKey').value = apiKey;
+        // Poll for video completion
+        async function pollVideoCompletion(videoId, attempts = 0) {
+            const maxAttempts = 60; // 5 minutes
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/vidzie/video/${videoId}/status`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    const { status, progress, videoUrl } = data.data;
+
+                    document.getElementById('previewStatus').textContent = `Video: ${status} (${progress}%)`;
+
+                    if (status === 'completed' && videoUrl) {
+                        // Video is ready!
+                        alert(`🎥 Video generated successfully!\n\nYou can view it at: ${videoUrl}`);
+
+                        // Add video to preview area
+                        addVideoToPreview(videoUrl);
+
+                        document.getElementById('previewStatus').textContent = 'App & Video Ready!';
+                        return;
+                    }
+
+                    if (status === 'failed') {
+                        alert('⚠️ Video generation failed, but your app is ready!');
+                        return;
+                    }
+
+                    // Continue polling
+                    if (attempts < maxAttempts) {
+                        setTimeout(() => pollVideoCompletion(videoId, attempts + 1), 5000);
+                    } else {
+                        alert('⚠️ Video generation timeout. Check VIDZIE dashboard for status.');
+                    }
+                }
+
+            } catch (error) {
+                console.error('Poll video error:', error);
             }
         }
+
+        // Add video to preview area
+        function addVideoToPreview(videoUrl) {
+            const previewContent = document.getElementById('previewContent');
+            const videoSection = document.createElement('div');
+            videoSection.style.cssText = 'background: var(--navy-blue); padding: 1rem; border-radius: 10px; margin-top: 1rem;';
+            videoSection.innerHTML = `
+                <h4 style="color: var(--gold); margin-bottom: 0.5rem;">
+                    <i class="fas fa-video"></i> Promotional Video
+                </h4>
+                <video controls style="width: 100%; border-radius: 5px;">
+                    <source src="${videoUrl}" type="video/mp4">
+                </video>
+                <div style="margin-top: 0.5rem;">
+                    <a href="${videoUrl}" download style="color: var(--gold); text-decoration: none;">
+                        <i class="fas fa-download"></i> Download Video
+                    </a>
+                </div>
+            `;
+            previewContent.appendChild(videoSection);
+        }
+
     </script>
 
     <!-- Z2B Ecosystem Integration -->

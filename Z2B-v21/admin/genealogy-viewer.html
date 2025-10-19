@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Genealogy Viewer - Z2B Admin</title>
+    <style>
+        :root {
+            --navy: #0A2647;
+            --gold: #FFD700;
+            --light-bg: #f5f7fa;
+            --white: #ffffff;
+            --text-dark: #2c3e50;
+            --text-light: #7f8c8d;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --info: #3498db;
+
+            /* Tier Colors */
+            --tier-fam: #95a5a6;
+            --tier-bronze: #cd7f32;
+            --tier-copper: #b87333;
+            --tier-silver: #c0c0c0;
+            --tier-gold: #FFD700;
+            --tier-platinum: #e5e4e2;
+            --tier-diamond: #b9f2ff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--navy) 0%, #144272 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            background: var(--white);
+            padding: 20px 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            color: var(--navy);
+            font-size: 28px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .back-btn {
+            background: var(--navy);
+            color: var(--gold);
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: var(--gold);
+            color: var(--navy);
+            transform: translateY(-2px);
+        }
+
+        /* Controls Section */
+        .controls {
+            background: var(--white);
+            padding: 20px 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .controls-row {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 15px;
+            transition: all 0.3s;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--navy);
+        }
+
+        .view-switcher {
+            display: flex;
+            gap: 10px;
+            background: var(--light-bg);
+            padding: 5px;
+            border-radius: 25px;
+        }
+
+        .view-btn {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 20px;
+            background: transparent;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dark);
+            transition: all 0.3s;
+        }
+
+        .view-btn.active {
+            background: var(--navy);
+            color: var(--gold);
+        }
+
+        .zoom-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .zoom-btn {
+            width: 40px;
+            height: 40px;
+            border: 2px solid var(--navy);
+            border-radius: 50%;
+            background: var(--white);
+            color: var(--navy);
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .zoom-btn:hover {
+            background: var(--navy);
+            color: var(--gold);
+        }
+
+        /* Analytics Panel */
+        .analytics-panel {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .analytics-card {
+            background: var(--light-bg);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .analytics-card h4 {
+            color: var(--text-light);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .analytics-card .value {
+            color: var(--navy);
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        /* Tree Container */
+        .tree-container {
+            background: var(--white);
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: auto;
+            min-height: 600px;
+        }
+
+        .tree-view {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: max-content;
+        }
+
+        /* Member Node */
+        .member-node {
+            background: var(--white);
+            border: 3px solid var(--navy);
+            border-radius: 10px;
+            padding: 15px;
+            min-width: 220px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            margin: 10px;
+        }
+
+        .member-node:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .member-node.active {
+            background: #e8f4f8;
+        }
+
+        .member-node.inactive {
+            opacity: 0.6;
+            border-color: var(--text-light);
+        }
+
+        /* Tier-specific border colors */
+        .member-node.FAM { border-color: var(--tier-fam); }
+        .member-node.Bronze { border-color: var(--tier-bronze); }
+        .member-node.Copper { border-color: var(--tier-copper); }
+        .member-node.Silver { border-color: var(--tier-silver); }
+        .member-node.Gold { border-color: var(--tier-gold); }
+        .member-node.Platinum { border-color: var(--tier-platinum); }
+        .member-node.Diamond { border-color: var(--tier-diamond); }
+
+        .member-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .member-tier-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        .member-tier-badge.FAM { background: var(--tier-fam); }
+        .member-tier-badge.Bronze { background: var(--tier-bronze); }
+        .member-tier-badge.Copper { background: var(--tier-copper); }
+        .member-tier-badge.Silver { background: var(--tier-silver); color: var(--text-dark); }
+        .member-tier-badge.Gold { background: var(--tier-gold); color: var(--text-dark); }
+        .member-tier-badge.Platinum { background: var(--tier-platinum); color: var(--text-dark); }
+        .member-tier-badge.Diamond { background: var(--tier-diamond); color: var(--text-dark); }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .status-dot.active { background: var(--success); }
+        .status-dot.inactive { background: var(--danger); }
+
+        .member-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 5px;
+        }
+
+        .member-number {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+
+        .member-stats {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 10px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .member-stat {
+            text-align: center;
+        }
+
+        .member-stat-label {
+            font-size: 10px;
+            color: var(--text-light);
+            text-transform: uppercase;
+        }
+
+        .member-stat-value {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--navy);
+        }
+
+        /* Expand/Collapse Button */
+        .expand-btn {
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--navy);
+            color: var(--gold);
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .expand-btn:hover {
+            background: var(--gold);
+            color: var(--navy);
+        }
+
+        /* Tree Lines */
+        .children-container {
+            display: flex;
+            gap: 30px;
+            position: relative;
+            margin-top: 50px;
+        }
+
+        .children-container::before {
+            content: '';
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            width: 2px;
+            height: 30px;
+            background: var(--navy);
+        }
+
+        .child-branch {
+            position: relative;
+        }
+
+        .child-branch::before {
+            content: '';
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            width: 2px;
+            height: 30px;
+            background: var(--navy);
+        }
+
+        /* List View */
+        .list-view {
+            display: none;
+        }
+
+        .list-view.active {
+            display: block;
+        }
+
+        .list-view table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .list-view thead {
+            background: var(--navy);
+            color: var(--gold);
+        }
+
+        .list-view th {
+            padding: 15px;
+            text-align: left;
+            font-size: 13px;
+            text-transform: uppercase;
+        }
+
+        .list-view td {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .list-view tr:hover {
+            background: var(--light-bg);
+        }
+
+        /* Member Details Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: 10px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            background: var(--navy);
+            color: var(--gold);
+            padding: 20px 30px;
+            border-radius: 10px 10px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: var(--gold);
+            font-size: 28px;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        .detail-value {
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .modal-footer {
+            padding: 20px 30px;
+            background: var(--light-bg);
+            border-radius: 0 0 10px 10px;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: var(--navy);
+            color: var(--gold);
+        }
+
+        .btn-info {
+            background: var(--info);
+            color: var(--white);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .controls-row {
+                flex-direction: column;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+
+            .analytics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .member-node {
+                min-width: 180px;
+            }
+
+            .children-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🌳 Genealogy Viewer</h1>
+            <a href="index.html" class="back-btn">
+                ← Back to Admin
+            </a>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <div class="controls-row">
+                <div class="search-box">
+                    <input type="text" id="member-search" placeholder="Search member by name or membership #..." onkeyup="searchMember()">
+                </div>
+
+                <div class="view-switcher">
+                    <button class="view-btn active" onclick="switchView('tree')">Tree View</button>
+                    <button class="view-btn" onclick="switchView('list')">List View</button>
+                </div>
+
+                <div class="zoom-controls">
+                    <button class="zoom-btn" onclick="zoomIn()">+</button>
+                    <button class="zoom-btn" onclick="zoomOut()">−</button>
+                    <button class="zoom-btn" onclick="resetZoom()">⟲</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics Panel -->
+        <div class="analytics-panel">
+            <div class="analytics-grid">
+                <div class="analytics-card">
+                    <h4>Total Members</h4>
+                    <div class="value" id="total-members">0</div>
+                </div>
+                <div class="analytics-card">
+                    <h4>Max Depth</h4>
+                    <div class="value" id="max-depth">0</div>
+                </div>
+                <div class="analytics-card">
+                    <h4>Total PV</h4>
+                    <div class="value" id="total-pv">0</div>
+                </div>
+                <div class="analytics-card">
+                    <h4>Active Members</h4>
+                    <div class="value" id="active-members">0</div>
+                </div>
+                <div class="analytics-card">
+                    <h4>Strongest Leg</h4>
+                    <div class="value" id="strongest-leg">-</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tree Container -->
+        <div class="tree-container" id="tree-container">
+            <div class="tree-view" id="tree-view">
+                <!-- Tree will be rendered here -->
+            </div>
+
+            <div class="list-view" id="list-view">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Level</th>
+                            <th>Member</th>
+                            <th>Membership#</th>
+                            <th>Tier</th>
+                            <th>Sponsor</th>
+                            <th>Team Size</th>
+                            <th>PV</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="list-tbody">
+                        <!-- List will be rendered here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Member Details Modal -->
+    <div class="modal" id="member-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Member Details</h2>
+                <button class="close-modal" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <!-- Details will be loaded here -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info" onclick="viewInTree()">View in Tree</button>
+                <button class="btn btn-primary" onclick="closeModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // API Configuration
+        const API_CONFIG = {
+            BASE_URL: 'http://localhost:5000/api'
+        };
+
+        let genealogyData = null;
+        let expandedNodes = new Set();
+        let currentZoom = 1;
+        let currentView = 'tree';
+        let selectedMemberId = null;
+
+        // Load genealogy on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            loadGenealogy();
+        });
+
+        // Load Genealogy
+        async function loadGenealogy(memberId = null) {
+            try {
+                const url = memberId ?
+                    `${API_CONFIG.BASE_URL}/genealogy/tree/${memberId}` :
+                    `${API_CONFIG.BASE_URL}/genealogy/tree`;
+
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (data.success) {
+                    genealogyData = data.tree;
+                    renderTree();
+                    updateAnalytics();
+                } else {
+                    loadSampleData();
+                }
+            } catch (error) {
+                console.error('Error loading genealogy:', error);
+                loadSampleData();
+            }
+        }
+
+        // Load Sample Data
+        function loadSampleData() {
+            genealogyData = {
+                _id: '1',
+                membershipNumber: 'Z2B0000001',
+                fullName: 'CEO Founder',
+                tier: 'Diamond',
+                status: 'active',
+                pv: 25000,
+                teamSize: 24,
+                level: 0,
+                children: [
+                    {
+                        _id: '2',
+                        membershipNumber: 'Z2B0000002',
+                        fullName: 'John Doe',
+                        tier: 'Platinum',
+                        status: 'active',
+                        pv: 8000,
+                        teamSize: 10,
+                        level: 1,
+                        sponsorId: '1',
+                        children: [
+                            {
+                                _id: '3',
+                                membershipNumber: 'Z2B0000003',
+                                fullName: 'Jane Smith',
+                                tier: 'Gold',
+                                status: 'active',
+                                pv: 3500,
+                                teamSize: 5,
+                                level: 2,
+                                sponsorId: '2',
+                                children: [
+                                    {
+                                        _id: '4',
+                                        membershipNumber: 'Z2B0000004',
+                                        fullName: 'Mike Johnson',
+                                        tier: 'Silver',
+                                        status: 'active',
+                                        pv: 1200,
+                                        teamSize: 2,
+                                        level: 3,
+                                        sponsorId: '3',
+                                        children: []
+                                    },
+                                    {
+                                        _id: '5',
+                                        membershipNumber: 'Z2B0000005',
+                                        fullName: 'Sarah Williams',
+                                        tier: 'Bronze',
+                                        status: 'active',
+                                        pv: 800,
+                                        teamSize: 1,
+                                        level: 3,
+                                        sponsorId: '3',
+                                        children: []
+                                    }
+                                ]
+                            },
+                            {
+                                _id: '6',
+                                membershipNumber: 'Z2B0000006',
+                                fullName: 'David Brown',
+                                tier: 'Silver',
+                                status: 'active',
+                                pv: 1500,
+                                teamSize: 3,
+                                level: 2,
+                                sponsorId: '2',
+                                children: [
+                                    {
+                                        _id: '7',
+                                        membershipNumber: 'Z2B0000007',
+                                        fullName: 'Emily Davis',
+                                        tier: 'Bronze',
+                                        status: 'inactive',
+                                        pv: 500,
+                                        teamSize: 0,
+                                        level: 3,
+                                        sponsorId: '6',
+                                        children: []
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        _id: '8',
+                        membershipNumber: 'Z2B0000008',
+                        fullName: 'Robert Wilson',
+                        tier: 'Gold',
+                        status: 'active',
+                        pv: 4500,
+                        teamSize: 8,
+                        level: 1,
+                        sponsorId: '1',
+                        children: [
+                            {
+                                _id: '9',
+                                membershipNumber: 'Z2B0000009',
+                                fullName: 'Lisa Anderson',
+                                tier: 'Silver',
+                                status: 'active',
+                                pv: 2000,
+                                teamSize: 4,
+                                level: 2,
+                                sponsorId: '8',
+                                children: [
+                                    {
+                                        _id: '10',
+                                        membershipNumber: 'Z2B0000010',
+                                        fullName: 'Chris Martin',
+                                        tier: 'Copper',
+                                        status: 'active',
+                                        pv: 600,
+                                        teamSize: 1,
+                                        level: 3,
+                                        sponsorId: '9',
+                                        children: []
+                                    }
+                                ]
+                            },
+                            {
+                                _id: '11',
+                                membershipNumber: 'Z2B0000011',
+                                fullName: 'Amanda Taylor',
+                                tier: 'Bronze',
+                                status: 'active',
+                                pv: 900,
+                                teamSize: 2,
+                                level: 2,
+                                sponsorId: '8',
+                                children: []
+                            }
+                        ]
+                    },
+                    {
+                        _id: '12',
+                        membershipNumber: 'Z2B0000012',
+                        fullName: 'Tom Harris',
+                        tier: 'Platinum',
+                        status: 'active',
+                        pv: 7200,
+                        teamSize: 6,
+                        level: 1,
+                        sponsorId: '1',
+                        children: [
+                            {
+                                _id: '13',
+                                membershipNumber: 'Z2B0000013',
+                                fullName: 'Rachel Green',
+                                tier: 'Gold',
+                                status: 'active',
+                                pv: 3000,
+                                teamSize: 3,
+                                level: 2,
+                                sponsorId: '12',
+                                children: []
+                            }
+                        ]
+                    }
+                ]
+            };
+
+            renderTree();
+            updateAnalytics();
+        }
+
+        // Render Tree
+        function renderTree() {
+            if (!genealogyData) return;
+
+            const treeView = document.getElementById('tree-view');
+            const listView = document.getElementById('list-tbody');
+
+            if (currentView === 'tree') {
+                treeView.innerHTML = renderNode(genealogyData);
+            } else {
+                listView.innerHTML = renderListView(genealogyData, []);
+            }
+
+            applyZoom();
+        }
+
+        // Render Node (Recursive)
+        function renderNode(member, depth = 0) {
+            const hasChildren = member.children && member.children.length > 0;
+            const isExpanded = expandedNodes.has(member._id) || depth === 0;
+
+            let html = `
+                <div class="member-node ${member.tier} ${member.status}" onclick="viewMemberDetails('${member._id}')">
+                    <div class="member-header">
+                        <span class="member-tier-badge ${member.tier}">${member.tier}</span>
+                        <span class="status-dot ${member.status}"></span>
+                    </div>
+                    <div class="member-name">${member.fullName}</div>
+                    <div class="member-number">${member.membershipNumber}</div>
+                    <div class="member-stats">
+                        <div class="member-stat">
+                            <div class="member-stat-label">Team</div>
+                            <div class="member-stat-value">${member.teamSize}</div>
+                        </div>
+                        <div class="member-stat">
+                            <div class="member-stat-label">PV</div>
+                            <div class="member-stat-value">${member.pv}</div>
+                        </div>
+                    </div>
+                    ${hasChildren ? `
+                        <button class="expand-btn" onclick="event.stopPropagation(); toggleNode('${member._id}')">
+                            ${isExpanded ? '−' : '+'}
+                        </button>
+                    ` : ''}
+                </div>
+            `;
+
+            if (hasChildren && isExpanded) {
+                html += '<div class="children-container">';
+                member.children.forEach(child => {
+                    html += `<div class="child-branch">${renderNode(child, depth + 1)}</div>`;
+                });
+                html += '</div>';
+            }
+
+            return html;
+        }
+
+        // Render List View (Recursive)
+        function renderListView(member, rows = [], depth = 0) {
+            const indent = '&nbsp;&nbsp;&nbsp;'.repeat(depth);
+            const sponsorName = member.sponsorId ? findMemberById(genealogyData, member.sponsorId)?.fullName || '-' : '-';
+
+            rows.push(`
+                <tr>
+                    <td>${depth}</td>
+                    <td>${indent}${member.fullName}</td>
+                    <td>${member.membershipNumber}</td>
+                    <td><span class="member-tier-badge ${member.tier}">${member.tier}</span></td>
+                    <td>${sponsorName}</td>
+                    <td>${member.teamSize}</td>
+                    <td>${member.pv}</td>
+                    <td><span class="status-dot ${member.status}"></span> ${member.status}</td>
+                    <td>
+                        <button class="btn btn-info" style="font-size: 12px; padding: 5px 10px;" onclick="viewMemberDetails('${member._id}')">
+                            View
+                        </button>
+                    </td>
+                </tr>
+            `);
+
+            if (member.children) {
+                member.children.forEach(child => {
+                    renderListView(child, rows, depth + 1);
+                });
+            }
+
+            return rows.join('');
+        }
+
+        // Find Member by ID (Recursive)
+        function findMemberById(node, id) {
+            if (node._id === id) return node;
+            if (node.children) {
+                for (const child of node.children) {
+                    const found = findMemberById(child, id);
+                    if (found) return found;
+                }
+            }
+            return null;
+        }
+
+        // Toggle Node Expansion
+        function toggleNode(id) {
+            if (expandedNodes.has(id)) {
+                expandedNodes.delete(id);
+            } else {
+                expandedNodes.add(id);
+            }
+            renderTree();
+        }
+
+        // Switch View
+        function switchView(view) {
+            currentView = view;
+
+            // Update buttons
+            document.querySelectorAll('.view-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Show/hide views
+            if (view === 'tree') {
+                document.getElementById('tree-view').style.display = 'flex';
+                document.getElementById('list-view').classList.remove('active');
+            } else {
+                document.getElementById('tree-view').style.display = 'none';
+                document.getElementById('list-view').classList.add('active');
+            }
+
+            renderTree();
+        }
+
+        // Zoom Controls
+        function zoomIn() {
+            currentZoom = Math.min(currentZoom + 0.1, 2);
+            applyZoom();
+        }
+
+        function zoomOut() {
+            currentZoom = Math.max(currentZoom - 0.1, 0.5);
+            applyZoom();
+        }
+
+        function resetZoom() {
+            currentZoom = 1;
+            applyZoom();
+        }
+
+        function applyZoom() {
+            const treeView = document.getElementById('tree-view');
+            treeView.style.transform = `scale(${currentZoom})`;
+            treeView.style.transformOrigin = 'top center';
+        }
+
+        // Search Member
+        function searchMember() {
+            const query = document.getElementById('member-search').value.toLowerCase();
+            if (!query) {
+                // Reset view
+                renderTree();
+                return;
+            }
+
+            // Find matching members
+            const matches = [];
+            findMatches(genealogyData, query, matches);
+
+            if (matches.length > 0) {
+                // Expand path to first match
+                expandPathTo(matches[0]._id);
+                renderTree();
+
+                // Highlight match
+                setTimeout(() => {
+                    const nodes = document.querySelectorAll('.member-node');
+                    nodes.forEach(node => {
+                        if (node.textContent.toLowerCase().includes(query)) {
+                            node.style.background = '#fff9c4';
+                        }
+                    });
+                }, 100);
+            }
+        }
+
+        // Find Matches (Recursive)
+        function findMatches(node, query, matches) {
+            if (node.fullName.toLowerCase().includes(query) ||
+                node.membershipNumber.toLowerCase().includes(query)) {
+                matches.push(node);
+            }
+            if (node.children) {
+                node.children.forEach(child => findMatches(child, query, matches));
+            }
+        }
+
+        // Expand Path To Member
+        function expandPathTo(id) {
+            const path = [];
+            findPath(genealogyData, id, path);
+            path.forEach(nodeId => expandedNodes.add(nodeId));
+        }
+
+        // Find Path (Recursive)
+        function findPath(node, targetId, path) {
+            if (node._id === targetId) return true;
+            if (node.children) {
+                for (const child of node.children) {
+                    if (findPath(child, targetId, path)) {
+                        path.unshift(node._id);
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        // View Member Details
+        function viewMemberDetails(id) {
+            const member = findMemberById(genealogyData, id);
+            if (!member) return;
+
+            selectedMemberId = id;
+
+            const modalBody = document.getElementById('modal-body');
+            const sponsorName = member.sponsorId ?
+                findMemberById(genealogyData, member.sponsorId)?.fullName || 'N/A' : 'N/A';
+
+            modalBody.innerHTML = `
+                <div class="detail-row">
+                    <span class="detail-label">Member Name:</span>
+                    <span class="detail-value">${member.fullName}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Membership #:</span>
+                    <span class="detail-value">${member.membershipNumber}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Tier:</span>
+                    <span class="detail-value"><span class="member-tier-badge ${member.tier}">${member.tier}</span></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Status:</span>
+                    <span class="detail-value">
+                        <span class="status-dot ${member.status}"></span> ${member.status}
+                    </span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Sponsor:</span>
+                    <span class="detail-value">${sponsorName}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Team Size:</span>
+                    <span class="detail-value">${member.teamSize} members</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Total PV:</span>
+                    <span class="detail-value">${member.pv} PV</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Level:</span>
+                    <span class="detail-value">Generation ${member.level}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Direct Referrals:</span>
+                    <span class="detail-value">${member.children ? member.children.length : 0}</span>
+                </div>
+            `;
+
+            document.getElementById('member-modal').classList.add('active');
+        }
+
+        // Close Modal
+        function closeModal() {
+            document.getElementById('member-modal').classList.remove('active');
+        }
+
+        // View in Tree
+        function viewInTree() {
+            if (!selectedMemberId) return;
+
+            closeModal();
+
+            // Switch to tree view if not already
+            if (currentView !== 'tree') {
+                currentView = 'tree';
+                document.getElementById('tree-view').style.display = 'flex';
+                document.getElementById('list-view').classList.remove('active');
+            }
+
+            // Expand path and highlight
+            expandPathTo(selectedMemberId);
+            renderTree();
+
+            // Scroll to member
+            setTimeout(() => {
+                const nodes = document.querySelectorAll('.member-node');
+                nodes.forEach(node => {
+                    if (node.textContent.includes(selectedMemberId)) {
+                        node.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        node.style.background = '#fff9c4';
+                    }
+                });
+            }, 100);
+        }
+
+        // Update Analytics
+        function updateAnalytics() {
+            if (!genealogyData) return;
+
+            const analytics = calculateAnalytics(genealogyData);
+
+            document.getElementById('total-members').textContent = analytics.totalMembers;
+            document.getElementById('max-depth').textContent = analytics.maxDepth;
+            document.getElementById('total-pv').textContent = analytics.totalPV;
+            document.getElementById('active-members').textContent = analytics.activeMembers;
+            document.getElementById('strongest-leg').textContent = analytics.strongestLeg || '-';
+        }
+
+        // Calculate Analytics (Recursive)
+        function calculateAnalytics(node, stats = {
+            totalMembers: 0,
+            maxDepth: 0,
+            totalPV: 0,
+            activeMembers: 0,
+            legs: []
+        }, depth = 0) {
+            stats.totalMembers++;
+            stats.totalPV += node.pv;
+            if (node.status === 'active') stats.activeMembers++;
+            stats.maxDepth = Math.max(stats.maxDepth, depth);
+
+            if (node.children) {
+                node.children.forEach((child, index) => {
+                    if (depth === 0) {
+                        stats.legs[index] = { name: child.fullName, size: 0 };
+                    }
+                    if (depth === 0 && stats.legs[index]) {
+                        stats.legs[index].size += countMembers(child);
+                    }
+                    calculateAnalytics(child, stats, depth + 1);
+                });
+            }
+
+            if (depth === 0 && stats.legs.length > 0) {
+                const strongest = stats.legs.reduce((max, leg) =>
+                    leg.size > max.size ? leg : max
+                );
+                stats.strongestLeg = `${strongest.name} (${strongest.size})`;
+            }
+
+            return stats;
+        }
+
+        // Count Members (Recursive)
+        function countMembers(node) {
+            let count = 1;
+            if (node.children) {
+                node.children.forEach(child => {
+                    count += countMembers(child);
+                });
+            }
+            return count;
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('member-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

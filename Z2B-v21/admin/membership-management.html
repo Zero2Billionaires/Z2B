@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Membership Management - Z2B Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0A2647 0%, #051428 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1600px; margin: 0 auto; }
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h1 { color: #0A2647; font-size: 32px; display: flex; align-items: center; gap: 15px; }
+        .back-btn {
+            padding: 10px 20px;
+            background: #6b7280;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .stat-card h3 { font-size: 32px; color: #0A2647; margin-bottom: 5px; }
+        .stat-card p { color: #6b7280; font-size: 13px; text-transform: uppercase; }
+        .stat-card .trend { font-size: 12px; margin-top: 5px; }
+        .trend.up { color: #10b981; }
+        .trend.down { color: #ef4444; }
+        .content-section { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); margin-bottom: 20px; }
+        .section-title { color: #0A2647; font-size: 24px; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #e5e7eb; }
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .search-box {
+            display: flex;
+            gap: 10px;
+            flex: 1;
+            max-width: 500px;
+        }
+        .search-box input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        .search-box input:focus { outline: none; border-color: #0A2647; }
+        .filters { display: flex; gap: 10px; flex-wrap: wrap; }
+        .filters select {
+            padding: 10px 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-primary { background: #0A2647; color: white; }
+        .btn-success { background: #10b981; color: white; }
+        .btn-warning { background: #f59e0b; color: white; }
+        .btn-danger { background: #ef4444; color: white; }
+        .btn-secondary { background: #6b7280; color: white; }
+        .btn:hover { opacity: 0.9; transform: translateY(-1px); }
+        table { width: 100%; border-collapse: collapse; }
+        table th, table td { padding: 12px; text-align: left; border-bottom: 1px solid #e5e7eb; }
+        table th {
+            background: #f9fafb;
+            font-weight: 600;
+            color: #374151;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        table tr:hover { background: #f9fafb; }
+        .badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+        .badge-active { background: #d1fae5; color: #065f46; }
+        .badge-suspended { background: #fee2e2; color: #991b1b; }
+        .badge-inactive { background: #e5e7eb; color: #374151; }
+        .badge-fam { background: #e5e7eb; color: #374151; }
+        .badge-bronze { background: #fef3c7; color: #92400e; }
+        .badge-copper { background: #fed7aa; color: #9a3412; }
+        .badge-silver { background: #e0e7ff; color: #3730a3; }
+        .badge-gold { background: #fef3c7; color: #854d0e; }
+        .badge-platinum { background: #f3e8ff; color: #6b21a8; }
+        .badge-diamond { background: #dbeafe; color: #1e40af; }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal.active { display: flex; }
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        .modal-header h2 { color: #0A2647; }
+        .close-modal {
+            font-size: 28px;
+            cursor: pointer;
+            color: #6b7280;
+            background: none;
+            border: none;
+        }
+        .form-group { margin-bottom: 20px; }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #374151;
+            font-weight: 600;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #0A2647;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .pagination button {
+            padding: 8px 12px;
+            border: 1px solid #e5e7eb;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .pagination button.active { background: #0A2647; color: white; }
+        .pagination button:disabled { opacity: 0.5; cursor: not-allowed; }
+        .member-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .detail-card {
+            background: #f9fafb;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .detail-card h4 { color: #0A2647; margin-bottom: 10px; font-size: 14px; text-transform: uppercase; }
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .detail-item:last-child { border-bottom: none; }
+        .detail-label { color: #6b7280; font-size: 14px; }
+        .detail-value { color: #374151; font-weight: 600; font-size: 14px; }
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        .tab {
+            padding: 12px 24px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            color: #6b7280;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .tab.active { color: #0A2647; border-bottom: 3px solid #0A2647; margin-bottom: -2px; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .action-buttons { display: flex; gap: 8px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-users"></i> Membership Management</h1>
+            <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Admin</a>
+        </div>
+
+        <!-- Statistics -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3 id="totalMembers">0</h3>
+                <p>Total Members</p>
+                <div class="trend up"><i class="fas fa-arrow-up"></i> +12% this month</div>
+            </div>
+            <div class="stat-card">
+                <h3 id="activeMembers">0</h3>
+                <p>Active Members</p>
+                <div class="trend up"><i class="fas fa-arrow-up"></i> +8%</div>
+            </div>
+            <div class="stat-card">
+                <h3 id="newMembers">0</h3>
+                <p>New This Month</p>
+                <div class="trend up"><i class="fas fa-arrow-up"></i> +23</div>
+            </div>
+            <div class="stat-card">
+                <h3 id="suspendedMembers">0</h3>
+                <p>Suspended</p>
+                <div class="trend down"><i class="fas fa-arrow-down"></i> -2</div>
+            </div>
+            <div class="stat-card">
+                <h3 id="totalRevenue">R 0</h3>
+                <p>Total Revenue</p>
+                <div class="trend up"><i class="fas fa-arrow-up"></i> +15%</div>
+            </div>
+            <div class="stat-card">
+                <h3 id="avgTierValue">R 0</h3>
+                <p>Avg Tier Value</p>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content-section">
+            <h2 class="section-title">Members Directory</h2>
+
+            <!-- Toolbar -->
+            <div class="toolbar">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Search by name, email, membership #...">
+                    <button class="btn btn-primary" onclick="searchMembers()"><i class="fas fa-search"></i></button>
+                </div>
+                <div class="filters">
+                    <select id="tierFilter" onchange="filterMembers()">
+                        <option value="">All Tiers</option>
+                        <option value="FAM">FAM (Free)</option>
+                        <option value="Bronze">Bronze</option>
+                        <option value="Copper">Copper</option>
+                        <option value="Silver">Silver</option>
+                        <option value="Gold">Gold</option>
+                        <option value="Platinum">Platinum</option>
+                        <option value="Diamond">Diamond</option>
+                    </select>
+                    <select id="statusFilter" onchange="filterMembers()">
+                        <option value="">All Status</option>
+                        <option value="active">Active</option>
+                        <option value="suspended">Suspended</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                    <button class="btn btn-success" onclick="openAddMemberModal()">
+                        <i class="fas fa-user-plus"></i> Add Member
+                    </button>
+                    <button class="btn btn-secondary" onclick="exportMembers()">
+                        <i class="fas fa-file-export"></i> Export CSV
+                    </button>
+                </div>
+            </div>
+
+            <!-- Members Table -->
+            <div style="overflow-x: auto;">
+                <table id="membersTable">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" id="selectAll" onchange="toggleSelectAll()"></th>
+                            <th>Membership #</th>
+                            <th>Member Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Tier</th>
+                            <th>Sponsor</th>
+                            <th>Total PV</th>
+                            <th>Total Earnings</th>
+                            <th>Status</th>
+                            <th>Joined</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="membersTableBody">
+                        <tr>
+                            <td colspan="12" style="text-align: center; padding: 40px;">
+                                <i class="fas fa-spinner fa-spin" style="font-size: 32px; color: #6b7280;"></i>
+                                <p style="color: #6b7280; margin-top: 10px;">Loading members...</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination" id="pagination"></div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Member Modal -->
+    <div id="memberModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add New Member</h2>
+                <button class="close-modal" onclick="closeMemberModal()">&times;</button>
+            </div>
+            <form id="memberForm" onsubmit="saveMember(event)">
+                <input type="hidden" id="memberId">
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>First Name *</label>
+                        <input type="text" id="firstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name *</label>
+                        <input type="text" id="lastName" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Email *</label>
+                        <input type="email" id="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="tel" id="phone">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Tier *</label>
+                        <select id="tier" required>
+                            <option value="FAM">FAM (Free) - R0</option>
+                            <option value="Bronze">Bronze Legacy Builder - R480</option>
+                            <option value="Copper">Copper Legacy Builder - R999</option>
+                            <option value="Silver">Silver Legacy Builder - R1,480</option>
+                            <option value="Gold">Gold Legacy Builder - R2,980</option>
+                            <option value="Platinum">Platinum Legacy Builder - R4,980</option>
+                            <option value="Diamond">Diamond Legacy Builder - R4,980</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Status *</label>
+                        <select id="status" required>
+                            <option value="active">Active</option>
+                            <option value="suspended">Suspended</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Sponsor Membership # (Optional)</label>
+                    <input type="text" id="sponsorId" placeholder="Z2B0000001">
+                </div>
+
+                <div class="form-group">
+                    <label>Notes</label>
+                    <textarea id="notes" rows="3" placeholder="Additional notes about this member..."></textarea>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 30px;">
+                    <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Save Member</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeMemberModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- View Member Details Modal -->
+    <div id="viewMemberModal" class="modal">
+        <div class="modal-content" style="max-width: 1000px;">
+            <div class="modal-header">
+                <h2><i class="fas fa-user"></i> Member Details</h2>
+                <button class="close-modal" onclick="closeViewMemberModal()">&times;</button>
+            </div>
+
+            <div class="tabs">
+                <button class="tab active" onclick="switchViewTab('profile')">Profile</button>
+                <button class="tab" onclick="switchViewTab('genealogy')">Genealogy</button>
+                <button class="tab" onclick="switchViewTab('earnings')">Earnings</button>
+                <button class="tab" onclick="switchViewTab('activity')">Activity</button>
+            </div>
+
+            <div class="tab-content active" id="profile-tab">
+                <div class="member-details" id="memberProfileDetails"></div>
+            </div>
+
+            <div class="tab-content" id="genealogy-tab">
+                <div id="genealogyTree"></div>
+            </div>
+
+            <div class="tab-content" id="earnings-tab">
+                <div id="earningsBreakdown"></div>
+            </div>
+
+            <div class="tab-content" id="activity-tab">
+                <div id="activityLog"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/app-config.js"></script>
+    <script>
+        let currentPage = 1;
+        let membersData = [];
+        let filteredMembers = [];
+
+        // Load members on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadMembers();
+            loadStats();
+        });
+
+        async function loadMembers() {
+            try {
+                const response = await fetch(`${API_CONFIG.BASE_URL}/members`);
+                const data = await response.json();
+
+                if (data.success) {
+                    membersData = data.members || [];
+                    filteredMembers = membersData;
+                    renderMembers();
+                }
+            } catch (error) {
+                console.error('Error loading members:', error);
+                document.getElementById('membersTableBody').innerHTML = `
+                    <tr><td colspan="12" style="text-align: center; padding: 40px; color: #ef4444;">
+                        Error loading members. Please try again.
+                    </td></tr>
+                `;
+            }
+        }
+
+        async function loadStats() {
+            // Mock data - replace with actual API calls
+            document.getElementById('totalMembers').textContent = '1,247';
+            document.getElementById('activeMembers').textContent = '1,089';
+            document.getElementById('newMembers').textContent = '23';
+            document.getElementById('suspendedMembers').textContent = '5';
+            document.getElementById('totalRevenue').textContent = 'R 1,247,500';
+            document.getElementById('avgTierValue').textContent = 'R 1,200';
+        }
+
+        function renderMembers() {
+            const tbody = document.getElementById('membersTableBody');
+
+            if (filteredMembers.length === 0) {
+                tbody.innerHTML = `
+                    <tr><td colspan="12" style="text-align: center; padding: 40px;">
+                        No members found
+                    </td></tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = filteredMembers.map(member => `
+                <tr>
+                    <td><input type="checkbox" class="member-checkbox" value="${member._id}"></td>
+                    <td><strong>${member.membershipNumber || member.membershipId || 'N/A'}</strong></td>
+                    <td>${member.fullName || member.first_name + ' ' + member.last_name}</td>
+                    <td>${member.email}</td>
+                    <td>${member.phone || 'N/A'}</td>
+                    <td><span class="badge badge-${member.tier?.toLowerCase() || 'fam'}">${member.tier || 'FAM'}</span></td>
+                    <td>${member.sponsorId || 'N/A'}</td>
+                    <td>${member.pv || 0}</td>
+                    <td>R ${(member.totalCommissions || 0).toLocaleString()}</td>
+                    <td><span class="badge badge-${member.status}">${member.status}</span></td>
+                    <td>${new Date(member.joinedDate || member.createdAt).toLocaleDateString()}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-primary btn-sm" onclick="viewMember('${member._id}')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-warning btn-sm" onclick="editMember('${member._id}')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteMember('${member._id}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function searchMembers() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            filteredMembers = membersData.filter(member =>
+                (member.fullName || '').toLowerCase().includes(searchTerm) ||
+                (member.email || '').toLowerCase().includes(searchTerm) ||
+                (member.membershipNumber || '').toLowerCase().includes(searchTerm) ||
+                (member.phone || '').toLowerCase().includes(searchTerm)
+            );
+            renderMembers();
+        }
+
+        function filterMembers() {
+            const tierFilter = document.getElementById('tierFilter').value;
+            const statusFilter = document.getElementById('statusFilter').value;
+
+            filteredMembers = membersData.filter(member => {
+                const tierMatch = !tierFilter || member.tier === tierFilter;
+                const statusMatch = !statusFilter || member.status === statusFilter;
+                return tierMatch && statusMatch;
+            });
+
+            renderMembers();
+        }
+
+        function openAddMemberModal() {
+            document.getElementById('modalTitle').textContent = 'Add New Member';
+            document.getElementById('memberForm').reset();
+            document.getElementById('memberId').value = '';
+            document.getElementById('memberModal').classList.add('active');
+        }
+
+        function closeMemberModal() {
+            document.getElementById('memberModal').classList.remove('active');
+        }
+
+        function closeViewMemberModal() {
+            document.getElementById('viewMemberModal').classList.remove('active');
+        }
+
+        async function saveMember(event) {
+            event.preventDefault();
+
+            const memberData = {
+                fullName: document.getElementById('firstName').value + ' ' + document.getElementById('lastName').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                tier: document.getElementById('tier').value,
+                status: document.getElementById('status').value,
+                sponsorId: document.getElementById('sponsorId').value,
+                notes: document.getElementById('notes').value
+            };
+
+            const memberId = document.getElementById('memberId').value;
+            const url = memberId
+                ? `${API_CONFIG.BASE_URL}/members/${memberId}`
+                : `${API_CONFIG.BASE_URL}/members`;
+            const method = memberId ? 'PUT' : 'POST';
+
+            try {
+                const response = await fetch(url, {
+                    method: method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(memberData)
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert(memberId ? 'Member updated successfully!' : 'Member added successfully!');
+                    closeMemberModal();
+                    loadMembers();
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            } catch (error) {
+                console.error('Error saving member:', error);
+                alert('Error saving member. Please try again.');
+            }
+        }
+
+        async function viewMember(memberId) {
+            // Load and display member details
+            document.getElementById('viewMemberModal').classList.add('active');
+            // Implement full member details loading
+        }
+
+        function editMember(memberId) {
+            const member = membersData.find(m => m._id === memberId);
+            if (!member) return;
+
+            document.getElementById('modalTitle').textContent = 'Edit Member';
+            document.getElementById('memberId').value = member._id;
+
+            const names = (member.fullName || '').split(' ');
+            document.getElementById('firstName').value = names[0] || '';
+            document.getElementById('lastName').value = names.slice(1).join(' ') || '';
+            document.getElementById('email').value = member.email || '';
+            document.getElementById('phone').value = member.phone || '';
+            document.getElementById('tier').value = member.tier || 'FAM';
+            document.getElementById('status').value = member.status || 'active';
+            document.getElementById('sponsorId').value = member.sponsorId || '';
+
+            document.getElementById('memberModal').classList.add('active');
+        }
+
+        async function deleteMember(memberId) {
+            if (!confirm('Are you sure you want to delete this member? This action cannot be undone.')) return;
+
+            try {
+                const response = await fetch(`${API_CONFIG.BASE_URL}/members/${memberId}`, {
+                    method: 'DELETE'
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert('Member deleted successfully!');
+                    loadMembers();
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            } catch (error) {
+                console.error('Error deleting member:', error);
+                alert('Error deleting member. Please try again.');
+            }
+        }
+
+        function toggleSelectAll() {
+            const checkboxes = document.querySelectorAll('.member-checkbox');
+            const selectAll = document.getElementById('selectAll').checked;
+            checkboxes.forEach(cb => cb.checked = selectAll);
+        }
+
+        function exportMembers() {
+            alert('Export functionality coming soon!');
+        }
+
+        function switchViewTab(tabName) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            event.target.classList.add('active');
+            document.getElementById(tabName + '-tab').classList.add('active');
+        }
+    </script>
+</body>
+</html>

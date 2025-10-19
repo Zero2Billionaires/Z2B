@@ -179,27 +179,16 @@ class MLMCalculator {
 
     /**
      * Calculate TLI (Team Leadership Incentive)
-     * Updated: January 2026 - New qualification requirements
-     * Quarterly pool distribution based on team performance, leadership, and tier eligibility
-     * Pool Source: 10% of Total Member TeamPV for the quarter
+     * Updated: January 2026 - Achievement-based progression system
+     * Members qualify by reaching PV targets and having personally invited members achieve specific levels
      */
     public function calculateTLI() {
         global $TLI_LEVELS;
 
-        // Calculate total pool for the quarter - 10% of all members' TeamPV
-        // Sum all team transactions (ISP, TSC, QPB) from all members for the quarter
-        $sql = "SELECT SUM(amount) as total_team_pv
-                FROM transactions
-                WHERE transaction_type IN ('ISP', 'TSC', 'QPB')
-                AND created_at >= DATE_SUB(NOW(), INTERVAL 3 MONTH)";
-
-        $result = $this->db->fetchOne($sql);
-        $totalTeamPV = $result['total_team_pv'] ?? 0;
-        $tliPool = ($totalTeamPV * TLI_POOL_PERCENTAGE) / 100;
-
-        // Get all eligible members (Silver-tier and above)
+        // Get all active members
         $sql = "SELECT m.id, m.first_name, m.last_name, m.tier_id,
                        CASE
+                           WHEN m.tier_id = 0 THEN 'FAM'
                            WHEN m.tier_id = 1 THEN 'BLB'
                            WHEN m.tier_id = 2 THEN 'CLB'
                            WHEN m.tier_id = 3 THEN 'SLB'
@@ -208,8 +197,7 @@ class MLMCalculator {
                            WHEN m.tier_id = 6 THEN 'DLB'
                        END as tier_code
                 FROM members m
-                WHERE m.tier_id >= 3
-                AND m.is_active = 1";
+                WHERE m.is_active = 1";
 
         $eligibleMembers = $this->db->fetchAll($sql);
         $distributions = [];
@@ -222,18 +210,8 @@ class MLMCalculator {
 
             if ($maxLevel == 0) continue; // Skip if tier not eligible
 
-            // Check 3-month consecutive PV requirement
-            if (!$this->checkConsecutiveMonthlyPV($memberId, TLI_MONTHLY_PV_REQUIREMENT, TLI_CONSECUTIVE_MONTHS)) {
-                continue;
-            }
-
-            // Calculate average monthly TeamPV for the quarter
-            $avgMonthlyTeamPV = $this->calculateAverageMonthlyTeamPV($memberId, 3);
-
-            // Check team composition requirement
-            if (!$this->checkTeamComposition($memberId, $tierCode)) {
-                continue;
-            }
+            // Get member's total PV
+            $memberPV = $this->getMemberPV($memberId);
 
             // Find highest qualifying TLI level
             $qualifiedLevel = null;
@@ -241,25 +219,36 @@ class MLMCalculator {
                 // Check if level is within tier's maximum
                 if ($level['level'] > $maxLevel) continue;
 
-                // Check if member meets monthly TeamPV requirement
-                if ($avgMonthlyTeamPV >= $level['monthly_team_pv']) {
-                    // Check leader requirement
-                    if ($level['leader_requirement'] > 0) {
-                        $qualifiedLeaders = $this->countQualifiedLeaders($memberId, $level['level']);
-                        if ($qualifiedLeaders < $level['leader_requirement']) {
-                            continue; // Not enough qualified leaders
-                        }
-                    }
-
-                    // Member qualifies for this level
-                    $qualifiedLevel = $level;
-                    break;
+                // Check if member meets minimum tier requirement
+                if ($level['min_tier'] !== null && !$this->meetsTierRequirement($tierCode, $level['min_tier'])) {
+                    continue;
                 }
+
+                // Check if member meets PV requirement
+                if ($memberPV < $level['pv']) {
+                    continue;
+                }
+
+                // Check team composition requirement (Silver+ percentage)
+                if ($level['team_silver_percentage'] > 0) {
+                    if (!$this->checkTeamSilverPercentage($memberId, $level['team_silver_percentage'])) {
+                        continue;
+                    }
+                }
+
+                // Check personally invited requirements
+                if (!$this->checkPersonallyInvitedRequirement($memberId, $level['required_invites'], $level['required_invite_level'])) {
+                    continue;
+                }
+
+                // Member qualifies for this level
+                $qualifiedLevel = $level;
+                break;
             }
 
             // If member qualified for a level, add to distributions
             if ($qualifiedLevel) {
-                $reward = min($qualifiedLevel['reward'], $tliPool * 0.1); // Cap at 10% of pool
+                $reward = $qualifiedLevel['reward'];
 
                 $distributions[] = [
                     'member_id' => $memberId,
@@ -267,17 +256,128 @@ class MLMCalculator {
                     'tier_code' => $tierCode,
                     'level' => $qualifiedLevel['level'],
                     'level_name' => $qualifiedLevel['name'],
-                    'monthly_team_pv' => round($avgMonthlyTeamPV, 2),
-                    'reward' => $reward
+                    'pv' => $memberPV,
+                    'reward' => $reward,
+                    'reward_type' => $qualifiedLevel['reward_type']
                 ];
 
-                // Record TLI payment
+                // Record TLI achievement
                 $this->recordCommission($memberId, null, 'TLI', $reward,
-                    "TLI {$qualifiedLevel['name']} (Level {$qualifiedLevel['level']}) quarterly reward");
+                    "TLI Achievement: {$qualifiedLevel['name']} (Level {$qualifiedLevel['level']})");
             }
         }
 
         return $distributions;
+    }
+
+    /**
+     * Get member's total PV from transactions
+     */
+    private function getMemberPV($memberId) {
+        $sql = "SELECT COALESCE(SUM(t.amount), 0) as total_pv
+                FROM transactions t
+                WHERE t.member_id = :member_id
+                AND t.transaction_type IN ('ISP', 'TSC', 'QPB')
+                AND t.status = 'completed'";
+
+        $result = $this->db->fetchOne($sql, ['member_id' => $memberId]);
+        return $result['total_pv'] ?? 0;
+    }
+
+    /**
+     * Check if member's tier meets the minimum tier requirement
+     */
+    private function meetsTierRequirement($memberTierCode, $requiredTierCode) {
+        $tierHierarchy = ['FAM' => 0, 'BLB' => 1, 'CLB' => 2, 'SLB' => 3, 'GLB' => 4, 'PLB' => 5, 'DLB' => 6];
+        $memberTierLevel = $tierHierarchy[$memberTierCode] ?? 0;
+        $requiredTierLevel = $tierHierarchy[$requiredTierCode] ?? 0;
+        return $memberTierLevel >= $requiredTierLevel;
+    }
+
+    /**
+     * Check if required percentage of team members are Silver Legacy or above
+     */
+    private function checkTeamSilverPercentage($memberId, $requiredPercentage) {
+        // Count total team members (direct recruits)
+        $sql = "SELECT COUNT(*) as total_team
+                FROM members
+                WHERE sponsor_id = :member_id";
+        $result = $this->db->fetchOne($sql, ['member_id' => $memberId]);
+        $totalTeam = $result['total_team'] ?? 0;
+
+        if ($totalTeam == 0) return false;
+
+        // Count Silver-tier and above members (tier_id >= 3)
+        $sql = "SELECT COUNT(*) as silver_plus
+                FROM members
+                WHERE sponsor_id = :member_id
+                AND tier_id >= 3";
+        $result = $this->db->fetchOne($sql, ['member_id' => $memberId]);
+        $silverPlus = $result['silver_plus'] ?? 0;
+
+        $actualPercentage = ($silverPlus / $totalTeam) * 100;
+        return $actualPercentage >= $requiredPercentage;
+    }
+
+    /**
+     * Check if member has required number of personally invited members at specific TLI level
+     */
+    private function checkPersonallyInvitedRequirement($memberId, $requiredCount, $requiredLevel) {
+        // Special case for level 1: just need active members
+        if ($requiredLevel === 'active') {
+            $sql = "SELECT COUNT(*) as active_count
+                    FROM members m
+                    INNER JOIN ai_credits_balance acb ON m.id = acb.member_id
+                    WHERE m.sponsor_id = :member_id
+                    AND m.is_active = 1
+                    AND acb.last_refuel >= DATE_SUB(NOW(), INTERVAL 30 DAY)";
+
+            $result = $this->db->fetchOne($sql, ['member_id' => $memberId]);
+            $activeCount = $result['active_count'] ?? 0;
+            return $activeCount >= $requiredCount;
+        }
+
+        // For other levels, check how many personally invited members achieved the required TLI level
+        global $TLI_LEVELS;
+        $requiredLevelData = null;
+        foreach ($TLI_LEVELS as $level) {
+            if ($level['level'] == $requiredLevel) {
+                $requiredLevelData = $level;
+                break;
+            }
+        }
+
+        if (!$requiredLevelData) return false;
+
+        // Get direct recruits
+        $sql = "SELECT id FROM members WHERE sponsor_id = :member_id AND is_active = 1";
+        $recruits = $this->db->fetchAll($sql, ['member_id' => $memberId]);
+
+        $qualifiedCount = 0;
+        foreach ($recruits as $recruit) {
+            $recruitId = $recruit['id'];
+            $recruitPV = $this->getMemberPV($recruitId);
+
+            // Check if recruit has achieved the required level
+            if ($recruitPV >= $requiredLevelData['pv']) {
+                // Check all other requirements for that level
+                $recruitDetails = $this->getMemberDetails($recruitId);
+                if ($recruitDetails) {
+                    $recruitTierCode = $recruitDetails['tier_code'];
+
+                    // Check tier requirement
+                    if ($requiredLevelData['min_tier'] !== null &&
+                        !$this->meetsTierRequirement($recruitTierCode, $requiredLevelData['min_tier'])) {
+                        continue;
+                    }
+
+                    // If all checks pass, this recruit qualifies
+                    $qualifiedCount++;
+                }
+            }
+        }
+
+        return $qualifiedCount >= $requiredCount;
     }
 
     /**
@@ -652,5 +752,162 @@ class MLMCalculator {
         }
 
         return $stats;
+    }
+
+    /**
+     * Update CEO Competition Progress
+     * Automatically updates member's progress in active competitions
+     * Called after recording sales/transactions
+     */
+    public function updateCompetitionProgress($memberId, $transactionType, $amount) {
+        // Note: This would ideally call the Node.js API endpoint
+        // For now, we'll outline the logic structure
+
+        // In production, you would:
+        // 1. Get all active competitions
+        // 2. Check if member is eligible for each competition
+        // 3. Calculate progress based on competition target type
+        // 4. Update participant progress via API call
+
+        // Example structure:
+        /*
+        $activeCompetitions = $this->getActiveCompetitions();
+
+        foreach ($activeCompetitions as $competition) {
+            // Check eligibility
+            if (!$this->isEligibleForCompetition($memberId, $competition)) {
+                continue;
+            }
+
+            // Calculate progress based on target type
+            $progress = $this->calculateCompetitionProgress($memberId, $competition);
+
+            // Update via API
+            $this->updateCompetitionAPI($competition['id'], $memberId, $progress);
+        }
+        */
+
+        // For PHP-only version, store in database:
+        // This is a placeholder for the competition tracking logic
+        return true;
+    }
+
+    /**
+     * Check if member is eligible for a competition
+     */
+    private function isEligibleForCompetition($memberId, $competition) {
+        $member = $this->getMemberDetails($memberId);
+
+        if (!$member || !$member['is_active']) {
+            return false;
+        }
+
+        // Check tier eligibility
+        if ($competition['eligibility']['minTier']) {
+            $tierHierarchy = ['FAM' => 0, 'BLB' => 1, 'CLB' => 2, 'SLB' => 3, 'GLB' => 4, 'PLB' => 5, 'DLB' => 6];
+            $memberTierLevel = $tierHierarchy[$member['tier_code']] ?? 0;
+            $minTierLevel = $tierHierarchy[$competition['eligibility']['minTier']] ?? 0;
+
+            if ($memberTierLevel < $minTierLevel) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Calculate competition progress based on target type
+     */
+    private function calculateCompetitionProgress($memberId, $competition) {
+        $targetType = $competition['targetType'];
+        $startDate = $competition['startDate'];
+        $endDate = $competition['endDate'];
+
+        switch ($targetType) {
+            case 'sales':
+                // Total sales amount during competition period
+                $sql = "SELECT COALESCE(SUM(amount), 0) as total
+                        FROM transactions
+                        WHERE member_id = :member_id
+                        AND transaction_type = 'ISP'
+                        AND created_at BETWEEN :start_date AND :end_date";
+                $result = $this->db->fetchOne($sql, [
+                    'member_id' => $memberId,
+                    'start_date' => $startDate,
+                    'end_date' => $endDate
+                ]);
+                return $result['total'] ?? 0;
+
+            case 'recruits':
+                // Number of new recruits during competition period
+                $sql = "SELECT COUNT(*) as total
+                        FROM members
+                        WHERE sponsor_id = :member_id
+                        AND created_at BETWEEN :start_date AND :end_date";
+                $result = $this->db->fetchOne($sql, [
+                    'member_id' => $memberId,
+                    'start_date' => $startDate,
+                    'end_date' => $endDate
+                ]);
+                return $result['total'] ?? 0;
+
+            case 'team_pv':
+                // Team PV during competition period
+                $sql = "SELECT COALESCE(SUM(t.amount), 0) as total
+                        FROM transactions t
+                        INNER JOIN members m ON t.member_id = m.id
+                        WHERE m.sponsor_id = :member_id
+                        AND t.transaction_type IN ('ISP', 'TSC', 'QPB')
+                        AND t.created_at BETWEEN :start_date AND :end_date";
+                $result = $this->db->fetchOne($sql, [
+                    'member_id' => $memberId,
+                    'start_date' => $startDate,
+                    'end_date' => $endDate
+                ]);
+                return $result['total'] ?? 0;
+
+            case 'personal_pv':
+                // Personal PV during competition period
+                $sql = "SELECT COALESCE(SUM(amount), 0) as total
+                        FROM transactions
+                        WHERE member_id = :member_id
+                        AND transaction_type IN ('ISP', 'TSC', 'QPB')
+                        AND created_at BETWEEN :start_date AND :end_date";
+                $result = $this->db->fetchOne($sql, [
+                    'member_id' => $memberId,
+                    'start_date' => $startDate,
+                    'end_date' => $endDate
+                ]);
+                return $result['total'] ?? 0;
+
+            case 'team_growth':
+                // Team growth percentage during competition period
+                $sqlBefore = "SELECT COUNT(*) as count
+                              FROM members
+                              WHERE sponsor_id = :member_id
+                              AND created_at < :start_date";
+                $resultBefore = $this->db->fetchOne($sqlBefore, [
+                    'member_id' => $memberId,
+                    'start_date' => $startDate
+                ]);
+                $teamBefore = $resultBefore['count'] ?? 0;
+
+                $sqlAfter = "SELECT COUNT(*) as count
+                             FROM members
+                             WHERE sponsor_id = :member_id
+                             AND created_at <= :end_date";
+                $resultAfter = $this->db->fetchOne($sqlAfter, [
+                    'member_id' => $memberId,
+                    'end_date' => $endDate
+                ]);
+                $teamAfter = $resultAfter['count'] ?? 0;
+
+                if ($teamBefore == 0) return 0;
+                return (($teamAfter - $teamBefore) / $teamBefore) * 100;
+
+            default:
+                return 0;
+        }
     }
 }

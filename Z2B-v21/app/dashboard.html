@@ -9,13 +9,24 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
+            /* Royal Gold - Main Brand Colors */
+            --royal-gold: #D4AF37;
+            --royal-gold-light: #F4E4C1;
+            --royal-gold-dark: #B8960D;
+            --royal-gold-shine: #FFE5A0;
+            --royal-gold-deep: #9B7E0D;
+
+            /* Supporting Colors */
             --navy-blue: #0A2647;
-            --gold: #FFD700;
-            --orange: #FF6B35;
-            --light-gold: #FFF4CC;
             --dark-navy: #051428;
+            --accent-orange: #FF6B35;
             --white: #FFFFFF;
-            --light-bg: #F8F9FA;
+            --light-bg: #FAF8F3;
+
+            /* Legacy aliases for gradual transition */
+            --gold: var(--royal-gold);
+            --light-gold: var(--royal-gold-light);
+            --orange: var(--accent-orange);
         }
 
         * {
@@ -46,20 +57,29 @@
 
         .sidebar-brand {
             padding: 0 1.5rem 2rem;
-            border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+            border-bottom: 3px solid var(--royal-gold);
             margin-bottom: 2rem;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(184, 150, 13, 0.05));
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
         }
 
         .sidebar-brand h3 {
-            color: var(--gold);
-            font-weight: bold;
-            font-size: 1.5rem;
+            color: var(--royal-gold-shine);
+            font-weight: 900;
+            font-size: 1.6rem;
+            text-shadow:
+                0 0 20px rgba(212, 175, 55, 0.8),
+                0 0 30px rgba(255, 229, 160, 0.5),
+                0 2px 4px rgba(0, 0, 0, 0.3);
+            letter-spacing: 1.5px;
         }
 
         .sidebar-brand p {
-            color: var(--white);
+            color: var(--royal-gold-light);
             font-size: 0.85rem;
             margin: 0;
+            font-weight: 600;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
         }
 
         .nav-item {
@@ -876,7 +896,7 @@
                 <span class="coach-name">Coach Manlaw</span>
             </span>
             <div class="tooltip-text">🤖 Your AI billionaire coach available 24/7 to guide your success. Get
-                personalized strategies, mindset coaching, and master the 4M Billionaire Table with expert AI guidance!
+                personalized strategies, mindset coaching, and master the 4 Legs of a Billionaire Table: MINDSET MYSTERY, MONEY MOVES, LEGACY MISSION, and MOMENTUM MOVEMENT with expert AI guidance!
             </div>
         </div>
         <div class="nav-item" onclick="window.location.href='glowie.html'">
@@ -884,6 +904,11 @@
             <span>Glowie</span>
             <div class="tooltip-text">📱 Your Instant App Builder - Create professional mobile and web apps in minutes
                 without coding! Build custom solutions for your business and sell them in the marketplace.</div>
+        </div>
+        <div class="nav-item" onclick="window.location.href='vidzie.html'">
+            <i class="fas fa-video"></i>
+            <span>VIDZIE</span>
+            <div class="tooltip-text">🎥 AI Video Generation - Create professional videos powered by AI. Generate talking head videos, presentations, and marketing content powered by AI!</div>
         </div>
         <div class="nav-item" onclick="window.location.href='marketplace.html'">
             <i class="fas fa-store"></i>
@@ -955,11 +980,11 @@
             <div class="user-profile">
                 <div>
                     <div style="text-align: right;">
-                        <strong style="color: var(--navy-blue);">John Mogul</strong>
-                        <div class="tier-badge">Gold Tier</div>
+                        <strong style="color: var(--navy-blue);" id="userName">John Mogul</strong>
+                        <div class="tier-badge" id="userTierBadge">Loading...</div>
                     </div>
                 </div>
-                <div class="profile-avatar">JM</div>
+                <div class="profile-avatar" id="userAvatar">JM</div>
             </div>
         </div>
 
@@ -1014,6 +1039,55 @@
             </div>
         </div>
 
+        <!-- My Referral Link Section -->
+        <div class="card-section" style="background: linear-gradient(135deg, var(--gold), var(--orange)); border: 3px solid var(--navy-blue); padding: 2rem; margin-bottom: 2rem;">
+            <h4 style="color: var(--navy-blue); font-weight: bold; font-size: 1.5rem; margin-bottom: 1.5rem; text-align: center;">
+                <i class="fas fa-share-alt"></i> My Referral Link
+            </h4>
+            <div style="background: rgba(255, 255, 255, 0.95); border-radius: 15px; padding: 2rem;">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label style="color: var(--navy-blue); font-weight: 600; margin-bottom: 0.5rem; display: block;">
+                            <i class="fas fa-id-card"></i> Your Membership Number
+                        </label>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <input type="text" id="membershipNumber" readonly value="Loading..." style="flex: 1; padding: 0.8rem; border: 2px solid var(--gold); border-radius: 10px; font-size: 1.1rem; font-weight: bold; color: var(--navy-blue); background: var(--light-bg);">
+                            <button onclick="copyMembershipNumber()" style="padding: 0.8rem 1.5rem; background: var(--navy-blue); color: var(--gold); border: none; border-radius: 10px; font-weight: bold; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.background='var(--dark-navy)'" onmouseout="this.style.background='var(--navy-blue)'">
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label style="color: var(--navy-blue); font-weight: 600; margin-bottom: 0.5rem; display: block;">
+                            <i class="fas fa-link"></i> Your Referral Link
+                        </label>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <input type="text" id="referralLink" readonly value="Loading..." style="flex: 1; padding: 0.8rem; border: 2px solid var(--gold); border-radius: 10px; font-size: 1rem; color: var(--navy-blue); background: var(--light-bg);">
+                            <button onclick="copyReferralLink()" style="padding: 0.8rem 1.5rem; background: var(--navy-blue); color: var(--gold); border: none; border-radius: 10px; font-weight: bold; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.background='var(--dark-navy)'" onmouseout="this.style.background='var(--navy-blue)'">
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 1.5rem;">
+                    <p style="color: var(--dark-navy); margin-bottom: 1rem;">
+                        <i class="fas fa-users"></i> Share your link and start building your team!
+                    </p>
+                    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                        <button onclick="shareViaWhatsApp()" style="padding: 0.8rem 1.5rem; background: #25D366; color: white; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(37, 211, 102, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(37, 211, 102, 0.3)'">
+                            <i class="fab fa-whatsapp"></i> Share on WhatsApp
+                        </button>
+                        <button onclick="shareViaEmail()" style="padding: 0.8rem 1.5rem; background: var(--navy-blue); color: var(--gold); border: none; border-radius: 50px; font-weight: bold; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 15px rgba(10, 38, 71, 0.3);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(10, 38, 71, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(10, 38, 71, 0.3)'">
+                            <i class="fas fa-envelope"></i> Share via Email
+                        </button>
+                        <button onclick="window.location.href='team.html'" style="padding: 0.8rem 1.5rem; background: linear-gradient(135deg, var(--gold), var(--orange)); color: var(--navy-blue); border: none; border-radius: 50px; font-weight: bold; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(255, 215, 0, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(255, 215, 0, 0.3)'">
+                            <i class="fas fa-chart-line"></i> View My Team
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Tier Upgrade Motivator (Dynamic based on current tier) -->
         <div id="upgradeMotivator" class="upgrade-motivator">
             <!-- This will be populated by JavaScript based on user's current tier -->
@@ -1026,11 +1100,182 @@
                 <div class="coach-message">
                     <p>🎯 <strong>Good morning, Champion!</strong> Today is Day 47 of your legacy journey. I've been
                         analyzing your progress, and you're crushing it! Your team grew by 3 members this week. Now
-                        let's focus on mastering the Marketing leg of your 4M Table. Ready to level up your social media
+                        let's focus on mastering the LEGACY MISSION of your 4 Legs of a Billionaire Table. Ready to level up your social media
                         game? Let's dive in!</p>
                 </div>
                 <button class="btn btn-chat-coach" onclick="window.location.href='coach-manlaw.html'">
                     <i class="fas fa-comments"></i> Chat with Coach Manlaw
+                </button>
+            </div>
+        </div>
+
+        <!-- Apps We've Built Showcase -->
+        <div class="card-section" style="background: linear-gradient(135deg, var(--navy-blue), var(--dark-navy)); border: 3px solid var(--gold); padding: 2.5rem;">
+            <h4 style="color: var(--gold); font-size: 1.8rem; text-align: center; margin-bottom: 0.5rem;">
+                <i class="fas fa-rocket"></i> Z2B AI-Powered Apps Ecosystem
+            </h4>
+            <p style="color: var(--white); text-align: center; margin-bottom: 2rem; font-size: 1.05rem;">
+                Transform your business with our suite of cutting-edge AI applications
+            </p>
+
+            <div class="row g-4">
+                <!-- Coach ManLaw -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="app-showcase-card" style="background: linear-gradient(145deg, var(--white), var(--light-gold)); border-radius: 20px; padding: 2rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); transition: all 0.3s; border: 2px solid transparent; height: 100%;" onmouseover="this.style.transform='translateY(-10px)'; this.style.borderColor='var(--gold)'; this.style.boxShadow='0 15px 40px rgba(255, 215, 0, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='transparent'; this.style.boxShadow='0 10px 30px rgba(0, 0, 0, 0.2)';">
+                        <div style="text-align: center; margin-bottom: 1.5rem;">
+                            <div style="width: 80px; height: 80px; margin: 0 auto 1rem; background: linear-gradient(135deg, var(--orange), var(--gold)); border-radius: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);">
+                                <i class="fas fa-robot" style="font-size: 2.5rem; color: var(--navy-blue);"></i>
+                            </div>
+                            <h5 style="color: var(--navy-blue); font-weight: bold; font-size: 1.3rem; margin-bottom: 0.5rem;">Coach ManLaw</h5>
+                            <span style="background: linear-gradient(135deg, #4ECDC4, #44A08D); color: white; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">LIVE</span>
+                        </div>
+                        <p style="color: var(--dark-navy); line-height: 1.7; margin-bottom: 1.5rem; min-height: 80px;">
+                            Your AI Billionaire Coach available 24/7. Get personalized guidance, master the 4 Legs of a Billionaire Table: MINDSET MYSTERY, MONEY MOVES, LEGACY MISSION, and MOMENTUM MOVEMENT with 90-day curriculum.
+                        </p>
+                        <ul style="color: var(--dark-navy); font-size: 0.9rem; margin-bottom: 1.5rem; padding-left: 1.2rem; min-height: 100px;">
+                            <li>✅ 90-Day Billionaire Curriculum</li>
+                            <li>✅ Real-Time AI Coaching Chat</li>
+                            <li>✅ BTSS Assessment System</li>
+                            <li>✅ Scripture-Based Guidance</li>
+                        </ul>
+                        <button onclick="window.location.href='coach-manlaw.html'" style="width: 100%; padding: 0.8rem; background: linear-gradient(135deg, var(--navy-blue), var(--dark-navy)); color: var(--gold); border: none; border-radius: 50px; font-weight: bold; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(10, 38, 71, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                            <i class="fas fa-play-circle"></i> Launch Coach
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Glowie -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="app-showcase-card" style="background: linear-gradient(145deg, var(--white), var(--light-gold)); border-radius: 20px; padding: 2rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); transition: all 0.3s; border: 2px solid transparent; height: 100%;" onmouseover="this.style.transform='translateY(-10px)'; this.style.borderColor='var(--gold)'; this.style.boxShadow='0 15px 40px rgba(255, 215, 0, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='transparent'; this.style.boxShadow='0 10px 30px rgba(0, 0, 0, 0.2)';">
+                        <div style="text-align: center; margin-bottom: 1.5rem;">
+                            <div style="width: 80px; height: 80px; margin: 0 auto 1rem; background: linear-gradient(135deg, #9B59B6, #8E44AD); border-radius: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(155, 89, 182, 0.4);">
+                                <i class="fas fa-mobile-alt" style="font-size: 2.5rem; color: white;"></i>
+                            </div>
+                            <h5 style="color: var(--navy-blue); font-weight: bold; font-size: 1.3rem; margin-bottom: 0.5rem;">Glowie</h5>
+                            <span style="background: linear-gradient(135deg, #4ECDC4, #44A08D); color: white; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">LIVE</span>
+                        </div>
+                        <p style="color: var(--dark-navy); line-height: 1.7; margin-bottom: 1.5rem; min-height: 80px;">
+                            No-Code AI App Builder. Create professional mobile and web applications in minutes without coding. Perfect for entrepreneurs and creators.
+                        </p>
+                        <ul style="color: var(--dark-navy); font-size: 0.9rem; margin-bottom: 1.5rem; padding-left: 1.2rem; min-height: 100px;">
+                            <li>✅ Claude-Powered AI Generation</li>
+                            <li>✅ Instant App Deployment</li>
+                            <li>✅ No Coding Required</li>
+                            <li>✅ Marketplace Integration</li>
+                        </ul>
+                        <button onclick="window.location.href='glowie.html'" style="width: 100%; padding: 0.8rem; background: linear-gradient(135deg, #9B59B6, #8E44AD); color: white; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(155, 89, 182, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                            <i class="fas fa-play-circle"></i> Launch Glowie
+                        </button>
+                    </div>
+                </div>
+
+                <!-- VIDZIE -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="app-showcase-card" style="background: linear-gradient(145deg, var(--white), var(--light-gold)); border-radius: 20px; padding: 2rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); transition: all 0.3s; border: 2px solid transparent; height: 100%;" onmouseover="this.style.transform='translateY(-10px)'; this.style.borderColor='var(--gold)'; this.style.boxShadow='0 15px 40px rgba(255, 215, 0, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='transparent'; this.style.boxShadow='0 10px 30px rgba(0, 0, 0, 0.2)';">
+                        <div style="text-align: center; margin-bottom: 1.5rem;">
+                            <div style="width: 80px; height: 80px; margin: 0 auto 1rem; background: linear-gradient(135deg, #E74C3C, #C0392B); border-radius: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);">
+                                <i class="fas fa-video" style="font-size: 2.5rem; color: white;"></i>
+                            </div>
+                            <h5 style="color: var(--navy-blue); font-weight: bold; font-size: 1.3rem; margin-bottom: 0.5rem;">VIDZIE</h5>
+                            <span style="background: linear-gradient(135deg, #4ECDC4, #44A08D); color: white; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">LIVE</span>
+                        </div>
+                        <p style="color: var(--dark-navy); line-height: 1.7; margin-bottom: 1.5rem; min-height: 80px;">
+                            AI Video Generation Platform. Create stunning talking head videos, presentations, and marketing content with professional AI avatars.
+                        </p>
+                        <ul style="color: var(--dark-navy); font-size: 0.9rem; margin-bottom: 1.5rem; padding-left: 1.2rem; min-height: 100px;">
+                            <li>✅ Advanced AI Video Technology</li>
+                            <li>✅ Talking Head Avatars</li>
+                            <li>✅ Text-to-Video Generation</li>
+                            <li>✅ Professional Presentations</li>
+                        </ul>
+                        <button onclick="window.location.href='vidzie.html'" style="width: 100%; padding: 0.8rem; background: linear-gradient(135deg, #E74C3C, #C0392B); color: white; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(231, 76, 60, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                            <i class="fas fa-play-circle"></i> Launch VIDZIE
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ZYRA -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="app-showcase-card" style="background: linear-gradient(145deg, var(--white), var(--light-gold)); border-radius: 20px; padding: 2rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); transition: all 0.3s; border: 2px solid transparent; height: 100%;" onmouseover="this.style.transform='translateY(-10px)'; this.style.borderColor='var(--gold)'; this.style.boxShadow='0 15px 40px rgba(255, 215, 0, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='transparent'; this.style.boxShadow='0 10px 30px rgba(0, 0, 0, 0.2)';">
+                        <div style="text-align: center; margin-bottom: 1.5rem;">
+                            <div style="width: 80px; height: 80px; margin: 0 auto 1rem; background: linear-gradient(135deg, #3498DB, #2980B9); border-radius: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);">
+                                <i class="fas fa-headset" style="font-size: 2.5rem; color: white;"></i>
+                            </div>
+                            <h5 style="color: var(--navy-blue); font-weight: bold; font-size: 1.3rem; margin-bottom: 0.5rem;">ZYRA</h5>
+                            <span style="background: linear-gradient(135deg, #F39C12, #E67E22); color: white; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">COMING SOON</span>
+                        </div>
+                        <p style="color: var(--dark-navy); line-height: 1.7; margin-bottom: 1.5rem; min-height: 80px;">
+                            AI Sales Agent that never sleeps. Automate customer conversations, answer questions, and convert prospects into customers 24/7.
+                        </p>
+                        <ul style="color: var(--dark-navy); font-size: 0.9rem; margin-bottom: 1.5rem; padding-left: 1.2rem; min-height: 100px;">
+                            <li>🔄 Automated Sales Conversations</li>
+                            <li>🔄 24/7 Customer Support</li>
+                            <li>🔄 Lead Qualification</li>
+                            <li>🔄 CRM Integration</li>
+                        </ul>
+                        <button onclick="window.location.href='zyra.html'" style="width: 100%; padding: 0.8rem; background: linear-gradient(135deg, #3498DB, #2980B9); color: white; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(52, 152, 219, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                            <i class="fas fa-info-circle"></i> Learn More
+                        </button>
+                    </div>
+                </div>
+
+                <!-- BENOWN -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="app-showcase-card" style="background: linear-gradient(145deg, var(--white), var(--light-gold)); border-radius: 20px; padding: 2rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); transition: all 0.3s; border: 2px solid transparent; height: 100%;" onmouseover="this.style.transform='translateY(-10px)'; this.style.borderColor='var(--gold)'; this.style.boxShadow='0 15px 40px rgba(255, 215, 0, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='transparent'; this.style.boxShadow='0 10px 30px rgba(0, 0, 0, 0.2)';">
+                        <div style="text-align: center; margin-bottom: 1.5rem;">
+                            <div style="width: 80px; height: 80px; margin: 0 auto 1rem; background: linear-gradient(135deg, #16A085, #138D75); border-radius: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(22, 160, 133, 0.4);">
+                                <i class="fas fa-magic" style="font-size: 2.5rem; color: white;"></i>
+                            </div>
+                            <h5 style="color: var(--navy-blue); font-weight: bold; font-size: 1.3rem; margin-bottom: 0.5rem;">BENOWN</h5>
+                            <span style="background: linear-gradient(135deg, #F39C12, #E67E22); color: white; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">COMING SOON</span>
+                        </div>
+                        <p style="color: var(--dark-navy); line-height: 1.7; margin-bottom: 1.5rem; min-height: 80px;">
+                            AI Content Creator. Generate engaging social media posts, blog articles, emails, and marketing content effortlessly using advanced AI.
+                        </p>
+                        <ul style="color: var(--dark-navy); font-size: 0.9rem; margin-bottom: 1.5rem; padding-left: 1.2rem; min-height: 100px;">
+                            <li>🔄 Social Media Posts</li>
+                            <li>🔄 Blog Articles & SEO</li>
+                            <li>🔄 Email Campaigns</li>
+                            <li>🔄 Marketing Copy</li>
+                        </ul>
+                        <button onclick="window.location.href='benown.html'" style="width: 100%; padding: 0.8rem; background: linear-gradient(135deg, #16A085, #138D75); color: white; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(22, 160, 133, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                            <i class="fas fa-info-circle"></i> Learn More
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ZYRO -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="app-showcase-card" style="background: linear-gradient(145deg, var(--white), var(--light-gold)); border-radius: 20px; padding: 2rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); transition: all 0.3s; border: 2px solid transparent; height: 100%;" onmouseover="this.style.transform='translateY(-10px)'; this.style.borderColor='var(--gold)'; this.style.boxShadow='0 15px 40px rgba(255, 215, 0, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='transparent'; this.style.boxShadow='0 10px 30px rgba(0, 0, 0, 0.2)';">
+                        <div style="text-align: center; margin-bottom: 1.5rem;">
+                            <div style="width: 80px; height: 80px; margin: 0 auto 1rem; background: linear-gradient(135deg, var(--orange), var(--gold)); border-radius: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);">
+                                <i class="fas fa-gamepad" style="font-size: 2.5rem; color: var(--navy-blue);"></i>
+                            </div>
+                            <h5 style="color: var(--navy-blue); font-weight: bold; font-size: 1.3rem; margin-bottom: 0.5rem;">ZYRO</h5>
+                            <span style="background: linear-gradient(135deg, #4ECDC4, #44A08D); color: white; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">LIVE</span>
+                        </div>
+                        <p style="color: var(--dark-navy); line-height: 1.7; margin-bottom: 1.5rem; min-height: 80px;">
+                            Gamification Hub. Engage and compete with team members through challenges, roulette, and bingo games. Earn rewards while building your legacy.
+                        </p>
+                        <ul style="color: var(--dark-navy); font-size: 0.9rem; margin-bottom: 1.5rem; padding-left: 1.2rem; min-height: 100px;">
+                            <li>✅ Challenge Games</li>
+                            <li>✅ Roulette Rewards</li>
+                            <li>✅ Bingo Events</li>
+                            <li>✅ Team Leaderboards</li>
+                        </ul>
+                        <button onclick="window.location.href='zyro.html'" style="width: 100%; padding: 0.8rem; background: linear-gradient(135deg, var(--orange), var(--gold)); color: var(--navy-blue); border: none; border-radius: 50px; font-weight: bold; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(255, 107, 53, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                            <i class="fas fa-play-circle"></i> Launch ZYRO
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 2px solid rgba(255, 215, 0, 0.3);">
+                <p style="color: var(--light-gold); font-size: 1.1rem; margin-bottom: 1rem;">
+                    <i class="fas fa-store"></i> All apps available in the <strong>Z2B Marketplace</strong>
+                </p>
+                <button onclick="window.location.href='marketplace.html'" style="padding: 1rem 2.5rem; background: linear-gradient(135deg, var(--gold), var(--orange)); color: var(--navy-blue); border: none; border-radius: 50px; font-weight: bold; font-size: 1.1rem; cursor: pointer; transition: all 0.3s; box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);" onmouseover="this.style.transform='translateY(-3px) scale(1.05)'; this.style.boxShadow='0 10px 30px rgba(255, 215, 0, 0.6)';" onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='0 6px 20px rgba(255, 215, 0, 0.4)';">
+                    <i class="fas fa-shopping-cart"></i> Visit Marketplace
                 </button>
             </div>
         </div>
@@ -1206,14 +1451,104 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Initialize user as GOLD tier on page load (centralized tier management)
+        function initializeUser() {
+            // Check if user exists, if not create GOLD tier user
+            const storedUser = localStorage.getItem('z2b_current_user');
+            if (!storedUser || JSON.parse(storedUser).tier !== 'GOLD') {
+                // Set John Mogul as GOLD tier user
+                const goldUser = {
+                    id: 'user_john_mogul',
+                    name: 'John Mogul',
+                    tier: 'GOLD',
+                    aiFuel: 600,
+                    joinDate: new Date().toISOString(),
+                    isDemo: false
+                };
+                localStorage.setItem('z2b_current_user', JSON.stringify(goldUser));
+
+                // Reload Z2BAppAccess to pick up new user
+                if (window.Z2BAppAccess) {
+                    window.Z2BAppAccess.currentUser = goldUser;
+                }
+            }
+        }
+
+        // Update top bar with tier from Z2BAppAccess
+        function updateTopBar() {
+            // Wait for Z2BAppAccess to be available
+            if (!window.Z2BAppAccess) {
+                setTimeout(updateTopBar, 100);
+                return;
+            }
+
+            const user = window.Z2BAppAccess.currentUser;
+            const tierData = window.Z2B_TIERS[user.tier];
+
+            // Update user name
+            const userNameEl = document.getElementById('userName');
+            if (userNameEl) {
+                userNameEl.textContent = user.name;
+            }
+
+            // Update tier badge
+            const tierBadgeEl = document.getElementById('userTierBadge');
+            if (tierBadgeEl && tierData) {
+                tierBadgeEl.textContent = tierData.name + ' Tier';
+            }
+
+            // Update avatar initials
+            const avatarEl = document.getElementById('userAvatar');
+            if (avatarEl && user.name) {
+                const nameParts = user.name.split(' ');
+                const initials = nameParts.map(part => part[0]).join('');
+                avatarEl.textContent = initials.toUpperCase();
+            }
+        }
+
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('active');
         }
 
-        // Dynamic Tooltip Positioning
+        // MASTER INITIALIZATION - Consolidate all initialization in correct order
         document.addEventListener('DOMContentLoaded', function () {
-            const navItems = document.querySelectorAll('.nav-item');
+            // Wait for app-config.js to load, then initialize everything in sequence
+            function masterInit() {
+                if (!window.Z2BAppAccess || !window.Z2B_TIERS || !window.Z2B_APPS) {
+                    setTimeout(masterInit, 50);
+                    return;
+                }
 
+                // Step 1: Initialize user as GOLD tier
+                initializeUser();
+
+                // Step 2: Force reload Z2BAppAccess to pick up the GOLD user
+                if (window.Z2BAppAccess) {
+                    const goldUser = JSON.parse(localStorage.getItem('z2b_current_user'));
+                    if (goldUser) {
+                        window.Z2BAppAccess.currentUser = goldUser;
+                    }
+                }
+
+                // Step 3: Update top bar
+                updateTopBar();
+
+                // Step 4: Initialize upgrade motivator
+                initializeUpgradeMotivator();
+
+                // Step 5: Update navigation with access badges
+                setTimeout(() => {
+                    if (window.Z2BAppAccess) {
+                        updateNavigationWithAccess();
+                    }
+                }, 100);
+            }
+
+            // Start master initialization
+            masterInit();
+
+            // Dynamic Tooltip Positioning
+            const navItems = document.querySelectorAll('.nav-item');
             navItems.forEach(item => {
                 item.addEventListener('mouseenter', function () {
                     const tooltip = this.querySelector('.tooltip-text');
@@ -1268,8 +1603,22 @@
 
         // Tier Upgrade Motivator Logic
         function initializeUpgradeMotivator() {
-            // Simulated user data (in production, this comes from backend/session)
-            const currentUserTier = 'FAM'; // Options: 'FAM', 'Bronze', 'Copper', 'Silver', 'Gold', 'Platinum'
+            // Get current user tier from Z2BAppAccess
+            const userTierCode = window.Z2BAppAccess.currentUser.tier; // e.g., 'GOLD'
+            const tierData = window.Z2B_TIERS[userTierCode];
+
+            // Map tier codes to motivator display names
+            const tierDisplayMap = {
+                'FREE': 'FAM',
+                'STARTER': 'Bronze',
+                'PRO': 'Copper',
+                'SILVER': 'Silver',
+                'GOLD': 'Gold',
+                'PLATINUM': 'Platinum',
+                'LIFETIME': 'Platinum' // Lifetime maps to Platinum (max tier)
+            };
+
+            const currentUserTier = tierDisplayMap[userTierCode] || 'FAM';
             const monthlyTeamSales = 8500; // Example: R8,500 in team sales this month
             const newBuildersThisMonth = 5; // Number of new builders invited this month
 
@@ -1408,9 +1757,6 @@
             return `R${missed.toFixed(0)}`;
         }
 
-        // Initialize on page load
-        document.addEventListener('DOMContentLoaded', initializeUpgradeMotivator);
-
         function handleLogout() {
             if (confirm('Are you sure you want to logout?')) {
                 // Clear session and redirect to landing page
@@ -1428,16 +1774,6 @@
                     }
                 });
             }
-        });
-
-        // Dynamic App Access Display
-        document.addEventListener('DOMContentLoaded', function () {
-            // Wait for app-config.js to load
-            setTimeout(() => {
-                if (window.Z2BAppAccess) {
-                    updateNavigationWithAccess();
-                }
-            }, 200);
         });
 
         function updateNavigationWithAccess() {
@@ -1558,6 +1894,112 @@
                 };
             }
         }
+
+        // Referral Link Functions
+        async function loadReferralInfo() {
+            const API_BASE_URL = 'http://localhost:5000/api';
+            const token = localStorage.getItem('z2b_auth_token') || localStorage.getItem('authToken');
+
+            if (!token) {
+                console.log('No auth token found, using demo data');
+                // Show demo data
+                document.getElementById('membershipNumber').value = 'Z2B0000001';
+                document.getElementById('referralLink').value = 'https://z2blegacybuilders.co.za/join?ref=Z2B0000001';
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/me`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success && data.user) {
+                    const membershipNumber = data.user.membershipNumber || 'Z2B0000001';
+                    const referralLink = data.user.referralStats?.referralLink ||
+                                       `https://z2blegacybuilders.co.za/join?ref=${membershipNumber}`;
+
+                    document.getElementById('membershipNumber').value = membershipNumber;
+                    document.getElementById('referralLink').value = referralLink;
+                } else {
+                    // Fallback to demo data
+                    document.getElementById('membershipNumber').value = 'Z2B0000001';
+                    document.getElementById('referralLink').value = 'https://z2blegacybuilders.co.za/join?ref=Z2B0000001';
+                }
+            } catch (error) {
+                console.error('Error loading referral info:', error);
+                // Fallback to demo data
+                document.getElementById('membershipNumber').value = 'Z2B0000001';
+                document.getElementById('referralLink').value = 'https://z2blegacybuilders.co.za/join?ref=Z2B0000001';
+            }
+        }
+
+        function copyMembershipNumber() {
+            const input = document.getElementById('membershipNumber');
+            input.select();
+            input.setSelectionRange(0, 99999); // For mobile
+            navigator.clipboard.writeText(input.value).then(() => {
+                alert('✅ Membership Number copied to clipboard!');
+            }).catch(err => {
+                console.error('Copy failed:', err);
+            });
+        }
+
+        function copyReferralLink() {
+            const input = document.getElementById('referralLink');
+            input.select();
+            input.setSelectionRange(0, 99999); // For mobile
+            navigator.clipboard.writeText(input.value).then(() => {
+                alert('✅ Referral Link copied to clipboard!');
+            }).catch(err => {
+                console.error('Copy failed:', err);
+            });
+        }
+
+        function shareViaWhatsApp() {
+            const referralLink = document.getElementById('referralLink').value;
+            const membershipNumber = document.getElementById('membershipNumber').value;
+            const message = `🚀 Join me on the Zero to Billionaires journey!\\n\\n` +
+                          `I'm transforming from employee to entrepreneur using Z2B's AI-powered platform.\\n\\n` +
+                          `✨ 6 Income Streams\\n` +
+                          `🤖 AI Coach & Tools\\n` +
+                          `💰 Build Legacy Wealth\\n\\n` +
+                          `Use my referral code: ${membershipNumber}\\n` +
+                          `Sign up here: ${referralLink}\\n\\n` +
+                          `Let's build our billion-dollar legacies together!`;
+
+            const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        }
+
+        function shareViaEmail() {
+            const referralLink = document.getElementById('referralLink').value;
+            const membershipNumber = document.getElementById('membershipNumber').value;
+            const subject = 'Join Me on Zero to Billionaires!';
+            const body = `Hi there,\\n\\n` +
+                       `I'm excited to invite you to join the Zero to Billionaires platform!\\n\\n` +
+                       `Z2B is transforming employees into entrepreneurs with:\\n` +
+                       `✨ 6 generous income streams\\n` +
+                       `🤖 AI-powered coaching and business tools\\n` +
+                       `💰 Multiple ways to build wealth and legacy\\n\\n` +
+                       `Use my referral code: ${membershipNumber}\\n` +
+                       `Sign up here: ${referralLink}\\n\\n` +
+                       `Let's build our billion-dollar legacies together!\\n\\n` +
+                       `To your success,\\n` +
+                       `Your Z2B Partner`;
+
+            const mailtoUrl = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            window.location.href = mailtoUrl;
+        }
+
+        // Load referral info when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load referral info after a short delay to ensure other scripts have loaded
+            setTimeout(loadReferralInfo, 500);
+        });
     </script>
 
     <!-- Z2B Ecosystem Integration -->

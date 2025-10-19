@@ -99,37 +99,131 @@ define('AI_COACH_PERSONALITIES', [
 ]);
 
 // TLI Recognition Levels
-// Updated: January 2026 - TeamPV is MONTHLY requirement, member must maintain for 3 consecutive months
+// Updated: January 2026 - New achievement-based progression system
 $TLI_LEVELS = [
-    ['name' => 'Bronze Achiever', 'level' => 1, 'monthly_team_pv' => 500, 'reward' => 2500, 'leader_requirement' => 0],
-    ['name' => 'Silver Performer', 'level' => 2, 'monthly_team_pv' => 1000, 'reward' => 7500, 'leader_requirement' => 0],
-    ['name' => 'Gold Leader', 'level' => 3, 'monthly_team_pv' => 2000, 'reward' => 20000, 'leader_requirement' => 0],
-    ['name' => 'Platinum Executive', 'level' => 4, 'monthly_team_pv' => 5000, 'reward' => 62500, 'leader_requirement' => 2],
-    ['name' => 'Diamond Director', 'level' => 5, 'monthly_team_pv' => 10000, 'reward' => 150000, 'leader_requirement' => 2],
-    ['name' => 'Ruby Ambassador', 'level' => 6, 'monthly_team_pv' => 20000, 'reward' => 350000, 'leader_requirement' => 2],
-    ['name' => 'Emerald Elite', 'level' => 7, 'monthly_team_pv' => 50000, 'reward' => 1000000, 'leader_requirement' => 2],
-    ['name' => 'Sapphire Master', 'level' => 8, 'monthly_team_pv' => 100000, 'reward' => 2250000, 'leader_requirement' => 2],
-    ['name' => 'Crown Royal', 'level' => 9, 'monthly_team_pv' => 150000, 'reward' => 3625000, 'leader_requirement' => 3],
-    ['name' => 'Infinite Legacy', 'level' => 10, 'monthly_team_pv' => 200000, 'reward' => 5000000, 'leader_requirement' => 3]
+    [
+        'name' => 'Ignite Pathfinder 🔥',
+        'level' => 1,
+        'pv' => 50,
+        'reward' => 600,
+        'reward_type' => 'cash',
+        'required_invites' => 2,
+        'required_invite_level' => 'active', // 2 personally invited must be active
+        'min_tier' => null,
+        'team_silver_percentage' => 0
+    ],
+    [
+        'name' => 'Guardian of Growth 🌱',
+        'level' => 2,
+        'pv' => 150,
+        'reward' => 1500,
+        'reward_type' => 'cash',
+        'required_invites' => 2,
+        'required_invite_level' => 1, // 2 must be Ignite Pathfinder
+        'min_tier' => null,
+        'team_silver_percentage' => 0
+    ],
+    [
+        'name' => 'Cash Catalyst 💰',
+        'level' => 3,
+        'pv' => 300,
+        'reward' => 3000,
+        'reward_type' => 'cash',
+        'required_invites' => 2,
+        'required_invite_level' => 2, // 2 must be Guardian of Growth
+        'min_tier' => null,
+        'team_silver_percentage' => 0
+    ],
+    [
+        'name' => 'Freedom Architect 🏛️',
+        'level' => 4,
+        'pv' => 1500,
+        'reward' => 15000,
+        'reward_type' => 'cash',
+        'required_invites' => 2,
+        'required_invite_level' => 3, // 2 must be Cash Catalyst
+        'min_tier' => null,
+        'team_silver_percentage' => 0
+    ],
+    [
+        'name' => 'Lifestyle Ambassador ✈️',
+        'level' => 5,
+        'pv' => 3000,
+        'reward' => 30000,
+        'reward_type' => 'business_holiday',
+        'required_invites' => 2,
+        'required_invite_level' => 4, // 2 must be Freedom Architect
+        'min_tier' => 'SLB', // Must be Silver Legacy or above
+        'team_silver_percentage' => 0
+    ],
+    [
+        'name' => 'Mama I Made It 🚗',
+        'level' => 6,
+        'pv' => 15000,
+        'reward' => 150000,
+        'reward_type' => 'car_incentive',
+        'required_invites' => 3,
+        'required_invite_level' => 5, // 3 must be Lifestyle Ambassador
+        'min_tier' => 'SLB', // Must be Silver Legacy or above
+        'team_silver_percentage' => 10 // 10% Team must be Silver Legacy or above
+    ],
+    [
+        'name' => 'Estate Pioneer 🏠',
+        'level' => 7,
+        'pv' => 40000,
+        'reward' => 375000,
+        'reward_type' => 'luxury_car_incentive',
+        'required_invites' => 3,
+        'required_invite_level' => 6, // 3 must be Mama I Made It
+        'min_tier' => 'SLB', // Must be Silver Legacy or above
+        'team_silver_percentage' => 15 // 15% Team must be Silver Legacy or above
+    ],
+    [
+        'name' => 'Capital Visionary 💼',
+        'level' => 8,
+        'pv' => 80000,
+        'reward' => 600000,
+        'reward_type' => 'house_incentive',
+        'required_invites' => 3,
+        'required_invite_level' => 7, // 3 must be Estate Pioneer
+        'min_tier' => 'SLB', // Must be Silver Legacy or above
+        'team_silver_percentage' => 20 // 20% Team must be Silver Legacy or above
+    ],
+    [
+        'name' => 'Mega Estate Builder 🏰',
+        'level' => 9,
+        'pv' => 100000,
+        'reward' => 750000,
+        'reward_type' => 'second_house_incentive',
+        'required_invites' => 3,
+        'required_invite_level' => 8, // 3 must be Capital Visionary
+        'min_tier' => 'SLB', // Must be Silver Legacy or above
+        'team_silver_percentage' => 30 // 30% Team must be Silver Legacy or above
+    ],
+    [
+        'name' => 'Titan Capitalist 💎',
+        'level' => 10,
+        'pv' => 200000,
+        'reward' => 1500000,
+        'reward_type' => 'dream_business_capital',
+        'required_invites' => 3,
+        'required_invite_level' => 9, // 3 must be Mega Estate Builder
+        'min_tier' => 'SLB', // Must be Silver Legacy or above
+        'team_silver_percentage' => 30 // 30% Team must be Silver Legacy or above
+    ]
 ];
 
 // TLI Tier Eligibility - Maximum level each tier can achieve
+// Levels 1-4: All tiers eligible
+// Levels 5-10: Silver Legacy or above required
 define('TLI_TIER_MAX_LEVELS', [
-    'BLB' => 0,  // Bronze - Not eligible
-    'CLB' => 0,  // Copper - Not eligible
-    'SLB' => 6,  // Silver - Up to Ruby Ambassador
-    'GLB' => 8,  // Gold - Up to Sapphire Master
-    'PLB' => 10, // Platinum - All levels
-    'DLB' => 10  // Diamond - All levels
-]);
-
-// TLI Requirements
-define('TLI_MONTHLY_PV_REQUIREMENT', 600); // Personal monthly PV required
-define('TLI_CONSECUTIVE_MONTHS', 3); // Must maintain for 3 months
-define('TLI_SILVER_TEAM_PERCENTAGE', [
-    'SLB' => 0,   // Silver - No minimum
-    'GLB' => 20,  // Gold - 20% of team must be Silver+
-    'PLB' => 40   // Platinum - 40% of team must be Silver+
+    'FAM' => 4,  // Family - Up to Freedom Architect
+    'BLB' => 4,  // Bronze - Up to Freedom Architect
+    'CLB' => 4,  // Copper - Up to Freedom Architect
+    'SLB' => 10, // Silver - All levels (Titan Capitalist)
+    'GLB' => 10, // Gold - All levels (Titan Capitalist)
+    'PLB' => 10, // Platinum - All levels (Titan Capitalist)
+    'DLB' => 10  // Diamond - All levels (Titan Capitalist)
 ]);
 
 // File Upload Settings
