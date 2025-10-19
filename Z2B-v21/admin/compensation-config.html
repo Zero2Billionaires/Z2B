@@ -635,16 +635,17 @@
         async function loadTLILevels() {
             // Load from API or use defaults
             tliLevels = [
-                { level: 1, name: 'Ignite Pathfinder 🔥', pv: 50, reward: 600, requiredInvites: 2, requiredInviteLevel: 'active' },
-                { level: 2, name: 'Guardian of Growth 🌱', pv: 150, reward: 1500, requiredInvites: 2, requiredInviteLevel: 1 },
-                { level: 3, name: 'Cash Catalyst 💰', pv: 300, reward: 3000, requiredInvites: 2, requiredInviteLevel: 2 },
-                { level: 4, name: 'Freedom Architect 🏛️', pv: 1500, reward: 15000, requiredInvites: 2, requiredInviteLevel: 3 },
-                { level: 5, name: 'Lifestyle Ambassador ✈️', pv: 3000, reward: 30000, requiredInvites: 2, requiredInviteLevel: 4 },
-                { level: 6, name: 'Mama I Made It 🚗', pv: 15000, reward: 150000, requiredInvites: 3, requiredInviteLevel: 5 },
-                { level: 7, name: 'Estate Pioneer 🏠', pv: 40000, reward: 375000, requiredInvites: 3, requiredInviteLevel: 6 },
-                { level: 8, name: 'Capital Visionary 💼', pv: 80000, reward: 600000, requiredInvites: 3, requiredInviteLevel: 7 },
-                { level: 9, name: 'Mega Estate Builder 🏰', pv: 100000, reward: 750000, requiredInvites: 3, requiredInviteLevel: 8 },
-                { level: 10, name: 'Titan Capitalist 💎', pv: 200000, reward: 1500000, requiredInvites: 3, requiredInviteLevel: 9 }
+                { level: 1, name: 'Ignite Pathfinder 🔥', pv: 50, reward: 600, requiredInvites: 2, requiredInviteLevel: 'active', silverPlusPercent: 0 },
+                { level: 2, name: 'Guardian of Growth 🌱', pv: 150, reward: 1500, requiredInvites: 2, requiredInviteLevel: 1, silverPlusPercent: 0 },
+                { level: 3, name: 'Cash Catalyst 💰', pv: 300, reward: 3000, requiredInvites: 2, requiredInviteLevel: 2, silverPlusPercent: 0 },
+                { level: 4, name: 'Freedom Architect 🏛️', pv: 1500, reward: 15000, requiredInvites: 2, requiredInviteLevel: 3, silverPlusPercent: 0 },
+                { level: 5, name: 'Lifestyle Ambassador ✈️', pv: 3000, reward: 30000, requiredInvites: 2, requiredInviteLevel: 4, silverPlusPercent: 0 },
+                { level: 6, name: 'Mama I Made It 🚗', pv: 15000, reward: 150000, requiredInvites: 3, requiredInviteLevel: 5, silverPlusPercent: 10 },
+                { level: 7, name: 'Estate Pioneer 🏠', pv: 40000, reward: 375000, requiredInvites: 3, requiredInviteLevel: 6, silverPlusPercent: 15 },
+                { level: 8, name: 'Capital Visionary 💼', pv: 80000, reward: 600000, requiredInvites: 3, requiredInviteLevel: 7, silverPlusPercent: 20 },
+                { level: 9, name: 'Mega Estate Builder 🏰', pv: 100000, reward: 750000, requiredInvites: 3, requiredInviteLevel: 8, silverPlusPercent: 30 },
+                { level: 10, name: 'Titan Capitalist 💎', pv: 200000, reward: 1500000, requiredInvites: 3, requiredInviteLevel: 9, silverPlusPercent: 35 },
+                { level: 11, name: 'Billionaire Legacy Builder 👑', pv: 700000, reward: 5000000, requiredInvites: 3, requiredInviteLevel: 10, silverPlusPercent: 40 }
             ];
 
             renderTLILevels();
@@ -680,7 +681,20 @@
                             <label>Invite Level Req</label>
                             <input type="text" value="${level.requiredInviteLevel}" onchange="updateTLILevel(${index}, 'requiredInviteLevel', this.value)">
                         </div>
+                        <div class="tli-field">
+                            <label>Min Silver+ % Required</label>
+                            <input type="number" value="${level.silverPlusPercent || 0}" min="0" max="100" onchange="updateTLILevel(${index}, 'silverPlusPercent', this.value)">
+                            <small style="color: #6b7280; display: block; margin-top: 3px;">% of team that must be Silver or higher</small>
+                        </div>
                     </div>
+                    ${level.silverPlusPercent > 0 ? `
+                    <div style="background: #f0fdf4; border-left: 4px solid #065f46; padding: 10px; margin-top: 10px; border-radius: 5px;">
+                        <strong style="color: #065f46;">🎯 Team Quality Requirement:</strong>
+                        <p style="color: #374151; margin: 5px 0 0 0; font-size: 0.9rem;">
+                            At least <strong>${level.silverPlusPercent}%</strong> of your team must be Silver builders or higher to qualify for this level.
+                        </p>
+                    </div>
+                    ` : ''}
                     <button class="btn btn-danger btn-sm" onclick="removeTLILevel(${index})" style="margin-top: 10px;">
                         <i class="fas fa-trash"></i> Remove Level
                     </button>
@@ -699,6 +713,7 @@
                 pv: 0,
                 reward: 0,
                 requiredInvites: 0,
+                silverPlusPercent: 0,
                 requiredInviteLevel: 0
             };
             tliLevels.push(newLevel);

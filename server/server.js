@@ -41,6 +41,9 @@ import ceoCompetitionRoutes from './routes/ceoCompetitionRoutes.js';
 // Admin Authentication routes
 import adminAuthRoutes from './routes/adminAuthRoutes.js';
 
+// TLI (Team Leadership Incentive) routes
+import tliRoutes from './routes/tliRoutes.js';
+
 dotenv.config();
 
 const app = express();
@@ -100,6 +103,9 @@ app.use('/api/ceo-competitions', ceoCompetitionRoutes);
 
 // Admin Authentication routes
 app.use('/api/admin-auth', adminAuthRoutes);
+
+// TLI routes
+app.use('/api/tli', tliRoutes);
 
 // Root route - API Documentation
 app.get('/', (req, res) => {
