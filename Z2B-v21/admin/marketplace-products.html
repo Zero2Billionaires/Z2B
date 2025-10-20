@@ -587,7 +587,7 @@
                         <td>
                             <div class="product-details">
                                 <div class="product-name">R21,500</div>
-                                <div class="product-meta">Member: R10K | MLM: R10K</div>
+                                <div class="product-meta">Vendor gets: R10K | MLM Pool: R10K</div>
                             </div>
                         </td>
                         <td><span class="badge badge-success">Active</span></td>
@@ -636,7 +636,7 @@
                         <td>
                             <div class="product-details">
                                 <div class="product-name">R215</div>
-                                <div class="product-meta">Member: R100 | MLM: R100</div>
+                                <div class="product-meta">Vendor gets: R100 | MLM Pool: R100</div>
                             </div>
                         </td>
                         <td><span class="badge badge-warning">Pending Review</span></td>
@@ -740,26 +740,37 @@
                     <div class="pricing-calculator">
                         <h3><i class="fas fa-calculator"></i> Dynamic Pricing Calculator</h3>
                         <div class="form-group">
-                            <label>Member Desired Income (What you want to earn) *</label>
+                            <label>Vendor Desired Income (What vendor wants to earn) *</label>
                             <input type="number" class="form-control" id="memberIncome" min="0" step="0.01"
                                    onchange="calculatePricing()" required>
+                            <small style="color: #666; margin-top: 0.3rem; display: block;">
+                                This is how much the vendor will receive per sale
+                            </small>
                         </div>
                         <div class="pricing-breakdown" id="pricingBreakdown">
                             <div class="price-row">
-                                <span class="price-label">Member Income:</span>
+                                <span class="price-label">💰 Vendor Receives:</span>
                                 <span class="price-value" id="displayMemberIncome">R 0.00</span>
                             </div>
                             <div class="price-row">
-                                <span class="price-label">MLM Commission Pool (100%):</span>
+                                <span class="price-label">👥 MLM Commission Pool (100%):</span>
                                 <span class="price-value" id="displayCommissionPool">R 0.00</span>
                             </div>
                             <div class="price-row">
-                                <span class="price-label">Z2B Platform Fee (7.5%):</span>
+                                <span class="price-label">⚙️ Z2B Platform Fee (7.5%):</span>
                                 <span class="price-value" id="displayPlatformFee">R 0.00</span>
                             </div>
                             <div class="price-row total">
-                                <span class="price-label">Final Retail Price:</span>
+                                <span class="price-label">🏷️ Customer Pays (Retail Price):</span>
                                 <span class="price-value" id="displayRetailPrice">R 0.00</span>
+                            </div>
+                        </div>
+                        <div style="margin-top: 1rem; padding: 1rem; background: rgba(0,255,136,0.1); border-radius: 8px; border-left: 3px solid #00AA5B;">
+                            <strong style="color: #00AA5B;">📅 Vendor Payment Schedule:</strong>
+                            <div style="margin-top: 0.5rem; font-size: 0.9rem; color: #555; line-height: 1.6;">
+                                • <strong>Digital:</strong> 24 hours after download<br>
+                                • <strong>Physical:</strong> 7 days after delivery confirmation<br>
+                                • <strong>Service:</strong> 3 days after completion
                             </div>
                         </div>
                     </div>
