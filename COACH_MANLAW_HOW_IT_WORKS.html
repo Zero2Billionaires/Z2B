@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Coach ManLaw Works - Complete System Guide | Z2B Legacy Builders</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background: linear-gradient(135deg, #0A2647 0%, #051428 100%);
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.3);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 3px solid #D4AF37;
+        }
+
+        h1 {
+            color: #D4AF37;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .subtitle {
+            color: #0A2647;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        h2 {
+            color: #D4AF37;
+            font-size: 2rem;
+            margin-top: 3rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid #D4AF37;
+        }
+
+        h3 {
+            color: #0A2647;
+            font-size: 1.5rem;
+            margin-top: 2rem;
+            margin-bottom: 0.8rem;
+        }
+
+        h4 {
+            color: #FF6B35;
+            font-size: 1.2rem;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        ul, ol {
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        .toc {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(10, 38, 71, 0.05));
+            padding: 2rem;
+            border-radius: 15px;
+            border-left: 5px solid #D4AF37;
+            margin: 2rem 0;
+        }
+
+        .toc ol {
+            margin-left: 1.5rem;
+        }
+
+        .toc li {
+            font-size: 1.1rem;
+            margin-bottom: 0.7rem;
+        }
+
+        .toc a {
+            color: #0A2647;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .toc a:hover {
+            color: #D4AF37;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(255, 255, 255, 0.5));
+            border-left: 5px solid #D4AF37;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 10px;
+        }
+
+        .tech-box {
+            background: #f8f9fa;
+            border: 2px solid #0A2647;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .flow-diagram {
+            background: linear-gradient(135deg, rgba(10, 38, 71, 0.05), rgba(212, 175, 55, 0.05));
+            padding: 2rem;
+            margin: 2rem 0;
+            border-radius: 15px;
+            border: 2px solid #D4AF37;
+            text-align: center;
+        }
+
+        .flow-step {
+            background: white;
+            border: 2px solid #D4AF37;
+            padding: 1rem;
+            margin: 0.5rem auto;
+            border-radius: 8px;
+            max-width: 600px;
+        }
+
+        .flow-arrow {
+            color: #D4AF37;
+            font-size: 1.5rem;
+            margin: 0.5rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: white;
+        }
+
+        th {
+            background: linear-gradient(135deg, #D4AF37, #B8941F);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 0.8rem;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .tier-section {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(212, 175, 55, 0.1));
+            padding: 2rem;
+            margin: 2rem 0;
+            border-radius: 15px;
+            border: 2px solid #D4AF37;
+        }
+
+        .highlight {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(255, 107, 53, 0.2));
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1.5rem 0;
+            border-left: 5px solid #FF6B35;
+        }
+
+        .example {
+            background: #f8f9fa;
+            border-left: 5px solid #FF6B35;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 10px;
+        }
+
+        .visual-marker {
+            color: #D4AF37;
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+
+        .footer {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid #D4AF37;
+            text-align: center;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        hr {
+            border: none;
+            border-top: 2px solid #D4AF37;
+            margin: 2rem 0;
+            opacity: 0.3;
+        }
+
+        code {
+            background: #f4f4f4;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #0A2647;
+        }
+
+        pre {
+            background: #f4f4f4;
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            border-left: 4px solid #D4AF37;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+        }
+
+        strong {
+            color: #0A2647;
+        }
+
+        em {
+            color: #FF6B35;
+        }
+
+        .checkmark {
+            color: #28a745;
+        }
+
+        .crossmark {
+            color: #dc3545;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+                padding: 1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+            h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎓 COACH MANLAW - HOW IT WORKS</h1>
+            <p class="subtitle">Complete System Explanation & User Access Guide</p>
+        </div>
+
+        <hr>
+
+        <div class="toc">
+            <h2 style="margin-top: 0; border: none;">📋 TABLE OF CONTENTS</h2>
+            <ol>
+                <li><a href="#program-overview">Program Overview</a></li>
+                <li><a href="#how-it-works">How It Works Day-by-Day</a></li>
+                <li><a href="#user-access">User Access Methods</a></li>
+                <li><a href="#technical">Technical Implementation</a></li>
+                <li><a href="#user-journey">User Journey Flow</a></li>
+                <li><a href="#tier-access">Tier-Based Access</a></li>
+                <li><a href="#progress-tracking">Progress Tracking System</a></li>
+                <li><a href="#ai-coaching">AI Coaching System</a></li>
+                <li><a href="#app-integration">Integration with Z2B Apps</a></li>
+                <li><a href="#faq">Common Questions</a></li>
+            </ol>
+        </div>
+
+        <hr>
+
+        <h2 id="program-overview">📚 PROGRAM OVERVIEW</h2>
+
+        <h3>What Is Coach ManLaw?</h3>
+        <p>Coach ManLaw is a <strong>90-day transformation program</strong> that takes employees and turns them into entrepreneurs by teaching the <strong>4 Legs of the Billion Dollar Table</strong> framework:</p>
+
+        <div class="info-box">
+            <ol>
+                <li>🧠 <strong>Mindset Mystery</strong> - Thinking like an entrepreneur</li>
+                <li>💸 <strong>Money Moves</strong> - Building wealth systems</li>
+                <li>⚙️ <strong>Legacy Missions</strong> - Creating scalable systems</li>
+                <li>🌍 <strong>Momentum Movement</strong> - Building influence</li>
+            </ol>
+        </div>
+
+        <h3>Program Structure:</h3>
+        <ul>
+            <li><strong>Total Duration:</strong> 90 days</li>
+            <li><strong>Total Lessons:</strong> 90 (1 per day)</li>
+            <li><strong>Total Weeks:</strong> 18</li>
+            <li><strong>Total Phases:</strong> 6 main phases</li>
+            <li><strong>Certification:</strong> Day 75 (75%+ BTSS)</li>
+            <li><strong>Mastery:</strong> Day 90 (90%+ BTSS)</li>
+        </ul>
+
+        <hr>
+
+        <h2 id="how-it-works">⚙️ HOW IT WORKS DAY-BY-DAY</h2>
+
+        <h3>Daily Lesson Structure:</h3>
+        <p>Every day follows this exact pattern:</p>
+
+        <h4>1. LESSON TITLE (Example: Day 1 - "The Employee Trap")</h4>
+        <ul>
+            <li>Clear, actionable topic</li>
+            <li>Tied to one of the 4 Legs</li>
+        </ul>
+
+        <h4>2. CONTENT (5-minute read)</h4>
+        <ul>
+            <li>Core teaching for the day</li>
+            <li>Biblical foundation/scripture reference</li>
+            <li>Real-world application</li>
+            <li>Entrepreneur mindset principles</li>
+        </ul>
+
+        <div class="example">
+            <p><strong>Example (Day 1):</strong></p>
+            <p>Understanding the psychological chains of employment.<br>
+            Biblical foundation: Proverbs 23:7 'As a man thinks, so is he.'</p>
+        </div>
+
+        <h4>3. ACTIVITY (10 minutes)</h4>
+        <ul>
+            <li>Hands-on exercise</li>
+            <li>Worksheet or journaling prompt</li>
+            <li>Immediate application</li>
+        </ul>
+
+        <div class="example">
+            <p><strong>Example (Day 1):</strong></p>
+            <p>Write down 5 employee beliefs holding you back.<br>
+            Example: 'I trade time for money.'</p>
+        </div>
+
+        <h4>4. ASSIGNMENT (15-30 minutes)</h4>
+        <ul>
+            <li>Action to complete during the day</li>
+            <li>Measurable outcome</li>
+            <li>Real-world implementation</li>
+        </ul>
+
+        <div class="example">
+            <p><strong>Example (Day 1):</strong></p>
+            <p>BTSS Assessment - Baseline measurement.<br>
+            Rate your current Mindset Mystery (0-100)</p>
+        </div>
+
+        <h4>5. BTSS IMPACT</h4>
+        <p>Shows which leg(s) this lesson affects:<br>
+        Options: <strong>mindset</strong>, <strong>money</strong>, <strong>legacy</strong>, <strong>movement</strong>, or <strong>"all"</strong></p>
+
+        <h4>6. APP CONNECTION (When applicable)</h4>
+        <ul>
+            <li>Recommends which Z2B app to use</li>
+            <li>Explains HOW to use it for this lesson</li>
+            <li>Deepens learning through tools</li>
+        </ul>
+
+        <div class="example">
+            <p><strong>Example (Day 5):</strong></p>
+            <p><strong>App:</strong> ZYRO<br>
+            <strong>How:</strong> "Play ZYRO's 'CEO or Minion Quiz' to discover your entrepreneur personality. Use insights to strengthen mindset."</p>
+        </div>
+
+        <hr>
+
+        <h2 id="user-access">🚪 USER ACCESS METHODS</h2>
+
+        <h3>Method 1: Direct Access (Local)</h3>
+        <p><strong>File Location:</strong> <code>C:\Users\Manana\Z2B\Z2B-v21\app\coach-manlaw.html</code></p>
+
+        <p><strong>Steps:</strong></p>
+        <ol>
+            <li>Double-click <code>coach-manlaw.html</code></li>
+            <li>Opens in browser</li>
+            <li>Program loads automatically</li>
+            <li>Start Day 1</li>
+        </ol>
+
+        <p><strong>Pros:</strong></p>
+        <ul>
+            <li><span class="checkmark">✅</span> Instant access</li>
+            <li><span class="checkmark">✅</span> No login required (for demo/development)</li>
+            <li><span class="checkmark">✅</span> Works offline</li>
+        </ul>
+
+        <p><strong>Cons:</strong></p>
+        <ul>
+            <li><span class="crossmark">❌</span> No cloud sync</li>
+            <li><span class="crossmark">❌</span> Progress stored locally only</li>
+        </ul>
+
+        <hr style="opacity: 0.2; margin: 1.5rem 0;">
+
+        <h3>Method 2: Z2B Platform Access (Recommended)</h3>
+        <p><strong>URL:</strong> <code>https://yourdomain.com/app/coach-manlaw.html</code></p>
+
+        <p><strong>Steps:</strong></p>
+        <ol>
+            <li>User logs into Z2B Dashboard</li>
+            <li>Clicks "Coach ManLaw" app icon</li>
+            <li>Program opens with user's saved progress</li>
+            <li>Continues from last completed day</li>
+        </ol>
+
+        <p><strong>Pros:</strong></p>
+        <ul>
+            <li><span class="checkmark">✅</span> Cloud-synced progress</li>
+            <li><span class="checkmark">✅</span> Multi-device access</li>
+            <li><span class="checkmark">✅</span> Tier-based access control</li>
+            <li><span class="checkmark">✅</span> Analytics tracked</li>
+            <li><span class="checkmark">✅</span> AI Fuel consumption tracked</li>
+        </ul>
+
+        <p><strong>Cons:</strong></p>
+        <ul>
+            <li><span class="crossmark">❌</span> Requires internet</li>
+            <li><span class="crossmark">❌</span> Requires login</li>
+        </ul>
+
+        <hr style="opacity: 0.2; margin: 1.5rem 0;">
+
+        <h3>Method 3: Mobile/Tablet Access</h3>
+        <p><strong>Same as Method 2</strong>, but optimized for mobile:</p>
+        <ul>
+            <li>Responsive design</li>
+            <li>Touch-friendly interface</li>
+            <li>Fits all screen sizes</li>
+        </ul>
+
+        <hr style="opacity: 0.2; margin: 1.5rem 0;">
+
+        <h3>Method 4: Embedded Access (Future)</h3>
+        <p>Coach ManLaw can be embedded in:</p>
+        <ul>
+            <li>Z2B Mobile App</li>
+            <li>Partner platforms</li>
+            <li>White-label deployments</li>
+            <li>LMS systems</li>
+        </ul>
+
+        <hr>
+
+        <h2 id="technical">🔧 TECHNICAL IMPLEMENTATION</h2>
+
+        <h3>How the System Works Behind the Scenes:</h3>
+
+        <h4>1. Curriculum Storage</h4>
+        <div class="tech-box">
+<pre><code>// File: coach-manlaw-curriculum.js
+const MANLAW_CURRICULUM = {
+    programName: "90-Day Legacy Builder Transformation",
+    totalDays: 90,
+    totalWeeks: 18,
+
+    phase1_mindset: {
+        weeks: [
+            {
+                week: 1,
+                lessons: [
+                    {
+                        day: 1,
+                        title: "The Employee Trap",
+                        content: "...",
+                        activity: "...",
+                        assignment: "...",
+                        btssImpact: "mindset",
+                        appConnection: { ... }
+                    }
+                ]
+            }
+        ]
+    }
+}</code></pre>
+        </div>
+
+        <p><strong>What this means for users:</strong></p>
+        <ul>
+            <li>All 90 lessons are pre-loaded</li>
+            <li>No downloading each day</li>
+            <li>Instant access to any lesson (if tier allows)</li>
+        </ul>
+
+        <hr style="opacity: 0.2; margin: 2rem 0;">
+
+        <h4>2. Progress Tracking</h4>
+        <div class="tech-box">
+<pre><code>// Stored in localStorage
+{
+    currentDay: 5,
+    completedLessons: [1, 2, 3, 4, 5],
+    btssScores: {
+        baseline: { mindset: 30, money: 25, legacy: 20, movement: 15 },
+        day20: { mindset: 55, money: 40, legacy: 35, movement: 30 },
+        // ... updated weekly
+    },
+    lastAccessed: "2025-10-15T10:30:00Z"
+}</code></pre>
+        </div>
+
+        <p><strong>What this means for users:</strong></p>
+        <ul>
+            <li>Progress auto-saves</li>
+            <li>Can resume anytime</li>
+            <li>BTSS scores tracked over time</li>
+            <li>Visual progress charts</li>
+        </ul>
+
+        <hr style="opacity: 0.2; margin: 2rem 0;">
+
+        <h4>3. Lesson Navigation</h4>
+        <div class="tech-box">
+<pre><code>function getLessonByDay(day) {
+    // Searches curriculum for specific day
+    // Returns: title, content, activity, assignment, etc.
+}
+
+function updateCurrentLesson() {
+    // Updates UI with current day's lesson
+    // Shows in sidebar card
+}
+
+function viewLesson() {
+    // Opens lesson modal
+    // Displays full content
+}
+
+function completeLesson() {
+    // Marks lesson complete
+    // Moves to next day
+    // Updates BTSS tracking
+}</code></pre>
+        </div>
+
+        <p><strong>What this means for users:</strong></p>
+        <ul>
+            <li>Click "Today's Lesson" → automatic</li>
+            <li>No manual searching</li>
+            <li>System knows where you are</li>
+            <li>Can review past lessons anytime</li>
+        </ul>
+
+        <hr style="opacity: 0.2; margin: 2rem 0;">
+
+        <h4>4. Tier-Based Access Control</h4>
+        <div class="tech-box">
+<pre><code>function canAccessLesson(day) {
+    const userTier = getCurrentUserTier(); // FREE, Bronze, Silver, etc.
+
+    if (userTier === 'FREE') {
+        return day <= 7; // Only first 7 days
+    }
+
+    if (userTier === 'STARTER') { // Bronze
+        return day <= 30; // First 30 days
+    }
+
+    // Silver, Gold, Platinum, Lifetime = all 90 days
+    return true;
+}</code></pre>
+        </div>
+
+        <p><strong>What this means for users:</strong></p>
+        <ul>
+            <li><strong>FREE Demo:</strong> Days 1-7 only (Week 1)</li>
+            <li><strong>Bronze Tier:</strong> Days 1-30 (Phase 1 complete)</li>
+            <li><strong>Silver+:</strong> All 90 days</li>
+        </ul>
+
+        <p><strong>When locked:</strong></p>
+        <ul>
+            <li>User sees upgrade nudge</li>
+            <li>Explains what tier unlocks</li>
+            <li>Links to upgrade page</li>
+        </ul>
+
+        <hr>
+
+        <h2 id="user-journey">🗺️ USER JOURNEY FLOW</h2>
+
+        <h3>First-Time User (Day 1):</h3>
+
+        <div class="flow-diagram">
+            <div class="flow-step"><strong>1.</strong> User opens Coach ManLaw</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step"><strong>2.</strong> Sees welcome screen<br><em>"Welcome, Legacy Builder!"</em><br>Day 1 lesson preview in sidebar</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step"><strong>3.</strong> Clicks "📖 Today's Lesson"</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step"><strong>4.</strong> Lesson modal opens<br>Title: "The Employee Trap"<br>Content, Activity, Assignment displayed</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step"><strong>5.</strong> Reads lesson (5 min)</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step"><strong>6.</strong> Completes activity (10 min)<br>Writes 5 employee beliefs</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step"><strong>7.</strong> Does assignment (5 min)<br>Takes BTSS baseline assessment<br>Rates 0-100 on all 4 legs</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step"><strong>8.</strong> Clicks "✓ Complete Lesson"</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step"><strong>9.</strong> System saves<br>✓ Day 1 marked complete<br>✓ BTSS baseline saved<br>✓ currentDay = 2</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step"><strong>10.</strong> Sidebar updates to "Day 2"</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step"><strong>11.</strong> User closes or continues to Day 2</div>
+        </div>
+
+        <hr style="opacity: 0.2; margin: 2rem 0;">
+
+        <h3>Returning User (Day 5):</h3>
+
+        <div class="flow-diagram">
+            <div class="flow-step"><strong>1.</strong> User opens Coach ManLaw</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step"><strong>2.</strong> System loads from localStorage<br>currentDay: 5<br>completedLessons: [1,2,3,4]<br>BTSS scores: {...}</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step"><strong>3.</strong> Sidebar shows<br>"WEEK 1 • DAY 5"<br>"Overcoming Limiting Beliefs"<br>✓ Complete / 📖 View Lesson buttons</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step"><strong>4.</strong> User continues Day 5</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step"><strong>5.</strong> After completion<br>currentDay advances to 6<br>Progress updated</div>
+        </div>
+
+        <hr style="opacity: 0.2; margin: 2rem 0;">
+
+        <h3>Weekly BTSS Check (Day 7, 14, 21, etc.):</h3>
+
+        <div class="flow-diagram">
+            <div class="flow-step"><strong>1.</strong> User completes week's lessons</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step"><strong>2.</strong> Sunday reflection prompt appears</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step"><strong>3.</strong> Weekend assignment<br>Re-take BTSS assessment<br>Compare to last week<br>Reflect on growth</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step"><strong>4.</strong> System tracks<br>Week 1 BTSS scores<br>Shows improvement chart<br>Identifies weak legs</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step"><strong>5.</strong> Coach ManLaw AI provides<br>Personalized feedback<br>Focus areas for next week<br>Encouragement on progress</div>
+        </div>
+
+        <hr>
+
+        <h2 id="tier-access">🎯 TIER-BASED ACCESS</h2>
+
+        <h3>Access Levels:</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Tier</th>
+                    <th>Days Unlocked</th>
+                    <th>Certification?</th>
+                    <th>BTSS Tracking</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>FREE (Demo)</strong></td>
+                    <td>Days 1-7</td>
+                    <td><span class="crossmark">❌</span> No</td>
+                    <td>Limited</td>
+                </tr>
+                <tr>
+                    <td><strong>Bronze (Starter)</strong></td>
+                    <td>Days 1-30</td>
+                    <td><span class="crossmark">❌</span> No</td>
+                    <td>Full</td>
+                </tr>
+                <tr>
+                    <td><strong>Copper (Pro)</strong></td>
+                    <td>Days 1-75</td>
+                    <td><span class="checkmark">✅</span> Yes (Day 75)</td>
+                    <td>Full</td>
+                </tr>
+                <tr>
+                    <td><strong>Silver</strong></td>
+                    <td>Days 1-90</td>
+                    <td><span class="checkmark">✅</span> Yes</td>
+                    <td>Full + Advanced</td>
+                </tr>
+                <tr>
+                    <td><strong>Gold</strong></td>
+                    <td>Days 1-90</td>
+                    <td><span class="checkmark">✅</span> Yes</td>
+                    <td>Full + Advanced</td>
+                </tr>
+                <tr>
+                    <td><strong>Platinum</strong></td>
+                    <td>Days 1-90</td>
+                    <td><span class="checkmark">✅</span> Yes</td>
+                    <td>Full + Premium</td>
+                </tr>
+                <tr>
+                    <td><strong>Lifetime</strong></td>
+                    <td>Days 1-90</td>
+                    <td><span class="checkmark">✅</span> Yes</td>
+                    <td>Unlimited</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <hr style="opacity: 0.2; margin: 2rem 0;">
+
+        <h3>What Users Get Per Tier:</h3>
+
+        <div class="tier-section">
+            <h4>FREE Demo (7 Days)</h4>
+            <p><strong>Access:</strong></p>
+            <ul>
+                <li><span class="checkmark">✅</span> Days 1-7 (Week 1: Identity Shift)</li>
+                <li><span class="checkmark">✅</span> AI Coaching (limited: 10 AI Fuel)</li>
+                <li><span class="checkmark">✅</span> BTSS baseline assessment</li>
+                <li><span class="checkmark">✅</span> Basic progress tracking</li>
+            </ul>
+            <p><strong>Purpose:</strong> Try before you buy</p>
+        </div>
+
+        <div class="tier-section">
+            <h4>Bronze/Starter ($299/month)</h4>
+            <p><strong>Access:</strong></p>
+            <ul>
+                <li><span class="checkmark">✅</span> Days 1-30 (Phase 1: Mindset Mystery complete)</li>
+                <li><span class="checkmark">✅</span> AI Coaching (100 AI Fuel/month)</li>
+                <li><span class="checkmark">✅</span> Full BTSS tracking</li>
+                <li><span class="checkmark">✅</span> All Week 1-4 content</li>
+                <li><span class="checkmark">✅</span> Mindset transformation materials</li>
+            </ul>
+            <p><strong>Purpose:</strong> Master mindset foundation</p>
+        </div>
+
+        <div class="tier-section">
+            <h4>Silver+ ($1480+/month)</h4>
+            <p><strong>Access:</strong></p>
+            <ul>
+                <li><span class="checkmark">✅</span> All 90 days (complete program)</li>
+                <li><span class="checkmark">✅</span> AI Coaching (300+ AI Fuel)</li>
+                <li><span class="checkmark">✅</span> Advanced BTSS analytics</li>
+                <li><span class="checkmark">✅</span> Certification eligibility (Day 75 & 90)</li>
+                <li><span class="checkmark">✅</span> Community access (ZYRO)</li>
+                <li><span class="checkmark">✅</span> All Z2B apps integration</li>
+            </ul>
+            <p><strong>Purpose:</strong> Complete transformation + certification</p>
+        </div>
+
+        <hr>
+
+        <h2 id="progress-tracking">📊 PROGRESS TRACKING SYSTEM</h2>
+
+        <h3>What Gets Tracked:</h3>
+
+        <h4>1. Daily Progress</h4>
+        <ul>
+            <li>Current day number (1-90)</li>
+            <li>Lessons completed (checkboxes)</li>
+            <li>Streak tracking (consecutive days)</li>
+            <li>Last login date</li>
+        </ul>
+
+        <div class="info-box">
+            <p><strong>Visual:</strong></p>
+            <p>Progress bar: "Day 25 of 90 (28% complete)"<br>
+            Completion percentage per phase</p>
+        </div>
+
+        <hr style="opacity: 0.2; margin: 2rem 0;">
+
+        <h4>2. BTSS Scores (Billionaire Table Stability Score)</h4>
+
+        <p>Users rate themselves <strong>0-100</strong> on each leg:</p>
+
+        <div class="example">
+            <p><strong>🧠 Mindset Mystery:</strong></p>
+            <ul>
+                <li>Day 1 baseline: 30/100</li>
+                <li>Day 7: 40/100 (+10 improvement!)</li>
+                <li>Day 14: 52/100 (+12 improvement!)</li>
+                <li>Day 20: 65/100 (Phase 1 complete! ✓)</li>
+            </ul>
+
+            <p style="margin-top: 1rem;"><strong>💸 Money Moves, ⚙️ Legacy Missions, 🌍 Momentum Movement:</strong></p>
+            <p>Same tracking pattern</p>
+        </div>
+
+        <div class="info-box">
+            <p><strong>Visual:</strong></p>
+            <ul>
+                <li>Line chart showing growth over 90 days</li>
+                <li>Bar chart comparing 4 legs</li>
+                <li>Color-coded: Red (0-40), Yellow (41-70), Green (71-85), Gold (86-100)</li>
+            </ul>
+        </div>
+
+        <hr style="opacity: 0.2; margin: 2rem 0;">
+
+        <h4>3. Milestone Tracking</h4>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Day</th>
+                    <th>Milestone</th>
+                    <th>Target BTSS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Baseline assessment</td>
+                    <td>Record starting point</td>
+                </tr>
+                <tr>
+                    <td>20</td>
+                    <td>Phase 1 complete</td>
+                    <td>Mindset 60%+</td>
+                </tr>
+                <tr>
+                    <td>35</td>
+                    <td>Phase 2 complete</td>
+                    <td>Money 60%+</td>
+                </tr>
+                <tr>
+                    <td>50</td>
+                    <td>Phase 3 complete</td>
+                    <td>Legacy 60%+</td>
+                </tr>
+                <tr>
+                    <td>65</td>
+                    <td>Phase 4 complete</td>
+                    <td>Movement 60%+</td>
+                </tr>
+                <tr style="background: rgba(212, 175, 55, 0.2);">
+                    <td><strong>75</strong></td>
+                    <td><strong>Certification</strong></td>
+                    <td><strong>All legs 75%+</strong></td>
+                </tr>
+                <tr style="background: rgba(212, 175, 55, 0.3);">
+                    <td><strong>90</strong></td>
+                    <td><strong>Mastery</strong></td>
+                    <td><strong>All legs 90%+</strong></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="info-box">
+            <p><strong>Visual:</strong></p>
+            <ul>
+                <li>Trophy icons on timeline</li>
+                <li>Achievement badges unlocked</li>
+                <li>Certificates downloadable</li>
+            </ul>
+        </div>
+
+        <hr>
+
+        <h2 id="ai-coaching">🤖 AI COACHING SYSTEM</h2>
+
+        <h3>How Coach ManLaw AI Works:</h3>
+
+        <h4>1. Context-Aware Coaching</h4>
+
+        <p>The AI knows:</p>
+        <ul>
+            <li>Your current day/lesson</li>
+            <li>Your BTSS scores</li>
+            <li>Your completed lessons</li>
+            <li>Your struggle areas (based on chat history)</li>
+        </ul>
+
+        <div class="example">
+            <p><strong>Example conversation:</strong></p>
+            <p style="margin-top: 1rem;"><strong>User:</strong> "I'm struggling with the mindset shift"</p>
+            <p style="margin-top: 1rem;"><strong>Coach ManLaw:</strong> "I see you're on Day 12 and your Mindset Mystery score is 45%. That's growth from your Day 1 baseline of 30%! The resistance you're feeling is normal. Today's lesson on 'The Power of Visualization' will help. Also, have you completed Day 11's 10x goal exercise? That's the foundation for today's visualization."</p>
+        </div>
+
+        <hr style="opacity: 0.2; margin: 2rem 0;">
+
+        <h4>2. Curriculum Integration</h4>
+
+        <p>AI references your specific lesson:</p>
+
+        <div class="tech-box">
+<pre><code>const currentLesson = getLessonByDay(currentDay);
+
+AIPrompt = `
+CURRENT CURRICULUM CONTEXT:
+- Current Lesson: "${currentLesson.title}"
+- Week ${currentLesson.week}: ${currentLesson.theme}
+- Phase: ${currentLesson.phaseTitle}
+- Focus Area: ${currentLesson.btssImpact}
+- Today's Content: ${currentLesson.content}
+- Today's Activity: ${currentLesson.activity}
+- Today's Assignment: ${currentLesson.assignment}
+
+Reference their current lesson naturally in conversation.
+Guide them through today's specific challenges.
+`;</code></pre>
+        </div>
+
+        <hr style="opacity: 0.2; margin: 2rem 0;">
+
+        <h4>3. Personalized Guidance</h4>
+
+        <p>Based on your BTSS scores, AI recommends:</p>
+        <ul>
+            <li>Which leg needs most attention</li>
+            <li>Specific lessons to review</li>
+            <li>Z2B apps to use</li>
+            <li>Daily focus areas</li>
+        </ul>
+
+        <div class="example">
+            <p><strong>Example:</strong></p>
+            <p><strong>Coach ManLaw:</strong> "Your Money Moves leg is at 35%, while your Mindset is at 68%. Let's focus on building income systems this week. I recommend using ZYRA (AI Sales Agent) to automate lead qualification while you work on Phase 2 lessons. Have you set up your sales funnel from Day 30?"</p>
+        </div>
+
+        <hr style="opacity: 0.2; margin: 2rem 0;">
+
+        <h4>4. AI Fuel System</h4>
+
+        <p>Each conversation uses AI Fuel:</p>
+        <ul>
+            <li><strong>Question to AI:</strong> -1 AI Fuel</li>
+            <li><strong>AI Response:</strong> Generated</li>
+            <li><strong>Fuel depleted:</strong> Upgrade prompt shown</li>
+        </ul>
+
+        <p><strong>Refills:</strong></p>
+        <ul>
+            <li>Bronze: 100/month</li>
+            <li>Silver: 300/month</li>
+            <li>Gold: 600/month</li>
+            <li>Platinum: 1000/month</li>
+            <li>Lifetime: Unlimited</li>
+        </ul>
+
+        <hr>
+
+        <h2 id="app-integration">🔗 INTEGRATION WITH Z2B APPS</h2>
+
+        <h3>Strategic App Usage Throughout 90 Days:</h3>
+
+        <h4>ZYRO (Gamification & Community)</h4>
+        <p><strong>Used on Days:</strong> 5, 8, 13, 20, 35, 50, 57, 65, 69, 75</p>
+
+        <div class="example">
+            <p><strong>How integrated (Day 5 lesson):</strong></p>
+<pre><code>appConnection: {
+    app: "ZYRO",
+    how: "Play ZYRO's 'CEO or Minion Quiz' to discover your
+          entrepreneur personality. Use insights to strengthen mindset."
+}</code></pre>
+
+            <p style="margin-top: 1rem;"><strong>User experience:</strong></p>
+            <ol>
+                <li>Completes Day 5 lesson</li>
+                <li>Sees "Recommended App: ZYRO" button</li>
+                <li>Clicks → Opens ZYRO</li>
+                <li>Plays quiz</li>
+                <li>Results inform their mindset development</li>
+            </ol>
+        </div>
+
+        <hr style="opacity: 0.2; margin: 2rem 0;">
+
+        <h4>GLOWIE (App Building)</h4>
+        <p><strong>Used on Days:</strong> 30, 37, 40, 44, 72</p>
+
+        <div class="example">
+            <p><strong>Example (Day 30):</strong></p>
+            <p><strong>Lesson:</strong> "Building Your First Funnel"<br>
+            <strong>Assignment:</strong> "Build 1 piece of this funnel (landing page)"</p>
+
+            <p style="margin-top: 1rem;"><strong>App Connection:</strong> GLOWIE<br>
+            <strong>How:</strong> "Use GLOWIE AI App Builder to create your landing page in minutes. No coding needed!"</p>
+
+            <p style="margin-top: 1rem;"><strong>User flow:</strong></p>
+            <ol>
+                <li>Day 30 assignment = build landing page</li>
+                <li>Clicks GLOWIE integration</li>
+                <li>Uses AI to generate page</li>
+                <li>Downloads and deploys</li>
+                <li>Completes assignment ✓</li>
+            </ol>
+        </div>
+
+        <hr style="opacity: 0.2; margin: 2rem 0;">
+
+        <h4>BENOWN (Content Creation)</h4>
+        <p><strong>Used on Days:</strong> 9, 26, 27, 52, 53, 55, 64, 72</p>
+
+        <div class="example">
+            <p><strong>Example (Day 52):</strong></p>
+            <p><strong>Lesson:</strong> "Storytelling That Sells"<br>
+            <strong>Assignment:</strong> "Share your story on social media"</p>
+
+            <p style="margin-top: 1rem;"><strong>App Connection:</strong> BENOWN<br>
+            <strong>How:</strong> "Use BENOWN AI to craft compelling brand stories. Turn your journey into viral content."</p>
+        </div>
+
+        <hr style="opacity: 0.2; margin: 2rem 0;">
+
+        <h4>ZYRA (AI Sales)</h4>
+        <p><strong>Used on Days:</strong> 28, 29, 33, 39, 44</p>
+
+        <hr style="opacity: 0.2; margin: 2rem 0;">
+
+        <h4>VIDZIE (Video Creation)</h4>
+        <p><strong>Used when requested</strong></p>
+
+        <div class="example">
+            <p><strong>Feature:</strong> Generate video version of any lesson</p>
+            <div class="flow-diagram" style="margin-top: 1rem;">
+                <div class="flow-step">User clicks: "Generate Video Lesson"</div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-step">VIDZIE creates: Talking avatar video of Coach ManLaw teaching today's lesson</div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-step">User can: Watch, download, share</div>
+            </div>
+        </div>
+
+        <hr>
+
+        <h2 id="faq">❓ COMMON QUESTIONS</h2>
+
+        <h3>Q: Do users have to complete 1 lesson per day?</h3>
+        <div class="info-box">
+            <p><strong>A:</strong> No, but recommended. Users can:</p>
+            <ul>
+                <li>Go slower (1 lesson every 2-3 days)</li>
+                <li>Go faster (2 lessons/day) - not recommended for integration</li>
+                <li>Take breaks and resume anytime</li>
+                <li>Their progress saves automatically</li>
+            </ul>
+        </div>
+
+        <h3>Q: What if a user misses days?</h3>
+        <div class="info-box">
+            <p><strong>A:</strong></p>
+            <ul>
+                <li>Progress saved at their last completed day</li>
+                <li>Can pick up exactly where they left off</li>
+                <li>Streak tracking resets but lessons remain</li>
+                <li>No penalty, just resume</li>
+            </ul>
+        </div>
+
+        <h3>Q: Can users jump ahead to Day 50?</h3>
+        <div class="info-box">
+            <p><strong>A:</strong></p>
+            <ul>
+                <li>Technically yes (code allows it)</li>
+                <li>Lessons are sequential for best results</li>
+                <li>Skipping = missing foundation</li>
+                <li>Users can access any completed lesson for review</li>
+            </ul>
+        </div>
+
+        <h3>Q: What happens after Day 90?</h3>
+        <div class="info-box">
+            <p><strong>A:</strong> Users can:</p>
+            <ol>
+                <li><strong>Restart</strong> - Do another 90-day cycle (many reach 95%+ BTSS)</li>
+                <li><strong>Mentor others</strong> - Guide new users through their transformation</li>
+                <li><strong>Advanced programs</strong> - Access Coach ManLaw Level 2 (if created)</li>
+                <li><strong>Maintain</strong> - Weekly BTSS check-ins to sustain growth</li>
+                <li><strong>Teach</strong> - Create their own courses using the framework</li>
+            </ol>
+        </div>
+
+        <h3>Q: How does certification work?</h3>
+        <div class="tier-section">
+            <h4>Day 75 Certification:</h4>
+            <ol>
+                <li>User completes Day 75</li>
+                <li>Takes final BTSS assessment</li>
+                <li>Must score 75%+ on ALL 4 legs</li>
+                <li>If passed:
+                    <ul>
+                        <li>"Legacy Builder Certificate" generated</li>
+                        <li>Achievement unlocked on Z2B profile</li>
+                        <li>Shareable certificate (PDF/image)</li>
+                        <li>Can display badge on social media</li>
+                    </ul>
+                </li>
+            </ol>
+
+            <h4 style="margin-top: 1.5rem;">Day 90 Mastery:</h4>
+            <ul>
+                <li>Same process</li>
+                <li>Must score 90%+ on all 4 legs</li>
+                <li>"Billionaire-Level Master" certificate</li>
+                <li>Elite badge and recognition</li>
+            </ul>
+        </div>
+
+        <h3>Q: Is internet required?</h3>
+        <div class="info-box">
+            <p><strong>A:</strong></p>
+            <p><strong>Local version</strong> (coach-manlaw.html):</p>
+            <ul>
+                <li><span class="crossmark">❌</span> No internet needed</li>
+                <li><span class="checkmark">✅</span> Runs fully offline</li>
+                <li><span class="crossmark">❌</span> No AI coaching (requires API)</li>
+                <li><span class="crossmark">❌</span> No cloud sync</li>
+            </ul>
+
+            <p style="margin-top: 1rem;"><strong>Z2B Platform version:</strong></p>
+            <ul>
+                <li><span class="checkmark">✅</span> Internet required</li>
+                <li><span class="checkmark">✅</span> Full AI coaching</li>
+                <li><span class="checkmark">✅</span> Cloud sync across devices</li>
+                <li><span class="checkmark">✅</span> Real-time progress tracking</li>
+            </ul>
+        </div>
+
+        <h3>Q: Can users access from mobile?</h3>
+        <div class="info-box">
+            <p><strong>A:</strong> YES! Fully responsive:</p>
+            <ul>
+                <li>Mobile browser (Chrome, Safari)</li>
+                <li>Tablet friendly</li>
+                <li>Touch-optimized interface</li>
+                <li>Same features as desktop</li>
+            </ul>
+        </div>
+
+        <h3>Q: How is progress synced across devices?</h3>
+        <div class="info-box">
+            <p><strong>A:</strong></p>
+            <p><strong>Current (localStorage):</strong></p>
+            <ul>
+                <li>Saved per browser/device</li>
+                <li>Not synced between devices</li>
+            </ul>
+
+            <p style="margin-top: 1rem;"><strong>With backend (recommended):</strong></p>
+            <ul>
+                <li>User logs in → progress loads from database</li>
+                <li>Complete lesson on phone → syncs to cloud</li>
+                <li>Open on laptop → progress up-to-date</li>
+                <li>All devices stay synchronized</li>
+            </ul>
+        </div>
+
+        <h3>Q: What if curriculum updates?</h3>
+        <div class="info-box">
+            <p><strong>A:</strong></p>
+            <ul>
+                <li><code>coach-manlaw-curriculum.js</code> can be updated anytime</li>
+                <li>Users' progress preserved</li>
+                <li>New lessons added seamlessly</li>
+                <li>Versioning tracks changes</li>
+            </ul>
+        </div>
+
+        <hr>
+
+        <h2>🎯 SUMMARY: HOW IT ALL WORKS</h2>
+
+        <h3>For Users:</h3>
+        <div class="highlight">
+            <ol>
+                <li><strong>Open Coach ManLaw</strong> (browser or app)</li>
+                <li><strong>See current day</strong> (sidebar shows "Today's Lesson")</li>
+                <li><strong>Click to view lesson</strong> (modal opens)</li>
+                <li><strong>Read → Do Activity → Complete Assignment</strong> (15-30 min)</li>
+                <li><strong>Mark complete</strong> (progress saves)</li>
+                <li><strong>Repeat daily for 90 days</strong> (transformation happens)</li>
+                <li><strong>Track BTSS weekly</strong> (measure growth)</li>
+                <li><strong>Get certified</strong> (Day 75 & 90)</li>
+                <li><strong>Pay it forward</strong> (mentor others)</li>
+            </ol>
+        </div>
+
+        <h3>For Platform:</h3>
+        <div class="highlight">
+            <ol>
+                <li><strong>Curriculum stored</strong> in JavaScript file (90 lessons pre-loaded)</li>
+                <li><strong>Progress tracked</strong> in localStorage or database</li>
+                <li><strong>Lessons served</strong> dynamically based on current day</li>
+                <li><strong>Tier access</strong> controls which days user can access</li>
+                <li><strong>AI coaching</strong> provides personalized guidance</li>
+                <li><strong>Apps integrated</strong> at strategic lesson points</li>
+                <li><strong>BTSS measured</strong> and visualized over time</li>
+                <li><strong>Certificates generated</strong> at milestones</li>
+            </ol>
+        </div>
+
+        <hr>
+
+        <h2>🚀 READY TO START?</h2>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin: 2rem 0;">
+            <div class="tier-section">
+                <h3 style="margin-top: 0;">User's Path:</h3>
+                <ol>
+                    <li>Open <code>coach-manlaw.html</code></li>
+                    <li>Click "📖 Today's Lesson"</li>
+                    <li>Begin Day 1</li>
+                    <li>Transform over 90 days! 🏆</li>
+                </ol>
+            </div>
+
+            <div class="tier-section">
+                <h3 style="margin-top: 0;">Admin's Path:</h3>
+                <ol>
+                    <li>Deploy to Z2B platform</li>
+                    <li>Set up tier-based access</li>
+                    <li>Connect backend API (optional for sync)</li>
+                    <li>Monitor user progress via dashboard</li>
+                    <li>Users transform at scale! 📈</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>🤖 <strong>Coach Manlaw - Z2B Legacy Builders</strong></p>
+            <p><em>From Employee to Entrepreneur in 90 Days</em></p>
+            <p><em>Powered by the 4 Legs of the Billion Dollar Table</em></p>
+            <p style="margin-top: 1rem; color: #999;">Generated with Royal Gold Excellence | Z2B Platform</p>
+        </div>
+    </div>
+</body>
+</html>

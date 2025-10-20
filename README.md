@@ -452,16 +452,17 @@ Z2B/
 ### Tier System
 - **FAM Member**: Free tier with 20% ISP
 - **Bronze Legacy**: R480 - 25% ISP, 3 TSC generations
-- **Silver Legacy**: R1,480 - 30% ISP, 5 TSC generations
-- **Gold Legacy**: R2,980 - 35% ISP, 7 TSC generations
-- **Platinum Legacy**: R4,980 - 40% ISP, 10 TSC generations
-- **Diamond Legacy**: By invitation, custom structure
+- **Copper Legacy**: R999 - 30% ISP, 4 TSC generations
+- **Silver Legacy**: R1,480 - 35% ISP, 5 TSC generations
+- **Gold Legacy**: R2,980 - 40% ISP, 7 TSC generations
+- **Platinum Legacy**: R4,980 - 45% ISP, 10 TSC generations
+- **Diamond Legacy**: Whitelabel tier - 0% ISP (sets own prices, keeps all sales, pays Z2B whitelabel premium)
 
 ### Commission Types
 - **ISP (Individual Sales Profit)**: 20-45% based on tier
 - **TSC (Team Sales Commission)**: Multi-generation team commissions
 - **TPB (Team Performance Bonus)**: Pool-based performance rewards
-- **QPB (Quick Performance Bonus)**: 3 sales in 30 days = R300
+- **QPB (Quick Pathfinder Bonus)**: 8% for first set of 3 sales, 10% for each additional set of 3 (monthly cycle: 4th-3rd)
 - **TLI (Ten Level Incentive)**: 10-level deep genealogy tracking
 
 ### First 100 Beta Testers
