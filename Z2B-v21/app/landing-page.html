@@ -2034,7 +2034,8 @@
                         const referralCode = urlParams.get('ref') || localStorage.getItem('z2b_referrer');
 
                         // Create checkout session
-                        const response = await fetch('/api/create-tier-checkout.php', {
+                        // Use relative path from app/ folder to api/ folder
+                        const response = await fetch('../api/create-tier-checkout.php', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json'
