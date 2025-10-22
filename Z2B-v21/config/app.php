@@ -85,13 +85,18 @@ $TIER_CONFIG = [
     ],
     'DLB' => [
         'name' => 'Diamond Legacy Builder',
-        'price' => 5980,
+        'price' => 11980,
         'pv' => 1200,
         'isp' => 50,
         'tsc' => 15,
         'tpb' => 9,
         'ai_credits' => 1000,
-        'color' => '#B9F2FF'
+        'color' => '#B9F2FF',
+        // Premium tier - Special access restrictions
+        'restricted' => true,
+        'min_current_tier' => 'PLB', // Must be at least Platinum
+        'min_silver_tenure_months' => 6, // Must have been Silver+ for 6 months
+        'min_tli_level' => 8 // Must have achieved TLI Level 8 (Capital Visionary)
     ]
 ];
 

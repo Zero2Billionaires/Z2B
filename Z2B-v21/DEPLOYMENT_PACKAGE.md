@@ -7,19 +7,25 @@
 
 ---
 
-## ⚠️ CRITICAL: PRICE DISCREPANCY ALERT!
+## ✅ DIAMOND TIER UPDATED - PREMIUM TIER WITH RESTRICTIONS
 
-**MUST FIX BEFORE DEPLOYMENT:**
+**IMPORTANT: Diamond Tier Changes Made**
 
-Your **Diamond tier** has different prices in different files:
-- **Landing Page** (`app/landing-page.html`): R11,980
-- **Config File** (`config/app.php`): R5,980
+The **Diamond Legacy Builder** tier has been updated with:
+- **Price:** R11,980 (both files now match ✓)
+- **Access Level:** **Premium upgrade tier - RESTRICTED ACCESS**
 
-**Action Required:** Choose ONE correct price and update both files to match!
-- If correct price is R11,980 → Update `config/app.php` line 87
-- If correct price is R5,980 → Update `app/landing-page.html` line 1886
+### 💎 Diamond Tier Requirements (Members Only)
 
-**Why This Matters:** Yoco will reject payments if amounts don't match!
+Diamond tier is NOT available to new/public buyers. Members must meet ALL THREE requirements:
+
+1. **Current Tier:** Must be at least Platinum Legacy Builder (PLB)
+2. **Silver Tenure:** Must have been Silver tier or above for 6+ months
+3. **TLI Achievement:** Must have achieved Level 8 - Capital Visionary 💼
+
+**For Landing Page Deployment:** Diamond button will be visible but validation happens at payment time.
+
+**Documentation:** See `DIAMOND_TIER_RESTRICTIONS.md` for full details.
 
 ---
 
@@ -174,6 +180,21 @@ public_html/config/yoco.php                   ← CREATE NEW on server with live
 7. Click "Go" button
 8. Verify tables created successfully
 
+**ADDITIONAL SETUP FOR DIAMOND TIER (Optional - For Future):**
+
+If you want Diamond tier eligibility validation to work (not required for initial landing page deployment):
+
+9. Open `database/DIAMOND_TIER_TABLES.sql` on your computer
+10. Copy ALL contents
+11. Paste into SQL tab in phpMyAdmin
+12. Click "Go" button
+13. This creates:
+    - `user_tier_history` table (tracks tier upgrades)
+    - `user_tli_achievements` table (tracks TLI levels)
+    - Auto-logging trigger for tier changes
+
+**Note:** For landing page deployment, Diamond tier validation is handled at payment time. These tables are needed when you build the member dashboard and upgrade system.
+
 ---
 
 ### ✅ **SECTION 6: PAYMENT PAGES** (Root folder files)
@@ -263,11 +284,11 @@ These files should **NOT** be uploaded to production:
 
 **BEFORE uploading ANY files, complete these tasks:**
 
-### 1. Fix Diamond Tier Price
-- [ ] Choose correct price: R5,980 or R11,980?
-- [ ] Update `config/app.php` line 87 if needed
-- [ ] Update `app/landing-page.html` line 1886 if needed
-- [ ] Both files MUST have matching price!
+### 1. ✅ Diamond Tier - ALREADY UPDATED
+- [x] Price set to R11,980 in both files
+- [x] Access restrictions configured
+- [ ] **Review:** Read `DIAMOND_TIER_RESTRICTIONS.md` to understand eligibility rules
+- [ ] **Decision:** Keep Diamond visible on landing page? (Validation happens at payment)
 
 ### 2. Update Database Credentials
 - [ ] Get production database name from hosting
