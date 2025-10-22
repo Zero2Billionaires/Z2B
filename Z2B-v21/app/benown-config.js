@@ -21,8 +21,9 @@ const BENOWN_CONFIG = {
     },
 
     // OpenAI Configuration
+    // SECURITY: API key removed from frontend - now handled by backend proxy
     OPENAI: {
-        apiKey: "YOUR_OPENAI_API_KEY",
+        proxyUrl: window.location.origin + '/api/openai-proxy.php', // Backend proxy endpoint
         model: "gpt-4",
         maxTokens: 1000,
         temperature: 0.8 // Higher for more creative content

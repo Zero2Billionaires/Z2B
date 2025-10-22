@@ -1,0 +1,81 @@
+/**
+ * Global Styles for Z2B Legacy Builders
+ */
+
+:root {
+  --primary-gold: #FFD700;
+  --primary-blue: #1E3A8A;
+  --secondary-blue: #2563EB;
+  --dark-bg: #0F172A;
+  --card-bg: #1E293B;
+  --text-primary: #F1F5F9;
+  --text-secondary: #94A3B8;
+  --success: #10B981;
+  --warning: #F59E0B;
+  --danger: #EF4444;
+  --bronze: #CD7F32;
+  --copper: #B87333;
+  --silver: #C0C0C0;
+  --gold: #FFD700;
+  --platinum: #E5E4E2;
+  --diamond: #B9F2FF;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: var(--dark-bg);
+  color: var(--text-primary);
+  overflow-x: hidden;
+}
+
+/* Override Bootstrap styles for dark theme */
+.bg-dark {
+  background-color: var(--card-bg) !important;
+}
+
+.text-primary {
+  color: var(--primary-gold) !important;
+}
+
+.btn-primary {
+  background-color: var(--primary-gold);
+  border-color: var(--primary-gold);
+  color: #000;
+  font-weight: 600;
+}
+
+.btn-primary:hover {
+  background-color: #e6c200;
+  border-color: #e6c200;
+}
+
+.card {
+  background-color: var(--card-bg);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+}
+
+.form-control {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+}
+
+.form-control:focus {
+  background-color: rgba(255, 255, 255, 0.08);
+  border-color: var(--primary-gold);
+  color: var(--text-primary);
+  box-shadow: 0 0 0 0.25rem rgba(255, 215, 0, 0.25);
+}
+
+/* Loading Spinner */
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+}

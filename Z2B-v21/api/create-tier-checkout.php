@@ -57,7 +57,7 @@ class TierCheckout {
             $payload = [
                 'amount' => $amountInCents,
                 'currency' => 'ZAR',
-                'successUrl' => $this->getBaseUrl() . $basePath . '/payment-success.php?ref=' . $reference . '&tier=' . $tierCode,
+                'successUrl' => $this->getBaseUrl() . $basePath . '/payment-success-register.php?ref=' . $reference . '&tier=' . $tierCode,
                 'cancelUrl' => $this->getBaseUrl() . $basePath . '/app/landing-page.html#tiers',
                 'failureUrl' => $this->getBaseUrl() . $basePath . '/payment-failed.php?ref=' . $reference,
                 'metadata' => [

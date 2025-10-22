@@ -1,0 +1,125 @@
+# Z2B Legacy Builders - Git Ignore File
+# CRITICAL: Prevents sensitive files from being committed to Git
+
+# ============================================
+# ENVIRONMENT & CONFIGURATION (CRITICAL!)
+# ============================================
+.env
+.env.*
+!.env.example
+config/yoco.php
+config/credentials.php
+config/api-keys.php
+
+# ============================================
+# LOGS & DEBUGGING
+# ============================================
+logs/
+*.log
+error.log
+access.log
+debug.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ============================================
+# BACKUPS & UPLOADS
+# ============================================
+backups/
+*.sql
+*.sql.gz
+*.backup
+uploads/
+temp/
+tmp/
+
+# ============================================
+# DEPENDENCIES
+# ============================================
+node_modules/
+vendor/
+composer.lock
+package-lock.json
+
+# ============================================
+# IDE & EDITOR FILES
+# ============================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ============================================
+# CACHE & TEMPORARY FILES
+# ============================================
+cache/
+*.cache
+.sass-cache/
+.php_cs.cache
+.phpunit.result.cache
+
+# ============================================
+# SENSITIVE DATA
+# ============================================
+*.key
+*.pem
+*.p12
+*.pfx
+*.cer
+*.crt
+*.der
+secrets/
+private/
+
+# ============================================
+# COMPILED & BUILD FILES
+# ============================================
+dist/
+build/
+*.min.js
+*.min.css
+public/build/
+
+# ============================================
+# TESTING
+# ============================================
+coverage/
+.nyc_output/
+phpunit.xml
+.phpunit.cache
+
+# ============================================
+# SYSTEM FILES
+# ============================================
+*.pid
+*.seed
+*.pid.lock
+
+# ============================================
+# SPECIFIC PROJECT FILES
+# ============================================
+# Backup HTML files
+*.html.backup
+
+# Database dumps
+database/backups/
+*.dump
+
+# Session files
+sessions/
+
+# Error logs from applications
+app/logs/
+api/logs/
+admin/logs/
+
+# ===========================================
+# ALLOW CERTAIN FILES (override)
+# ===========================================
+!.env.example
+!.gitignore
+!README.md
