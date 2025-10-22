@@ -2046,6 +2046,11 @@
                             })
                         });
 
+                        // Check if response is OK before parsing
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+
                         const result = await response.json();
 
                         if (result.success && result.redirectUrl) {
