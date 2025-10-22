@@ -51,12 +51,15 @@ class TierCheckout {
             $reference = 'TIER-' . $tierCode . '-' . uniqid();
 
             // Prepare checkout payload
+            // Determine base path (for XAMPP or production)
+            $basePath = strpos($_SERVER['REQUEST_URI'], '/Z2B-v21/') !== false ? '/Z2B-v21' : '';
+
             $payload = [
                 'amount' => $amountInCents,
                 'currency' => 'ZAR',
-                'successUrl' => $this->getBaseUrl() . '/payment-success.php?ref=' . $reference . '&tier=' . $tierCode,
-                'cancelUrl' => $this->getBaseUrl() . '/app/landing-page.html#tiers',
-                'failureUrl' => $this->getBaseUrl() . '/payment-failed.php?ref=' . $reference,
+                'successUrl' => $this->getBaseUrl() . $basePath . '/payment-success.php?ref=' . $reference . '&tier=' . $tierCode,
+                'cancelUrl' => $this->getBaseUrl() . $basePath . '/app/landing-page.html#tiers',
+                'failureUrl' => $this->getBaseUrl() . $basePath . '/payment-failed.php?ref=' . $reference,
                 'metadata' => [
                     'tier_code' => $tierCode,
                     'tier_name' => $tier['name'],
