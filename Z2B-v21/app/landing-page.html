@@ -1752,7 +1752,7 @@
                             <li><i class="fas fa-check"></i> Basic Training</li>
                             <li><i class="fas fa-times" style="color: #999;"></i> No TLI (Upgrade Required)</li>
                         </ul>
-                        <button class="btn-tier btn-tier-secondary" onclick="window.open('https://wa.me/27774901639?text=Hi!%20I%20want%20to%20sign%20up%20for%20Bronze%20tier%20(R480/month)', '_blank')">
+                        <button class="btn-tier btn-tier-secondary yoco-payment-btn" data-tier-code="BLB" data-tier-name="Bronze Legacy Builder" data-tier-price="480">
                             Get Bronze
                         </button>
                     </div>
@@ -1775,7 +1775,7 @@
                             <li><i class="fas fa-check"></i> Advanced Training</li>
                             <li><i class="fas fa-times" style="color: #999;"></i> No TLI (Upgrade Required)</li>
                         </ul>
-                        <button class="btn-tier btn-tier-secondary" onclick="window.open('https://wa.me/27774901639?text=Hi!%20I%20want%20to%20sign%20up%20for%20Copper%20tier%20(R980/month)', '_blank')">
+                        <button class="btn-tier btn-tier-secondary yoco-payment-btn" data-tier-code="CLB" data-tier-name="Copper Legacy Builder" data-tier-price="980">
                             Get Copper
                         </button>
                     </div>
@@ -1798,7 +1798,7 @@
                             <li><i class="fas fa-check"></i> Marketplace Access</li>
                             <li><i class="fas fa-check"></i> Priority Support</li>
                         </ul>
-                        <button class="btn-tier btn-tier-secondary" onclick="window.open('https://wa.me/27774901639?text=Hi!%20I%20want%20to%20sign%20up%20for%20Silver%20tier%20(R1,480/month)', '_blank')">
+                        <button class="btn-tier btn-tier-secondary yoco-payment-btn" data-tier-code="SLB" data-tier-name="Silver Legacy Builder" data-tier-price="1480">
                             Get Silver
                         </button>
                     </div>
@@ -1835,7 +1835,7 @@
                             <li><i class="fas fa-check"></i> Sales Funnel</li>
                             <li><i class="fas fa-check"></i> VIP Support</li>
                         </ul>
-                        <button class="btn-tier btn-tier-primary" onclick="window.open('https://wa.me/27774901639?text=Hi!%20I%20want%20to%20sign%20up%20for%20Gold%20tier%20(R2,980/month)', '_blank')">
+                        <button class="btn-tier btn-tier-primary yoco-payment-btn" data-tier-code="GLB" data-tier-name="Gold Legacy Builder" data-tier-price="2980">
                             Start Building
                         </button>
                     </div>
@@ -1859,7 +1859,7 @@
                             <li><i class="fas fa-check"></i> Done-For-You Campaigns</li>
                             <li><i class="fas fa-check"></i> Personal Success Coach</li>
                         </ul>
-                        <button class="btn-tier btn-tier-primary" onclick="window.open('https://wa.me/27774901639?text=Hi!%20I%20want%20to%20sign%20up%20for%20Platinum%20tier%20(R4,980/month)', '_blank')">
+                        <button class="btn-tier btn-tier-primary yoco-payment-btn" data-tier-code="PLB" data-tier-name="Platinum Legacy Builder" data-tier-price="4980">
                             Go Platinum
                         </button>
                     </div>
@@ -1883,7 +1883,7 @@
                             <li><i class="fas fa-check"></i> Direct Founder Access</li>
                             <li><i class="fas fa-check"></i> Dual Income Streams</li>
                         </ul>
-                        <button class="btn-tier btn-tier-primary" onclick="window.open('https://wa.me/27774901639?text=Hi!%20I%20want%20to%20apply%20for%20Diamond%20White%20Label%20tier%20(R11,980/month)', '_blank')">
+                        <button class="btn-tier btn-tier-primary yoco-payment-btn" data-tier-code="DLB" data-tier-name="Diamond White Label" data-tier-price="11980">
                             Apply for Diamond
                         </button>
                     </div>
@@ -2006,6 +2006,80 @@
                     });
                 }
             });
+        });
+    </script>
+
+    <!-- Yoco Payment Integration -->
+    <script>
+        // Yoco Payment Integration for Tier Purchases
+        document.addEventListener('DOMContentLoaded', function() {
+            const paymentButtons = document.querySelectorAll('.yoco-payment-btn');
+
+            paymentButtons.forEach(button => {
+                button.addEventListener('click', async function() {
+                    const tierCode = this.dataset.tierCode;
+                    const tierName = this.dataset.tierName;
+                    const tierPrice = this.dataset.tierPrice;
+
+                    // Store original button content
+                    const originalContent = this.innerHTML;
+
+                    // Show loading state
+                    this.disabled = true;
+                    this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+                    try {
+                        // Get referral code from URL if present
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const referralCode = urlParams.get('ref') || localStorage.getItem('z2b_referrer');
+
+                        // Create checkout session
+                        const response = await fetch('/api/create-tier-checkout.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                tier_code: tierCode,
+                                referral_code: referralCode
+                            })
+                        });
+
+                        const result = await response.json();
+
+                        if (result.success && result.redirectUrl) {
+                            // Store tier selection for later
+                            localStorage.setItem('z2b_selected_tier', JSON.stringify({
+                                code: tierCode,
+                                name: tierName,
+                                price: tierPrice,
+                                reference: result.reference
+                            }));
+
+                            // Redirect to Yoco checkout page
+                            window.location.href = result.redirectUrl;
+                        } else {
+                            alert('Payment initialization failed: ' + (result.error || 'Unknown error'));
+                            // Restore button
+                            this.disabled = false;
+                            this.innerHTML = originalContent;
+                        }
+                    } catch (error) {
+                        console.error('Payment error:', error);
+                        alert('An error occurred. Please try again or contact support.');
+                        // Restore button
+                        this.disabled = false;
+                        this.innerHTML = originalContent;
+                    }
+                });
+            });
+
+            // Store referral code from URL if present
+            const urlParams = new URLSearchParams(window.location.search);
+            const refCode = urlParams.get('ref');
+            if (refCode) {
+                localStorage.setItem('z2b_referrer', refCode);
+            }
         });
     </script>
 
