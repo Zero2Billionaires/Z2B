@@ -1209,6 +1209,37 @@
         </div>
     </div>
 
+    <!-- Journal Modal -->
+    <div class="modal-overlay" id="journalModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-book-open"></i> Your Transformation Journal</h3>
+                <button class="btn-close" onclick="closeJournal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="assessment-item" style="background: linear-gradient(135deg, rgba(76, 236, 196, 0.15), rgba(155, 89, 182, 0.15)); border-left: 4px solid var(--success);">
+                <p style="margin: 0; opacity: 0.9; line-height: 1.6;">
+                    <strong>📖 Your Complete Journey Record</strong><br>
+                    All your activities, assignments, and personal reflections from your 90-day transformation. This is your legacy document.
+                </p>
+                <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                    <button type="button" onclick="downloadJournal()" class="sidebar-btn" style="flex: 1; background: linear-gradient(135deg, var(--gold), var(--orange)); padding: 1rem; font-weight: 600;">
+                        <i class="fas fa-download"></i> Download Journal
+                    </button>
+                    <button type="button" onclick="clearJournal()" class="sidebar-btn" style="flex: 1; background: linear-gradient(135deg, rgba(255,0,0,0.6), rgba(150,0,0,0.6)); padding: 1rem; font-weight: 600;">
+                        <i class="fas fa-trash"></i> Clear Journal
+                    </button>
+                </div>
+            </div>
+
+            <div id="journalEntriesContainer" style="max-height: 60vh; overflow-y: auto;">
+                <!-- Journal entries will be populated here -->
+            </div>
+        </div>
+    </div>
+
     <!-- BTSS Assessment Modal -->
     <div class="modal-overlay" id="assessmentModal">
         <div class="modal-content">
@@ -1524,11 +1555,16 @@
                 <p id="modalLessonActivity">
                     Write down 5 employee beliefs holding you back...
                 </p>
-                <div id="activityResponseSection" style="margin-top: 1rem; display: none;">
-                    <textarea id="activityResponseInput" placeholder="Type your response here..." style="width: 100%; min-height: 120px; padding: 1rem; border: 2px solid var(--purple); border-radius: 12px; background: rgba(0,0,0,0.3); color: white; font-family: inherit; font-size: 0.95rem; resize: vertical;"></textarea>
-                    <button type="button" onclick="submitActivityResponse()" class="sidebar-btn" style="margin-top: 0.8rem; width: 100%; background: linear-gradient(135deg, var(--orange), var(--gold)); padding: 1rem; font-weight: 600;">
-                        <i class="fas fa-paper-plane"></i> Submit to Coach ManLaw
-                    </button>
+                <div id="activityResponseSection" style="margin-top: 1rem;">
+                    <textarea id="activityResponseInput" placeholder="📝 Type your activity response here... This will be saved to your journal." style="width: 100%; min-height: 150px; padding: 1rem; border: 2px solid var(--purple); border-radius: 12px; background: rgba(0,0,0,0.3); color: white; font-family: inherit; font-size: 0.95rem; resize: vertical;"></textarea>
+                    <div style="display: flex; gap: 0.5rem; margin-top: 0.8rem;">
+                        <button type="button" onclick="saveToJournal('activity')" class="sidebar-btn" style="flex: 1; background: linear-gradient(135deg, var(--purple), var(--success)); padding: 1rem; font-weight: 600;">
+                            <i class="fas fa-save"></i> Save to Journal
+                        </button>
+                        <button type="button" onclick="submitActivityResponse()" class="sidebar-btn" style="flex: 1; background: linear-gradient(135deg, var(--orange), var(--gold)); padding: 1rem; font-weight: 600;">
+                            <i class="fas fa-paper-plane"></i> Submit to Coach
+                        </button>
+                    </div>
                     <div id="activityFeedback" style="display: none; margin-top: 1rem; padding: 1.5rem; background: linear-gradient(135deg, rgba(76, 236, 196, 0.15), rgba(155, 89, 182, 0.15)); border-left: 4px solid var(--purple); border-radius: 12px;">
                         <h5 style="margin: 0 0 0.8rem 0; color: var(--gold); font-size: 1rem;"><i class="fas fa-comments"></i> Coach ManLaw Says:</h5>
                         <p id="activityFeedbackText" style="margin: 0; line-height: 1.6; color: rgba(255,255,255,0.9);"></p>
@@ -1541,15 +1577,37 @@
                 <p id="modalLessonAssignment">
                     BTSS Assessment - Baseline measurement...
                 </p>
-                <div id="assignmentResponseSection" style="margin-top: 1rem; display: none;">
-                    <textarea id="assignmentResponseInput" placeholder="Type your response here..." style="width: 100%; min-height: 120px; padding: 1rem; border: 2px solid var(--orange); border-radius: 12px; background: rgba(0,0,0,0.3); color: white; font-family: inherit; font-size: 0.95rem; resize: vertical;"></textarea>
-                    <button type="button" onclick="submitAssignmentResponse()" class="sidebar-btn" style="margin-top: 0.8rem; width: 100%; background: linear-gradient(135deg, var(--gold), var(--orange)); padding: 1rem; font-weight: 600;">
-                        <i class="fas fa-paper-plane"></i> Submit to Coach ManLaw
-                    </button>
+                <div id="assignmentResponseSection" style="margin-top: 1rem;">
+                    <textarea id="assignmentResponseInput" placeholder="📝 Type your assignment response here... This will be saved to your journal." style="width: 100%; min-height: 150px; padding: 1rem; border: 2px solid var(--orange); border-radius: 12px; background: rgba(0,0,0,0.3); color: white; font-family: inherit; font-size: 0.95rem; resize: vertical;"></textarea>
+                    <div style="display: flex; gap: 0.5rem; margin-top: 0.8rem;">
+                        <button type="button" onclick="saveToJournal('assignment')" class="sidebar-btn" style="flex: 1; background: linear-gradient(135deg, var(--purple), var(--success)); padding: 1rem; font-weight: 600;">
+                            <i class="fas fa-save"></i> Save to Journal
+                        </button>
+                        <button type="button" onclick="submitAssignmentResponse()" class="sidebar-btn" style="flex: 1; background: linear-gradient(135deg, var(--gold), var(--orange)); padding: 1rem; font-weight: 600;">
+                            <i class="fas fa-paper-plane"></i> Submit to Coach
+                        </button>
+                    </div>
                     <div id="assignmentFeedback" style="display: none; margin-top: 1rem; padding: 1.5rem; background: linear-gradient(135deg, rgba(255, 107, 53, 0.15), rgba(212, 175, 55, 0.15)); border-left: 4px solid var(--orange); border-radius: 12px;">
                         <h5 style="margin: 0 0 0.8rem 0; color: var(--gold); font-size: 1rem;"><i class="fas fa-comments"></i> Coach ManLaw Says:</h5>
                         <p id="assignmentFeedbackText" style="margin: 0; line-height: 1.6; color: rgba(255,255,255,0.9);"></p>
                     </div>
+                </div>
+            </div>
+
+            <!-- Personal Notes / Journal Section -->
+            <div class="assessment-item" style="background: linear-gradient(135deg, rgba(155, 89, 182, 0.15), rgba(76, 236, 196, 0.15)); border-left: 4px solid var(--success);">
+                <h4><i class="fas fa-pen-fancy"></i> Personal Notes & Reflections</h4>
+                <p style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 1rem;">
+                    Capture your thoughts, insights, and reflections from today's lesson. All entries are automatically saved to your journal.
+                </p>
+                <textarea id="personalNotesInput" placeholder="✍️ Write your thoughts, breakthroughs, questions, or reflections here..." style="width: 100%; min-height: 150px; padding: 1rem; border: 2px solid var(--success); border-radius: 12px; background: rgba(0,0,0,0.3); color: white; font-family: inherit; font-size: 0.95rem; resize: vertical;"></textarea>
+                <div style="display: flex; gap: 0.5rem; margin-top: 0.8rem;">
+                    <button type="button" onclick="saveToJournal('notes')" class="sidebar-btn" style="flex: 1; background: linear-gradient(135deg, var(--success), var(--purple)); padding: 1rem; font-weight: 600;">
+                        <i class="fas fa-save"></i> Save Notes to Journal
+                    </button>
+                    <button type="button" onclick="viewJournal()" class="sidebar-btn" style="flex: 1; background: linear-gradient(135deg, var(--gold), var(--orange)); padding: 1rem; font-weight: 600;">
+                        <i class="fas fa-book-open"></i> View Full Journal
+                    </button>
                 </div>
             </div>
 
@@ -2330,13 +2388,307 @@
                 // Close modal if open
                 closeLessonModal();
 
-                // Send congratulations message
+                // Send congratulations message with social sharing option
                 addCoachMessage(`
                     <strong>🎉 Lesson Complete!</strong><br><br>
                     You've completed Day ${currentDay}: "${getLessonByDay(currentDay).title}"<br><br>
                     Keep building, Legacy Builder! Ready for the next lesson?
                 `);
+
+                // Show social sharing for milestone days
+                const milestoneDays = [1, 7, 13, 26, 39, 52, 65, 78, 90];
+                if (milestoneDays.includes(currentDay)) {
+                    setTimeout(() => showSocialShare(currentDay), 1000);
+                }
             }
+        }
+
+        // ==================== JOURNAL SYSTEM ====================
+
+        // Save entry to journal
+        function saveToJournal(type) {
+            const lesson = getLessonByDay(currentDay);
+            if (!lesson) return;
+
+            let content = '';
+            let entryType = '';
+
+            if (type === 'activity') {
+                content = document.getElementById('activityResponseInput').value.trim();
+                entryType = 'Activity';
+            } else if (type === 'assignment') {
+                content = document.getElementById('assignmentResponseInput').value.trim();
+                entryType = 'Assignment';
+            } else if (type === 'notes') {
+                content = document.getElementById('personalNotesInput').value.trim();
+                entryType = 'Personal Notes';
+            }
+
+            if (!content) {
+                addCoachMessage(`⚠️ Please write something in the ${entryType.toLowerCase()} field before saving!`);
+                return;
+            }
+
+            // Get existing journal
+            const journal = JSON.parse(localStorage.getItem('coach_journal') || '[]');
+
+            // Create journal entry
+            const entry = {
+                id: Date.now(),
+                day: currentDay,
+                date: new Date().toISOString(),
+                lessonTitle: lesson.title,
+                type: entryType,
+                content: content,
+                stageInfo: getCurrentStage(currentDay)
+            };
+
+            // Add to journal
+            journal.push(entry);
+            localStorage.setItem('coach_journal', JSON.stringify(journal));
+
+            // Show confirmation
+            addCoachMessage(`
+                <strong>✅ Saved to Journal!</strong><br><br>
+                Your ${entryType.toLowerCase()} for Day ${currentDay} has been saved to your transformation journal.
+                You can view and download your complete journal anytime!
+            `);
+
+            // Clear the input field
+            if (type === 'activity') document.getElementById('activityResponseInput').value = '';
+            if (type === 'assignment') document.getElementById('assignmentResponseInput').value = '';
+            if (type === 'notes') document.getElementById('personalNotesInput').value = '';
+        }
+
+        // Open journal modal
+        function viewJournal() {
+            const journal = JSON.parse(localStorage.getItem('coach_journal') || '[]');
+            const container = document.getElementById('journalEntriesContainer');
+
+            if (journal.length === 0) {
+                container.innerHTML = `
+                    <div class="assessment-item" style="text-align: center; padding: 3rem;">
+                        <i class="fas fa-book-open" style="font-size: 3rem; color: var(--gold); opacity: 0.5; margin-bottom: 1rem;"></i>
+                        <p style="color: var(--white); opacity: 0.7;">
+                            Your journal is empty. Start writing your transformation story!
+                        </p>
+                    </div>
+                `;
+            } else {
+                // Sort by day (most recent first)
+                journal.sort((a, b) => b.day - a.day);
+
+                let html = '';
+                journal.forEach((entry) => {
+                    const date = new Date(entry.date).toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+
+                    const typeColor = entry.type === 'Activity' ? 'var(--purple)' :
+                                     entry.type === 'Assignment' ? 'var(--orange)' :
+                                     'var(--success)';
+
+                    html += `
+                        <div class="assessment-item" style="border-left: 4px solid ${typeColor};">
+                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
+                                <div>
+                                    <div style="font-size: 0.85rem; color: ${typeColor}; font-weight: 600;">
+                                        Day ${entry.day} • ${entry.type}
+                                    </div>
+                                    <div style="font-size: 0.95rem; color: var(--gold); font-weight: 600;">
+                                        ${entry.lessonTitle}
+                                    </div>
+                                    <div style="font-size: 0.75rem; color: var(--white); opacity: 0.6;">
+                                        ${date}
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="color: var(--white); opacity: 0.9; line-height: 1.6; white-space: pre-wrap;">
+                                ${entry.content}
+                            </div>
+                        </div>
+                    `;
+                });
+
+                container.innerHTML = html;
+            }
+
+            document.getElementById('journalModal').classList.add('show');
+        }
+
+        // Close journal modal
+        function closeJournal() {
+            document.getElementById('journalModal').classList.remove('show');
+        }
+
+        // Download journal as text file
+        function downloadJournal() {
+            const journal = JSON.parse(localStorage.getItem('coach_journal') || '[]');
+
+            if (journal.length === 0) {
+                addCoachMessage('⚠️ Your journal is empty. Complete some activities and add notes first!');
+                return;
+            }
+
+            // Sort by day
+            journal.sort((a, b) => a.day - b.day);
+
+            // Build text content
+            let content = `
+╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║        COACH MANLAW - 90-DAY TRANSFORMATION JOURNAL          ║
+║        Employee to Entrepreneur Journey                      ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+Generated: ${new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+Total Entries: ${journal.length}
+
+════════════════════════════════════════════════════════════════
+
+`;
+
+            journal.forEach((entry, index) => {
+                const date = new Date(entry.date).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+
+                content += `
+──────────────────────────────────────────────────────────────
+ENTRY ${index + 1} | DAY ${entry.day} | ${entry.type.toUpperCase()}
+──────────────────────────────────────────────────────────────
+
+Lesson: ${entry.lessonTitle}
+Date: ${date}
+Stage: Stage ${entry.stageInfo.stage} - ${entry.stageInfo.name}
+
+${entry.content}
+
+`;
+            });
+
+            content += `
+════════════════════════════════════════════════════════════════
+
+"I am a Legacy Builder, You are a Legacy Builder,
+and Together we are Builders of Legacies."
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                www.z2blegacy.com
+                Coach Manlaw - Legacy Builder Programme
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+`;
+
+            // Create blob and download
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `Coach_Manlaw_Journal_${new Date().toISOString().split('T')[0]}.txt`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+
+            addCoachMessage('✅ Journal downloaded successfully! Your transformation story is saved.');
+        }
+
+        // Clear journal (with confirmation)
+        function clearJournal() {
+            if (confirm('⚠️ Are you sure you want to clear your entire journal? This cannot be undone!\n\nTip: Download your journal first to keep a backup.')) {
+                localStorage.removeItem('coach_journal');
+                closeJournal();
+                addCoachMessage('🗑️ Journal cleared. Your journal entries have been deleted.');
+            }
+        }
+
+        // ==================== SOCIAL SHARING ====================
+
+        // Show social sharing modal for milestones
+        function showSocialShare(day) {
+            const stageInfo = getCurrentStage(day);
+            const lesson = getLessonByDay(day);
+
+            let milestone = '';
+            let shareText = '';
+
+            if (day === 1) {
+                milestone = '🚀 Started My Transformation!';
+                shareText = `I just started my 90-day transformation from Employee to Entrepreneur with Coach Manlaw! Day 1 complete. 💪 #CoachManlaw #LegacyBuilder #Entrepreneur`;
+            } else if (day === 13) {
+                milestone = `🎉 Stage 1 Complete: Awakening!`;
+                shareText = `Just completed Stage 1 of my transformation! I'm awakening to the employee trap and stepping into my entrepreneur identity. Day 13/90 ✅ #CoachManlaw #Awakening #LegacyBuilder`;
+            } else if (day === 26) {
+                milestone = `🔥 Stage 2 Complete: Reprogrammed!`;
+                shareText = `Mind reprogrammed! Just finished Stage 2 of my 90-day transformation. Employee mindset → Entrepreneur thinking. Day 26/90 ✅ #CoachManlaw #MindsetShift #Entrepreneur`;
+            } else if (day === 39) {
+                milestone = `💎 Stage 3 Complete: Purpose Discovered!`;
+                shareText = `Found my profitable purpose! Stage 3 complete. I know my zone of genius and ready to create value. Day 39/90 ✅ #CoachManlaw #Purpose #LegacyBuilder`;
+            } else if (day === 52) {
+                milestone = `💰 Stage 4 Complete: First Income!`;
+                shareText = `Generated my first entrepreneurial income! Stage 4 complete. From employee to earner. Day 52/90 ✅ #CoachManlaw #FirstSale #Entrepreneur`;
+            } else if (day === 65) {
+                milestone = `⚙️ Stage 5 Complete: Systems Built!`;
+                shareText = `Business systems built! Stage 5 complete. Working ON the business, not just IN it. Day 65/90 ✅ #CoachManlaw #Systems #BusinessOwner`;
+            } else if (day === 78) {
+                milestone = `🌍 Stage 6 Complete: Team Activated!`;
+                shareText = `Built my team and community! Stage 6 complete. Multiplying impact through others. Day 78/90 ✅ #CoachManlaw #Leadership #LegacyBuilder`;
+            } else if (day === 90) {
+                milestone = `👑 TRANSFORMATION COMPLETE!`;
+                shareText = `I DID IT! 90 days complete. From employee to entrepreneur. Legacy secured! 🎉🔥💪 Thank you Coach Manlaw! #CoachManlaw #90DayChallenge #Entrepreneur #LegacyBuilder`;
+            } else {
+                milestone = `Day ${day} Complete!`;
+                shareText = `Day ${day}/90 complete in my transformation journey with Coach Manlaw! Building my legacy one day at a time. 💪 #CoachManlaw #LegacyBuilder`;
+            }
+
+            addCoachMessage(`
+                <strong>${milestone}</strong><br><br>
+                <div style="background: rgba(255,215,0,0.1); padding: 1rem; border-radius: 10px; border-left: 4px solid var(--gold); margin: 1rem 0;">
+                    <strong>📱 Share Your Achievement!</strong><br><br>
+                    <em style="font-size: 0.9rem;">"${shareText}"</em>
+                </div>
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    <button onclick="shareToFacebook('${encodeURIComponent(shareText)}')" style="flex: 1; min-width: 120px; padding: 0.8rem; background: linear-gradient(135deg, #1877F2, #0C5FAC); border: none; border-radius: 8px; color: white; font-weight: 600; cursor: pointer;">
+                        <i class="fab fa-facebook"></i> Facebook
+                    </button>
+                    <button onclick="shareToTwitter('${encodeURIComponent(shareText)}')" style="flex: 1; min-width: 120px; padding: 0.8rem; background: linear-gradient(135deg, #1DA1F2, #0C85D0); border: none; border-radius: 8px; color: white; font-weight: 600; cursor: pointer;">
+                        <i class="fab fa-twitter"></i> Twitter
+                    </button>
+                    <button onclick="copyShareText('${shareText.replace(/'/g, "\\'")}')" style="flex: 1; min-width: 120px; padding: 0.8rem; background: linear-gradient(135deg, var(--gold), var(--orange)); border: none; border-radius: 8px; color: var(--navy-blue); font-weight: 600; cursor: pointer;">
+                        <i class="fas fa-copy"></i> Copy Text
+                    </button>
+                </div>
+            `);
+        }
+
+        // Share to Facebook
+        function shareToFacebook(text) {
+            const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://z2blegacy.com')}&quote=${text}`;
+            window.open(url, '_blank', 'width=600,height=400');
+        }
+
+        // Share to Twitter
+        function shareToTwitter(text) {
+            const url = `https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent('https://z2blegacy.com')}`;
+            window.open(url, '_blank', 'width=600,height=400');
+        }
+
+        // Copy share text to clipboard
+        function copyShareText(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                addCoachMessage('✅ Text copied to clipboard! Paste it anywhere you want to share your achievement.');
+            }).catch(() => {
+                addCoachMessage('⚠️ Could not copy text. Please copy it manually from the message above.');
+            });
         }
 
         // Navigate to previous day
@@ -3286,7 +3638,7 @@ Respond as Coach Manlaw would - sharp, strategic, faith-filled, funny when appro
                 Focus: ${overview.focus}
             `;
 
-            // Combine all lesson text with stage context and overview
+            // Combine lesson text with stage context and overview (EXCLUDING activity and assignment)
             const fullText = `
                 Welcome to Day ${currentDay} of your 90-day transformation journey.
 
@@ -3297,11 +3649,7 @@ Respond as Coach Manlaw would - sharp, strategic, faith-filled, funny when appro
 
                 ${lesson.content}
 
-                Now, let's move to today's activity: ${lesson.activity}
-
-                Your assignment for today: ${lesson.assignment}
-
-                Complete this lesson to move forward in your transformation from employee to entrepreneur.
+                This is the end of today's lesson. Now, complete the activity and assignment below to progress to the next lesson in your transformation journey.
             `;
 
             currentUtterance = new SpeechSynthesisUtterance(fullText);
@@ -4095,11 +4443,11 @@ I am a Legacy Builder, You are a Legacy Builder, and Together we are Builders of
             }
 
             // Load curriculum
-            if (typeof COACH_CURRICULUM !== 'undefined') {
-                curriculum = COACH_CURRICULUM;
-                console.log('✅ Curriculum loaded:', curriculum.length, 'lessons');
+            if (typeof MANLAW_CURRICULUM !== 'undefined') {
+                curriculum = MANLAW_CURRICULUM;
+                console.log('✅ Curriculum loaded from MANLAW_CURRICULUM');
             } else {
-                console.warn('⚠️ Curriculum not loaded yet');
+                console.warn('⚠️ MANLAW_CURRICULUM not loaded yet');
             }
 
             // Update displays
