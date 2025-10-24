@@ -194,6 +194,15 @@
             }
         }
 
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(255, 215, 0, 0.8);
+            }
+        }
+
         @keyframes rotate {
             from {
                 transform: rotate(0deg);
@@ -1206,6 +1215,9 @@
                     </button>
                     <button class="quick-action-btn" onclick="showProgress()">
                         📊 My Progress
+                    </button>
+                    <button class="quick-action-btn" onclick="show90DayList()">
+                        📚 90-Day Content List
                     </button>
                 </div>
 
@@ -3074,6 +3086,38 @@ and Together we are Builders of Legacies."
         // Close progress modal
         function closeProgress() {
             document.getElementById('progressModal').classList.remove('show');
+        }
+
+        // Show 90-Day Content List
+        function show90DayList() {
+            const container = document.getElementById('lessonOverviewContainer');
+            if (container && container.parentElement) {
+                // Scroll to the lesson overview section
+                container.parentElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+                // Add visual highlight effect
+                container.parentElement.style.animation = 'pulse 1s ease-in-out';
+                setTimeout(() => {
+                    container.parentElement.style.animation = '';
+                }, 1000);
+
+                // Send confirmation message
+                addCoachMessage(`
+                    <strong>📚 90-Day Content List</strong><br><br>
+                    Here's your complete transformation roadmap! All 90 lessons are listed below, organized by the 7 transformation stages.<br><br>
+                    🔒 Locked lessons will unlock as you complete previous lessons.<br>
+                    ✅ Completed lessons show a checkmark.<br>
+                    🔓 Click any unlocked lesson to start learning!<br><br>
+                    <em>Remember: Trust the process. Sequential learning ensures lasting transformation.</em>
+                `);
+            } else {
+                // If container not found, try to render it
+                renderLessonOverview();
+                addCoachMessage('📚 Loading your 90-day content list... Please wait a moment.');
+                setTimeout(() => {
+                    show90DayList();
+                }, 1000);
+            }
         }
 
         // Update progress dashboard
