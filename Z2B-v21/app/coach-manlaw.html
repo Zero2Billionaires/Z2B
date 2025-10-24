@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coach Manlaw - Where Employees Build Entrepreneur Mindsets | Z2B</title>
+    <title>Coach Manlaw - 7-Stage Employee to Entrepreneur Transformation | Z2B</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap"
@@ -1009,6 +1009,19 @@
                 </div>
             </div>
 
+            <!-- Current Stage Tracker -->
+            <div class="btss-panel" style="background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 107, 53, 0.15)); border: 2px solid var(--gold);">
+                <h5 style="margin-bottom: 0.8rem;"><i class="fas fa-rocket"></i> Your Transformation Stage</h5>
+                <div style="text-align: center; margin-bottom: 1rem;">
+                    <div style="font-size: 2rem; font-weight: 800; color: var(--gold); margin-bottom: 0.3rem;" id="stageNumber">Stage 1</div>
+                    <div style="font-size: 1.1rem; font-weight: 600; color: var(--white); margin-bottom: 0.5rem;" id="stageName">Awakening</div>
+                    <div style="font-size: 0.85rem; color: var(--orange); font-weight: 500;" id="stageLeg">🧠 Mindset Mystery</div>
+                </div>
+                <div style="font-size: 0.75rem; color: var(--white); opacity: 0.8; text-align: center; font-style: italic; line-height: 1.3;" id="stageQuote">
+                    "I'm not building my dream. I'm helping someone else build theirs."
+                </div>
+            </div>
+
             <div class="stats-box">
                 <div class="stats-number" id="statsDay">Day 1</div>
                 <div class="stats-label">Your Journey</div>
@@ -1055,6 +1068,9 @@
                 <button class="sidebar-btn" onclick="showProgress()">
                     <i class="fas fa-chart-line"></i> View Progress
                 </button>
+                <button class="sidebar-btn" onclick="openActivity()">
+                    <i class="fas fa-tasks"></i> Activity Center
+                </button>
                 <button class="sidebar-btn" onclick="showSettings()">
                     <i class="fas fa-cog"></i> AI Settings
                 </button>
@@ -1065,7 +1081,7 @@
         <div class="chat-area">
             <div class="chat-header">
                 <h2><i class="fas fa-graduation-cap"></i> Coach Manlaw</h2>
-                <p id="headerStatus">Where Employees Build Entrepreneur Mindsets, Money Systems, Movements and Legacies</p>
+                <p id="headerStatus">Transforming Employees into Entrepreneurs Through the 7-Stage Journey</p>
             </div>
 
             <div class="chat-messages" id="chatMessages">
@@ -1074,24 +1090,66 @@
                     <div class="message-avatar">🎯</div>
                     <div class="message-content">
                         <div class="message-text">
-                            <strong>Hey there, Future Billionaire! 👋</strong><br><br>
-                            I'm Coach Manlaw—part mentor, part strategist, all about helping you build something that outlives you.
-                            You know that quote, <em>"As a man thinks, so is he"</em> (Proverbs 23:7)? That's where we start.
-                            But thinking alone won't pay bills—so we're building <strong>systems, movements, and money machines</strong>.<br><br>
+                            <strong>Hey Employee, Ready to Break Free? 👋</strong><br><br>
 
-                            Here's the deal: Your success is determined by your <strong>weakest leg</strong>. Imagine a billion-dollar
-                            table wobbling because one leg is weak—that's most entrepreneurs. We're fixing that.<br><br>
+                            I'm Coach Manlaw—and I see you. You're trading time for money, building someone else's dream, feeling the weight of the paycheck trap.
+                            You know there's more, but the path from <strong>employee to entrepreneur</strong> feels unclear, risky, maybe even impossible.<br><br>
 
-                            <strong>The Four Legs of Your Billionaire Table:</strong><br>
-                            <strong>🧠 Mindset Mystery</strong> - Transform your identity & beliefs (billionaires think differently)<br>
-                            <strong>💸 Money Moves</strong> - Build wealth systems that work while you sleep<br>
-                            <strong>⚙️ Legacy Missions</strong> - Create scalable systems & automation<br>
-                            <strong>🌍 Momentum Movement</strong> - Build influence & lead movements<br><br>
+                            Let me be clear: <strong>This isn't just a career change. It's a complete identity shift.</strong><br>
+                            It's about unlearning dependency and rediscovering self-agency. Moving from surviving on a paycheck to creating value, systems, and legacy.<br><br>
+
+                            <strong>🌍 THE 7-STAGE TRANSFORMATION JOURNEY: From Employee to Entrepreneur</strong><br><br>
+
+                            I'll guide you through <strong>7 transformational stages</strong>, built on the <strong>4 Legs of Your Billion-Dollar Table</strong>.
+                            Your success depends on your weakest leg—and we're strengthening ALL of them:<br><br>
+
+                            <strong style="color: #FFD700; font-size: 1.1rem;">🧠 MINDSET MYSTERY</strong> - <em>Awakening & Reprogramming Your Mind</em><br>
+                            <strong>Stage 1: Awakening</strong> – "I'm not building my dream. I'm helping someone else build theirs."<br>
+                            → Realize the trap. Recognize job security is an illusion. Hard work alone won't create freedom.<br>
+                            → Focus: <em>Awareness → Financial self-realization</em><br><br>
+
+                            <strong>Stage 2: Reprogramming</strong> – "If I don't change my thinking, I'll repeat the same cycle."<br>
+                            → Unlearn employee habits (fear, dependency, trading time for money). Reprogram for growth, risk, leadership.<br>
+                            → Focus: <em>Unlearning → Building a Money Mindset</em><br><br>
+
+                            <strong style="color: #FFD700; font-size: 1.1rem;">💸 MONEY MOVES</strong> - <em>From Value Discovery to First Income</em><br>
+                            <strong>Stage 3: Discovery</strong> – "What do I have that can solve problems or create value?"<br>
+                            → Identify your purpose, passions, strengths. Find your profitable niche—your true path as a value creator.<br>
+                            → Focus: <em>Self-awareness → Profitable purpose</em><br><br>
+
+                            <strong>Stage 4: Activation</strong> – "Done is better than perfect. Action creates clarity."<br>
+                            → Test ideas through small offers or side hustles. Learn by doing. Overcome fear through execution.<br>
+                            → Focus: <em>Action → First income stream</em><br><br>
+
+                            <strong style="color: #FFD700; font-size: 1.1rem;">⚙️ LEGACY MISSIONS</strong> - <em>Building Systems That Work For You</em><br>
+                            <strong>Stage 5: Systemization</strong> – "I don't want to work harder—I want to build a system that works for me."<br>
+                            → Move from hustling to structuring. Build systems, automations, processes that create leverage and consistency.<br>
+                            → Focus: <em>Self-employment → Business ownership</em><br><br>
+
+                            <strong style="color: #FFD700; font-size: 1.1rem;">🌍 MOMENTUM MOVEMENT</strong> - <em>From Solo Success to Generational Impact</em><br>
+                            <strong>Stage 6: Expansion</strong> – "I grow by helping others grow."<br>
+                            → Shift from working IN the business to working ON it. Build teams, collaborations, communities that multiply your impact.<br>
+                            → Focus: <em>Leadership → Community growth</em><br><br>
+
+                            <strong>Stage 7: Legacy</strong> – "My purpose is to create systems that outlive me."<br>
+                            → Transcend personal success. Focus on generational impact, mentorship, contribution.<br>
+                            → Focus: <em>Purpose-driven leadership → Legacy creation</em><br><br>
+
+                            <strong>📊 YOUR BILLIONAIRE TABLE FRAMEWORK:</strong><br>
+                            <strong>🧠 Mindset Mystery</strong> - Transform identity & beliefs (Stages 1-2)<br>
+                            <strong>💸 Money Moves</strong> - Build wealth systems that work while you sleep (Stages 3-4)<br>
+                            <strong>⚙️ Legacy Missions</strong> - Create scalable systems & automation (Stage 5)<br>
+                            <strong>🌍 Momentum Movement</strong> - Build influence & lead movements (Stages 6-7)<br><br>
+
+                            <em>"As a man thinks, so is he"</em> (Proverbs 23:7). But thinking without action is just dreaming.
+                            We're building <strong>systems, movements, and money machines</strong>.<br><br>
 
                             <em>"I am a Legacy Builder, You are a Legacy Builder, and Together we are Builders of Legacies."</em><br><br>
 
-                            <strong>First Step:</strong> Take your BTSS (Billionaire Table Stability Score) assessment so I know exactly
-                            where to focus your coaching. Or just ask me anything—I'm here 24/7. Let's build! 💪🔥
+                            <strong>Your First Step:</strong> Take your BTSS (Billion-Dollar Table Stability Score) assessment.
+                            I'll identify which stage you're in, which leg is weakest, and exactly where to focus your transformation.<br><br>
+
+                            Or just ask me anything—I'm here 24/7 to coach you through this journey. <strong>Let's transform you from employee to entrepreneur!</strong> 💪🔥
                         </div>
                         <div class="message-time" id="welcomeTime">Just now</div>
                     </div>
@@ -1145,7 +1203,7 @@
                 Rate each of the Four Legs honestly (0-100). Your weakest leg determines your table's stability!
             </p>
 
-            <form class="assessment-form">
+            <div class="assessment-form" id="assessmentForm">
                 <div class="assessment-item">
                     <h4>🧠 Mindset Mystery</h4>
                     <p>Your beliefs, vision, spiritual alignment, and mental wealth</p>
@@ -1182,10 +1240,10 @@
                     </div>
                 </div>
 
-                <button type="button" class="btn-submit" onclick="submitAssessment()">
+                <div class="btn-submit" id="submitAssessmentBtn" style="cursor: pointer; user-select: none;">
                     <i class="fas fa-check"></i> Submit Assessment
-                </button>
-            </form>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1218,6 +1276,78 @@
             <button type="button" class="btn-submit" onclick="saveSettings()">
                 <i class="fas fa-save"></i> Save Settings
             </button>
+        </div>
+    </div>
+
+    <!-- Activity Center Modal -->
+    <div class="modal-overlay" id="activityModal">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <h3><i class="fas fa-tasks"></i> Activity Center</h3>
+                <button class="btn-close" onclick="closeActivity()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <p style="color: var(--white); opacity: 0.9; margin-bottom: 2rem;">
+                Complete daily activities, respond to assignments, and track your engagement with Coach Manlaw's curriculum.
+            </p>
+
+            <div class="assessment-item">
+                <h4><i class="fas fa-fire"></i> Today's Activity</h4>
+                <div style="background: rgba(255, 107, 53, 0.1); padding: 1.5rem; border-radius: 10px; border-left: 4px solid var(--royal-gold); margin-bottom: 1.5rem;">
+                    <h5 style="color: var(--royal-gold); margin-bottom: 0.8rem;" id="activityTitle">Daily Reflection: Your Current Table Stability</h5>
+                    <p style="color: var(--white); line-height: 1.8; margin-bottom: 1rem;" id="activityDescription">
+                        Reflect on your Four Legs Table. Which leg is your weakest right now, and what specific action will you take this week to strengthen it?
+                    </p>
+                    <div style="display: flex; gap: 1rem; align-items: center; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255,215,0,0.2);">
+                        <div style="flex: 1;">
+                            <small style="color: var(--royal-gold); display: block; margin-bottom: 0.3rem;">Estimated Time</small>
+                            <span style="color: var(--white);" id="activityTime">5-10 minutes</span>
+                        </div>
+                        <div style="flex: 1;">
+                            <small style="color: var(--royal-gold); display: block; margin-bottom: 0.3rem;">AI Fuel Cost</small>
+                            <span style="color: var(--white);" id="activityFuel">2 fuel</span>
+                        </div>
+                        <div style="flex: 1;">
+                            <small style="color: var(--royal-gold); display: block; margin-bottom: 0.3rem;">Status</small>
+                            <span style="color: #00ff88; font-weight: 600;" id="activityStatus">Active</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="activityResponseSection">
+                    <label style="color: var(--royal-gold); font-weight: 600; margin-bottom: 0.5rem; display: block;">
+                        <i class="fas fa-pencil-alt"></i> Your Response
+                    </label>
+                    <textarea id="activityResponseInput" placeholder="Type your thoughtful response here... Coach Manlaw will provide personalized feedback."
+                        style="width: 100%; min-height: 150px; padding: 1rem; border: 2px solid var(--royal-gold); border-radius: 12px; background: rgba(0,0,0,0.3); color: white; font-family: inherit; font-size: 0.95rem; resize: vertical; margin-bottom: 1rem;"></textarea>
+
+                    <button type="button" onclick="submitActivityResponse()" class="btn-submit" style="width: 100%; background: linear-gradient(135deg, var(--royal-gold), var(--royal-gold-light)); padding: 1rem; font-weight: 600;">
+                        <i class="fas fa-paper-plane"></i> Submit to Coach Manlaw
+                    </button>
+                </div>
+            </div>
+
+            <div class="assessment-item" style="margin-top: 2rem;">
+                <h4><i class="fas fa-history"></i> Recent Activities</h4>
+                <div id="activityHistory">
+                    <div style="background: rgba(30, 58, 138, 0.3); padding: 1rem; border-radius: 10px; margin-bottom: 0.8rem; border-left: 3px solid #00ff88;">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
+                            <span style="color: var(--royal-gold); font-weight: 600;">Week 1, Day 1: Breaking the Employee Mindset</span>
+                            <span style="color: #00ff88; font-size: 0.85rem;"><i class="fas fa-check-circle"></i> Completed</span>
+                        </div>
+                        <p style="color: var(--white); opacity: 0.8; font-size: 0.9rem; margin: 0;">Submitted 2 days ago</p>
+                    </div>
+                    <div style="background: rgba(30, 58, 138, 0.3); padding: 1rem; border-radius: 10px; margin-bottom: 0.8rem; border-left: 3px solid #00ff88;">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
+                            <span style="color: var(--royal-gold); font-weight: 600;">Week 1, Day 2: Vision Alignment Exercise</span>
+                            <span style="color: #00ff88; font-size: 0.85rem;"><i class="fas fa-check-circle"></i> Completed</span>
+                        </div>
+                        <p style="color: var(--white); opacity: 0.8; font-size: 0.9rem; margin: 0;">Submitted 1 day ago</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1948,29 +2078,236 @@
             }
         }
 
-        // Update journey day
-        function updateJourneyDay() {
-            document.getElementById('statsDay').textContent = `Day ${currentDay}`;
+        // Get current stage info based on day
+        function getCurrentStage(day) {
+            const stages = [
+                {
+                    stage: 1,
+                    name: "Awakening",
+                    dayRange: [1, 13],
+                    leg: "🧠 Mindset Mystery",
+                    quote: '"I\'m not building my dream. I\'m helping someone else build theirs."',
+                    focus: "Realize the employee trap"
+                },
+                {
+                    stage: 2,
+                    name: "Reprogramming",
+                    dayRange: [14, 26],
+                    leg: "🧠 Mindset Mystery",
+                    quote: '"If I don\'t change my thinking, I\'ll repeat the same cycle."',
+                    focus: "Reset mindset for entrepreneurship"
+                },
+                {
+                    stage: 3,
+                    name: "Discovery",
+                    dayRange: [27, 39],
+                    leg: "💸 Money Moves",
+                    quote: '"What do I have that can solve problems or create value?"',
+                    focus: "Find your profitable purpose"
+                },
+                {
+                    stage: 4,
+                    name: "Activation",
+                    dayRange: [40, 52],
+                    leg: "💸 Money Moves",
+                    quote: '"Done is better than perfect. Action creates clarity."',
+                    focus: "Generate first entrepreneurial income"
+                },
+                {
+                    stage: 5,
+                    name: "Systemization",
+                    dayRange: [53, 65],
+                    leg: "⚙️ Legacy Missions",
+                    quote: '"I don\'t want to work harder—I want to build a system that works for me."',
+                    focus: "Build systems that work without you"
+                },
+                {
+                    stage: 6,
+                    name: "Expansion",
+                    dayRange: [66, 78],
+                    leg: "🌍 Momentum Movement",
+                    quote: '"I grow by helping others grow."',
+                    focus: "Scale through teams and community"
+                },
+                {
+                    stage: 7,
+                    name: "Legacy",
+                    dayRange: [79, 90],
+                    leg: "🌍 Momentum Movement",
+                    quote: '"My purpose is to create systems that outlive me."',
+                    focus: "Create generational impact"
+                }
+            ];
+
+            for (const stageInfo of stages) {
+                if (day >= stageInfo.dayRange[0] && day <= stageInfo.dayRange[1]) {
+                    return stageInfo;
+                }
+            }
+
+            // Default to stage 1 if out of range
+            return stages[0];
+        }
+
+        // Update current stage display
+        function updateCurrentStage() {
+            const stageInfo = getCurrentStage(currentDay);
+
+            document.getElementById('stageNumber').textContent = `Stage ${stageInfo.stage}`;
+            document.getElementById('stageName').textContent = stageInfo.name;
+            document.getElementById('stageLeg').textContent = stageInfo.leg;
+            document.getElementById('stageQuote').textContent = stageInfo.quote;
+
+            // Update header with stage info
             const lesson = getLessonByDay(currentDay);
             if (lesson) {
                 document.getElementById('headerStatus').textContent =
-                    `Day ${currentDay} of 90 • ${lesson.phaseTitle.split(':')[0]}`;
+                    `Day ${currentDay} • Stage ${stageInfo.stage}: ${stageInfo.name} • ${stageInfo.leg}`;
             } else {
                 document.getElementById('headerStatus').textContent =
-                    `Day ${currentDay} of your 90-day transformation`;
+                    `Day ${currentDay} • Stage ${stageInfo.stage}: ${stageInfo.name}`;
             }
+
+            // Show milestone celebration if completing a stage
+            const isStageComplete = currentDay === stageInfo.dayRange[1];
+            if (isStageComplete && !localStorage.getItem(`stage${stageInfo.stage}_celebrated`)) {
+                setTimeout(() => {
+                    const milestones = [
+                        "🎉 Stage 1 Complete! You've Awakened!",
+                        "🎉 Stage 2 Complete! Mind Reprogrammed!",
+                        "🎉 Stage 3 Complete! Purpose Discovered!",
+                        "🎉 Stage 4 Complete! First Income Generated!",
+                        "🎉 Stage 5 Complete! Systems Built!",
+                        "🎉 Stage 6 Complete! Team & Community Established!",
+                        "🎉 Stage 7 Complete! Legacy Secured! YOU ARE AN ENTREPRENEUR!"
+                    ];
+                    addCoachMessage(`
+                        <strong>${milestones[stageInfo.stage - 1]}</strong><br><br>
+                        Congratulations! You've completed <strong>Stage ${stageInfo.stage}: ${stageInfo.name}</strong>.<br><br>
+                        ${stageInfo.stage < 7 ? `🚀 Ready for <strong>Stage ${stageInfo.stage + 1}</strong>? Let's keep building!` : '👑 You did it! From employee to entrepreneur in 90 days. Welcome to your new life!'}
+                    `);
+                    localStorage.setItem(`stage${stageInfo.stage}_celebrated`, 'true');
+                }, 2000);
+            }
+        }
+
+        // Update journey day
+        function updateJourneyDay() {
+            document.getElementById('statsDay').textContent = `Day ${currentDay}`;
+            updateCurrentStage(); // Update stage info
         }
 
         // Setup slider listeners
         function setupSliderListeners() {
+            console.log('Setting up slider listeners...');
+
             const sliders = ['mindset', 'money', 'legacy', 'movement'];
             sliders.forEach(name => {
                 const slider = document.getElementById(name + 'Slider');
                 const value = document.getElementById(name + 'Value');
-                slider.oninput = () => {
-                    value.textContent = slider.value;
-                };
+                if (slider && value) {
+                    slider.oninput = () => {
+                        value.textContent = slider.value;
+                    };
+                    console.log(`Slider ${name} initialized`);
+                } else {
+                    console.error(`Slider ${name} not found`);
+                }
             });
+
+            // Set up submit button with multiple methods
+            console.log('Setting up submit button...');
+            const submitBtn = document.getElementById('submitAssessmentBtn');
+            if (submitBtn) {
+                // Remove any existing listeners
+                const newBtn = submitBtn.cloneNode(true);
+                submitBtn.parentNode.replaceChild(newBtn, submitBtn);
+
+                // Add click listener
+                newBtn.addEventListener('click', function(e) {
+                    console.log('=== SUBMIT BUTTON CLICKED ===');
+                    e.stopPropagation();
+                    handleAssessmentSubmit();
+                }, true);
+
+                // Add mousedown listener as backup
+                newBtn.addEventListener('mousedown', function(e) {
+                    console.log('Submit button mousedown');
+                }, true);
+
+                console.log('Submit button listeners attached');
+            } else {
+                console.error('Submit button not found!');
+            }
+        }
+
+        // Separate handler function
+        function handleAssessmentSubmit() {
+            console.log('handleAssessmentSubmit called');
+
+            // Get values
+            const mindsetVal = document.getElementById('mindsetSlider')?.value || 50;
+            const moneyVal = document.getElementById('moneySlider')?.value || 50;
+            const legacyVal = document.getElementById('legacySlider')?.value || 50;
+            const movementVal = document.getElementById('movementSlider')?.value || 50;
+
+            console.log('Values:', {mindsetVal, moneyVal, legacyVal, movementVal});
+
+            // Create scores object
+            const scores = {
+                mindset: parseInt(mindsetVal),
+                money: parseInt(moneyVal),
+                legacy: parseInt(legacyVal),
+                movement: parseInt(movementVal),
+                date: new Date().toISOString(),
+                day: currentDay
+            };
+
+            // Update global variable
+            btssScores = scores;
+
+            // Save
+            localStorage.setItem('coach_btss_scores', JSON.stringify(scores));
+
+            // Add to history
+            btssHistory.push(scores);
+            localStorage.setItem('coach_btss_history', JSON.stringify(btssHistory));
+
+            console.log('Assessment saved:', scores);
+
+            // Update UI
+            loadBTSSScores();
+
+            // Close modal
+            closeAssessment();
+
+            // Calculate overall
+            const overall = Math.round((scores.mindset + scores.money + scores.legacy + scores.movement) / 4);
+
+            // Get weakest leg
+            const legs = [
+                { name: 'Mindset Mystery', score: scores.mindset },
+                { name: 'Money Moves', score: scores.money },
+                { name: 'Legacy Missions', score: scores.legacy },
+                { name: 'Momentum Movement', score: scores.movement }
+            ];
+            const weakestLeg = legs.reduce((min, leg) => leg.score < min.score ? leg : min, legs[0]);
+
+            // Send message
+            const message = `
+                <strong>BTSS Assessment Complete! 🎯</strong><br><br>
+                <strong>Your Scores:</strong><br>
+                🧠 Mindset Mystery: ${scores.mindset}/100<br>
+                💸 Money Moves: ${scores.money}/100<br>
+                ⚙️ Legacy Missions: ${scores.legacy}/100<br>
+                🌍 Momentum Movement: ${scores.movement}/100<br><br>
+                <strong>Overall BTSS: ${overall}%</strong><br>
+                Your weakest leg is <strong>${weakestLeg.name}</strong>. Remember: a table is only as strong as its weakest leg! Let's focus on strengthening this area to build your billion-dollar empire. 💪
+            `;
+
+            addCoachMessage(message);
+
+            console.log('Assessment complete!');
         }
 
         // Load BTSS scores
@@ -2003,50 +2340,86 @@
 
         // Submit assessment
         function submitAssessment() {
-            btssScores = {
-                mindset: parseInt(document.getElementById('mindsetSlider').value),
-                money: parseInt(document.getElementById('moneySlider').value),
-                legacy: parseInt(document.getElementById('legacySlider').value),
-                movement: parseInt(document.getElementById('movementSlider').value),
-                date: new Date().toISOString(),
-                day: currentDay
-            };
+            try {
+                console.log('submitAssessment called');
 
-            // Save current scores
-            localStorage.setItem('coach_btss_scores', JSON.stringify(btssScores));
+                // Get slider elements
+                const mindsetSlider = document.getElementById('mindsetSlider');
+                const moneySlider = document.getElementById('moneySlider');
+                const legacySlider = document.getElementById('legacySlider');
+                const movementSlider = document.getElementById('movementSlider');
 
-            // Add to history
-            btssHistory.push(btssScores);
-            localStorage.setItem('coach_btss_history', JSON.stringify(btssHistory));
-
-            loadBTSSScores();
-            closeAssessment();
-
-            // Send confirmation message
-            const overall = Math.round((btssScores.mindset + btssScores.money + btssScores.legacy + btssScores.movement) / 4);
-            const weakest = getWeakestLeg();
-
-            // Check for improvement if previous assessment exists
-            let improvementMsg = '';
-            if (btssHistory.length > 1) {
-                const previous = btssHistory[btssHistory.length - 2];
-                const prevOverall = Math.round((previous.mindset + previous.money + previous.legacy + previous.movement) / 4);
-                const improvement = overall - prevOverall;
-                if (improvement > 0) {
-                    improvementMsg = `<br><strong>📈 You've improved ${improvement} points since your last assessment!</strong><br>`;
+                // Check if elements exist
+                if (!mindsetSlider || !moneySlider || !legacySlider || !movementSlider) {
+                    console.error('One or more sliders not found!');
+                    alert('Error: Assessment sliders not found. Please refresh the page and try again.');
+                    return;
                 }
-            }
 
-            addCoachMessage(`
-                <strong>BTSS Assessment Complete! 🎯</strong><br><br>
-                <strong>Your Scores:</strong><br>
-                🧠 Mindset Mystery: ${btssScores.mindset}/100<br>
-                💸 Money Moves: ${btssScores.money}/100<br>
-                ⚙️ Legacy Missions: ${btssScores.legacy}/100<br>
-                🌍 Momentum Movement: ${btssScores.movement}/100<br><br>
-                <strong>Overall BTSS: ${overall}%</strong>${improvementMsg}<br>
-                Your weakest leg is <strong>${weakest.name}</strong>. Remember: a table is only as strong as its weakest leg! Let's focus on strengthening this area to build your billion-dollar empire. 💪
-            `);
+                // Get values
+                btssScores = {
+                    mindset: parseInt(mindsetSlider.value),
+                    money: parseInt(moneySlider.value),
+                    legacy: parseInt(legacySlider.value),
+                    movement: parseInt(movementSlider.value),
+                    date: new Date().toISOString(),
+                    day: currentDay
+                };
+
+                console.log('BTSS Scores:', btssScores);
+
+                // Validate scores
+                if (isNaN(btssScores.mindset) || isNaN(btssScores.money) || isNaN(btssScores.legacy) || isNaN(btssScores.movement)) {
+                    console.error('Invalid scores detected');
+                    alert('Error: Invalid assessment values. Please try again.');
+                    return;
+                }
+
+                // Save current scores
+                localStorage.setItem('coach_btss_scores', JSON.stringify(btssScores));
+
+                // Add to history
+                btssHistory.push(btssScores);
+                localStorage.setItem('coach_btss_history', JSON.stringify(btssHistory));
+
+                console.log('Assessment saved successfully');
+
+                // Update UI
+                loadBTSSScores();
+                closeAssessment();
+
+                // Send confirmation message
+                const overall = Math.round((btssScores.mindset + btssScores.money + btssScores.legacy + btssScores.movement) / 4);
+                const weakest = getWeakestLeg();
+
+                // Check for improvement if previous assessment exists
+                let improvementMsg = '';
+                if (btssHistory.length > 1) {
+                    const previous = btssHistory[btssHistory.length - 2];
+                    const prevOverall = Math.round((previous.mindset + previous.money + previous.legacy + previous.movement) / 4);
+                    const improvement = overall - prevOverall;
+                    if (improvement > 0) {
+                        improvementMsg = `<br><strong>📈 You've improved ${improvement} points since your last assessment!</strong><br>`;
+                    }
+                }
+
+                addCoachMessage(`
+                    <strong>BTSS Assessment Complete! 🎯</strong><br><br>
+                    <strong>Your Scores:</strong><br>
+                    🧠 Mindset Mystery: ${btssScores.mindset}/100<br>
+                    💸 Money Moves: ${btssScores.money}/100<br>
+                    ⚙️ Legacy Missions: ${btssScores.legacy}/100<br>
+                    🌍 Momentum Movement: ${btssScores.movement}/100<br><br>
+                    <strong>Overall BTSS: ${overall}%</strong>${improvementMsg}<br>
+                    Your weakest leg is <strong>${weakest.name}</strong>. Remember: a table is only as strong as its weakest leg! Let's focus on strengthening this area to build your billion-dollar empire. 💪
+                `);
+
+                console.log('Assessment message added to chat');
+
+            } catch (error) {
+                console.error('Error in submitAssessment:', error);
+                alert('An error occurred while submitting the assessment: ' + error.message + '\n\nPlease try again or refresh the page.');
+            }
         }
 
         // Get weakest leg
@@ -2069,6 +2442,41 @@
         // Close settings
         function closeSettings() {
             document.getElementById('settingsModal').classList.remove('show');
+        }
+
+        // Open Activity Center
+        function openActivity() {
+            document.getElementById('activityModal').classList.add('show');
+        }
+
+        // Close Activity Center
+        function closeActivity() {
+            document.getElementById('activityModal').classList.remove('show');
+        }
+
+        // Submit Activity Response
+        function submitActivityResponse() {
+            const response = document.getElementById('activityResponseInput').value.trim();
+
+            if (!response) {
+                alert('Please enter your response before submitting.');
+                return;
+            }
+
+            // Here you would normally send to Coach Manlaw AI for feedback
+            console.log('Activity Response:', response);
+
+            // Show success message
+            alert('✅ Response submitted successfully!\n\nCoach Manlaw will review your activity and provide personalized feedback.');
+
+            // Clear the input
+            document.getElementById('activityResponseInput').value = '';
+
+            // Close modal
+            closeActivity();
+
+            // You could also send this to the chat as a message to Coach Manlaw
+            sendMessage('Activity Response: ' + response);
         }
 
         // Save settings

@@ -39,7 +39,8 @@
       "Bash(cmd.exe //c \"mklink /D C:\\xampp\\htdocs\\Z2B-v21 C:\\Users\\Manana\\Z2B\\Z2B-v21\")",
       "Bash(cmd.exe //c:*)",
       "Bash(/c/xampp/mysql_start.bat)",
-      "Bash(/c/xampp/mysql/bin/mysql.exe:*)"
+      "Bash(/c/xampp/mysql/bin/mysql.exe:*)",
+      "Bash(./mysql.exe:*)"
     ],
     "deny": [],
     "ask": []

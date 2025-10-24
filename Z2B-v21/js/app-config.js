@@ -139,13 +139,12 @@ const Z2B_TIERS = {
         price: 999,
         period: 'month',
         apps: {
-            zyro: { access: 'full', aiFuel: 200 },
             'coach-manlaw': { access: 'pro', aiFuel: 200 },
-            zyra: { access: 'full', aiFuel: 200 }
+            glowie: { access: 'full', aiFuel: 200 }
         },
         tscGenerations: 5,
         tliLevels: 0,
-        features: ['3 AI Apps', '5 Generations TSC', '200 AI Fuel/month', 'Referral Tracking', 'Advanced Analytics']
+        features: ['2 AI Apps (Coach Manlaw + Glowie)', '5 Generations TSC', '200 AI Fuel/month', 'Referral Tracking', 'Advanced Analytics']
     },
     SILVER: {
         id: 'SILVER',
@@ -153,14 +152,14 @@ const Z2B_TIERS = {
         price: 1480,
         period: 'month',
         apps: {
-            zyro: { access: 'full', aiFuel: 300 },
             'coach-manlaw': { access: 'elite', aiFuel: 300 },
-            zyra: { access: 'full', aiFuel: 300 },
-            benown: { access: 'full', aiFuel: 300 }
+            glowie: { access: 'full', aiFuel: 300 },
+            benown: { access: 'full', aiFuel: 300 },
+            zyra: { access: 'full', aiFuel: 300 }
         },
         tscGenerations: 7,
         tliLevels: 6,
-        features: ['4 AI Apps', '7 Generations TSC', 'TLI Access (6 Levels)', '300 AI Fuel/month', 'Advanced Features']
+        features: ['4 AI Apps (Coach Manlaw + Glowie + Benown + Zyra)', '7 Generations TSC', 'TLI Access (6 Levels)', '300 AI Fuel/month', 'Advanced Features']
     },
     GOLD: {
         id: 'GOLD',
@@ -178,7 +177,7 @@ const Z2B_TIERS = {
         },
         tscGenerations: 9,
         tliLevels: 8,
-        features: ['Zyronic Suite (7 Apps)', '9 Generations TSC', 'TLI (8 Levels)', '600 AI Fuel/month', 'Profit Pool', 'Sales Funnel']
+        features: ['All 7 AI Apps (Zyro, Coach Manlaw, Glowie, Zyra, Benown, Zynect, Vidzie)', '9 Generations TSC', 'TLI (8 Levels)', '600 AI Fuel/month', 'Profit Pool', 'Sales Funnel']
     },
     PLATINUM: {
         id: 'PLATINUM',
@@ -196,7 +195,7 @@ const Z2B_TIERS = {
         },
         tscGenerations: 10,
         tliLevels: 10,
-        features: ['Zyronic Suite (7 Apps)', '10 Generations TSC', 'Full TLI (10 Levels)', '1000 AI Fuel/month', 'Profit Pool', 'DFY Campaigns', 'Personal Coach']
+        features: ['All 7 AI Apps (Zyro, Coach Manlaw, Glowie, Zyra, Benown, Zynect, Vidzie)', '10 Generations TSC', 'Full TLI (10 Levels)', '1000 AI Fuel/month', 'Profit Pool', 'DFY Campaigns', 'Personal Coach']
     },
     LIFETIME: {
         id: 'LIFETIME',
@@ -214,7 +213,7 @@ const Z2B_TIERS = {
         },
         tscGenerations: 10,
         tliLevels: 10,
-        features: ['Zyronic Suite Forever (7 Apps)', 'Unlimited AI Fuel', 'Full TLI Forever', 'Profit Pool Forever', 'VIP Support', 'Legacy Builder Status']
+        features: ['All 7 AI Apps Forever (Zyro, Coach Manlaw, Glowie, Zyra, Benown, Zynect, Vidzie)', 'Unlimited AI Fuel', 'Full TLI Forever', 'Profit Pool Forever', 'VIP Support', 'Legacy Builder Status']
     }
 };
 
