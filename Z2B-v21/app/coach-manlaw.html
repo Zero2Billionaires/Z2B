@@ -1069,8 +1069,8 @@
                 <button class="sidebar-btn" onclick="showProgress()">
                     <i class="fas fa-chart-line"></i> View Progress
                 </button>
-                <button class="sidebar-btn" onclick="openActivity()">
-                    <i class="fas fa-tasks"></i> Activity Center
+                <button class="sidebar-btn" onclick="viewJournal()">
+                    <i class="fas fa-book-open"></i> My Journal
                 </button>
                 <button class="sidebar-btn" onclick="showSettings()">
                     <i class="fas fa-cog"></i> AI Settings
@@ -1153,6 +1153,11 @@
                             Or just ask me anything—I'm here 24/7 to coach you through this journey. <strong>Let's transform you from employee to entrepreneur!</strong> 💪🔥
                         </div>
                         <div class="message-time" id="welcomeTime">Just now</div>
+                        <div style="margin-top: 1rem;">
+                            <button onclick="playIntroductionAudio()" class="sidebar-btn" style="width: 100%; padding: 1rem; background: linear-gradient(135deg, var(--success), var(--purple)); font-weight: 600;">
+                                <i class="fas fa-volume-up"></i> Listen to Introduction (Luke)
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -1167,6 +1172,12 @@
                                 Below is your complete journey—all 90 lessons that will transform you from employee to entrepreneur.
                                 <strong>Lessons are unlocked sequentially</strong> as you complete them. Stay disciplined, follow the path, and trust the process.
                             </p>
+
+                            <div style="margin-bottom: 1rem;">
+                                <button onclick="readAllLessons()" class="sidebar-btn" style="width: 100%; padding: 1rem; background: linear-gradient(135deg, var(--gold), var(--orange)); font-weight: 600;">
+                                    <i class="fas fa-headphones"></i> Luke Reads All 90 Lessons
+                                </button>
+                            </div>
 
                             <div id="lessonOverviewContainer">
                                 <!-- Lesson overview will be populated by JavaScript -->
@@ -1548,6 +1559,29 @@
                 <p id="modalLessonContent" style="white-space: pre-line;">
                     Understanding the psychological chains of employment...
                 </p>
+            </div>
+
+            <!-- Comprehension Check -->
+            <div class="assessment-item" style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(255, 107, 53, 0.1)); border-left: 4px solid var(--gold);">
+                <h4><i class="fas fa-brain"></i> Comprehension Check</h4>
+                <p style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 1rem;">
+                    Answer these 5 questions to ensure you've grasped today's lesson. Understanding comes before action.
+                </p>
+                <div id="comprehensionQuestions">
+                    <!-- Questions will be populated by JavaScript -->
+                </div>
+                <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                    <button type="button" onclick="checkComprehension()" class="sidebar-btn" style="flex: 1; background: linear-gradient(135deg, var(--gold), var(--orange)); padding: 1rem; font-weight: 600;">
+                        <i class="fas fa-check-circle"></i> Check Answers
+                    </button>
+                    <button type="button" onclick="saveToJournal('comprehension')" class="sidebar-btn" style="flex: 1; background: linear-gradient(135deg, var(--purple), var(--success)); padding: 1rem; font-weight: 600;">
+                        <i class="fas fa-save"></i> Save to Journal
+                    </button>
+                </div>
+                <div id="comprehensionFeedback" style="display: none; margin-top: 1rem; padding: 1.5rem; background: linear-gradient(135deg, rgba(76, 236, 196, 0.15), rgba(155, 89, 182, 0.15)); border-left: 4px solid var(--success); border-radius: 12px;">
+                    <h5 style="margin: 0 0 0.8rem 0; color: var(--gold); font-size: 1rem;"><i class="fas fa-trophy"></i> Results</h5>
+                    <p id="comprehensionFeedbackText" style="margin: 0; line-height: 1.6; color: rgba(255,255,255,0.9);"></p>
+                </div>
             </div>
 
             <div class="assessment-item">
@@ -2186,6 +2220,9 @@
             document.getElementById('modalStageSubtitle').textContent = stageInfo.subtitle ? `- ${stageInfo.subtitle}` : '';
             document.getElementById('modalStageLeg').textContent = stageInfo.leg;
 
+            // Generate and populate comprehension questions
+            populateComprehensionQuestions(lesson);
+
             // Update stage overview content
             const overview = getStageOverview(stageInfo.stage);
             const overviewHTML = `
@@ -2403,6 +2440,294 @@
             }
         }
 
+        // ==================== INTRODUCTION AUDIO ====================
+
+        // Play introduction audio with Luke
+        function playIntroductionAudio() {
+            const introText = `
+                Hey Employee, Ready to Break Free?
+
+                I'm Coach Manlaw—and I see you. You're trading time for money, building someone else's dream, feeling the weight of the paycheck trap.
+                You know there's more, but the path from employee to entrepreneur feels unclear, risky, maybe even impossible.
+
+                Let me be clear: This isn't just a career change. It's a complete identity shift.
+                It's about unlearning dependency and rediscovering self-agency. Moving from surviving on a paycheck to creating value, systems, and legacy.
+
+                THE 7-STAGE TRANSFORMATION JOURNEY: From Employee to Entrepreneur
+
+                I'll guide you through 7 transformational stages, built on the 4 Legs of Your Billion-Dollar Table.
+                Your success depends on your weakest leg—and we're strengthening ALL of them:
+
+                Stage 1: Awakening – Realize the trap. Recognize job security is an illusion. Hard work alone won't create freedom.
+
+                Stage 2: Reprogramming – Unlearn employee habits. Reprogram for growth, risk, leadership.
+
+                Stage 3: Discovery – Identify your purpose, passions, strengths. Find your profitable niche.
+
+                Stage 4: Activation – Test ideas. Learn by doing. Overcome fear through execution.
+
+                Stage 5: Systemization – Move from hustling to structuring. Build systems that work for you.
+
+                Stage 6: Expansion – Build teams, collaborations, communities that multiply your impact.
+
+                Stage 7: Legacy – Create systems that outlive you. Generational impact. Mentorship. Contribution.
+
+                YOUR BILLIONAIRE TABLE FRAMEWORK:
+                Mindset Mystery - Transform identity and beliefs
+                Money Moves - Build wealth systems that work while you sleep
+                Legacy Missions - Create scalable systems and automation
+                Momentum Movement - Build influence and lead movements
+
+                As a man thinks, so is he. But thinking without action is just dreaming.
+                We're building systems, movements, and money machines.
+
+                I am a Legacy Builder, You are a Legacy Builder, and Together we are Builders of Legacies.
+
+                Your First Step: Take your BTSS assessment.
+                I'll identify which stage you're in, which leg is weakest, and exactly where to focus your transformation.
+
+                Let's transform you from employee to entrepreneur!
+            `;
+
+            if (currentUtterance && speechSynthesis.speaking) {
+                speechSynthesis.cancel();
+            }
+
+            currentUtterance = new SpeechSynthesisUtterance(introText);
+            currentUtterance.rate = 0.9;
+            currentUtterance.pitch = 1.0;
+            currentUtterance.volume = 1.0;
+
+            // Select Luke voice
+            const voices = speechSynthesis.getVoices();
+            const lukeVoice = voices.find(v => v.lang === 'en-ZA' && !v.name.toLowerCase().includes('female')) ||
+                             voices.find(v => v.lang === 'en-ZA') ||
+                             voices.find(v => v.name.includes('Luke') || v.name.includes('Thabo'));
+
+            if (lukeVoice) {
+                currentUtterance.voice = lukeVoice;
+            }
+
+            currentUtterance.onstart = () => {
+                addCoachMessage('🎧 Playing introduction... Luke is speaking to you!');
+            };
+
+            currentUtterance.onend = () => {
+                addCoachMessage('✅ Introduction complete. Ready to start your transformation?');
+            };
+
+            speechSynthesis.speak(currentUtterance);
+        }
+
+        // Read all 90 lessons
+        function readAllLessons() {
+            const allLessons = getAllLessons();
+            if (allLessons.length === 0) {
+                addCoachMessage('⚠️ Lessons not loaded yet. Please wait a moment and try again.');
+                return;
+            }
+
+            let lessonText = `
+                Your Complete 90-Day Transformation Journey.
+                I'm going to read all 90 lesson titles organized by the 7 stages of transformation.
+                Listen carefully to see the complete path from employee to entrepreneur.
+
+            `;
+
+            let currentStageNum = 0;
+            allLessons.forEach((lesson) => {
+                const stageInfo = getCurrentStage(lesson.day);
+
+                // Announce new stage
+                if (stageInfo.stage !== currentStageNum) {
+                    currentStageNum = stageInfo.stage;
+                    lessonText += `
+                        Stage ${stageInfo.stage}: ${stageInfo.name}. ${stageInfo.leg}.
+                    `;
+                }
+
+                lessonText += `
+                    Day ${lesson.day}: ${lesson.title}.
+                `;
+            });
+
+            lessonText += `
+                That's your complete 90-day journey.
+                All 90 lessons designed to transform you from employee to entrepreneur.
+                Start with Day 1 and follow the path. Trust the process. Build your legacy.
+            `;
+
+            if (currentUtterance && speechSynthesis.speaking) {
+                speechSynthesis.cancel();
+            }
+
+            currentUtterance = new SpeechSynthesisUtterance(lessonText);
+            currentUtterance.rate = 1.0;
+            currentUtterance.pitch = 1.0;
+            currentUtterance.volume = 1.0;
+
+            // Select Luke voice
+            const voices = speechSynthesis.getVoices();
+            const lukeVoice = voices.find(v => v.lang === 'en-ZA' && !v.name.toLowerCase().includes('female')) ||
+                             voices.find(v => v.lang === 'en-ZA') ||
+                             voices.find(v => v.name.includes('Luke') || v.name.includes('Thabo'));
+
+            if (lukeVoice) {
+                currentUtterance.voice = lukeVoice;
+            }
+
+            currentUtterance.onstart = () => {
+                addCoachMessage('🎧 Luke is now reading all 90 lessons... This will take a few minutes. Relax and listen to your transformation roadmap!');
+            };
+
+            currentUtterance.onend = () => {
+                addCoachMessage('✅ All 90 lessons read! That\'s your complete journey. Ready to start Day 1?');
+            };
+
+            speechSynthesis.speak(currentUtterance);
+        }
+
+        // ==================== COMPREHENSION SYSTEM ====================
+
+        // Generate comprehension questions based on lesson content
+        function populateComprehensionQuestions(lesson) {
+            const container = document.getElementById('comprehensionQuestions');
+            if (!container) return;
+
+            // Generate 5 questions based on the lesson
+            const questions = generateQuestionsFromLesson(lesson);
+
+            let html = '';
+            questions.forEach((q, index) => {
+                html += `
+                    <div style="margin-bottom: 1.5rem; padding: 1rem; background: rgba(0,0,0,0.2); border-radius: 10px;">
+                        <div style="font-weight: 600; color: var(--gold); margin-bottom: 0.8rem;">
+                            ${index + 1}. ${q.question}
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                            ${q.options.map((option, optIndex) => `
+                                <label style="display: flex; align-items: center; padding: 0.8rem; background: rgba(255,255,255,0.05); border-radius: 8px; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.background='rgba(255,215,0,0.15)'" onmouseout="this.style.background='rgba(255,255,255,0.05)'">
+                                    <input type="radio" name="q${index}" value="${optIndex}" style="margin-right: 0.8rem; width: 18px; height: 18px; cursor: pointer;">
+                                    <span style="color: var(--white); opacity: 0.9;">${option}</span>
+                                </label>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+            container.dataset.answers = JSON.stringify(questions.map(q => q.correctIndex));
+        }
+
+        // Generate questions from lesson content
+        function generateQuestionsFromLesson(lesson) {
+            const stageInfo = getCurrentStage(lesson.day);
+
+            // Base questions - these are generic but contextual to the transformation
+            const questions = [
+                {
+                    question: `What is the main focus of today's lesson: "${lesson.title}"?`,
+                    options: [
+                        "Understanding the challenge and identifying the problem",
+                        "Taking immediate action without understanding",
+                        "Avoiding the topic entirely",
+                        "Waiting for someone else to solve it"
+                    ],
+                    correctIndex: 0
+                },
+                {
+                    question: `Which stage of transformation are you in on Day ${lesson.day}?`,
+                    options: [
+                        `Stage ${stageInfo.stage}: ${stageInfo.name}`,
+                        "I'm not in any particular stage",
+                        "The final stage",
+                        "Just starting"
+                    ],
+                    correctIndex: 0
+                },
+                {
+                    question: "According to Coach Manlaw, what comes before action?",
+                    options: [
+                        "Perfect planning",
+                        "Understanding and awareness",
+                        "Getting permission",
+                        "Waiting for the right time"
+                    ],
+                    correctIndex: 1
+                },
+                {
+                    question: `This lesson primarily impacts which leg of the Billion-Dollar Table?`,
+                    options: [
+                        stageInfo.leg,
+                        "None of the legs",
+                        "All legs equally",
+                        "Only financial aspects"
+                    ],
+                    correctIndex: 0
+                },
+                {
+                    question: "What is the ultimate goal of the 90-day transformation programme?",
+                    options: [
+                        "To become rich quickly",
+                        "To quit your job immediately",
+                        "To transform from employee mindset to entrepreneur mindset and build legacy",
+                        "To learn theory without implementation"
+                    ],
+                    correctIndex: 2
+                }
+            ];
+
+            return questions;
+        }
+
+        // Check comprehension answers
+        function checkComprehension() {
+            const container = document.getElementById('comprehensionQuestions');
+            const correctAnswers = JSON.parse(container.dataset.answers || '[]');
+
+            let score = 0;
+            let totalQuestions = correctAnswers.length;
+            let results = [];
+
+            correctAnswers.forEach((correctIndex, qIndex) => {
+                const selected = document.querySelector(`input[name="q${qIndex}"]:checked`);
+                if (selected && parseInt(selected.value) === correctIndex) {
+                    score++;
+                    results.push(true);
+                } else {
+                    results.push(false);
+                }
+            });
+
+            const percentage = Math.round((score / totalQuestions) * 100);
+            const feedbackEl = document.getElementById('comprehensionFeedback');
+            const feedbackText = document.getElementById('comprehensionFeedbackText');
+
+            let message = '';
+            let emoji = '';
+
+            if (percentage === 100) {
+                emoji = '🏆';
+                message = `<strong>Perfect Score! ${score}/${totalQuestions} (${percentage}%)</strong><br><br>Excellent! You've fully understood today's lesson. You're ready to move forward with the activity and assignment. This level of comprehension will accelerate your transformation!`;
+            } else if (percentage >= 80) {
+                emoji = '✅';
+                message = `<strong>Great Job! ${score}/${totalQuestions} (${percentage}%)</strong><br><br>You've grasped the key concepts of today's lesson. Review the areas you missed to strengthen your understanding, then proceed with the activity and assignment.`;
+            } else if (percentage >= 60) {
+                emoji = '📖';
+                message = `<strong>Good Start! ${score}/${totalQuestions} (${percentage}%)</strong><br><br>You're on the right track, but I recommend re-reading today's lesson before moving to the activity. Understanding the foundation is crucial for lasting transformation.`;
+            } else {
+                emoji = '🔄';
+                message = `<strong>Needs Review: ${score}/${totalQuestions} (${percentage}%)</strong><br><br>Take your time to re-read today's lesson. Understanding comes before action. This isn't a race—it's a transformation. Read the lesson again, then retake the comprehension check.`;
+            }
+
+            feedbackText.innerHTML = `${emoji} ${message}`;
+            feedbackEl.style.display = 'block';
+
+            // Scroll to feedback
+            feedbackEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
         // ==================== JOURNAL SYSTEM ====================
 
         // Save entry to journal
@@ -2422,6 +2747,25 @@
             } else if (type === 'notes') {
                 content = document.getElementById('personalNotesInput').value.trim();
                 entryType = 'Personal Notes';
+            } else if (type === 'comprehension') {
+                // Save comprehension quiz results
+                const container = document.getElementById('comprehensionQuestions');
+                const correctAnswers = JSON.parse(container.dataset.answers || '[]');
+                let results = [];
+                correctAnswers.forEach((correctIndex, qIndex) => {
+                    const selected = document.querySelector(`input[name="q${qIndex}"]:checked`);
+                    const questionText = container.querySelectorAll('.assessment-item > div > div')[qIndex * 2]?.textContent || `Question ${qIndex + 1}`;
+                    results.push({
+                        question: questionText,
+                        answered: selected ? parseInt(selected.value) === correctIndex : false
+                    });
+                });
+                const score = results.filter(r => r.answered).length;
+                content = `Comprehension Score: ${score}/${correctAnswers.length} (${Math.round((score/correctAnswers.length)*100)}%)\n\n`;
+                results.forEach((r, i) => {
+                    content += `${i + 1}. ${r.question.replace(/^\d+\.\s*/, '')} - ${r.answered ? '✓ Correct' : '✗ Incorrect'}\n`;
+                });
+                entryType = 'Comprehension';
             }
 
             if (!content) {
@@ -3649,7 +3993,7 @@ Respond as Coach Manlaw would - sharp, strategic, faith-filled, funny when appro
 
                 ${lesson.content}
 
-                This is the end of today's lesson. Now, complete the activity and assignment below to progress to the next lesson in your transformation journey.
+                This is the end of today's lesson. Now, test your understanding with the comprehension check, then complete the activity and assignment below to progress to the next lesson in your transformation journey. Understanding comes before action, Legacy Builder!
             `;
 
             currentUtterance = new SpeechSynthesisUtterance(fullText);
@@ -4457,8 +4801,11 @@ I am a Legacy Builder, You are a Legacy Builder, and Together we are Builders of
                 updateBTSSDisplay();
             }
 
-            // Render 90-day lesson overview
-            renderLessonOverview();
+            // Render 90-day lesson overview (with small delay to ensure curriculum is loaded)
+            setTimeout(() => {
+                renderLessonOverview();
+                console.log('✅ Lesson overview rendered');
+            }, 500);
 
             // Set welcome time
             const now = new Date();
