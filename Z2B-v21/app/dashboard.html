@@ -997,11 +997,11 @@
             <div class="user-profile">
                 <div>
                     <div style="text-align: right;">
-                        <strong style="color: var(--navy-blue);" id="userName">John Mogul</strong>
+                        <strong style="color: var(--navy-blue);" id="userName">Mokoro Manana</strong>
                         <div class="tier-badge" id="userTierBadge">Loading...</div>
                     </div>
                 </div>
-                <div class="profile-avatar" id="userAvatar">JM</div>
+                <div class="profile-avatar" id="userAvatar">MM</div>
             </div>
         </div>
 
@@ -1509,10 +1509,10 @@
             // Check if user exists, if not create LIFETIME tier user
             const storedUser = localStorage.getItem('z2b_current_user');
             if (!storedUser || JSON.parse(storedUser).tier !== 'LIFETIME') {
-                // Set John Mogul as LIFETIME tier user (Premium Legacy Builder)
+                // Set Mokoro Manana as LIFETIME tier user (Premium Legacy Builder)
                 const lifetimeUser = {
-                    id: 'user_john_mogul',
-                    name: 'John Mogul',
+                    id: 'user_mokoro_manana',
+                    name: 'Mokoro Manana',
                     tier: 'LIFETIME',
                     aiFuel: 999999, // Unlimited AI Fuel
                     joinDate: new Date().toISOString(),
