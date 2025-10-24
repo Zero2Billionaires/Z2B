@@ -1432,7 +1432,7 @@
             <div class="assessment-item" id="audioPlayer" style="display: none; background: linear-gradient(135deg, rgba(76, 236, 196, 0.15), rgba(155, 89, 182, 0.15));">
                 <h4><i class="fas fa-volume-up"></i> Audio Lesson - Listen Mode</h4>
                 <p style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 1rem;">
-                    <i class="fas fa-headphones"></i> Your lesson will be read aloud to you. Perfect for multitasking!
+                    <i class="fas fa-headphones"></i> Read along while listening! Audio will narrate the lesson below. Perfect for multitasking or reinforcing learning!
                 </p>
 
                 <div style="display: flex; align-items: center; gap: 1rem; margin-top: 1rem;">
@@ -1466,7 +1466,7 @@
                 </div>
 
                 <p style="font-size: 0.8rem; opacity: 0.7; margin-top: 1rem;">
-                    <i class="fas fa-lightbulb"></i> <strong>Pro Tip:</strong> Listen while you work, drive, or exercise! Learning on the go.
+                    <i class="fas fa-lightbulb"></i> <strong>Pro Tip:</strong> Read along with the audio for better retention, or just listen while you work, drive, or exercise!
                 </p>
             </div>
 
@@ -2830,7 +2830,8 @@ Respond as Coach Manlaw would - sharp, strategic, faith-filled, funny when appro
                 stopAudio();
                 stopAnimation();
             } else if (mode === 'listen') {
-                contentSections.forEach(id => document.getElementById(id).closest('.assessment-item').style.display = 'none');
+                // Show BOTH content and audio player so user can read while listening
+                contentSections.forEach(id => document.getElementById(id).closest('.assessment-item').style.display = 'block');
                 audioPlayer.style.display = 'block';
                 videoPlayer.style.display = 'none';
                 stopAnimation();
