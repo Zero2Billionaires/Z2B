@@ -1014,7 +1014,8 @@
                 <h5 style="margin-bottom: 0.8rem;"><i class="fas fa-rocket"></i> Your Transformation Stage</h5>
                 <div style="text-align: center; margin-bottom: 1rem;">
                     <div style="font-size: 2rem; font-weight: 800; color: var(--gold); margin-bottom: 0.3rem;" id="stageNumber">Stage 1</div>
-                    <div style="font-size: 1.1rem; font-weight: 600; color: var(--white); margin-bottom: 0.5rem;" id="stageName">Awakening</div>
+                    <div style="font-size: 1.1rem; font-weight: 600; color: var(--white); margin-bottom: 0.3rem;" id="stageName">Awakening</div>
+                    <div style="font-size: 0.9rem; color: var(--gold); font-weight: 500; font-style: italic; margin-bottom: 0.5rem;" id="stageSubtitle"></div>
                     <div style="font-size: 0.85rem; color: var(--orange); font-weight: 500;" id="stageLeg">🧠 Mindset Mystery</div>
                 </div>
                 <div style="font-size: 0.75rem; color: var(--white); opacity: 0.8; text-align: center; font-style: italic; line-height: 1.3;" id="stageQuote">
@@ -1471,6 +1472,17 @@
                 <button class="btn-close" onclick="closeLessonModal()">
                     <i class="fas fa-times"></i>
                 </button>
+            </div>
+
+            <!-- Current Stage Tracker (In Modal) -->
+            <div class="assessment-item" style="background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 107, 53, 0.15)); border: 2px solid var(--gold);">
+                <div style="text-align: center;">
+                    <div style="font-size: 0.9rem; font-weight: 600; color: var(--orange); margin-bottom: 0.5rem;"><i class="fas fa-rocket"></i> YOUR TRANSFORMATION STAGE</div>
+                    <div style="font-size: 1.5rem; font-weight: 800; color: var(--gold); margin-bottom: 0.2rem;" id="modalStageNumber">Stage 1</div>
+                    <div style="font-size: 1rem; font-weight: 600; color: var(--white); margin-bottom: 0.2rem;" id="modalStageName">Awakening</div>
+                    <div style="font-size: 0.85rem; color: var(--gold); font-weight: 500; font-style: italic; margin-bottom: 0.4rem;" id="modalStageSubtitle"></div>
+                    <div style="font-size: 0.8rem; color: var(--orange); font-weight: 500;" id="modalStageLeg">🧠 Mindset Mystery</div>
+                </div>
             </div>
 
             <div class="assessment-item">
@@ -1949,6 +1961,13 @@
             document.getElementById('modalLessonActivity').textContent = lesson.activity;
             document.getElementById('modalLessonAssignment').textContent = lesson.assignment;
 
+            // Update stage info in modal
+            const stageInfo = getCurrentStage(currentDay);
+            document.getElementById('modalStageNumber').textContent = `Stage ${stageInfo.stage}`;
+            document.getElementById('modalStageName').textContent = stageInfo.name;
+            document.getElementById('modalStageSubtitle').textContent = stageInfo.subtitle ? `- ${stageInfo.subtitle}` : '';
+            document.getElementById('modalStageLeg').textContent = stageInfo.leg;
+
             // Show/hide app connection
             const appSection = document.getElementById('modalAppConnection');
             if (lesson.appConnection) {
@@ -2227,6 +2246,7 @@
                 {
                     stage: 1,
                     name: "Awakening",
+                    subtitle: "The Problem",
                     dayRange: [1, 13],
                     leg: "🧠 Mindset Mystery",
                     quote: '"I\'m not building my dream. I\'m helping someone else build theirs."',
@@ -2298,6 +2318,13 @@
 
             document.getElementById('stageNumber').textContent = `Stage ${stageInfo.stage}`;
             document.getElementById('stageName').textContent = stageInfo.name;
+
+            // Update subtitle if exists
+            const subtitleEl = document.getElementById('stageSubtitle');
+            if (subtitleEl) {
+                subtitleEl.textContent = stageInfo.subtitle ? `- ${stageInfo.subtitle}` : '';
+            }
+
             document.getElementById('stageLeg').textContent = stageInfo.leg;
             document.getElementById('stageQuote').textContent = stageInfo.quote;
 
