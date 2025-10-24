@@ -2142,7 +2142,9 @@
                     currentPhase = lesson.phaseTitle;
                     html += `
                         <div style="font-size: 0.95rem; font-weight: 700; color: #FF6B35;
-                                    margin: 1rem 0 0.5rem 0; padding-left: 0.5rem; border-left: 3px solid #FF6B35;">
+                                    margin: 1rem 0 0.5rem 0; padding: 0.5rem 0.5rem 0.5rem 0.8rem;
+                                    background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 107, 53, 0.1));
+                                    border-left: 3px solid #FF6B35; border-radius: 5px;">
                             ${lesson.phaseTitle}
                         </div>
                     `;
@@ -2152,10 +2154,10 @@
                 const lockIcon = isCompleted ? '✅' : (isUnlocked ? '🔓' : '🔒');
                 const opacity = isUnlocked ? '1' : '0.6';
                 const cursor = isUnlocked ? 'pointer' : 'not-allowed';
-                const hoverStyle = isUnlocked ? 'this.style.background="rgba(255,215,0,0.2)"' : '';
-                const unhoverStyle = isUnlocked ? `this.style.background="${isCurrent ? 'rgba(255,215,0,0.15)' : 'rgba(0,0,0,0.03)'}"` : '';
-                const currentBorder = isCurrent ? 'border: 2px solid #D4AF37;' : 'border: 1px solid rgba(0,0,0,0.1);';
-                const currentBg = isCurrent ? 'background: rgba(255,215,0,0.15);' : 'background: rgba(0,0,0,0.03);';
+                const hoverStyle = isUnlocked ? 'this.style.background="linear-gradient(135deg, rgba(255, 215, 0, 0.25), rgba(255, 107, 53, 0.25))"' : '';
+                const unhoverStyle = isUnlocked ? `this.style.background="${isCurrent ? 'linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 107, 53, 0.15))' : 'linear-gradient(135deg, rgba(255, 215, 0, 0.08), rgba(255, 107, 53, 0.08))'}"` : '';
+                const currentBorder = isCurrent ? 'border: 2px solid #D4AF37;' : 'border: 1px solid rgba(255, 215, 0, 0.3);';
+                const currentBg = isCurrent ? 'background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 107, 53, 0.15));' : 'background: linear-gradient(135deg, rgba(255, 215, 0, 0.08), rgba(255, 107, 53, 0.08));';
 
                 html += `
                     <div onclick="${isUnlocked ? `goToLesson(${lesson.day})` : ''}"
