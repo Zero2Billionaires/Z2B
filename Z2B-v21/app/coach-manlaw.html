@@ -2315,6 +2315,17 @@
                 console.error('❌ lessonModal element not found in DOM!');
                 alert('⚠️ Modal element not found. Page may be corrupted.');
             }
+
+            // AUTO-UNLOCK: Mark lesson as complete when opened (unlocks next lesson)
+            if (!completedLessons.includes(currentDay)) {
+                completedLessons.push(currentDay);
+                localStorage.setItem('coach_completed_lessons', JSON.stringify(completedLessons));
+
+                // Update lesson overview to show completion
+                renderLessonOverview();
+
+                console.log(`✅ Lesson ${currentDay} auto-completed (unlocks Day ${currentDay + 1})`);
+            }
         }
 
         // Submit activity response to Coach ManLaw
