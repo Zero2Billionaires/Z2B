@@ -1156,6 +1156,25 @@
                     </div>
                 </div>
 
+                <!-- 90-Day Lesson Overview -->
+                <div class="message coach" style="margin-top: 2rem;">
+                    <div class="message-avatar">📚</div>
+                    <div class="message-content">
+                        <div class="message-text">
+                            <strong style="font-size: 1.3rem; color: var(--gold);">📖 YOUR 90-DAY TRANSFORMATION ROADMAP</strong><br><br>
+
+                            <p style="opacity: 0.9; margin-bottom: 1.5rem;">
+                                Below is your complete journey—all 90 lessons that will transform you from employee to entrepreneur.
+                                <strong>Lessons are unlocked sequentially</strong> as you complete them. Stay disciplined, follow the path, and trust the process.
+                            </p>
+
+                            <div id="lessonOverviewContainer">
+                                <!-- Lesson overview will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="typing-indicator" id="typingIndicator">
                     <span class="typing-dot"></span>
                     <span class="typing-dot"></span>
@@ -1482,6 +1501,14 @@
                     <div style="font-size: 1rem; font-weight: 600; color: var(--white); margin-bottom: 0.2rem;" id="modalStageName">Awakening</div>
                     <div style="font-size: 0.85rem; color: var(--gold); font-weight: 500; font-style: italic; margin-bottom: 0.4rem;" id="modalStageSubtitle"></div>
                     <div style="font-size: 0.8rem; color: var(--orange); font-weight: 500;" id="modalStageLeg">🧠 Mindset Mystery</div>
+                </div>
+            </div>
+
+            <!-- Stage Overview with Details -->
+            <div class="assessment-item" id="stageOverviewPanel" style="background: linear-gradient(135deg, rgba(76, 236, 196, 0.1), rgba(155, 89, 182, 0.1)); border-left: 4px solid var(--purple);">
+                <h4 style="color: var(--gold); margin-bottom: 1rem;"><i class="fas fa-map-marked-alt"></i> Stage Overview</h4>
+                <div id="stageOverviewContent">
+                    <!-- Will be populated by JavaScript -->
                 </div>
             </div>
 
@@ -1898,6 +1925,139 @@
             return null;
         }
 
+        // Get all lessons (1-90)
+        function getAllLessons() {
+            if (!curriculum) return [];
+
+            const allLessons = [];
+            const phases = [
+                curriculum.phase1_mindset,
+                curriculum.phase2_money,
+                curriculum.phase3_legacy,
+                curriculum.phase4_momentum,
+                curriculum.finalPhase_integration
+            ];
+
+            for (const phase of phases) {
+                for (const week of phase.weeks) {
+                    for (const lesson of week.lessons) {
+                        allLessons.push({
+                            ...lesson,
+                            week: week.week,
+                            theme: week.theme,
+                            phaseTitle: phase.title
+                        });
+                    }
+                }
+            }
+
+            // Sort by day to ensure correct order
+            return allLessons.sort((a, b) => a.day - b.day);
+        }
+
+        // Check if a lesson is unlocked
+        function isLessonUnlocked(day) {
+            // Day 1 is always unlocked
+            if (day === 1) return true;
+
+            // A lesson is unlocked if the previous lesson is completed
+            return completedLessons.includes(day - 1);
+        }
+
+        // Navigate to a specific lesson
+        function goToLesson(day) {
+            if (!isLessonUnlocked(day)) {
+                addCoachMessage(`🔒 This lesson is locked! Complete Day ${day - 1} first to unlock it. Stay disciplined—the sequence matters for your transformation!`);
+                return;
+            }
+
+            currentDay = day;
+            updateJourneyDay();
+            updateCurrentLesson();
+            viewLesson();
+        }
+
+        // Render the 90-day lesson overview
+        function renderLessonOverview() {
+            const allLessons = getAllLessons();
+            const container = document.getElementById('lessonOverviewContainer');
+
+            if (!container || allLessons.length === 0) return;
+
+            let html = '';
+            let currentStage = 0;
+            let currentPhase = '';
+
+            allLessons.forEach((lesson) => {
+                const stageInfo = getCurrentStage(lesson.day);
+                const isUnlocked = isLessonUnlocked(lesson.day);
+                const isCompleted = completedLessons.includes(lesson.day);
+                const isCurrent = lesson.day === currentDay;
+
+                // Add stage header when stage changes
+                if (stageInfo.stage !== currentStage) {
+                    currentStage = stageInfo.stage;
+                    html += `
+                        <div style="background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 107, 53, 0.15));
+                                    padding: 1rem; border-radius: 10px; border-left: 4px solid var(--gold);
+                                    margin: 1.5rem 0 1rem 0;">
+                            <div style="font-size: 1.1rem; font-weight: 700; color: var(--gold); margin-bottom: 0.3rem;">
+                                Stage ${stageInfo.stage}: ${stageInfo.name}${stageInfo.subtitle ? ' - ' + stageInfo.subtitle : ''}
+                            </div>
+                            <div style="font-size: 0.85rem; color: var(--orange);">${stageInfo.leg}</div>
+                            <div style="font-size: 0.8rem; color: var(--white); opacity: 0.8; font-style: italic; margin-top: 0.3rem;">
+                                ${stageInfo.quote}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // Add phase header when phase changes
+                if (lesson.phaseTitle !== currentPhase) {
+                    currentPhase = lesson.phaseTitle;
+                    html += `
+                        <div style="font-size: 0.95rem; font-weight: 600; color: var(--orange);
+                                    margin: 1rem 0 0.5rem 0; padding-left: 0.5rem; border-left: 3px solid var(--orange);">
+                            ${lesson.phaseTitle}
+                        </div>
+                    `;
+                }
+
+                // Lesson item
+                const lockIcon = isCompleted ? '✅' : (isUnlocked ? '🔓' : '🔒');
+                const opacity = isUnlocked ? '1' : '0.5';
+                const cursor = isUnlocked ? 'pointer' : 'not-allowed';
+                const hoverStyle = isUnlocked ? 'this.style.background="rgba(255,215,0,0.2)"' : '';
+                const unhoverStyle = isUnlocked ? `this.style.background="${isCurrent ? 'rgba(255,215,0,0.15)' : 'rgba(255,255,255,0.05)'}"` : '';
+                const currentBorder = isCurrent ? 'border: 2px solid var(--gold);' : 'border: 1px solid rgba(255,255,255,0.1);';
+                const currentBg = isCurrent ? 'background: rgba(255,215,0,0.15);' : 'background: rgba(255,255,255,0.05);';
+
+                html += `
+                    <div onclick="${isUnlocked ? `goToLesson(${lesson.day})` : ''}"
+                         onmouseover="${hoverStyle}"
+                         onmouseout="${unhoverStyle}"
+                         style="display: flex; align-items: center; gap: 1rem;
+                                padding: 0.8rem; margin: 0.3rem 0;
+                                ${currentBg} ${currentBorder}
+                                border-radius: 8px; cursor: ${cursor}; opacity: ${opacity};
+                                transition: all 0.3s;">
+                        <div style="font-size: 1.2rem; min-width: 30px;">${lockIcon}</div>
+                        <div style="flex: 1;">
+                            <div style="font-size: 0.75rem; color: var(--orange); font-weight: 600;">
+                                Day ${lesson.day} • Week ${lesson.week}
+                            </div>
+                            <div style="font-size: 0.9rem; color: var(--white); font-weight: 500;">
+                                ${lesson.title}
+                            </div>
+                        </div>
+                        ${isCurrent ? '<div style="font-size: 0.75rem; color: var(--gold); font-weight: 600;">◄ YOU ARE HERE</div>' : ''}
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
         // Update current lesson display
         function updateCurrentLesson() {
             const lesson = getLessonByDay(currentDay);
@@ -1967,6 +2127,34 @@
             document.getElementById('modalStageName').textContent = stageInfo.name;
             document.getElementById('modalStageSubtitle').textContent = stageInfo.subtitle ? `- ${stageInfo.subtitle}` : '';
             document.getElementById('modalStageLeg').textContent = stageInfo.leg;
+
+            // Update stage overview content
+            const overview = getStageOverview(stageInfo.stage);
+            const overviewHTML = `
+                <div style="margin-bottom: 1rem;">
+                    <div style="font-size: 1rem; font-weight: 700; color: var(--gold); margin-bottom: 0.5rem;">
+                        ${overview.legPhase}
+                    </div>
+                    <div style="font-size: 0.95rem; color: var(--white); margin-bottom: 0.5rem;">
+                        <strong>Stage ${stageInfo.stage}: ${stageInfo.name}</strong> – ${stageInfo.quote}
+                    </div>
+                    <div style="font-size: 0.9rem; color: var(--white); opacity: 0.9; margin-bottom: 0.3rem;">
+                        → ${overview.description}
+                    </div>
+                    <div style="font-size: 0.85rem; color: var(--orange); font-style: italic;">
+                        → Focus: <strong>${overview.focus}</strong>
+                    </div>
+                </div>
+                <div style="background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 8px;">
+                    <div style="font-size: 0.85rem; font-weight: 600; color: var(--gold); margin-bottom: 0.5rem;">
+                        🎯 What You'll Learn in This Stage:
+                    </div>
+                    <ul style="margin: 0; padding-left: 1.5rem; color: var(--white); opacity: 0.9; font-size: 0.85rem; line-height: 1.8;">
+                        ${overview.keyLearnings.map(learning => `<li>${learning}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+            document.getElementById('stageOverviewContent').innerHTML = overviewHTML;
 
             // Show/hide app connection
             const appSection = document.getElementById('modalAppConnection');
@@ -2137,6 +2325,7 @@
                 // Update UI
                 updateCurrentLesson();
                 updateProgressDashboard();
+                renderLessonOverview(); // Update lesson list to show completion
 
                 // Close modal if open
                 closeLessonModal();
@@ -2157,6 +2346,7 @@
                 localStorage.setItem('coach_current_day', currentDay);
                 updateCurrentLesson();
                 updateJourneyDay();
+                renderLessonOverview(); // Update lesson overview
                 closeLessonModal();
             }
         }
@@ -2174,6 +2364,7 @@
                 localStorage.setItem('coach_current_day', currentDay);
                 updateCurrentLesson();
                 updateJourneyDay();
+                renderLessonOverview(); // Update lesson overview
                 closeLessonModal();
             }
         }
@@ -2238,6 +2429,90 @@
                 historyHTML += '</div>';
                 historyDiv.innerHTML = historyHTML;
             }
+        }
+
+        // Get stage overview details
+        function getStageOverview(stage) {
+            const overviews = {
+                1: {
+                    legPhase: "🧠 MINDSET MYSTERY - Awakening & Reprogramming Your Mind",
+                    description: "Realize the trap. Recognize job security is an illusion. Hard work alone won't create freedom.",
+                    focus: "Awareness → Financial self-realization",
+                    keyLearnings: [
+                        "Identify the employee trap and psychological chains of employment",
+                        "Recognize that job security is an illusion",
+                        "Understand that hard work alone won't create freedom",
+                        "Begin shifting from employee to entrepreneur mindset"
+                    ]
+                },
+                2: {
+                    legPhase: "🧠 MINDSET MYSTERY - Awakening & Reprogramming Your Mind",
+                    description: "Unlearn employee habits (fear, dependency, trading time for money). Reprogram for growth, risk, leadership.",
+                    focus: "Unlearning → Building a Money Mindset",
+                    keyLearnings: [
+                        "Identify and challenge limiting employee beliefs",
+                        "Develop calculated risk-taking skills",
+                        "Build self-agency and independence",
+                        "Adopt abundance thinking over scarcity mindset"
+                    ]
+                },
+                3: {
+                    legPhase: "💸 MONEY MOVES - From Value Discovery to First Income",
+                    description: "Identify your purpose, passions, strengths. Find your profitable niche—your true path as a value creator.",
+                    focus: "Self-awareness → Profitable purpose",
+                    keyLearnings: [
+                        "Discover your zone of genius and transferable skills",
+                        "Identify market needs you can solve",
+                        "Define your unique value proposition",
+                        "Select and validate your profitable niche"
+                    ]
+                },
+                4: {
+                    legPhase: "💸 MONEY MOVES - From Value Discovery to First Income",
+                    description: "Test ideas through small offers or side hustles. Learn by doing. Overcome fear through execution.",
+                    focus: "Action → First income stream",
+                    keyLearnings: [
+                        "Launch your Minimum Viable Offer (MVO)",
+                        "Acquire your first customer",
+                        "Generate your first entrepreneurial income",
+                        "Learn from market feedback and iterate"
+                    ]
+                },
+                5: {
+                    legPhase: "⚙️ LEGACY MISSIONS - Building Systems That Work For You",
+                    description: "Move from hustling to structuring. Build systems, automations, processes that create leverage and consistency.",
+                    focus: "Self-employment → Business ownership",
+                    keyLearnings: [
+                        "Document your core business processes",
+                        "Implement marketing, sales, and delivery systems",
+                        "Create SOPs (Standard Operating Procedures)",
+                        "Build automation that works without constant personal effort"
+                    ]
+                },
+                6: {
+                    legPhase: "🌍 MOMENTUM MOVEMENT - From Solo Success to Generational Impact",
+                    description: "Shift from working IN the business to working ON it. Build teams, collaborations, communities that multiply your impact.",
+                    focus: "Leadership → Community growth",
+                    keyLearnings: [
+                        "Build and lead your first team members",
+                        "Develop delegation and leadership skills",
+                        "Create strategic partnerships and collaborations",
+                        "Build community and expand market reach"
+                    ]
+                },
+                7: {
+                    legPhase: "🌍 MOMENTUM MOVEMENT - From Solo Success to Generational Impact",
+                    description: "Transcend personal success. Focus on generational impact, mentorship, contribution.",
+                    focus: "Purpose-driven leadership → Legacy creation",
+                    keyLearnings: [
+                        "Create systems that outlive you",
+                        "Develop succession and legacy plans",
+                        "Become a mentor and industry guide",
+                        "Build generational wealth and lasting impact"
+                    ]
+                }
+            };
+            return overviews[stage] || overviews[1];
         }
 
         // Get current stage info based on day
@@ -3001,11 +3276,23 @@ Respond as Coach Manlaw would - sharp, strategic, faith-filled, funny when appro
 
             // Get current stage info for context
             const stageInfo = getCurrentStage(currentDay);
+            const overview = getStageOverview(stageInfo.stage);
 
-            // Combine all lesson text with stage context
+            // Build stage overview narration
+            const stageOverviewText = `
+                ${overview.legPhase}.
+                Stage ${stageInfo.stage}: ${stageInfo.name}. ${stageInfo.quote}
+                ${overview.description}
+                Focus: ${overview.focus}
+            `;
+
+            // Combine all lesson text with stage context and overview
             const fullText = `
-                Welcome to Day ${currentDay} of your transformation journey.
-                You are in Stage ${stageInfo.stage}: ${stageInfo.name}.
+                Welcome to Day ${currentDay} of your 90-day transformation journey.
+
+                Let me remind you where you are in your transformation:
+                ${stageOverviewText}
+
                 Today's lesson: ${lesson.title}.
 
                 ${lesson.content}
@@ -3821,6 +4108,9 @@ I am a Legacy Builder, You are a Legacy Builder, and Together we are Builders of
             if (btssScores) {
                 updateBTSSDisplay();
             }
+
+            // Render 90-day lesson overview
+            renderLessonOverview();
 
             // Set welcome time
             const now = new Date();
