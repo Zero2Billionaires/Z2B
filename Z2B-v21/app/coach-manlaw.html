@@ -1478,7 +1478,10 @@
                         <i class="fas fa-video"></i> AI Video Lesson (VIDZIE)
                     </h4>
                     <p style="font-size: 0.9rem; margin-bottom: 1rem; opacity: 0.9;">
-                        Generate a professional talking avatar video of this lesson with Coach Manlaw's voice!
+                        Generate a professional talking avatar video of this lesson with Coach Manlaw's voice! <br>
+                        <span style="font-size: 0.85rem; color: var(--gold);">
+                            <i class="fas fa-star"></i> Stage-aware video includes your transformation stage context
+                        </span>
                     </p>
                     <button type="button" onclick="generateCoachingVideo()" id="btnGenerateCoachVideo" style="width: 100%; padding: 1rem; background: linear-gradient(135deg, var(--gold), var(--orange)); border: none; border-radius: 10px; color: var(--navy-blue); font-weight: 700; cursor: pointer;">
                         <i class="fas fa-magic"></i> Generate Video Lesson
@@ -3237,17 +3240,31 @@ Respond as Coach Manlaw would - sharp, strategic, faith-filled, funny when appro
                 btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
                 document.getElementById('videoGenerationProgress').style.display = 'block';
 
-                // Create video script from lesson
+                // Get current stage info for context
+                const stageInfo = getCurrentStage(currentDay);
+                console.log('🎥 Generating stage-aware video for Day', currentDay, '- Stage', stageInfo.stage + ':', stageInfo.name);
+
+                // Create stage-aware video script from lesson
                 const videoScript = `
-Hi! I'm Coach Manlaw, and today is Day ${currentDay} of your 90-day transformation: ${lesson.title}.
+Hi! I'm Coach Manlaw, your guide from employee to entrepreneur!
+
+Welcome to Day ${currentDay} of your 90-day transformation journey.
+
+You are in Stage ${stageInfo.stage}: ${stageInfo.name}. This is where you ${stageInfo.focus}.
+
+Right now, we're focusing on ${stageInfo.leg}.
+
+Today's lesson is: ${lesson.title}.
 
 ${lesson.content}
 
-Here's your activity for today: ${lesson.activity}
+Now, here's your activity for today: ${lesson.activity}
 
 And your assignment: ${lesson.assignment}
 
-Remember, Legacy Builder: ${lesson.phaseTitle.split(':')[0]} is about ${lesson.theme}. Stay focused, keep building, and let's make today count!
+Remember, Legacy Builder: You're on ${lesson.phaseTitle.split(':')[0]}, and this stage is about ${lesson.theme}.
+
+Stage ${stageInfo.stage} is critical to your transformation. Stay focused, keep building, and let's make today count!
 
 I am a Legacy Builder, You are a Legacy Builder, and Together we are Builders of Legacies!
                 `.trim();
@@ -3264,15 +3281,17 @@ I am a Legacy Builder, You are a Legacy Builder, and Together we are Builders of
                         'Authorization': `Bearer ${authToken}`
                     },
                     body: JSON.stringify({
-                        videoName: `Coach Manlaw - Day ${currentDay} - ${lesson.title}`,
-                        description: `Coaching video for Day ${currentDay}`,
+                        videoName: `Coach Manlaw - Day ${currentDay} - Stage ${stageInfo.stage}: ${stageInfo.name} - ${lesson.title}`,
+                        description: `Stage ${stageInfo.stage} (${stageInfo.name}) - Day ${currentDay} of 90-day transformation: ${lesson.title}`,
                         videoType: 'coaching',
                         purpose: 'coach-manlaw',
                         sourceImage: coachAvatar,
                         script: videoScript.substring(0, 5000), // Limit to 5000 chars
                         voiceId: 'en-US-GuyNeural', // Professional male voice
                         settings: {
-                            resolution: 'HD'
+                            resolution: 'HD',
+                            stage: stageInfo.stage,
+                            stageName: stageInfo.name
                         }
                     })
                 });
@@ -3332,10 +3351,12 @@ I am a Legacy Builder, You are a Legacy Builder, and Together we are Builders of
                         document.getElementById('videoGenerationProgress').style.display = 'none';
 
                         // Send success message to chat
+                        const stageInfo = getCurrentStage(currentDay);
                         addCoachMessage(`
                             <strong>🎥 Your Video Lesson is Ready!</strong><br><br>
-                            I've created a personalized video lesson for Day ${currentDay}. Watch it anytime you need a refresher!<br><br>
-                            <em>Pro tip: Download it to your device so you can watch offline!</em>
+                            I've created a personalized video lesson for Day ${currentDay} - Stage ${stageInfo.stage}: ${stageInfo.name}.<br><br>
+                            This video covers your current transformation stage and includes all the guidance you need for today's lesson.<br><br>
+                            <em>Pro tip: Download it to your device so you can watch offline anytime!</em>
                         `);
 
                         return;
@@ -3403,11 +3424,12 @@ I am a Legacy Builder, You are a Legacy Builder, and Together we are Builders of
                     });
                 }
 
-                // Download video
+                // Download video with stage info in filename
                 const lesson = getLessonByDay(currentDay);
+                const stageInfo = getCurrentStage(currentDay);
                 const link = document.createElement('a');
                 link.href = currentCoachingVideoUrl;
-                link.download = `Coach-Manlaw-Day-${currentDay}-${lesson.title.replace(/[^a-z0-9]/gi, '-')}.mp4`;
+                link.download = `Coach-Manlaw-Day-${currentDay}-Stage-${stageInfo.stage}-${stageInfo.name}-${lesson.title.replace(/[^a-z0-9]/gi, '-')}.mp4`;
                 link.click();
 
                 addCoachMessage('✅ Video downloaded! Keep building, Legacy Builder!');
