@@ -1171,7 +1171,7 @@
                 </div>
 
                 <!-- 90-Day Lesson Overview -->
-                <div class="message coach" style="margin-top: 2rem;">
+                <div id="roadmapSection" class="message coach" style="margin-top: 2rem;">
                     <div class="message-avatar">📚</div>
                     <div class="message-content">
                         <div class="message-text">
@@ -3118,33 +3118,41 @@ and Together we are Builders of Legacies."
                 renderLessonOverview(); // Re-render with loaded curriculum
             }
 
-            const container = document.getElementById('lessonOverviewContainer');
-            if (container && container.parentElement) {
-                // Scroll to the lesson overview section
-                container.parentElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            const roadmapSection = document.getElementById('roadmapSection');
+            const chatMessages = document.getElementById('chatMessages');
+
+            if (roadmapSection && chatMessages) {
+                // Scroll the chat messages container to show the roadmap
+                const roadmapTop = roadmapSection.offsetTop;
+                chatMessages.scrollTo({
+                    top: roadmapTop - 20, // 20px offset for better visibility
+                    behavior: 'smooth'
+                });
 
                 // Add visual highlight effect
-                container.parentElement.style.animation = 'pulse 1s ease-in-out';
+                roadmapSection.style.animation = 'pulse 1s ease-in-out';
                 setTimeout(() => {
-                    container.parentElement.style.animation = '';
+                    roadmapSection.style.animation = '';
                 }, 1000);
 
                 // Send confirmation message
                 addCoachMessage(`
                     <strong>📚 90-Day Content List</strong><br><br>
-                    Here's your complete transformation roadmap! All 90 lessons are listed below, organized by the 7 transformation stages.<br><br>
+                    Scrolling to your complete transformation roadmap! All 90 lessons are organized by the 7 transformation stages.<br><br>
                     🔒 Locked lessons will unlock as you complete previous lessons.<br>
                     ✅ Completed lessons show a checkmark.<br>
                     🔓 Click any unlocked lesson to start learning!<br><br>
                     <em>Remember: Trust the process. Sequential learning ensures lasting transformation.</em>
                 `);
             } else {
-                // If container not found, try to render it
-                renderLessonOverview();
-                addCoachMessage('📚 Loading your 90-day content list... Please wait a moment.');
-                setTimeout(() => {
-                    show90DayList();
-                }, 1000);
+                // If roadmap section not found, something is wrong
+                console.error('❌ Roadmap section not found!', { roadmapSection: !!roadmapSection, chatMessages: !!chatMessages });
+                addCoachMessage('📚 Loading your 90-day content list... Please refresh the page if the list doesn\'t appear.');
+
+                // Try to render the overview anyway
+                if (typeof renderLessonOverview === 'function') {
+                    renderLessonOverview();
+                }
             }
         }
 
@@ -4873,16 +4881,8 @@ I am a Legacy Builder, You are a Legacy Builder, and Together we are Builders of
                 updateBTSSDisplay();
             }
 
-            // Render 90-day lesson overview (with small delay to ensure curriculum is loaded)
-            setTimeout(() => {
-                // Ensure curriculum is loaded before rendering
-                if (typeof MANLAW_CURRICULUM !== 'undefined' && !curriculum) {
-                    curriculum = MANLAW_CURRICULUM;
-                    console.log('✅ Curriculum loaded for lesson overview');
-                }
-                renderLessonOverview();
-                console.log('✅ Lesson overview rendered');
-            }, 500);
+            // Lesson overview will be rendered after curriculum loads (see script block after curriculum file)
+            console.log('⏳ Waiting for curriculum to load before rendering lesson overview...');
 
             // Set welcome time
             const now = new Date();
@@ -4945,6 +4945,11 @@ I am a Legacy Builder, You are a Legacy Builder, and Together we are Builders of
             curriculum = MANLAW_CURRICULUM;
             if (typeof updateCurrentLesson === 'function') {
                 updateCurrentLesson();
+            }
+            // Now render the lesson overview with loaded curriculum
+            if (typeof renderLessonOverview === 'function') {
+                renderLessonOverview();
+                console.log('✅ Lesson overview rendered with curriculum data');
             }
             console.log('✅ Curriculum loaded from external file');
         } else {
