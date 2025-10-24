@@ -2126,11 +2126,11 @@
                         <div style="background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 107, 53, 0.15));
                                     padding: 1rem; border-radius: 10px; border-left: 4px solid var(--gold);
                                     margin: 1.5rem 0 1rem 0;">
-                            <div style="font-size: 1.1rem; font-weight: 700; color: var(--gold); margin-bottom: 0.3rem;">
+                            <div style="font-size: 1.1rem; font-weight: 700; color: #D4AF37; margin-bottom: 0.3rem;">
                                 Stage ${stageInfo.stage}: ${stageInfo.name}${stageInfo.subtitle ? ' - ' + stageInfo.subtitle : ''}
                             </div>
-                            <div style="font-size: 0.85rem; color: var(--orange);">${stageInfo.leg}</div>
-                            <div style="font-size: 0.8rem; color: var(--white); opacity: 0.8; font-style: italic; margin-top: 0.3rem;">
+                            <div style="font-size: 0.85rem; color: #FF6B35; font-weight: 600;">${stageInfo.leg}</div>
+                            <div style="font-size: 0.8rem; color: #030B1F; opacity: 0.75; font-style: italic; margin-top: 0.3rem;">
                                 ${stageInfo.quote}
                             </div>
                         </div>
@@ -2141,8 +2141,8 @@
                 if (lesson.phaseTitle !== currentPhase) {
                     currentPhase = lesson.phaseTitle;
                     html += `
-                        <div style="font-size: 0.95rem; font-weight: 600; color: var(--orange);
-                                    margin: 1rem 0 0.5rem 0; padding-left: 0.5rem; border-left: 3px solid var(--orange);">
+                        <div style="font-size: 0.95rem; font-weight: 700; color: #FF6B35;
+                                    margin: 1rem 0 0.5rem 0; padding-left: 0.5rem; border-left: 3px solid #FF6B35;">
                             ${lesson.phaseTitle}
                         </div>
                     `;
@@ -2150,12 +2150,12 @@
 
                 // Lesson item
                 const lockIcon = isCompleted ? '✅' : (isUnlocked ? '🔓' : '🔒');
-                const opacity = isUnlocked ? '1' : '0.5';
+                const opacity = isUnlocked ? '1' : '0.6';
                 const cursor = isUnlocked ? 'pointer' : 'not-allowed';
                 const hoverStyle = isUnlocked ? 'this.style.background="rgba(255,215,0,0.2)"' : '';
-                const unhoverStyle = isUnlocked ? `this.style.background="${isCurrent ? 'rgba(255,215,0,0.15)' : 'rgba(255,255,255,0.05)'}"` : '';
-                const currentBorder = isCurrent ? 'border: 2px solid var(--gold);' : 'border: 1px solid rgba(255,255,255,0.1);';
-                const currentBg = isCurrent ? 'background: rgba(255,215,0,0.15);' : 'background: rgba(255,255,255,0.05);';
+                const unhoverStyle = isUnlocked ? `this.style.background="${isCurrent ? 'rgba(255,215,0,0.15)' : 'rgba(0,0,0,0.03)'}"` : '';
+                const currentBorder = isCurrent ? 'border: 2px solid #D4AF37;' : 'border: 1px solid rgba(0,0,0,0.1);';
+                const currentBg = isCurrent ? 'background: rgba(255,215,0,0.15);' : 'background: rgba(0,0,0,0.03);';
 
                 html += `
                     <div onclick="${isUnlocked ? `goToLesson(${lesson.day})` : ''}"
@@ -2168,14 +2168,14 @@
                                 transition: all 0.3s;">
                         <div style="font-size: 1.2rem; min-width: 30px;">${lockIcon}</div>
                         <div style="flex: 1;">
-                            <div style="font-size: 0.75rem; color: var(--orange); font-weight: 600;">
+                            <div style="font-size: 0.75rem; color: #FF6B35; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">
                                 Day ${lesson.day} • Week ${lesson.week}
                             </div>
-                            <div style="font-size: 0.9rem; color: var(--white); font-weight: 500;">
+                            <div style="font-size: 0.95rem; color: #030B1F; font-weight: 600; margin-top: 0.2rem;">
                                 ${lesson.title}
                             </div>
                         </div>
-                        ${isCurrent ? '<div style="font-size: 0.75rem; color: var(--gold); font-weight: 600;">◄ YOU ARE HERE</div>' : ''}
+                        ${isCurrent ? '<div style="font-size: 0.75rem; color: #D4AF37; font-weight: 700; white-space: nowrap;">◄ YOU ARE HERE</div>' : ''}
                     </div>
                 `;
             });
