@@ -2894,18 +2894,38 @@ Respond as Coach Manlaw would - sharp, strategic, faith-filled, funny when appro
                 console.log('🎤 Available voices:', voices.length);
 
                 if (voices.length > 0 && !voiceSelected) {
-                    // Prefer English voices with natural sounding quality
+                    // Log all available voices for debugging
+                    console.log('🌍 All voices:', voices.map(v => `${v.name} (${v.lang})`).join(', '));
+
+                    // Prefer African male voices (South African, Nigerian, Kenyan, etc.)
                     const preferredVoice =
-                        voices.find(v => v.name.includes('Google') && v.lang.startsWith('en')) ||
-                        voices.find(v => v.name.includes('Microsoft') && v.name.includes('Natural') && v.lang.startsWith('en')) ||
-                        voices.find(v => v.name.includes('Samantha') && v.lang.startsWith('en')) || // MacOS
-                        voices.find(v => v.name.includes('Daniel') && v.lang.startsWith('en')) || // MacOS
-                        voices.find(v => v.lang.startsWith('en-US')) ||
-                        voices.find(v => v.lang.startsWith('en'));
+                        // South African English voices (Microsoft, Google)
+                        voices.find(v => v.lang === 'en-ZA' && !v.name.toLowerCase().includes('female')) ||
+                        voices.find(v => v.lang === 'en-ZA') ||
+
+                        // African-accented English voices
+                        voices.find(v => (v.name.includes('Thabo') || v.name.includes('Luke')) && v.lang.startsWith('en')) || // Microsoft SA voices
+                        voices.find(v => v.name.includes('Nigerian') && v.lang.startsWith('en')) ||
+                        voices.find(v => v.name.includes('Kenyan') && v.lang.startsWith('en')) ||
+
+                        // General African region voices
+                        voices.find(v => v.lang.startsWith('en-') && (v.name.includes('Africa') || v.name.includes('ZA'))) ||
+
+                        // Fallback to quality English male voices
+                        voices.find(v => v.name.includes('Google UK English Male')) ||
+                        voices.find(v => v.name.includes('Microsoft David')) || // UK male
+                        voices.find(v => v.name.includes('Microsoft George')) || // UK male
+                        voices.find(v => v.name.includes('Google') && v.lang === 'en-GB') || // UK English
+                        voices.find(v => v.name.includes('Daniel') && v.lang.startsWith('en')) || // MacOS UK
+
+                        // Last resort fallback
+                        voices.find(v => v.lang.startsWith('en-GB')) || // Any UK voice
+                        voices.find(v => v.lang.startsWith('en-US')) || // US voice
+                        voices.find(v => v.lang.startsWith('en')); // Any English
 
                     if (preferredVoice) {
                         currentUtterance.voice = preferredVoice;
-                        console.log('✅ Selected voice:', preferredVoice.name);
+                        console.log('✅ Selected voice:', preferredVoice.name, '(' + preferredVoice.lang + ')');
                         voiceSelected = true;
                     } else {
                         console.log('⚠️ No preferred voice found, using default');
@@ -3288,7 +3308,7 @@ I am a Legacy Builder, You are a Legacy Builder, and Together we are Builders of
                         purpose: 'coach-manlaw',
                         sourceImage: coachAvatar,
                         script: videoScript.substring(0, 5000), // Limit to 5000 chars
-                        voiceId: 'en-US-GuyNeural', // Professional male voice
+                        voiceId: 'en-ZA-LukeNeural', // South African male voice (African accent)
                         settings: {
                             resolution: 'HD',
                             stage: stageInfo.stage,
