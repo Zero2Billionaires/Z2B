@@ -3486,6 +3486,27 @@ I am a Legacy Builder, You are a Legacy Builder, and Together we are Builders of
         function initializePage() {
             console.log('🎯 Coach ManLaw: Initializing...');
 
+            // Initialize user as LIFETIME tier if not already set
+            const storedUser = localStorage.getItem('z2b_current_user');
+            if (!storedUser || JSON.parse(storedUser).tier !== 'LIFETIME') {
+                console.log('🔧 Initializing user as LIFETIME tier (Premium Legacy Builder)');
+                const lifetimeUser = {
+                    id: 'user_mokoro_manana',
+                    name: 'Mokoro Manana',
+                    tier: 'LIFETIME',
+                    aiFuel: 999999, // Unlimited AI Fuel
+                    joinDate: new Date().toISOString(),
+                    isDemo: false,
+                    legacyBuilder: true // Premium Legacy Builder status
+                };
+                localStorage.setItem('z2b_current_user', JSON.stringify(lifetimeUser));
+                // Update userTier variable
+                userTier = getUserTier();
+                console.log('✅ User initialized:', lifetimeUser.name, '- Tier:', userTier);
+            } else {
+                console.log('✅ User already initialized:', JSON.parse(storedUser).name);
+            }
+
             // Load curriculum
             if (typeof COACH_CURRICULUM !== 'undefined') {
                 curriculum = COACH_CURRICULUM;
