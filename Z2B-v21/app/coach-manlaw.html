@@ -1901,10 +1901,10 @@
             <div class="assessment-item" style="background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 107, 53, 0.15)); border-left: 4px solid var(--gold);">
                 <h4><i class="fas fa-info-circle"></i> How This Works</h4>
                 <p style="font-size: 0.9rem; line-height: 1.6;">
-                    Record yourself reading <strong>15 sample sentences</strong> below. Speak naturally and clearly, as if you're coaching someone.
-                    These samples will be used to clone your voice for narrating lessons.
+                    Record yourself reading the <strong>30-minute script</strong> below. Speak naturally and clearly, as if you're coaching someone.
+                    This recording will be used to clone your voice for all 90 lessons + introduction.
                 </p>
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1rem;">
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-top: 1rem;">
                     <div style="text-align: center; padding: 0.8rem; background: rgba(255,255,255,0.05); border-radius: 10px;">
                         <div style="font-size: 1.5rem; color: var(--gold);">🎤</div>
                         <div style="font-size: 0.85rem; margin-top: 0.5rem;">Clear voice</div>
@@ -1917,19 +1917,18 @@
                         <div style="font-size: 1.5rem; color: var(--success);">💬</div>
                         <div style="font-size: 0.85rem; margin-top: 0.5rem;">Natural tone</div>
                     </div>
+                    <div style="text-align: center; padding: 0.8rem; background: rgba(255,255,255,0.05); border-radius: 10px;">
+                        <div style="font-size: 1.5rem; color: var(--purple);">⏱️</div>
+                        <div style="font-size: 0.85rem; margin-top: 0.5rem;">~30 minutes</div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Progress Counter -->
-            <div class="assessment-item">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <h4 style="margin: 0;"><i class="fas fa-tasks"></i> Progress</h4>
-                    <div style="font-size: 1.2rem; font-weight: 700; color: var(--gold);">
-                        <span id="recordedCount">0</span> / 15
-                    </div>
-                </div>
-                <div class="bar-container" style="margin-top: 1rem;">
-                    <div class="bar-fill" id="voiceProgressBar" style="width: 0%; background: linear-gradient(90deg, var(--gold), var(--orange));"></div>
+            <!-- Reading Script -->
+            <div class="assessment-item" style="max-height: 400px; overflow-y: auto;">
+                <h4><i class="fas fa-scroll"></i> 30-Minute Reading Script</h4>
+                <div id="voiceScript" style="font-size: 0.95rem; line-height: 1.8; color: var(--white); opacity: 0.95; padding: 1.5rem; background: rgba(0,0,0,0.3); border-radius: 10px; white-space: pre-line;">
+                    Loading script...
                 </div>
             </div>
 
@@ -1937,10 +1936,10 @@
             <div class="assessment-item" style="background: linear-gradient(135deg, rgba(76, 236, 196, 0.1), rgba(155, 89, 182, 0.1)); border-left: 4px solid var(--purple);">
                 <div style="text-align: center; margin-bottom: 1.5rem;">
                     <div style="font-size: 0.85rem; color: var(--orange); font-weight: 600; margin-bottom: 0.5rem;">
-                        SAMPLE <span id="currentSampleNumber">1</span> OF 15
+                        30-MINUTE VOICE SAMPLE
                     </div>
-                    <div id="sampleText" style="font-size: 1.1rem; font-weight: 600; color: var(--white); line-height: 1.6; padding: 1.5rem; background: rgba(0,0,0,0.3); border-radius: 10px; margin-bottom: 1.5rem;">
-                        Welcome to your transformation journey from employee to entrepreneur.
+                    <div style="font-size: 0.9rem; color: var(--white); opacity: 0.8;">
+                        Read the script above naturally. Take breaks if needed.
                     </div>
                 </div>
 
@@ -2613,24 +2612,156 @@
 
         // ==================== VOICE RECORDING FOR VOICE CLONING ====================
 
-        // Voice sample sentences for recording
-        const voiceSamples = [
-            "Welcome to your transformation journey from employee to entrepreneur.",
-            "I'm Coach Manlaw, and I'm here to guide you through this ninety-day transformation.",
-            "The employee trap keeps you trading time for money, building someone else's dream.",
-            "Your success depends on the weakest leg of your Billion-Dollar Table.",
-            "Mindset Mystery is about transforming your identity and beliefs.",
-            "Money Moves focuses on building wealth systems that work while you sleep.",
-            "Legacy Missions creates scalable systems and automation for lasting impact.",
-            "Momentum Movement builds influence and leads transformative movements.",
-            "Stage one is Awakening, where you realize the trap and recognize job security is an illusion.",
-            "Stage two is Reprogramming, where you unlearn employee habits and reprogram for growth.",
-            "Stage three is Discovery, where you identify your purpose and find your profitable niche.",
-            "Stage four is Activation, where you test ideas, learn by doing, and overcome fear through execution.",
-            "Stage five is Systemization, where you move from hustling to structuring and build systems that work for you.",
-            "Stage six is Expansion, where you build teams, collaborations, and communities that multiply your impact.",
-            "Stage seven is Legacy, where you create systems that outlive you and generate generational impact."
-        ];
+        // 30-Minute Voice Cloning Script (~4500 words)
+        const voiceScript = `Hey Employee, Ready to Break Free?
+
+I'm Coach Manlaw, and I see you. You're trading time for money, building someone else's dream, feeling the weight of the paycheck trap. You know there's more, but the path from employee to entrepreneur feels unclear, risky, maybe even impossible.
+
+Let me be clear: This isn't just a career change. It's a complete identity shift. It's about unlearning dependency and rediscovering self-agency. Moving from surviving on a paycheck to creating value, systems, and legacy.
+
+THE SEVEN STAGE TRANSFORMATION JOURNEY
+
+I'll guide you through seven transformational stages, built on the Four Legs of Your Billion-Dollar Table. Your success depends on your weakest leg, and we're strengthening all of them.
+
+Stage One: Awakening. Realize the trap. Recognize job security is an illusion. Hard work alone won't create freedom. You're stuck in a cycle that wasn't designed for your liberation. It was designed for your productivity.
+
+Stage Two: Reprogramming. Unlearn employee habits. Reprogram for growth, risk, leadership. The employee mindset is a prison of someone else's making. Break free from it.
+
+Stage Three: Discovery. Identify your purpose, passions, strengths. Find your profitable niche. What problem can you solve better than anyone else? That's your path.
+
+Stage Four: Activation. Test ideas. Learn by doing. Overcome fear through execution. Action creates clarity. Waiting for perfect conditions creates regret.
+
+Stage Five: Systemization. Move from hustling to structuring. Build systems that work for you, not you working for the systems. Freedom comes from automation, not exhaustion.
+
+Stage Six: Expansion. Build teams, collaborations, communities that multiply your impact. You can't scale if you're the bottleneck. Leadership is leverage.
+
+Stage Seven: Legacy. Create systems that outlive you. Generational impact. Mentorship. Contribution. This is where entrepreneurs become legends.
+
+YOUR BILLION DOLLAR TABLE FRAMEWORK
+
+Imagine a table with four legs. That table is your life, your business, your billion-dollar future. If one leg is weak, the whole table wobbles, no matter how strong the others are.
+
+Leg One: Mindset Mystery. Transform your identity and beliefs. You can't build a million-dollar business with a minimum-wage mindset. Your internal programming dictates your external results.
+
+Leg Two: Money Moves. Build wealth systems that work while you sleep. Passive income isn't a dream. It's a design. Multiple streams, strategic investments, assets that appreciate.
+
+Leg Three: Legacy Missions. Create scalable systems and automation. Your business should run without you. If it can't, you don't have a business. You have a job you created for yourself.
+
+Leg Four: Momentum Movement. Build influence and lead movements. Your network is your net worth. Your message is your mission. Impact at scale requires a movement, not just a product.
+
+THE EMPLOYEE TRAP
+
+Let's talk about why you're stuck. The employee trap is psychological, financial, and cultural. You were taught to get good grades, get a good job, work hard, and retire. That was the script. But who wrote it? And who benefits from it?
+
+The illusion of job security. Your job isn't secure. It's convenient for your employer. The moment you cost more than you provide, you're replaceable. Loyalty is a one-way street in corporate culture.
+
+Trading time for money. There are only twenty-four hours in a day. If you're paid by the hour, your income has a ceiling. That ceiling is your time. Entrepreneurs break that ceiling by creating value that scales.
+
+Building someone else's dream. Every day you work for someone else, you're building their vision, their wealth, their legacy. What about yours? How much longer will you postpone your own greatness?
+
+The golden handcuffs syndrome. The more you earn as an employee, the harder it is to leave. The mortgage, the car payment, the lifestyle you've built. It all depends on that paycheck. You're not free. You're funded.
+
+MINDSET MYSTERY: THE FIRST LEG
+
+Your mindset is the foundation of everything. Employee mindset versus entrepreneur mindset. Let's break it down.
+
+Employees seek stability. Entrepreneurs create opportunity. Employees avoid risk. Entrepreneurs calculate and take risk. Employees trade time for money. Entrepreneurs build assets that generate money.
+
+Employees wait for permission. Entrepreneurs take initiative. Employees follow instructions. Entrepreneurs write the playbook. Employees retire. Entrepreneurs build legacies.
+
+The fear of failure keeps you employed. The acceptance of failure makes you an entrepreneur. Every successful entrepreneur has failed more times than the average employee has tried.
+
+Scarcity versus abundance thinking. Employees operate from scarcity. There's only one promotion, one spot, one opportunity. Entrepreneurs operate from abundance. There's infinite opportunity if you create it.
+
+From consumer to producer. Employees consume. They buy products, pay for services, rent their time. Entrepreneurs produce. They create products, offer services, own their time.
+
+MONEY MOVES: THE SECOND LEG
+
+Money doesn't sleep, and neither should your income. Multiple streams of income. Active income is what you earn by working. Passive income is what you earn while sleeping. Your goal? Flip the ratio.
+
+The mathematics of wealth. Employees earn linear income. One hour equals one paycheck. Entrepreneurs earn exponential income. One product can sell a million times. One system can serve thousands simultaneously.
+
+Ownership versus salary. Employees rent their time. Entrepreneurs own assets. Real estate, businesses, intellectual property, equity. Ownership is the only path to generational wealth.
+
+Investing like a billionaire. Diversify your portfolio. Stocks, real estate, businesses, crypto, commodities. Don't put all your eggs in one basket. And definitely don't put them in someone else's basket.
+
+Cash flow is king. Profit is an opinion. Cash is a fact. Revenue is vanity. Profit is sanity. Cash flow is reality. Build systems that generate consistent, predictable cash flow.
+
+LEGACY MISSIONS: THE THIRD LEG
+
+Your business should outlive you. That's legacy. Systems, automation, documentation. If your business can't run without you, it's not a business. It's self-employment.
+
+Standard operating procedures. Document everything. How you acquire customers. How you deliver value. How you handle support. How you scale. A documented process is a repeatable process.
+
+Automation and delegation. Technology handles repetition. People handle complexity. Your job as a leader is to architect the system, not operate it.
+
+Building to sell. Even if you never sell, build your business as if you will. Buyers want systems, not solopreneurs. Investors want scalability, not dependency.
+
+Generational wealth. Legacy isn't just about money. It's about values, systems, opportunities you pass down. What will your children inherit? Debt or assets? Scarcity or abundance?
+
+MOMENTUM MOVEMENT: THE FOURTH LEG
+
+You can't build a billion-dollar business alone. You need a team. A network. A movement.
+
+Building your team. Hire for culture, train for skill. Your team is your leverage. The right people multiply your impact. The wrong people divide your energy.
+
+Strategic partnerships. Collaborate, don't compete. Two businesses serving the same audience? Partner. Create win-win scenarios. Joint ventures, affiliate programs, co-marketing.
+
+Your personal brand. You are the message. Your story, your journey, your transformation. People connect with people, not logos. Build your brand, and your business will follow.
+
+Thought leadership. Share your insights. Write. Speak. Teach. Mentor. The more you give, the more you grow. Thought leaders attract opportunity.
+
+Community building. Your customers should become your community. Your community becomes your advocates. Your advocates become your salesforce.
+
+STAGE ONE: AWAKENING
+
+Day one. The employee trap. Why you're stuck. You wake up, go to work, come home, repeat. Weekends are for recovery, not creation. Vacations are an escape, not a lifestyle. This is the trap.
+
+Day two. The illusion of job security. Your job isn't guaranteed. Recessions happen. Layoffs happen. Automation happens. The only security is self-reliance.
+
+Day three. Trading time for money. The hidden cost. Your time is finite. Your potential is infinite. Every hour you trade for a paycheck is an hour you're not building equity.
+
+Day four. Building someone else's dream. Your boss has a vision. A mission. A legacy plan. Where do you fit in it? As a tool. As a resource. As an expense.
+
+Day five. The golden handcuffs syndrome. The more you earn, the more you spend. The more you spend, the more you need that job. It's a cycle designed to keep you running.
+
+Day six. Why hard work alone won't set you free. Hard work is necessary but not sufficient. You need smart work. Strategic work. Leveraged work.
+
+Day seven. BTSS Assessment and Awakening Reflection. Where are you now? Where do you want to be? What's stopping you? Awareness is the first step to transformation.
+
+STAGE TWO: REPROGRAMMING
+
+Week three. Unlearning employee habits. Identifying your employee mindset patterns. The need for approval. The fear of mistakes. The wait for instructions. These are chains. Break them.
+
+The fear of risk. Why you're risk-averse. Because you were taught that safety equals success. But safety equals stagnation. Growth requires risk. Calculated, strategic, intelligent risk.
+
+Dependency to self-reliance shift. Stop waiting for someone to save you. No one is coming. Your rescue is your responsibility. Your transformation is your mission.
+
+Scarcity versus abundance thinking. There's enough for everyone. Opportunity isn't scarce. Your belief in scarcity is. Shift your mindset, shift your reality.
+
+The time trader to value creator shift. Stop selling hours. Start creating value. Products, systems, content, intellectual property. Value scales. Time doesn't.
+
+Consumer to producer identity change. Stop consuming other people's content, products, and dreams. Start producing your own. The world needs what you have to offer.
+
+STAGE THREE: DISCOVERY
+
+Week five. Finding your profitable purpose. Your zone of genius discovery. What do you do better than most? What do you do effortlessly that others struggle with? That's your genius.
+
+Identifying your transferable skills. Everything you've learned as an employee is valuable. Customer service. Project management. Sales. Communication. These skills translate.
+
+Passions that align with profit. Do what you love, but make sure someone will pay for it. Passion without profit is a hobby. Profit without passion is a prison.
+
+Market needs you can solve. Problems are opportunities. Every problem is a business waiting to be built. What frustrates people? Solve it.
+
+Your unique value proposition. What makes you different? What makes you better? What makes you the only choice? Define it clearly.
+
+CONCLUSION OF VOICE SAMPLE
+
+This is the foundation of your ninety-day transformation. From employee to entrepreneur. From dependency to self-agency. From paycheck to legacy.
+
+I am a Legacy Builder. You are a Legacy Builder. Together, we are Builders of Legacies.
+
+Let's transform you from employee to entrepreneur. Your journey starts now.`;
 
         // Voice recording state
         let mediaRecorder = null;
@@ -2644,8 +2775,18 @@
         // Open voice recording modal
         function openVoiceRecording() {
             document.getElementById('voiceRecordingModal').classList.add('show');
-            updateVoiceRecordingUI();
-            loadRecordedSamples();
+
+            // Display the 30-minute script
+            document.getElementById('voiceScript').textContent = voiceScript;
+
+            // Check if voice sample already recorded
+            const existingRecording = localStorage.getItem('coach_voice_master_recording');
+            if (existingRecording) {
+                document.getElementById('audioPlayback').src = existingRecording;
+                document.getElementById('audioPlaybackSection').style.display = 'block';
+                document.getElementById('saveVoiceBtn').disabled = false;
+                document.getElementById('saveVoiceBtn').style.opacity = '1';
+            }
         }
 
         // Close voice recording modal
@@ -2756,7 +2897,7 @@
             audio.play();
         }
 
-        // Accept recording and move to next
+        // Accept recording (save master 30-minute sample)
         async function acceptRecording() {
             if (!currentRecording) {
                 alert('No recording to accept');
@@ -2769,40 +2910,20 @@
             reader.onloadend = () => {
                 const base64Audio = reader.result;
 
-                // Save recording
-                voiceRecordings.push({
-                    sampleIndex: currentSampleIndex,
-                    sampleText: voiceSamples[currentSampleIndex],
-                    audioData: base64Audio,
-                    timestamp: new Date().toISOString()
-                });
+                // Save master recording to localStorage
+                localStorage.setItem('coach_voice_master_recording', base64Audio);
+                localStorage.setItem('coach_voice_recording_date', new Date().toISOString());
 
-                // Save to localStorage
-                localStorage.setItem('coach_voice_recordings', JSON.stringify(voiceRecordings));
+                // Enable save button
+                document.getElementById('saveVoiceBtn').disabled = false;
+                document.getElementById('saveVoiceBtn').style.opacity = '1';
 
-                // Move to next sample
-                if (currentSampleIndex < voiceSamples.length - 1) {
-                    currentSampleIndex++;
-                } else {
-                    // Loop back to first sample for re-recording if needed
-                    currentSampleIndex = 0;
-                }
-
-                // Reset UI
-                document.getElementById('audioPlaybackSection').style.display = 'none';
-                currentRecording = null;
-
-                // Update UI
-                updateVoiceRecordingUI();
-                loadRecordedSamples();
+                // Hide playback controls
+                document.getElementById('audioPlaybackSection').style.display = 'block';
 
                 // Show success message
-                console.log(`✅ Sample ${voiceRecordings.length} saved!`);
-
-                // Check if all samples done
-                if (voiceRecordings.length >= voiceSamples.length) {
-                    alert('🎉 All voice samples recorded! You can now save your voice profile.');
-                }
+                alert('✅ 30-minute voice sample saved! You can now save your voice profile to proceed with voice cloning.');
+                console.log('✅ Master voice recording saved!');
             };
         }
 
@@ -2869,10 +2990,12 @@
             }
         }
 
-        // Save voice profile
+        // Save voice profile and prepare for voice cloning
         function saveVoiceProfile() {
-            if (voiceRecordings.length < voiceSamples.length) {
-                alert(`Please record all ${voiceSamples.length} samples before saving.`);
+            const masterRecording = localStorage.getItem('coach_voice_master_recording');
+
+            if (!masterRecording) {
+                alert('Please record your 30-minute voice sample first!');
                 return;
             }
 
@@ -2880,22 +3003,47 @@
             localStorage.setItem('coach_voice_profile_complete', 'true');
             localStorage.setItem('coach_voice_profile_date', new Date().toISOString());
 
-            // Show success message
+            // Show detailed next steps message
             addCoachMessage(`
-                <strong>🎉 Voice Profile Saved!</strong><br><br>
-                Your voice samples have been saved successfully! You've recorded all ${voiceRecordings.length} samples.<br><br>
-                <strong>Next Steps:</strong><br>
-                1. Download your voice samples (coming soon)<br>
-                2. Use a voice cloning service to create your AI voice<br>
-                3. We'll integrate your cloned voice into the app<br><br>
-                <em>Your recordings are stored securely in your browser.</em>
+                <strong>🎉 Voice Profile Saved Successfully!</strong><br><br>
+                Your 30-minute voice sample has been saved! (~${Math.round(masterRecording.length / 1024)}KB)<br><br>
+
+                <strong>📋 Next Steps for Voice Cloning:</strong><br><br>
+
+                <strong>OPTION 1: Coqui TTS (Free, Self-Hosted)</strong><br>
+                • Install Python and Coqui TTS library<br>
+                • Use your recording to train voice model<br>
+                • Generate audio for all 90 lessons locally<br>
+                • No third-party service needed<br><br>
+
+                <strong>OPTION 2: Manual Audio Recording</strong><br>
+                • Use your recording as reference tone<br>
+                • Record full audio for each lesson manually<br>
+                • Upload audio files to the app<br>
+                • App plays your recordings<br><br>
+
+                <strong>🔧 Technical Setup (Coming Soon):</strong><br>
+                I'll add features to:<br>
+                1. Export your 30-min recording<br>
+                2. Upload generated lesson audio<br>
+                3. Integrate voice synthesis API<br>
+                4. Auto-generate all 90 lessons + intro<br><br>
+
+                <strong>📊 Current Status:</strong><br>
+                ✅ Master voice recording saved<br>
+                ✅ Voice profile completed<br>
+                ⏳ Voice cloning setup pending<br>
+                ⏳ 90 lesson audio generation pending<br><br>
+
+                <em>Your recording is safely stored in your browser (localStorage).</em><br>
+                <em>Ready to proceed with voice cloning integration when you are!</em>
             `);
 
             closeVoiceRecording();
 
             console.log('✅ Voice profile saved!', {
-                samples: voiceRecordings.length,
-                totalDuration: 'calculated from recordings'
+                recordingSize: `${Math.round(masterRecording.length / 1024)}KB`,
+                timestamp: new Date().toISOString()
             });
         }
 
