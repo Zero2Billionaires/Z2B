@@ -1084,6 +1084,9 @@
                 <button class="sidebar-btn" onclick="showSettings()">
                     <i class="fas fa-cog"></i> AI Settings
                 </button>
+                <button class="sidebar-btn" onclick="openVoiceRecording()" style="background: linear-gradient(135deg, #FF4444, #CC0000); font-weight: 600;">
+                    <i class="fas fa-microphone"></i> Record My Voice
+                </button>
             </div>
         </div>
 
@@ -1884,6 +1887,128 @@
         </div>
     </div>
 
+    <!-- Voice Recording Modal -->
+    <div class="modal-overlay" id="voiceRecordingModal">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <h3><i class="fas fa-microphone"></i> Record Your Voice for Coach Manlaw</h3>
+                <button class="btn-close" onclick="closeVoiceRecording()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <!-- Instructions -->
+            <div class="assessment-item" style="background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 107, 53, 0.15)); border-left: 4px solid var(--gold);">
+                <h4><i class="fas fa-info-circle"></i> How This Works</h4>
+                <p style="font-size: 0.9rem; line-height: 1.6;">
+                    Record yourself reading <strong>15 sample sentences</strong> below. Speak naturally and clearly, as if you're coaching someone.
+                    These samples will be used to clone your voice for narrating lessons.
+                </p>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1rem;">
+                    <div style="text-align: center; padding: 0.8rem; background: rgba(255,255,255,0.05); border-radius: 10px;">
+                        <div style="font-size: 1.5rem; color: var(--gold);">🎤</div>
+                        <div style="font-size: 0.85rem; margin-top: 0.5rem;">Clear voice</div>
+                    </div>
+                    <div style="text-align: center; padding: 0.8rem; background: rgba(255,255,255,0.05); border-radius: 10px;">
+                        <div style="font-size: 1.5rem; color: var(--orange);">🔇</div>
+                        <div style="font-size: 0.85rem; margin-top: 0.5rem;">Quiet room</div>
+                    </div>
+                    <div style="text-align: center; padding: 0.8rem; background: rgba(255,255,255,0.05); border-radius: 10px;">
+                        <div style="font-size: 1.5rem; color: var(--success);">💬</div>
+                        <div style="font-size: 0.85rem; margin-top: 0.5rem;">Natural tone</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Counter -->
+            <div class="assessment-item">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h4 style="margin: 0;"><i class="fas fa-tasks"></i> Progress</h4>
+                    <div style="font-size: 1.2rem; font-weight: 700; color: var(--gold);">
+                        <span id="recordedCount">0</span> / 15
+                    </div>
+                </div>
+                <div class="bar-container" style="margin-top: 1rem;">
+                    <div class="bar-fill" id="voiceProgressBar" style="width: 0%; background: linear-gradient(90deg, var(--gold), var(--orange));"></div>
+                </div>
+            </div>
+
+            <!-- Recording Interface -->
+            <div class="assessment-item" style="background: linear-gradient(135deg, rgba(76, 236, 196, 0.1), rgba(155, 89, 182, 0.1)); border-left: 4px solid var(--purple);">
+                <div style="text-align: center; margin-bottom: 1.5rem;">
+                    <div style="font-size: 0.85rem; color: var(--orange); font-weight: 600; margin-bottom: 0.5rem;">
+                        SAMPLE <span id="currentSampleNumber">1</span> OF 15
+                    </div>
+                    <div id="sampleText" style="font-size: 1.1rem; font-weight: 600; color: var(--white); line-height: 1.6; padding: 1.5rem; background: rgba(0,0,0,0.3); border-radius: 10px; margin-bottom: 1.5rem;">
+                        Welcome to your transformation journey from employee to entrepreneur.
+                    </div>
+                </div>
+
+                <!-- Recording Controls -->
+                <div style="display: flex; gap: 1rem; justify-content: center; margin-bottom: 1rem;">
+                    <button id="recordBtn" onclick="startRecording()" style="flex: 1; max-width: 200px; padding: 1.2rem; background: linear-gradient(135deg, #FF4444, #CC0000); border: none; border-radius: 10px; color: white; font-weight: 700; cursor: pointer; font-size: 1rem;">
+                        <i class="fas fa-circle"></i> Record
+                    </button>
+                    <button id="stopBtn" onclick="stopRecording()" disabled style="flex: 1; max-width: 200px; padding: 1.2rem; background: linear-gradient(135deg, var(--gold), var(--orange)); border: none; border-radius: 10px; color: var(--navy-blue); font-weight: 700; cursor: pointer; font-size: 1rem; opacity: 0.5;">
+                        <i class="fas fa-stop"></i> Stop
+                    </button>
+                </div>
+
+                <!-- Recording Status -->
+                <div id="recordingStatus" style="text-align: center; margin-bottom: 1rem; min-height: 30px;">
+                    <div id="recordingTimer" style="display: none; font-size: 1.5rem; font-weight: 700; color: #FF4444;">
+                        <i class="fas fa-circle" style="animation: pulse 1s infinite;"></i> 0:00
+                    </div>
+                </div>
+
+                <!-- Audio Playback -->
+                <div id="audioPlaybackSection" style="display: none;">
+                    <div style="background: rgba(0,0,0,0.3); padding: 1.5rem; border-radius: 10px; margin-bottom: 1rem;">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                            <button onclick="playRecording()" style="padding: 0.8rem 1.5rem; background: linear-gradient(135deg, var(--success), var(--purple)); border: none; border-radius: 8px; color: white; font-weight: 600; cursor: pointer;">
+                                <i class="fas fa-play"></i> Play
+                            </button>
+                            <div style="flex: 1; font-size: 0.9rem; opacity: 0.8;">
+                                Listen to your recording
+                            </div>
+                        </div>
+                        <audio id="audioPlayback" style="width: 100%; margin-bottom: 1rem;"></audio>
+                    </div>
+
+                    <!-- Accept or Re-record -->
+                    <div style="display: flex; gap: 1rem;">
+                        <button onclick="acceptRecording()" style="flex: 1; padding: 1.2rem; background: linear-gradient(135deg, var(--success), var(--purple)); border: none; border-radius: 10px; color: white; font-weight: 700; cursor: pointer;">
+                            <i class="fas fa-check"></i> Accept & Next
+                        </button>
+                        <button onclick="reRecord()" style="flex: 1; padding: 1.2rem; background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05)); border: 2px solid var(--orange); border-radius: 10px; color: var(--orange); font-weight: 700; cursor: pointer;">
+                            <i class="fas fa-redo"></i> Re-record
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recorded Samples List -->
+            <div class="assessment-item">
+                <h4><i class="fas fa-list"></i> Recorded Samples</h4>
+                <div id="recordedSamplesList" style="max-height: 300px; overflow-y: auto;">
+                    <div style="text-align: center; padding: 2rem; opacity: 0.5;">
+                        No samples recorded yet. Start recording above!
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div style="display: flex; gap: 1rem;">
+                <button type="button" class="btn-submit" onclick="saveVoiceProfile()" id="saveVoiceBtn" disabled style="opacity: 0.5;">
+                    <i class="fas fa-save"></i> Save Voice Profile
+                </button>
+                <button type="button" class="sidebar-btn" onclick="closeVoiceRecording()">
+                    <i class="fas fa-times"></i> Close
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts -->
     <script>
         // State
@@ -2484,6 +2609,294 @@
                     setTimeout(() => showSocialShare(currentDay), 1000);
                 }
             }
+        }
+
+        // ==================== VOICE RECORDING FOR VOICE CLONING ====================
+
+        // Voice sample sentences for recording
+        const voiceSamples = [
+            "Welcome to your transformation journey from employee to entrepreneur.",
+            "I'm Coach Manlaw, and I'm here to guide you through this ninety-day transformation.",
+            "The employee trap keeps you trading time for money, building someone else's dream.",
+            "Your success depends on the weakest leg of your Billion-Dollar Table.",
+            "Mindset Mystery is about transforming your identity and beliefs.",
+            "Money Moves focuses on building wealth systems that work while you sleep.",
+            "Legacy Missions creates scalable systems and automation for lasting impact.",
+            "Momentum Movement builds influence and leads transformative movements.",
+            "Stage one is Awakening, where you realize the trap and recognize job security is an illusion.",
+            "Stage two is Reprogramming, where you unlearn employee habits and reprogram for growth.",
+            "Stage three is Discovery, where you identify your purpose and find your profitable niche.",
+            "Stage four is Activation, where you test ideas, learn by doing, and overcome fear through execution.",
+            "Stage five is Systemization, where you move from hustling to structuring and build systems that work for you.",
+            "Stage six is Expansion, where you build teams, collaborations, and communities that multiply your impact.",
+            "Stage seven is Legacy, where you create systems that outlive you and generate generational impact."
+        ];
+
+        // Voice recording state
+        let mediaRecorder = null;
+        let audioChunks = [];
+        let currentRecording = null;
+        let recordingTimer = null;
+        let recordingStartTime = 0;
+        let currentSampleIndex = 0;
+        let voiceRecordings = JSON.parse(localStorage.getItem('coach_voice_recordings')) || [];
+
+        // Open voice recording modal
+        function openVoiceRecording() {
+            document.getElementById('voiceRecordingModal').classList.add('show');
+            updateVoiceRecordingUI();
+            loadRecordedSamples();
+        }
+
+        // Close voice recording modal
+        function closeVoiceRecording() {
+            if (mediaRecorder && mediaRecorder.state === 'recording') {
+                stopRecording();
+            }
+            document.getElementById('voiceRecordingModal').classList.remove('show');
+        }
+
+        // Update UI with current sample and progress
+        function updateVoiceRecordingUI() {
+            const sampleNumber = currentSampleIndex + 1;
+            document.getElementById('currentSampleNumber').textContent = sampleNumber;
+            document.getElementById('sampleText').textContent = voiceSamples[currentSampleIndex];
+            document.getElementById('recordedCount').textContent = voiceRecordings.length;
+
+            const progress = (voiceRecordings.length / voiceSamples.length) * 100;
+            document.getElementById('voiceProgressBar').style.width = progress + '%';
+
+            // Enable save button if all samples recorded
+            const saveBtn = document.getElementById('saveVoiceBtn');
+            if (voiceRecordings.length >= voiceSamples.length) {
+                saveBtn.disabled = false;
+                saveBtn.style.opacity = '1';
+            } else {
+                saveBtn.disabled = true;
+                saveBtn.style.opacity = '0.5';
+            }
+        }
+
+        // Start recording
+        async function startRecording() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+
+                mediaRecorder.ondataavailable = (event) => {
+                    audioChunks.push(event.data);
+                };
+
+                mediaRecorder.onstop = () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    currentRecording = audioBlob;
+
+                    // Show playback section
+                    const audioURL = URL.createObjectURL(audioBlob);
+                    document.getElementById('audioPlayback').src = audioURL;
+                    document.getElementById('audioPlaybackSection').style.display = 'block';
+
+                    // Stop all tracks
+                    stream.getTracks().forEach(track => track.stop());
+                };
+
+                mediaRecorder.start();
+
+                // Update UI
+                document.getElementById('recordBtn').disabled = true;
+                document.getElementById('recordBtn').style.opacity = '0.5';
+                document.getElementById('stopBtn').disabled = false;
+                document.getElementById('stopBtn').style.opacity = '1';
+                document.getElementById('recordingTimer').style.display = 'block';
+
+                // Start timer
+                recordingStartTime = Date.now();
+                recordingTimer = setInterval(updateRecordingTimer, 100);
+
+                console.log('🎤 Recording started...');
+            } catch (error) {
+                console.error('❌ Error accessing microphone:', error);
+                alert('Could not access microphone. Please check permissions.');
+            }
+        }
+
+        // Update recording timer
+        function updateRecordingTimer() {
+            const elapsed = Math.floor((Date.now() - recordingStartTime) / 1000);
+            const minutes = Math.floor(elapsed / 60);
+            const seconds = elapsed % 60;
+            document.getElementById('recordingTimer').innerHTML =
+                `<i class="fas fa-circle" style="animation: pulse 1s infinite;"></i> ${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // Stop recording
+        function stopRecording() {
+            if (mediaRecorder && mediaRecorder.state === 'recording') {
+                mediaRecorder.stop();
+
+                // Update UI
+                document.getElementById('recordBtn').disabled = false;
+                document.getElementById('recordBtn').style.opacity = '1';
+                document.getElementById('stopBtn').disabled = true;
+                document.getElementById('stopBtn').style.opacity = '0.5';
+                document.getElementById('recordingTimer').style.display = 'none';
+
+                // Stop timer
+                clearInterval(recordingTimer);
+
+                console.log('⏹️ Recording stopped');
+            }
+        }
+
+        // Play recording
+        function playRecording() {
+            const audio = document.getElementById('audioPlayback');
+            audio.play();
+        }
+
+        // Accept recording and move to next
+        async function acceptRecording() {
+            if (!currentRecording) {
+                alert('No recording to accept');
+                return;
+            }
+
+            // Convert blob to base64 for storage
+            const reader = new FileReader();
+            reader.readAsDataURL(currentRecording);
+            reader.onloadend = () => {
+                const base64Audio = reader.result;
+
+                // Save recording
+                voiceRecordings.push({
+                    sampleIndex: currentSampleIndex,
+                    sampleText: voiceSamples[currentSampleIndex],
+                    audioData: base64Audio,
+                    timestamp: new Date().toISOString()
+                });
+
+                // Save to localStorage
+                localStorage.setItem('coach_voice_recordings', JSON.stringify(voiceRecordings));
+
+                // Move to next sample
+                if (currentSampleIndex < voiceSamples.length - 1) {
+                    currentSampleIndex++;
+                } else {
+                    // Loop back to first sample for re-recording if needed
+                    currentSampleIndex = 0;
+                }
+
+                // Reset UI
+                document.getElementById('audioPlaybackSection').style.display = 'none';
+                currentRecording = null;
+
+                // Update UI
+                updateVoiceRecordingUI();
+                loadRecordedSamples();
+
+                // Show success message
+                console.log(`✅ Sample ${voiceRecordings.length} saved!`);
+
+                // Check if all samples done
+                if (voiceRecordings.length >= voiceSamples.length) {
+                    alert('🎉 All voice samples recorded! You can now save your voice profile.');
+                }
+            };
+        }
+
+        // Re-record current sample
+        function reRecord() {
+            document.getElementById('audioPlaybackSection').style.display = 'none';
+            currentRecording = null;
+        }
+
+        // Load and display recorded samples
+        function loadRecordedSamples() {
+            const listContainer = document.getElementById('recordedSamplesList');
+
+            if (voiceRecordings.length === 0) {
+                listContainer.innerHTML = `
+                    <div style="text-align: center; padding: 2rem; opacity: 0.5;">
+                        No samples recorded yet. Start recording above!
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            voiceRecordings.forEach((recording, index) => {
+                html += `
+                    <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem; background: linear-gradient(135deg, rgba(255, 215, 0, 0.08), rgba(255, 107, 53, 0.08)); border-radius: 10px; margin-bottom: 0.5rem; border: 1px solid rgba(255, 215, 0, 0.3);">
+                        <div style="flex: 1;">
+                            <div style="font-size: 0.75rem; color: var(--orange); font-weight: 600; margin-bottom: 0.3rem;">
+                                SAMPLE ${recording.sampleIndex + 1}
+                            </div>
+                            <div style="font-size: 0.85rem; color: var(--white); opacity: 0.9;">
+                                ${recording.sampleText.substring(0, 60)}...
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button onclick="playSample(${index})" style="padding: 0.6rem 1rem; background: linear-gradient(135deg, var(--success), var(--purple)); border: none; border-radius: 8px; color: white; font-weight: 600; cursor: pointer; font-size: 0.85rem;">
+                                <i class="fas fa-play"></i>
+                            </button>
+                            <button onclick="deleteSample(${index})" style="padding: 0.6rem 1rem; background: linear-gradient(135deg, #FF4444, #CC0000); border: none; border-radius: 8px; color: white; font-weight: 600; cursor: pointer; font-size: 0.85rem;">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            listContainer.innerHTML = html;
+        }
+
+        // Play a specific sample
+        function playSample(index) {
+            const recording = voiceRecordings[index];
+            const audio = new Audio(recording.audioData);
+            audio.play();
+        }
+
+        // Delete a sample
+        function deleteSample(index) {
+            if (confirm('Delete this voice sample?')) {
+                voiceRecordings.splice(index, 1);
+                localStorage.setItem('coach_voice_recordings', JSON.stringify(voiceRecordings));
+                updateVoiceRecordingUI();
+                loadRecordedSamples();
+            }
+        }
+
+        // Save voice profile
+        function saveVoiceProfile() {
+            if (voiceRecordings.length < voiceSamples.length) {
+                alert(`Please record all ${voiceSamples.length} samples before saving.`);
+                return;
+            }
+
+            // Mark voice profile as complete
+            localStorage.setItem('coach_voice_profile_complete', 'true');
+            localStorage.setItem('coach_voice_profile_date', new Date().toISOString());
+
+            // Show success message
+            addCoachMessage(`
+                <strong>🎉 Voice Profile Saved!</strong><br><br>
+                Your voice samples have been saved successfully! You've recorded all ${voiceRecordings.length} samples.<br><br>
+                <strong>Next Steps:</strong><br>
+                1. Download your voice samples (coming soon)<br>
+                2. Use a voice cloning service to create your AI voice<br>
+                3. We'll integrate your cloned voice into the app<br><br>
+                <em>Your recordings are stored securely in your browser.</em>
+            `);
+
+            closeVoiceRecording();
+
+            console.log('✅ Voice profile saved!', {
+                samples: voiceRecordings.length,
+                totalDuration: 'calculated from recordings'
+            });
         }
 
         // ==================== INTRODUCTION AUDIO ====================
