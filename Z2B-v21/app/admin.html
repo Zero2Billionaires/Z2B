@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel - Z2B Legacy Builders</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/responsive.css">
     <style>
         :root {
             --navy-blue: #0A2647;
@@ -474,6 +475,14 @@
             </ul>
         </div>
 
+        <!-- Sidebar Overlay for Mobile -->
+        <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+        <!-- Mobile Menu Button -->
+        <button class="mobile-menu-btn" id="mobileMenuBtn" onclick="toggleSidebar()">
+            <i class="fas fa-bars"></i>
+        </button>
+
         <!-- Main Content -->
         <div class="main-content">
             <div class="top-bar">
@@ -517,6 +526,23 @@
     </div>
 
     <script>
+        // Mobile Sidebar Toggle Function
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            const menuBtn = document.getElementById('mobileMenuBtn');
+
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+
+            // Change icon based on sidebar state
+            if (sidebar.classList.contains('active')) {
+                menuBtn.innerHTML = '<i class="fas fa-times"></i>';
+            } else {
+                menuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            }
+        }
+
         // API Configuration
         const API_URL = 'http://localhost:5000/api'; // Change to your backend URL
         let authToken = localStorage.getItem('admin_token');
@@ -1249,25 +1275,60 @@
                 </div>
 
                 <!-- Grant Manual Access Modal -->
-                <div id="grantManualAccessModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
-                    <div style="background: white; padding: 2rem; border-radius: 15px; max-width: 500px; width: 90%;">
-                        <h3 style="color: var(--navy-blue); margin-bottom: 1rem;">Grant Manual Access</h3>
-                        <p style="color: #666; font-size: 0.9rem; margin-bottom: 1.5rem;">For users who paid via cash, in-kind, or alternative payment methods.</p>
+                <div id="grantManualAccessModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; overflow-y: auto;">
+                    <div style="background: white; padding: 2rem; border-radius: 15px; max-width: 700px; width: 90%; margin: 2rem auto; max-height: 90vh; overflow-y: auto;">
+                        <h3 style="color: var(--navy-blue); margin-bottom: 0.5rem;">Register New Member - Manual Access</h3>
+                        <p style="color: #666; font-size: 0.9rem; margin-bottom: 1.5rem;">For members who paid via cash, in-kind, or alternative payment methods.</p>
 
-                        <div style="margin-bottom: 1rem;">
-                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #555;">User Email *</label>
-                            <input type="email" id="manualAccessEmail" style="width: 100%; padding: 0.7rem; border: 1px solid #ddd; border-radius: 5px;" placeholder="user@example.com">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                            <div>
+                                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #555;">Full Name *</label>
+                                <input type="text" id="manualAccessName" style="width: 100%; padding: 0.7rem; border: 1px solid #ddd; border-radius: 5px;" placeholder="John Doe">
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #555;">Email Address *</label>
+                                <input type="email" id="manualAccessEmail" style="width: 100%; padding: 0.7rem; border: 1px solid #ddd; border-radius: 5px;" placeholder="john@example.com">
+                            </div>
                         </div>
 
-                        <div style="margin-bottom: 1.5rem;">
-                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #555;">Upgrade to Tier *</label>
-                            <select id="manualAccessTier" style="width: 100%; padding: 0.7rem; border: 1px solid #ddd; border-radius: 5px;">
-                                <option value="BRONZE">Bronze Legacy Builder</option>
-                                <option value="COPPER">Copper Legacy Builder</option>
-                                <option value="SILVER">Silver Legacy Builder</option>
-                                <option value="GOLD">Gold Legacy Builder</option>
-                                <option value="PLATINUM">Platinum Legacy Builder</option>
-                            </select>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                            <div>
+                                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #555;">Phone Number *</label>
+                                <input type="tel" id="manualAccessPhone" style="width: 100%; padding: 0.7rem; border: 1px solid #ddd; border-radius: 5px;" placeholder="+27 123 456 789">
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #555;">ID Number</label>
+                                <input type="text" id="manualAccessIdNumber" style="width: 100%; padding: 0.7rem; border: 1px solid #ddd; border-radius: 5px;" placeholder="Optional">
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                            <div>
+                                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #555;">Membership Tier *</label>
+                                <select id="manualAccessTier" style="width: 100%; padding: 0.7rem; border: 1px solid #ddd; border-radius: 5px;">
+                                    <option value="FAM">FAM - Free Affiliate</option>
+                                    <option value="BRONZE" selected>Bronze Legacy Builder</option>
+                                    <option value="COPPER">Copper Legacy Builder</option>
+                                    <option value="SILVER">Silver Legacy Builder</option>
+                                    <option value="GOLD">Gold Legacy Builder</option>
+                                    <option value="PLATINUM">Platinum Legacy Builder</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #555;">Sponsor Code</label>
+                                <input type="text" id="manualAccessSponsorCode" style="width: 100%; padding: 0.7rem; border: 1px solid #ddd; border-radius: 5px;" placeholder="Optional">
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 1rem;">
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #555;">Password *</label>
+                            <input type="password" id="manualAccessPassword" style="width: 100%; padding: 0.7rem; border: 1px solid #ddd; border-radius: 5px;" placeholder="Min 8 characters" value="Welcome@123">
+                        </div>
+
+                        <div style="background: #e8f5e9; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; border-left: 4px solid #28a745;">
+                            <p style="margin: 0; color: #2e7d32; font-size: 0.9rem;">
+                                <i class="fas fa-hand-holding-usd"></i> This registration is marked as <strong>Manual Access</strong> (cash/in-kind payment received)
+                            </p>
                         </div>
 
                         <div style="display: flex; gap: 1rem; justify-content: flex-end;">
@@ -1275,9 +1336,27 @@
                                 Cancel
                             </button>
                             <button onclick="grantManualAccess()" style="padding: 0.8rem 1.5rem; background: #28a745; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">
-                                <i class="fas fa-hand-holding-usd"></i> Grant Access
+                                <i class="fas fa-user-plus"></i> Register Member
                             </button>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Success Modal for Manual Access -->
+                <div id="manualAccessSuccessModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1001; align-items: center; justify-content: center;">
+                    <div style="background: white; padding: 2rem; border-radius: 15px; max-width: 600px; width: 90%;">
+                        <div style="text-align: center; margin-bottom: 1.5rem;">
+                            <i class="fas fa-check-circle" style="font-size: 4rem; color: #28a745;"></i>
+                            <h3 style="color: var(--navy-blue); margin-top: 1rem;">Member Registered Successfully!</h3>
+                        </div>
+
+                        <div id="manualAccessSuccessDetails" style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                            <!-- Details will be populated by JavaScript -->
+                        </div>
+
+                        <button onclick="closeManualAccessSuccessModal()" style="width: 100%; padding: 1rem; background: var(--navy-blue); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">
+                            Close
+                        </button>
                     </div>
                 </div>
             `;
@@ -1536,41 +1615,112 @@
         function hideGrantManualAccessModal() {
             const modal = document.getElementById('grantManualAccessModal');
             modal.style.display = 'none';
+            // Clear form
+            document.getElementById('manualAccessName').value = '';
             document.getElementById('manualAccessEmail').value = '';
+            document.getElementById('manualAccessPhone').value = '';
+            document.getElementById('manualAccessIdNumber').value = '';
             document.getElementById('manualAccessTier').value = 'BRONZE';
+            document.getElementById('manualAccessSponsorCode').value = '';
+            document.getElementById('manualAccessPassword').value = 'Welcome@123';
         }
 
         async function grantManualAccess() {
+            const name = document.getElementById('manualAccessName').value.trim();
             const email = document.getElementById('manualAccessEmail').value.trim();
+            const phone = document.getElementById('manualAccessPhone').value.trim();
+            const idNumber = document.getElementById('manualAccessIdNumber').value.trim();
             const tier = document.getElementById('manualAccessTier').value;
+            const sponsorCode = document.getElementById('manualAccessSponsorCode').value.trim();
+            const password = document.getElementById('manualAccessPassword').value;
 
-            if (!email) {
-                alert('⚠️ Please enter a user email address');
+            // Validation
+            if (!name || !email || !phone) {
+                alert('⚠️ Please fill in all required fields (Name, Email, Phone)');
                 return;
             }
 
+            if (password.length < 8) {
+                alert('⚠️ Password must be at least 8 characters long');
+                return;
+            }
+
+            const userData = {
+                name,
+                email,
+                phone,
+                idNumber,
+                tier,
+                sponsorCode,
+                password,
+                freeAccess: true // Mark as manual access
+            };
+
             try {
-                const response = await fetch(`${API_URL}/users/grant-free-access`, {
-                    method: 'PUT',
+                const response = await fetch(`${API_URL}/users`, {
+                    method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${authToken}`,
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ email, tier })
+                    body: JSON.stringify(userData)
                 });
 
                 const result = await response.json();
                 if (result.success) {
-                    alert(`✅ Manual access granted! User upgraded to ${tier} tier for cash/in-kind payment.`);
                     hideGrantManualAccessModal();
+                    showManualAccessSuccess(result.data);
                     loadUsersData();
                 } else {
-                    alert('❌ Error granting access: ' + result.message);
+                    alert('❌ Error registering member: ' + result.message);
                 }
             } catch (error) {
-                alert('❌ Error granting access. Please try again.');
+                alert('❌ Error registering member. Please try again.');
                 console.error(error);
             }
+        }
+
+        function showManualAccessSuccess(userData) {
+            const modal = document.getElementById('manualAccessSuccessModal');
+            const detailsDiv = document.getElementById('manualAccessSuccessDetails');
+
+            detailsDiv.innerHTML = `
+                <div style="margin-bottom: 1rem;">
+                    <strong style="color: var(--navy-blue);">Member Name:</strong><br>
+                    <span style="font-size: 1.1rem;">${userData.name}</span>
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <strong style="color: var(--navy-blue);">Email:</strong><br>
+                    <span>${userData.email}</span>
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <strong style="color: var(--navy-blue);">Membership Number (Referral Code):</strong><br>
+                    <span style="font-size: 1.2rem; font-weight: bold; color: #28a745; background: #e8f5e9; padding: 0.5rem 1rem; border-radius: 5px; display: inline-block;">${userData.referralCode}</span>
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <strong style="color: var(--navy-blue);">User ID:</strong><br>
+                    <span style="font-family: monospace;">${userData.id}</span>
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <strong style="color: var(--navy-blue);">Access Type:</strong><br>
+                    <span style="background: #28a745; color: white; padding: 0.3rem 0.8rem; border-radius: 5px; font-size: 0.9rem;">Manual Access (Cash/In-Kind)</span>
+                </div>
+                <div style="background: #fff3cd; padding: 1rem; border-radius: 8px; border-left: 4px solid #ffc107; margin-top: 1rem;">
+                    <p style="margin: 0; color: #856404; font-size: 0.9rem;">
+                        <i class="fas fa-info-circle"></i> <strong>Next Steps:</strong><br>
+                        • Share the referral code with the member<br>
+                        • Member can log in with their email and password<br>
+                        • Placement in 3x3 matrix will be automatic based on sponsor
+                    </p>
+                </div>
+            `;
+
+            modal.style.display = 'flex';
+        }
+
+        function closeManualAccessSuccessModal() {
+            const modal = document.getElementById('manualAccessSuccessModal');
+            modal.style.display = 'none';
         }
 
         function editUser(user) {
