@@ -73,6 +73,7 @@ const userSchema = new mongoose.Schema({
         default: 'ACTIVE'
     },
     accountNotes: { type: String }, // Admin notes about this user
+    freeAccess: { type: Boolean, default: false }, // Admin granted free tier access
 
     // Banking Information
     bankName: { type: String },
@@ -86,7 +87,14 @@ const userSchema = new mongoose.Schema({
     createdByAdmin: { type: Boolean, default: false }
 }, {
     timestamps: true,
-    collection: 'users'
+    collection: 'users',
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
+});
+
+// Virtual field for full name
+userSchema.virtual('name').get(function() {
+    return `${this.firstName} ${this.lastName}`;
 });
 
 // Generate unique referral code before saving

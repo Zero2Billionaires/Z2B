@@ -8,7 +8,7 @@ const { verifyToken } = require('../middleware/auth');
 router.get('/', verifyToken, async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 50;
+        const limit = parseInt(req.query.limit) || 1000; // Higher limit for admin panel
         const skip = (page - 1) * limit;
 
         const filter = {};
@@ -33,6 +33,7 @@ router.get('/', verifyToken, async (req, res) => {
 
         res.json({
             success: true,
+            users: users, // Add 'users' field for frontend compatibility
             data: users,
             pagination: {
                 total,
@@ -77,10 +78,60 @@ router.get('/:id', verifyToken, async (req, res) => {
     }
 });
 
+// Grant Free Access - Find user by email and upgrade tier with free access
+router.put('/grant-free-access', verifyToken, async (req, res) => {
+    try {
+        const { email, tier } = req.body;
+
+        if (!email || !tier) {
+            return res.status(400).json({
+                success: false,
+                message: 'Email and tier are required'
+            });
+        }
+
+        // Find user by email
+        const user = await User.findOne({ email: email.toLowerCase() });
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found with this email address'
+            });
+        }
+
+        // Update user tier and grant free access
+        const oldTier = user.tier;
+        user.tier = tier;
+        user.freeAccess = true; // Mark as free access granted
+        user.accountNotes = (user.accountNotes || '') + `\n[${new Date().toISOString()}] Admin granted free access: upgraded from ${oldTier} to ${tier}`;
+
+        await user.save();
+
+        res.json({
+            success: true,
+            message: `Free access granted! User upgraded from ${oldTier} to ${tier}`,
+            data: {
+                email: user.email,
+                oldTier,
+                newTier: tier,
+                freeAccess: true
+            }
+        });
+    } catch (error) {
+        console.error('Error granting free access:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error granting free access'
+        });
+    }
+});
+
 // Create New User (Admin Registration)
 router.post('/', verifyToken, async (req, res) => {
     try {
         const {
+            name,
             firstName,
             lastName,
             email,
@@ -88,11 +139,22 @@ router.post('/', verifyToken, async (req, res) => {
             tier,
             isBetaTester,
             sponsorCode,
-            password
+            password,
+            freeAccess
         } = req.body;
 
+        // Handle name field - split into firstName and lastName if provided
+        let fName = firstName;
+        let lName = lastName;
+
+        if (name && !firstName && !lastName) {
+            const nameParts = name.trim().split(' ');
+            fName = nameParts[0] || 'User';
+            lName = nameParts.slice(1).join(' ') || '';
+        }
+
         // Check if user already exists
-        const existingUser = await User.findOne({ email });
+        const existingUser = await User.findOne({ email: email.toLowerCase() });
         if (existingUser) {
             return res.status(400).json({
                 success: false,
@@ -105,9 +167,9 @@ router.post('/', verifyToken, async (req, res) => {
 
         // Create new user
         const user = new User({
-            firstName,
-            lastName,
-            email,
+            firstName: fName,
+            lastName: lName,
+            email: email.toLowerCase(),
             phone,
             tier: tier || 'FAM',
             isBetaTester: isBetaTester || false,
@@ -115,7 +177,8 @@ router.post('/', verifyToken, async (req, res) => {
             password: hashedPassword,
             isEmailVerified: true,
             createdByAdmin: true,
-            accountStatus: 'ACTIVE'
+            accountStatus: 'ACTIVE',
+            freeAccess: freeAccess || false
         });
 
         await user.save();
@@ -126,6 +189,7 @@ router.post('/', verifyToken, async (req, res) => {
             data: {
                 id: user._id,
                 email: user.email,
+                name: user.name,
                 referralCode: user.referralCode
             }
         });
@@ -133,7 +197,7 @@ router.post('/', verifyToken, async (req, res) => {
         console.error('Error creating user:', error);
         res.status(500).json({
             success: false,
-            message: 'Error creating user'
+            message: error.message || 'Error creating user'
         });
     }
 });
