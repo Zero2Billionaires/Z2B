@@ -1183,6 +1183,9 @@
                     <button onclick="loadUsersData()" style="padding: 0.8rem 1.5rem; background: var(--navy-blue); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">
                         <i class="fas fa-sync-alt"></i> Refresh
                     </button>
+                    <button onclick="clearAllDemoUsers()" style="padding: 0.8rem 1.5rem; background: #dc3545; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);">
+                        <i class="fas fa-trash-alt"></i> Clear All Demo Users
+                    </button>
                 </div>
 
                 <!-- Search and Filter -->
@@ -1425,6 +1428,89 @@
         // ==================== USER MANAGEMENT FUNCTIONS ====================
 
         let allUsers = []; // Store all users for filtering
+
+        // Clear All Demo Users - Start Fresh for Real Beta Testers
+        async function clearAllDemoUsers() {
+            const confirmation = prompt('⚠️ WARNING: This will DELETE ALL USERS from the database!\n\nThis action CANNOT be undone and will permanently remove all user data.\n\nType "DELETE ALL USERS" to confirm:', '');
+
+            if (confirmation !== 'DELETE ALL USERS') {
+                alert('Action cancelled. Users were not deleted.');
+                return;
+            }
+
+            const doubleConfirm = confirm('Are you ABSOLUTELY SURE? This will delete ALL users including admins!\n\nClick OK to proceed with deletion.');
+
+            if (!doubleConfirm) {
+                alert('Action cancelled. Users were not deleted.');
+                return;
+            }
+
+            try {
+                // Get all users first
+                const response = await fetch(`${API_URL}/users?limit=10000`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const result = await response.json();
+                if (!result.success || !result.data) {
+                    alert('Error fetching users to delete');
+                    return;
+                }
+
+                const users = result.data;
+                let deletedCount = 0;
+                let failedCount = 0;
+
+                // Show progress
+                const progressDiv = document.createElement('div');
+                progressDiv.style.cssText = 'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 10px 50px rgba(0,0,0,0.3); z-index: 10000; min-width: 300px; text-align: center;';
+                progressDiv.innerHTML = `
+                    <h3 style="color: var(--navy-blue); margin-bottom: 1rem;">Deleting Users...</h3>
+                    <p id="deleteProgress">Deleting 0 of ${users.length} users...</p>
+                `;
+                document.body.appendChild(progressDiv);
+
+                // Delete each user
+                for (let i = 0; i < users.length; i++) {
+                    const user = users[i];
+                    document.getElementById('deleteProgress').textContent = `Deleting ${i + 1} of ${users.length} users...`;
+
+                    try {
+                        const deleteResponse = await fetch(`${API_URL}/users/${user._id}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'Authorization': `Bearer ${authToken}`,
+                                'Content-Type': 'application/json'
+                            }
+                        });
+
+                        if (deleteResponse.ok) {
+                            deletedCount++;
+                        } else {
+                            failedCount++;
+                        }
+                    } catch (error) {
+                        failedCount++;
+                        console.error(`Failed to delete user ${user.email}:`, error);
+                    }
+                }
+
+                document.body.removeChild(progressDiv);
+
+                alert(`✅ Deletion Complete!\n\nDeleted: ${deletedCount} users\nFailed: ${failedCount} users\n\nYou can now start fresh with your first 100 real beta testers!`);
+
+                // Reload the users table
+                loadUsersData();
+
+            } catch (error) {
+                console.error('Error clearing demo users:', error);
+                alert('❌ Error clearing demo users. Please try again.');
+            }
+        }
 
         async function loadUsersData() {
             try {
