@@ -3,7 +3,7 @@ Z2B LEGACY BUILDERS - DEPLOYMENT CHECKLIST
 ═══════════════════════════════════════════════════════════════
 
 DEPLOYMENT PACKAGE READY!
-File: app/z2b-complete-deployment.zip (299 KB)
+File: app/z2b-complete-deployment.zip (394 KB)
 Location: C:\Users\Manana\Z2B\Z2B-v21\app\
 
 ═══════════════════════════════════════════════════════════════
@@ -51,13 +51,14 @@ WHAT'S INCLUDED:
 ═══════════════════════════════════════════════════════════════
 
 ✓ 35 HTML Files (All pages)
+✓ 15 JavaScript Files (AI apps & configurations)
 ✓ Mobile-Responsive CSS (css/responsive.css)
 ✓ Dashboard with mobile menu
 ✓ Admin panel with mobile menu
 ✓ Marketplace (mobile-responsive)
 ✓ Tiers page (mobile-responsive)
 ✓ Landing page (mobile-responsive)
-✓ All Z2B AI Apps (8 apps)
+✓ All Z2B AI Apps (8 apps with JS logic)
 ✓ Coach ManLaw integration
 ✓ E-commerce pages
 ✓ Payment pages
@@ -116,6 +117,23 @@ OTHER:
 ☐ landing-page.html
 ☐ index-new.html
 ☐ index-updated.html
+
+JAVASCRIPT (AI Apps):
+☐ benown-ai.js
+☐ benown-config.js
+☐ coach-manlaw-curriculum.js
+☐ zyra-ai.js
+☐ zyra-config.js
+☐ zyra-firebase.js
+☐ zyro-bingo.js
+☐ zyro-config.js
+☐ zyro-daily-challenges.js
+☐ zyro-idea-roulette.js
+☐ zyro-leaderboards.js
+☐ zyro-madlibs.js
+☐ zyro-quiz.js
+☐ zyro-social-sharing.js
+☐ zyro-z2b-integration.js
 
 CSS:
 ☐ css/responsive.css (IMPORTANT!)

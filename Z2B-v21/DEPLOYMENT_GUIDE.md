@@ -2,7 +2,7 @@
 
 ## Deployment Package Created
 
-**File**: `app/z2b-complete-deployment.zip` (299 KB)
+**File**: `app/z2b-complete-deployment.zip` (394 KB)
 **Location**: `C:\Users\Manana\Z2B\Z2B-v21\app\z2b-complete-deployment.zip`
 **Created**: October 28, 2025
 
@@ -56,6 +56,25 @@
 33. **landing-page.html** - Alternative landing
 34. **index-new.html** - New index version
 35. **index-updated.html** - Updated index version
+
+### JavaScript Files (15 files):
+
+#### Z2B AI Apps Scripts:
+- **benown-ai.js** - Benown personal branding AI logic
+- **benown-config.js** - Benown configuration
+- **zyra-ai.js** - ZYRA marketing automation AI
+- **zyra-config.js** - ZYRA configuration
+- **zyra-firebase.js** - ZYRA Firebase integration
+- **zyro-bingo.js** - ZYRO Bingo game
+- **zyro-config.js** - ZYRO configuration
+- **zyro-daily-challenges.js** - ZYRO daily challenges
+- **zyro-idea-roulette.js** - ZYRO idea roulette game
+- **zyro-leaderboards.js** - ZYRO leaderboards
+- **zyro-madlibs.js** - ZYRO MadLibs game
+- **zyro-quiz.js** - ZYRO quiz game
+- **zyro-social-sharing.js** - ZYRO social sharing
+- **zyro-z2b-integration.js** - ZYRO Z2B integration
+- **coach-manlaw-curriculum.js** - Coach ManLaw curriculum data
 
 ### CSS Files:
 
@@ -116,6 +135,7 @@ The app uses external CDN resources (no download needed):
 
 4. **Upload ALL extracted files**:
    - Upload all 35 HTML files to root directory
+   - Upload all 15 JavaScript files to root directory
    - Upload the `css` folder (with responsive.css)
    - Maintain folder structure
 
@@ -349,6 +369,21 @@ Your web root should look like this:
 ├── index-updated.html
 ├── coach-manlaw-simple.html
 ├── coach-test.html
+├── benown-ai.js
+├── benown-config.js
+├── coach-manlaw-curriculum.js
+├── zyra-ai.js
+├── zyra-config.js
+├── zyra-firebase.js
+├── zyro-bingo.js
+├── zyro-config.js
+├── zyro-daily-challenges.js
+├── zyro-idea-roulette.js
+├── zyro-leaderboards.js
+├── zyro-madlibs.js
+├── zyro-quiz.js
+├── zyro-social-sharing.js
+├── zyro-z2b-integration.js
 └── css/
     └── responsive.css
 ```
@@ -461,13 +496,14 @@ If you encounter issues:
 
 This deployment package contains:
 - ✅ 35 Complete HTML pages
+- ✅ 15 JavaScript files for AI apps
 - ✅ Mobile-responsive CSS stylesheet
 - ✅ All core features and AI apps
 - ✅ Admin panel and dashboard
 - ✅ E-commerce pages
 - ✅ Coach ManLaw integration
 
-**File Size**: 299 KB (compressed)
+**File Size**: 394 KB (compressed)
 **Ready to Deploy**: Yes
 **Mobile-Responsive**: Yes
 **Browser Compatible**: Chrome, Firefox, Safari, Edge
