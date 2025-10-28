@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Z2B Legacy Builders</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --navy-blue: #0A2647;
+            --medium-blue: #144272;
+            --light-blue: #205295;
+            --gold: #FFD700;
+            --orange: #FF6B35;
+            --white: #FFFFFF;
+            --success: #4CAF50;
+            --danger: #f44336;
+            --warning: #ff9800;
+            --sidebar-width: 260px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--navy-blue), var(--medium-blue));
+            min-height: 100vh;
+        }
+
+        /* Login Screen */
+        #loginScreen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .login-card {
+            background: var(--white);
+            padding: 3rem 2rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-header i {
+            font-size: 4rem;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+
+        .login-header h1 {
+            color: var(--navy-blue);
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-header p {
+            color: var(--medium-blue);
+            font-size: 0.9rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--navy-blue);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--gold), var(--orange));
+            color: var(--navy-blue);
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+        }
+
+        .error-message {
+            background: #ffebee;
+            color: var(--danger);
+            padding: 0.8rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        /* Admin Dashboard Layout */
+        #adminDashboard {
+            display: none;
+        }
+
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--navy-blue);
+            padding: 2rem 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 0 1.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .sidebar-header h2 {
+            color: var(--gold);
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-header p {
+            color: var(--white);
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem 1.5rem;
+            color: var(--white);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: linear-gradient(90deg, var(--gold), transparent);
+            color: var(--navy-blue);
+        }
+
+        .sidebar-menu a i {
+            font-size: 1.2rem;
+            width: 24px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            padding: 2rem;
+        }
+
+        .top-bar {
+            background: var(--white);
+            padding: 1rem 1.5rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .top-bar h1 {
+            color: var(--navy-blue);
+            font-size: 1.8rem;
+        }
+
+        .btn-logout {
+            padding: 0.6rem 1.2rem;
+            background: var(--danger);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        /* Content Sections */
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .card h2 {
+            color: var(--navy-blue);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--navy-blue), var(--medium-blue));
+            padding: 1.5rem;
+            border-radius: 15px;
+            color: var(--white);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stat-card i {
+            font-size: 3rem;
+            opacity: 0.7;
+        }
+
+        .stat-info h3 {
+            font-size: 2rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-info p {
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        /* Form Elements */
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="email"],
+        input[type="password"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold), var(--orange));
+            color: var(--navy-blue);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: var(--white);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: var(--white);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+            margin-top: 1.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        th {
+            background: var(--navy-blue);
+            color: var(--white);
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: #f5f5f5;
+        }
+
+        .badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: #e8f5e9;
+            color: var(--success);
+        }
+
+        .badge-danger {
+            background: #ffebee;
+            color: var(--danger);
+        }
+
+        .badge-warning {
+            background: #fff3e0;
+            color: var(--warning);
+        }
+
+        /* Success/Error Messages */
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .alert-success {
+            background: #e8f5e9;
+            color: var(--success);
+            border-left: 4px solid var(--success);
+        }
+
+        .alert-error {
+            background: #ffebee;
+            color: var(--danger);
+            border-left: 4px solid var(--danger);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--navy-blue);
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--gold);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen">
+        <div class="login-card">
+            <div class="login-header">
+                <i class="fas fa-shield-alt"></i>
+                <h1>Admin Panel</h1>
+                <p>Z2B Legacy Builders</p>
+            </div>
+
+            <div class="error-message" id="loginError"></div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required>
+                </div>
+                <button type="submit" class="btn-login">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="adminDashboard" class="admin-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>Z2B Admin</h2>
+                <p>Control Panel</p>
+            </div>
+
+            <ul class="sidebar-menu">
+                <li><a href="#" class="menu-link active" data-section="overview"><i class="fas fa-tachometer-alt"></i> Overview</a></li>
+                <li><a href="#" class="menu-link" data-section="tiers"><i class="fas fa-layer-group"></i> Tiers & Pricing</a></li>
+                <li><a href="#" class="menu-link" data-section="users"><i class="fas fa-users"></i> User Management</a></li>
+                <li><a href="#" class="menu-link" data-section="content"><i class="fas fa-book"></i> Content Management</a></li>
+                <li><a href="#" class="menu-link" data-section="compensation"><i class="fas fa-dollar-sign"></i> Compensation Plan</a></li>
+                <li><a href="#" class="menu-link" data-section="branding"><i class="fas fa-palette"></i> Branding</a></li>
+                <li><a href="#" class="menu-link" data-section="payment"><i class="fas fa-credit-card"></i> Payment Gateways</a></li>
+                <li><a href="#" class="menu-link" data-section="statistics"><i class="fas fa-chart-bar"></i> Statistics</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="top-bar">
+                <h1 id="sectionTitle">Dashboard Overview</h1>
+                <button class="btn-logout" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+
+            <!-- Overview Section -->
+            <div id="overview" class="content-section active">
+                <div class="stats-grid" id="statsGrid">
+                    <!-- Stats will be loaded here -->
+                </div>
+
+                <div class="card">
+                    <h2>Quick Actions</h2>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                        <button class="btn btn-primary" onclick="showSection('users')">
+                            <i class="fas fa-user-plus"></i> Create User
+                        </button>
+                        <button class="btn btn-success" onclick="showSection('tiers')">
+                            <i class="fas fa-cog"></i> Update Pricing
+                        </button>
+                        <button class="btn btn-danger" onclick="resetStats()">
+                            <i class="fas fa-sync"></i> Reset Statistics
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Other sections will be added via JavaScript -->
+            <div id="tiers" class="content-section"></div>
+            <div id="users" class="content-section"></div>
+            <div id="content" class="content-section"></div>
+            <div id="compensation" class="content-section"></div>
+            <div id="branding" class="content-section"></div>
+            <div id="payment" class="content-section"></div>
+            <div id="statistics" class="content-section"></div>
+        </div>
+    </div>
+
+    <script>
+        // API Configuration
+        const API_URL = 'http://localhost:5000/api'; // Change to your backend URL
+        let authToken = localStorage.getItem('admin_token');
+
+        // Login Form Handler
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch(`${API_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    authToken = data.token;
+                    localStorage.setItem('admin_token', authToken);
+                    document.getElementById('loginScreen').style.display = 'none';
+                    document.getElementById('adminDashboard').style.display = 'flex';
+                    loadDashboard();
+                } else {
+                    showError(data.message);
+                }
+            } catch (error) {
+                showError('Connection error. Please ensure the backend server is running.');
+            }
+        });
+
+        function showError(message) {
+            const errorDiv = document.getElementById('loginError');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+
+        function logout() {
+            localStorage.removeItem('admin_token');
+            location.reload();
+        }
+
+        // Check if already logged in
+        if (authToken) {
+            verifyToken();
+        }
+
+        async function verifyToken() {
+            try {
+                const response = await fetch(`${API_URL}/auth/verify`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+
+                if (response.ok) {
+                    document.getElementById('loginScreen').style.display = 'none';
+                    document.getElementById('adminDashboard').style.display = 'flex';
+                    loadDashboard();
+                } else {
+                    localStorage.removeItem('admin_token');
+                }
+            } catch (error) {
+                console.error('Token verification failed:', error);
+            }
+        }
+
+        // Menu Navigation
+        document.querySelectorAll('.menu-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const section = link.dataset.section;
+                showSection(section);
+
+                // Update active state
+                document.querySelectorAll('.menu-link').forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+            });
+        });
+
+        function showSection(section) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(section).classList.add('active');
+
+            // Update title
+            const titles = {
+                'overview': 'Dashboard Overview',
+                'tiers': 'Tiers & Pricing Management',
+                'users': 'User Management',
+                'content': 'Content Management',
+                'compensation': 'Compensation Plan',
+                'branding': 'Branding Settings',
+                'payment': 'Payment Gateway Configuration',
+                'statistics': 'Platform Statistics'
+            };
+            document.getElementById('sectionTitle').textContent = titles[section];
+
+            // Load section data
+            loadSectionData(section);
+        }
+
+        async function loadDashboard() {
+            await loadStatistics();
+            await loadAllSettings();
+        }
+
+        async function loadStatistics() {
+            try {
+                const response = await fetch(`${API_URL}/stats`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    displayStats(result.data);
+                }
+            } catch (error) {
+                console.error('Error loading statistics:', error);
+            }
+        }
+
+        function displayStats(stats) {
+            const statsGrid = document.getElementById('statsGrid');
+            statsGrid.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h3>${stats.totalUsers || 0}</h3>
+                        <p>Total Users</p>
+                    </div>
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h3>${stats.totalBetaTesters || 0}</h3>
+                        <p>Beta Testers</p>
+                    </div>
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h3>${stats.activeUsers || 0}</h3>
+                        <p>Active Users</p>
+                    </div>
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h3>R${(stats.totalRevenue || 0).toLocaleString()}</h3>
+                        <p>Total Revenue</p>
+                    </div>
+                    <i class="fas fa-money-bill-wave"></i>
+                </div>
+            `;
+        }
+
+        // Placeholder for section loading
+        async function loadSectionData(section) {
+            // This will be expanded to load specific section data
+            console.log('Loading section:', section);
+        }
+
+        async function loadAllSettings() {
+            // Load settings from backend
+        }
+
+        async function resetStats() {
+            if (!confirm('Are you sure you want to reset all statistics? This action cannot be undone.')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/stats/reset`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ reason: 'Manual admin reset' })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    alert('Statistics reset successfully!');
+                    loadStatistics();
+                }
+            } catch (error) {
+                alert('Error resetting statistics');
+            }
+        }
+    </script>
+</body>
+</html>
