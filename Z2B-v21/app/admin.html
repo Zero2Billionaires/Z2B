@@ -673,14 +673,201 @@
             `;
         }
 
-        // Placeholder for section loading
+        // Load section-specific data
         async function loadSectionData(section) {
-            // This will be expanded to load specific section data
-            console.log('Loading section:', section);
+            const contentDiv = document.getElementById('mainContent');
+
+            try {
+                const response = await fetch(`${API_URL}/settings`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                const result = await response.json();
+
+                if (!result.success) {
+                    contentDiv.innerHTML = '<p>Error loading settings</p>';
+                    return;
+                }
+
+                const settings = result.data;
+
+                switch(section) {
+                    case 'tiers':
+                        displayTiersSection(settings.tiers);
+                        break;
+                    case 'compensation':
+                        displayCompensationSection(settings.compensation);
+                        break;
+                    case 'branding':
+                        displayBrandingSection(settings.branding);
+                        break;
+                    case 'users':
+                        displayUsersSection();
+                        break;
+                    case 'content':
+                        displayContentSection();
+                        break;
+                    case 'payment':
+                        displayPaymentSection();
+                        break;
+                    case 'stats':
+                        displayStatsSection();
+                        break;
+                }
+            } catch (error) {
+                console.error('Error loading section:', error);
+                contentDiv.innerHTML = '<p>Error loading data. Please try again.</p>';
+            }
         }
 
         async function loadAllSettings() {
-            // Load settings from backend
+            // Load initial overview
+            await loadStatistics();
+        }
+
+        function displayTiersSection(tiers) {
+            const contentDiv = document.getElementById('mainContent');
+            contentDiv.innerHTML = `
+                <h2>Tiers & Pricing</h2>
+                <div style="display: grid; gap: 1.5rem;">
+                    ${Object.entries(tiers).map(([key, tier]) => `
+                        <div style="background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                            <h3>${tier.name}</h3>
+                            <p><strong>Price:</strong> R${tier.price}</p>
+                            <p><strong>Beta Price:</strong> R${tier.betaPrice}</p>
+                            <p><strong>PV Points:</strong> ${tier.pvPoints}</p>
+                            <p><strong>ISP Commission:</strong> ${tier.ispCommission}%</p>
+                            <p>${tier.description}</p>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function displayCompensationSection(comp) {
+            const contentDiv = document.getElementById('mainContent');
+            contentDiv.innerHTML = `
+                <h2>Compensation Plan - 7 Income Streams</h2>
+                <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                    <div style="margin-bottom: 2rem;">
+                        <h3>1. ISP (Individual Sales Profit)</h3>
+                        <p>Defined in tier percentages: 20%-45% based on membership tier</p>
+                        <p><em>Payment: Monthly</em></p>
+                    </div>
+
+                    <div style="margin-bottom: 2rem;">
+                        <h3>2. QPB (Quick Pathfinder Bonus)</h3>
+                        <p><strong>First 3 builders:</strong> ${comp.qpbFirstThree || 7.5}%</p>
+                        <p><strong>Subsequent sets:</strong> ${comp.qpbSubsequent || 10}%</p>
+                        <p><em>Payment: Monthly</em></p>
+                    </div>
+
+                    <div style="margin-bottom: 2rem;">
+                        <h3>3. TSC (Team Sales Commission)</h3>
+                        <p><strong>Generation 1:</strong> ${comp.tscG1 || 10}%</p>
+                        <p><strong>Generation 2:</strong> ${comp.tscG2 || 5}%</p>
+                        <p><strong>Generation 3:</strong> ${comp.tscG3 || 3}%</p>
+                        <p><strong>Generation 4:</strong> ${comp.tscG4 || 2}%</p>
+                        <p><strong>Generations 5-10:</strong> ${comp.tscG5to10 || 1}% each</p>
+                        <p><strong>Max Levels:</strong> ${comp.tscMaxLevels || 10}</p>
+                        <p><em>Payment: Monthly</em></p>
+                    </div>
+
+                    <div style="margin-bottom: 2rem;">
+                        <h3>4. TPB (Team Performance Bonus)</h3>
+                        <p><strong>Max Percentage:</strong> ${comp.tpbMaxPercentage || 10}% (subject to tier)</p>
+                        <p><strong>Min Active Builders:</strong> ${comp.tpbMinActiveBuilders || 2}</p>
+                        <p><em>Payment: Quarterly</em></p>
+                    </div>
+
+                    <div style="margin-bottom: 2rem;">
+                        <h3>5. TLI (Team Leadership Incentive)</h3>
+                        <p><strong>Pool:</strong> ${comp.tliPoolPercentage || 10}% of Total TeamPV</p>
+                        <p><strong>Range:</strong> R${(comp.tliMinRange || 2500).toLocaleString()} - R${(comp.tliMaxRange || 5000000).toLocaleString()}</p>
+                        <p><strong>Minimum Tier:</strong> ${comp.tliMinimumTier || 'SILVER'}</p>
+                        <p><strong>Min PV:</strong> ${comp.tliMinPV || 600} PV × ${comp.tliConsecutiveMonths || 3} months</p>
+                        <p><em>Payment: Quarterly (CEO Approved)</em></p>
+                    </div>
+
+                    <div style="margin-bottom: 2rem;">
+                        <h3>6. CEO (CEO Awards & Competitions)</h3>
+                        <p><strong>Status:</strong> ${comp.ceoAwardsEnabled ? 'Enabled' : 'Disabled'}</p>
+                        <p><strong>Quarterly Competitions:</strong> ${comp.ceoQuarterlyCompetitions ? 'Yes' : 'No'}</p>
+                        <p><strong>Rewards:</strong> Variable (luxury trips, cash bonuses, recognition)</p>
+                        <p><em>Payment: Quarterly</em></p>
+                    </div>
+
+                    <div style="margin-bottom: 2rem;">
+                        <h3>7. MKT (Marketplace Sales)</h3>
+                        <p><strong>Seller Keeps:</strong> ${comp.mktSellerKeepPercentage || 95}%</p>
+                        <p><strong>Platform Fee:</strong> ${comp.mktPlatformFee || 5}%</p>
+                        <p><em>Payment: Monthly</em></p>
+                    </div>
+
+                    <div style="margin-top: 2rem; padding-top: 2rem; border-top: 2px solid #eee;">
+                        <h4>General Settings</h4>
+                        <p><strong>Beta Tester Limit:</strong> ${comp.betaTesterLimit || 100} members</p>
+                        <p><strong>Beta Discount:</strong> ${comp.betaTesterDiscount || 50}%</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function displayBrandingSection(branding) {
+            const contentDiv = document.getElementById('mainContent');
+            contentDiv.innerHTML = `
+                <h2>Branding Settings</h2>
+                <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                    <p><strong>Company Name:</strong> ${branding.companyName}</p>
+                    <p><strong>Tagline:</strong> ${branding.tagline}</p>
+                    <p><strong>Primary Color:</strong> <span style="display: inline-block; width: 30px; height: 30px; background: ${branding.primaryColor}; border: 1px solid #ccc; vertical-align: middle;"></span> ${branding.primaryColor}</p>
+                    <p><strong>Gold Color:</strong> <span style="display: inline-block; width: 30px; height: 30px; background: ${branding.goldColor}; border: 1px solid #ccc; vertical-align: middle;"></span> ${branding.goldColor}</p>
+                    <p><strong>Orange Color:</strong> <span style="display: inline-block; width: 30px; height: 30px; background: ${branding.orangeColor}; border: 1px solid #ccc; vertical-align: middle;"></span> ${branding.orangeColor}</p>
+                    <p><strong>Font Family:</strong> ${branding.fontFamily}</p>
+                </div>
+            `;
+        }
+
+        function displayUsersSection() {
+            const contentDiv = document.getElementById('mainContent');
+            contentDiv.innerHTML = `
+                <h2>User Management</h2>
+                <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                    <p>User management functionality will be implemented here.</p>
+                    <p>Features: Create users, manage tiers, grant free access, view user details.</p>
+                </div>
+            `;
+        }
+
+        function displayContentSection() {
+            const contentDiv = document.getElementById('mainContent');
+            contentDiv.innerHTML = `
+                <h2>Content Management</h2>
+                <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                    <p>Content management functionality will be implemented here.</p>
+                    <p>Features: Update 90-day lessons, manage course materials, edit content.</p>
+                </div>
+            `;
+        }
+
+        function displayPaymentSection() {
+            const contentDiv = document.getElementById('mainContent');
+            contentDiv.innerHTML = `
+                <h2>Payment Gateways</h2>
+                <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                    <p>Payment gateway management functionality will be implemented here.</p>
+                    <p>Gateways: Yoco, Payfast, CoinPayments, Bank Transfer</p>
+                </div>
+            `;
+        }
+
+        function displayStatsSection() {
+            const contentDiv = document.getElementById('mainContent');
+            contentDiv.innerHTML = `
+                <h2>Statistics</h2>
+                <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                    <p>Statistics and analytics will be displayed here.</p>
+                </div>
+            `;
         }
 
         async function resetStats() {
