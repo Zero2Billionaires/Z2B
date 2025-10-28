@@ -4,6 +4,146 @@ const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const { verifyToken } = require('../middleware/auth');
 
+// Helper function to check if phase is complete (3 generations deep with 3 positions each)
+async function isPhaseComplete(userId, phase, maxGenerations = 3) {
+    const user = await User.findById(userId).populate('directDownline');
+    if (!user) return false;
+
+    // Get positions for this phase (phase 1: pos 1-3, phase 2: pos 4-6, etc.)
+    const phaseStart = (phase - 1) * 3 + 1;
+    const phaseEnd = phase * 3;
+    const phaseDownline = user.directDownline.filter((child, idx) => {
+        const pos = idx + 1;
+        return pos >= phaseStart && pos <= phaseEnd;
+    });
+
+    if (phaseDownline.length < 3) return false; // Phase not filled yet
+
+    // Check if all 3 positions have gone 3 generations deep
+    async function checkGenerationDepth(nodeId, currentDepth) {
+        if (currentDepth >= maxGenerations) return true;
+        const node = await User.findById(nodeId).populate('directDownline');
+        if (!node || !node.directDownline || node.directDownline.length === 0) return false;
+        if (node.directDownline.length < 3) return false; // Must have 3 to be complete
+
+        // Check all 3 children go to next depth
+        for (const child of node.directDownline) {
+            const isDeep = await checkGenerationDepth(child._id, currentDepth + 1);
+            if (!isDeep) return false;
+        }
+        return true;
+    }
+
+    for (const child of phaseDownline) {
+        const isComplete = await checkGenerationDepth(child._id, 1);
+        if (!isComplete) return false;
+    }
+
+    return true;
+}
+
+// Helper function to find next available position in Phased 12x12 Matrix
+async function findNextAvailablePosition(sponsorId, placementParentId = null) {
+    if (!sponsorId) {
+        return { placementParentId: null, position: '1', level: 0, phase: 1 };
+    }
+
+    const sponsor = await User.findById(sponsorId).populate('directDownline');
+    if (!sponsor) {
+        return { placementParentId: null, position: '1', level: 0, phase: 1 };
+    }
+
+    // If manual placement with specific parent, use that
+    if (placementParentId) {
+        const parent = await User.findById(placementParentId).populate('directDownline');
+        if (parent && parent.directDownline.length < 3) {
+            const position = parent.directDownline.length + 1;
+            return {
+                placementParentId: parent._id,
+                placementParentName: parent.name,
+                placementParentEmail: parent.email,
+                position: position.toString(),
+                level: (parent.matrixLevel || 0) + 1,
+                phase: parent.matrixPhase || 1
+            };
+        }
+    }
+
+    // Determine current phase for sponsor
+    let currentPhase = sponsor.matrixPhase || 1;
+    const sponsorDownlineCount = sponsor.directDownline?.length || 0;
+
+    // Check if we need to advance to next phase
+    if (sponsorDownlineCount >= currentPhase * 3) {
+        // Current phase positions filled, check if phase is complete (3 generations deep)
+        const phaseComplete = await isPhaseComplete(sponsor._id, currentPhase);
+        if (phaseComplete && currentPhase < 4) {
+            currentPhase++;
+            sponsor.matrixPhase = currentPhase;
+            await sponsor.save();
+        }
+    }
+
+    // Check if sponsor has space in current phase
+    const maxPositionsForPhase = currentPhase * 3;
+    if (sponsorDownlineCount < maxPositionsForPhase) {
+        const position = sponsorDownlineCount + 1;
+        return {
+            placementParentId: sponsor._id,
+            placementParentName: sponsor.name,
+            placementParentEmail: sponsor.email,
+            position: position.toString(),
+            level: (sponsor.matrixLevel || 0) + 1,
+            phase: currentPhase
+        };
+    }
+
+    // If sponsor is full for current phase, find next available in downline (breadth-first, max 3 levels)
+    const queue = [[sponsor._id, 0]]; // [userId, depth]
+    const visited = new Set();
+    const MAX_DEPTH = 3; // Only go 3 generations deep
+
+    while (queue.length > 0) {
+        const [currentId, depth] = queue.shift();
+        if (depth >= MAX_DEPTH) continue; // Stop at 3 generations
+        if (visited.has(currentId.toString())) continue;
+        visited.add(currentId.toString());
+
+        const current = await User.findById(currentId).populate('directDownline');
+        if (!current) continue;
+
+        // Check if current user has space (less than 3 direct)
+        if (!current.directDownline || current.directDownline.length < 3) {
+            const position = (current.directDownline?.length || 0) + 1;
+            return {
+                placementParentId: current._id,
+                placementParentName: current.name,
+                placementParentEmail: current.email,
+                position: position.toString(),
+                level: (current.matrixLevel || 0) + 1,
+                phase: current.matrixPhase || 1
+            };
+        }
+
+        // Add children to queue if within depth limit
+        if (current.directDownline && depth + 1 < MAX_DEPTH) {
+            current.directDownline.forEach(child => {
+                if (child && child._id) queue.push([child._id, depth + 1]);
+            });
+        }
+    }
+
+    // Fallback: place under sponsor (should rarely happen)
+    return {
+        placementParentId: sponsor._id,
+        placementParentName: sponsor.name,
+        placementParentEmail: sponsor.email,
+        position: (sponsorDownlineCount + 1).toString(),
+        level: (sponsor.matrixLevel || 0) + 1,
+        phase: currentPhase
+    };
+}
+
 // Get All Users (with pagination and filtering)
 router.get('/', verifyToken, async (req, res) => {
     try {
@@ -140,7 +280,10 @@ router.post('/', verifyToken, async (req, res) => {
             isBetaTester,
             sponsorCode,
             password,
-            freeAccess
+            freeAccess,
+            idNumber,
+            recruitingBuilderId, // Builder who recruited this person (for ISP credit)
+            enableStrategicPlacement // If true, create as PENDING_PLACEMENT for manual placement
         } = req.body;
 
         // Handle name field - split into firstName and lastName if provided
@@ -162,42 +305,211 @@ router.post('/', verifyToken, async (req, res) => {
             });
         }
 
+        // Find sponsor if sponsor code provided
+        let sponsor = null;
+        let sponsorId = null;
+        if (sponsorCode) {
+            sponsor = await User.findOne({ referralCode: sponsorCode });
+            if (sponsor) {
+                sponsorId = sponsor._id;
+            }
+        }
+
+        // Determine recruiting builder (ISP beneficiary)
+        let recruitingBuilder = null;
+        let recruitingBuilderId_final = recruitingBuilderId || sponsorId;
+        if (recruitingBuilderId_final) {
+            recruitingBuilder = await User.findById(recruitingBuilderId_final);
+        }
+
         // Hash password
         const hashedPassword = await bcrypt.hash(password || 'Welcome@123', 10);
 
-        // Create new user
+        let placement = null;
+        let placementStatus = 'AUTO_PLACED';
+        let registrationType = 'MANUAL'; // Admin created
+
+        // If strategic placement is enabled, create as pending
+        if (enableStrategicPlacement && recruitingBuilder) {
+            placementStatus = 'PENDING_PLACEMENT';
+            // Don't calculate placement yet - builder will choose
+        } else {
+            // Auto-place in matrix
+            placement = await findNextAvailablePosition(sponsorId);
+        }
+
+        // Create new user with placement info
         const user = new User({
             firstName: fName,
             lastName: lName,
             email: email.toLowerCase(),
             phone,
+            idNumber,
             tier: tier || 'FAM',
             isBetaTester: isBetaTester || false,
             sponsorCode,
+            sponsorId: sponsorId,
             password: hashedPassword,
             isEmailVerified: true,
             createdByAdmin: true,
             accountStatus: 'ACTIVE',
-            freeAccess: freeAccess || false
+            freeAccess: freeAccess || false,
+            placementPosition: placement ? placement.position : null,
+            placementParentId: placement ? placement.placementParentId : null,
+            matrixLevel: placement ? placement.level : 0,
+            matrixPhase: placement ? placement.phase : 1,
+            registrationType,
+            recruitingBuilderId: recruitingBuilderId_final,
+            ispBeneficiaryId: recruitingBuilderId_final, // ISP goes to recruiting builder
+            placementStatus,
+            placementLocked: placementStatus === 'AUTO_PLACED' // Auto-placed = immediately locked
         });
 
         await user.save();
 
+        // Update placement parent's directDownline array (only if auto-placed)
+        if (placement && placement.placementParentId) {
+            await User.findByIdAndUpdate(
+                placement.placementParentId,
+                { $push: { directDownline: user._id } }
+            );
+        }
+
+        // Update sponsor's directReferrals count if sponsor exists
+        if (sponsor) {
+            sponsor.directReferrals = (sponsor.directReferrals || 0) + 1;
+            await sponsor.save();
+        }
+
+        // Update recruiting builder's personal sales count
+        if (recruitingBuilder) {
+            recruitingBuilder.personalSales = (recruitingBuilder.personalSales || 0) + 1;
+            await recruitingBuilder.save();
+        }
+
+        // Prepare response with placement information
+        const responseData = {
+            id: user._id,
+            email: user.email,
+            name: user.name,
+            referralCode: user.referralCode,
+            placementStatus,
+            placement: placement ? {
+                position: placement.position,
+                level: placement.level,
+                phase: placement.phase,
+                parentName: placement.placementParentName || 'Top Level',
+                parentEmail: placement.placementParentEmail || 'N/A',
+                sponsorName: sponsor ? sponsor.name : 'No Sponsor',
+                sponsorEmail: sponsor ? sponsor.email : 'N/A'
+            } : {
+                status: 'Pending Strategic Placement',
+                message: 'Builder can now place this member strategically'
+            }
+        };
+
         res.status(201).json({
             success: true,
-            message: 'User created successfully',
-            data: {
-                id: user._id,
-                email: user.email,
-                name: user.name,
-                referralCode: user.referralCode
-            }
+            message: placementStatus === 'PENDING_PLACEMENT'
+                ? 'User created successfully. Ready for strategic placement.'
+                : 'User created and placed successfully',
+            data: responseData
         });
     } catch (error) {
         console.error('Error creating user:', error);
         res.status(500).json({
             success: false,
             message: error.message || 'Error creating user'
+        });
+    }
+});
+
+// Strategic Placement - Builder places their manually recruited member
+router.post('/:userId/strategic-placement', verifyToken, async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const { placementParentId } = req.body; // Where to place the member
+
+        // Get the user to be placed
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found'
+            });
+        }
+
+        // Verify placement is not already locked
+        if (user.placementLocked) {
+            return res.status(400).json({
+                success: false,
+                message: 'Placement is already locked and cannot be changed'
+            });
+        }
+
+        // Verify user is in pending placement status
+        if (user.placementStatus !== 'PENDING_PLACEMENT') {
+            return res.status(400).json({
+                success: false,
+                message: 'User is not pending strategic placement'
+            });
+        }
+
+        // Verify the requesting user is the ISP beneficiary (owns this recruit)
+        // For now, we'll allow admin to place anyone. Later, add builder authentication check
+        // if (req.user.id !== user.ispBeneficiaryId.toString()) {
+        //     return res.status(403).json({
+        //         success: false,
+        //         message: 'Only the recruiting builder can place this member'
+        //     });
+        // }
+
+        // Calculate placement
+        const placement = await findNextAvailablePosition(user.sponsorId, placementParentId);
+
+        // Get placement parent info
+        const placementParent = await User.findById(placement.placementParentId);
+
+        // Update user with placement information
+        user.placementPosition = placement.position;
+        user.placementParentId = placement.placementParentId;
+        user.matrixLevel = placement.level;
+        user.matrixPhase = placement.phase;
+        user.placementStatus = 'PLACED';
+        user.placementLocked = true; // PERMANENT - cannot be changed
+        user.placementLockedAt = new Date();
+
+        await user.save();
+
+        // Update placement parent's directDownline array
+        if (placement.placementParentId) {
+            await User.findByIdAndUpdate(
+                placement.placementParentId,
+                { $push: { directDownline: user._id } }
+            );
+        }
+
+        res.json({
+            success: true,
+            message: 'Member placed successfully. Placement is now permanent.',
+            data: {
+                userId: user._id,
+                userName: user.name,
+                placement: {
+                    position: placement.position,
+                    level: placement.level,
+                    phase: placement.phase,
+                    parentName: placement.placementParentName || 'Top Level',
+                    parentEmail: placement.placementParentEmail || 'N/A',
+                    lockedAt: user.placementLockedAt
+                }
+            }
+        });
+    } catch (error) {
+        console.error('Error performing strategic placement:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error performing strategic placement'
         });
     }
 });
