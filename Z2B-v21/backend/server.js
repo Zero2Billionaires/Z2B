@@ -36,6 +36,7 @@ const userRoutes = require('./routes/users');
 const contentRoutes = require('./routes/content');
 const statsRoutes = require('./routes/stats');
 const paymentRoutes = require('./routes/payment');
+const spilloverRoutes = require('./routes/spillover');
 
 // Use Routes
 app.use('/api/auth', authRoutes);
@@ -44,6 +45,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/content', contentRoutes);
 app.use('/api/stats', statsRoutes);
 app.use('/api/payment', paymentRoutes);
+app.use('/api/spillover', spilloverRoutes);
 
 // Health Check Endpoint
 app.get('/api/health', (req, res) => {
@@ -64,9 +66,15 @@ app.use((err, req, res, next) => {
     });
 });
 
+// Import and Start Spillover Scheduler
+const spilloverScheduler = require('./scheduler/spilloverScheduler');
+
 // Start Server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`🚀 Z2B Admin Backend Server running on port ${PORT}`);
     console.log(`📍 Environment: ${process.env.NODE_ENV}`);
+
+    // Start the spillover scheduler
+    spilloverScheduler.start();
 });
