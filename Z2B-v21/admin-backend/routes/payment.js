@@ -2,6 +2,21 @@ const express = require('express');
 const router = express.Router();
 const PaymentGateway = require('../models/PaymentGateway');
 const { verifyToken } = require('../middleware/auth');
+const { createTierCheckout } = require('../utils/tierCheckout');
+
+// Create Tier Checkout Session (PUBLIC ENDPOINT - No auth required)
+router.post('/create-tier-checkout', async (req, res) => {
+    try {
+        const result = await createTierCheckout(req);
+        res.json(result);
+    } catch (error) {
+        console.error('Create tier checkout error:', error);
+        res.status(500).json({
+            success: false,
+            error: error.message || 'Failed to create checkout session'
+        });
+    }
+});
 
 // Get Payment Gateway Settings
 router.get('/', verifyToken, async (req, res) => {
