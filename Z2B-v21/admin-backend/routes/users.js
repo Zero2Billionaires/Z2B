@@ -55,7 +55,7 @@ router.get('/', verifyToken, async (req, res) => {
 router.get('/by-referral/:referralCode', async (req, res) => {
     try {
         const user = await User.findOne({ referralCode: req.params.referralCode })
-            .select('firstName lastName email referralCode tier');
+            .select('firstName lastName email referralCode tier memberId');
 
         if (!user) {
             return res.status(404).json({
