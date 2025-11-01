@@ -338,4 +338,170 @@ router.delete('/:id', verifyToken, async (req, res) => {
     }
 });
 
+// ============================================
+// FAM TIER CREDIT SYSTEM ENDPOINTS
+// ============================================
+
+// Monthly Credit Refresh for FAM Members (Run this monthly via cron or manually)
+router.post('/fam/refresh-credits', verifyToken, async (req, res) => {
+    try {
+        const now = new Date();
+
+        // Find all active FAM members who haven't expired
+        const famUsers = await User.find({
+            tier: 'FAM',
+            famExpiryDate: { $gt: now }, // Not expired yet
+            famMonthsRemaining: { $gt: 0 } // Still have months remaining
+        });
+
+        let refreshedCount = 0;
+        let skippedCount = 0;
+        const refreshResults = [];
+
+        for (const user of famUsers) {
+            // Check if it's been at least 30 days since last refresh
+            const lastRefresh = user.lastCreditRefresh || user.famStartDate;
+            const daysSinceRefresh = (now - lastRefresh) / (1000 * 60 * 60 * 24);
+
+            if (daysSinceRefresh >= 30) {
+                // Add 5 credits
+                user.fuelCredits += 5;
+                user.lastCreditRefresh = now;
+                user.famMonthsRemaining = Math.max(0, user.famMonthsRemaining - 1);
+
+                await user.save();
+
+                refreshedCount++;
+                refreshResults.push({
+                    userId: user._id,
+                    name: `${user.firstName} ${user.lastName}`,
+                    creditsAdded: 5,
+                    newBalance: user.fuelCredits,
+                    monthsRemaining: user.famMonthsRemaining
+                });
+            } else {
+                skippedCount++;
+            }
+        }
+
+        res.json({
+            success: true,
+            message: `FAM credit refresh completed`,
+            data: {
+                totalFAMUsers: famUsers.length,
+                refreshedCount,
+                skippedCount,
+                refreshResults
+            }
+        });
+    } catch (error) {
+        console.error('Error refreshing FAM credits:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error refreshing FAM credits'
+        });
+    }
+});
+
+// Check and Handle FAM Expiry (Run this daily via cron or manually)
+router.post('/fam/check-expiry', verifyToken, async (req, res) => {
+    try {
+        const now = new Date();
+
+        // Find all FAM members who have expired
+        const expiredFAM = await User.find({
+            tier: 'FAM',
+            famExpiryDate: { $lte: now }, // Expired
+            accountStatus: 'ACTIVE' // Still active (not yet processed)
+        });
+
+        let expiredCount = 0;
+        const expiredResults = [];
+
+        for (const user of expiredFAM) {
+            // Change account status to PENDING (requires upgrade)
+            user.accountStatus = 'PENDING';
+            user.accountNotes = (user.accountNotes || '') +
+                `\n[${now.toISOString()}] FAM 3-month trial expired. Account suspended pending upgrade.`;
+            user.famMonthsRemaining = 0;
+
+            // Optionally: Disable Coach Manlaw access
+            if (user.freeAppAccess) {
+                user.freeAppAccess.coachManlaw = false;
+            }
+
+            await user.save();
+
+            expiredCount++;
+            expiredResults.push({
+                userId: user._id,
+                name: `${user.firstName} ${user.lastName}`,
+                email: user.email,
+                expiredOn: user.famExpiryDate
+            });
+        }
+
+        res.json({
+            success: true,
+            message: `FAM expiry check completed`,
+            data: {
+                expiredCount,
+                expiredResults
+            }
+        });
+    } catch (error) {
+        console.error('Error checking FAM expiry:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error checking FAM expiry'
+        });
+    }
+});
+
+// Get FAM Statistics
+router.get('/fam/stats', verifyToken, async (req, res) => {
+    try {
+        const now = new Date();
+
+        const totalFAM = await User.countDocuments({ tier: 'FAM' });
+        const activeFAM = await User.countDocuments({
+            tier: 'FAM',
+            famExpiryDate: { $gt: now }
+        });
+        const expiredFAM = await User.countDocuments({
+            tier: 'FAM',
+            famExpiryDate: { $lte: now }
+        });
+
+        // Get FAM members expiring soon (within 7 days)
+        const sevenDaysFromNow = new Date(now);
+        sevenDaysFromNow.setDate(sevenDaysFromNow.getDate() + 7);
+
+        const expiringSoon = await User.find({
+            tier: 'FAM',
+            famExpiryDate: {
+                $gt: now,
+                $lte: sevenDaysFromNow
+            }
+        }).select('firstName lastName email famExpiryDate famMonthsRemaining');
+
+        res.json({
+            success: true,
+            data: {
+                totalFAM,
+                activeFAM,
+                expiredFAM,
+                expiringSoonCount: expiringSoon.length,
+                expiringSoon
+            }
+        });
+    } catch (error) {
+        console.error('Error fetching FAM stats:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error fetching FAM statistics'
+        });
+    }
+});
+
 module.exports = router;

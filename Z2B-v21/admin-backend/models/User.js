@@ -25,7 +25,7 @@ const userSchema = new mongoose.Schema({
     // Sponsor & Placement
     sponsorId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     sponsorCode: { type: String },
-    referralCode: { type: String, unique: true, required: true },
+    referralCode: { type: String, unique: true },
     placementPosition: { type: String }, // LEFT or RIGHT for binary
 
     // AI Fuel Credits
@@ -38,6 +38,12 @@ const userSchema = new mongoose.Schema({
         expiryDate: Date,
         transactionId: String
     }],
+
+    // FAM Tier Benefits (3 months, 5 credits/month)
+    famStartDate: { type: Date },
+    famExpiryDate: { type: Date },
+    lastCreditRefresh: { type: Date },
+    famMonthsRemaining: { type: Number, default: 0 },
 
     // PV Points
     currentMonthPV: { type: Number, default: 0 },

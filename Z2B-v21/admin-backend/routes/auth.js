@@ -169,20 +169,40 @@ router.post('/register', async (req, res) => {
             accountStatus = 'ACTIVE';
         }
 
-        // Create new user
-        const user = new User({
+        // Prepare user data
+        const selectedTier = tier || 'FAM';
+        const userData = {
             firstName,
             lastName,
             email: email.toLowerCase(),
             phone,
             password: hashedPassword,
-            tier: tier || 'FAM',
+            tier: selectedTier,
             sponsorId,
             sponsorCode,
             accountStatus,
             isEmailVerified: true, // Auto-verify for public registration
             createdByAdmin: false
-        });
+        };
+
+        // FAM Tier Auto-Benefits: 5 credits/month for 3 months + Coach Manlaw access
+        if (selectedTier === 'FAM') {
+            const now = new Date();
+            const threeMonthsLater = new Date(now);
+            threeMonthsLater.setMonth(threeMonthsLater.getMonth() + 3);
+
+            userData.fuelCredits = 5; // Initial 5 credits
+            userData.famStartDate = now;
+            userData.famExpiryDate = threeMonthsLater;
+            userData.lastCreditRefresh = now;
+            userData.famMonthsRemaining = 3;
+            userData.freeAppAccess = {
+                coachManlaw: true // Auto-enable Coach Manlaw for FAM
+            };
+        }
+
+        // Create new user
+        const user = new User(userData);
 
         await user.save();
 
