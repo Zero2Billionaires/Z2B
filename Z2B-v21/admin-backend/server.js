@@ -20,6 +20,8 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 // Serve static files from the app directory
 app.use(express.static(path.join(__dirname, '../app')));
+// Also serve from public folder (for Railway deployment)
+app.use(express.static(path.join(__dirname, 'public')));
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGODB_URI, {
