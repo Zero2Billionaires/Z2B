@@ -3,6 +3,7 @@ const router = express.Router();
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const { verifyToken } = require('../middleware/auth');
+const { sendWelcomeEmail } = require('../utils/emailService');
 
 // Get All Users (with pagination and filtering)
 router.get('/', verifyToken, async (req, res) => {
@@ -46,6 +47,32 @@ router.get('/', verifyToken, async (req, res) => {
         res.status(500).json({
             success: false,
             message: 'Error fetching users'
+        });
+    }
+});
+
+// Get User by Referral Code (PUBLIC - No auth required)
+router.get('/by-referral/:referralCode', async (req, res) => {
+    try {
+        const user = await User.findOne({ referralCode: req.params.referralCode })
+            .select('firstName lastName email referralCode tier');
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found'
+            });
+        }
+
+        res.json({
+            success: true,
+            data: user
+        });
+    } catch (error) {
+        console.error('Error fetching user by referral code:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error fetching user'
         });
     }
 });
@@ -120,11 +147,25 @@ router.post('/', verifyToken, async (req, res) => {
 
         await user.save();
 
+        // Send welcome email (don't wait for it, send async)
+        const plainPassword = password || 'Welcome@123';
+        sendWelcomeEmail({
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            referralCode: user.referralCode,
+            tier: user.tier
+        }, plainPassword).catch(err => {
+            console.error('Failed to send welcome email:', err);
+        });
+
         res.status(201).json({
             success: true,
             message: 'User created successfully',
             data: {
                 id: user._id,
+                firstName: user.firstName,
+                lastName: user.lastName,
                 email: user.email,
                 referralCode: user.referralCode
             }
@@ -133,7 +174,8 @@ router.post('/', verifyToken, async (req, res) => {
         console.error('Error creating user:', error);
         res.status(500).json({
             success: false,
-            message: 'Error creating user'
+            message: error.message || 'Error creating user',
+            error: process.env.NODE_ENV === 'production' ? error.message : error.toString()
         });
     }
 });
