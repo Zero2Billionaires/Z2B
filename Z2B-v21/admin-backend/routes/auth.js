@@ -5,6 +5,21 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const { sendWelcomeEmail } = require('../utils/emailService');
 
+// Tier configurations for payment
+const TIER_PRICES = {
+    FAM: { name: 'FAM - Free Affiliate', price: 0, betaPrice: 0 },
+    BRONZE: { name: 'Bronze Legacy Builder', price: 960, betaPrice: 480 },
+    COPPER: { name: 'Copper Legacy Builder', price: 1980, betaPrice: 990 },
+    SILVER: { name: 'Silver Legacy Builder', price: 2980, betaPrice: 1490 },
+    GOLD: { name: 'Gold Legacy Builder', price: 4980, betaPrice: 2490 },
+    PLATINUM: { name: 'Platinum Legacy Builder', price: 6980, betaPrice: 3490 },
+    LIFETIME: { name: 'Lifetime Legacy Builder', price: 12000, betaPrice: 6000 }
+};
+
+// Yoco API configuration
+const YOCO_SECRET_KEY = process.env.YOCO_SECRET_KEY || 'sk_test_960bfde0VBrLlpK098e4ffeb53e1';
+const YOCO_API_URL = 'https://payments.yoco.com/api/checkouts';
+
 // Unified Login - Handles both Admin (username) and User (email) logins
 router.post('/login', async (req, res) => {
     try {
@@ -122,6 +137,44 @@ router.post('/login', async (req, res) => {
     }
 });
 
+// Get current user data - requires authentication
+router.get('/me', async (req, res) => {
+    try {
+        const token = req.headers.authorization?.replace('Bearer ', '');
+
+        if (!token) {
+            return res.status(401).json({
+                success: false,
+                message: 'No token provided'
+            });
+        }
+
+        // Verify JWT token
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        // Find user by ID from token
+        const user = await User.findById(decoded.userId).select('-password');
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found'
+            });
+        }
+
+        return res.json({
+            success: true,
+            data: user
+        });
+    } catch (error) {
+        console.error('Auth error:', error);
+        return res.status(401).json({
+            success: false,
+            message: 'Invalid or expired token'
+        });
+    }
+});
+
 module.exports = router;
 
 
@@ -168,11 +221,9 @@ router.post('/register', async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // Determine account status based on payment method
-        let accountStatus = 'PENDING'; // Default
-        if (paymentMethod === 'cash') {
-            // For cash deposits, give free access until POP is received
-            accountStatus = 'ACTIVE';
-        }
+        let accountStatus = 'PENDING'; // Default - all new registrations need verification
+        // Cash deposits remain PENDING until admin verifies proof of payment
+        // Only online payments with successful checkout get ACTIVE status
 
         // Prepare user data
         const selectedTier = tier || 'FAM';
@@ -252,8 +303,75 @@ router.post('/register', async (req, res) => {
             }
         };
 
-        // Add payment-specific instructions
-        if (paymentMethod === 'cash') {
+        // Handle online payment - Create Yoco checkout session
+        if (paymentMethod === 'online') {
+            try {
+                // Get tier price (use beta pricing by default)
+                const tierInfo = TIER_PRICES[selectedTier];
+                if (!tierInfo) {
+                    throw new Error('Invalid tier selected');
+                }
+
+                const price = tierInfo.betaPrice || tierInfo.price;
+                const amountInCents = price * 100;
+
+                // Generate unique reference
+                const reference = `REG-${user.referralCode}-${Date.now()}`;
+
+                // Prepare Yoco checkout payload
+                const baseUrl = req.protocol + '://' + req.get('host');
+                const payload = {
+                    amount: amountInCents,
+                    currency: 'ZAR',
+                    successUrl: `${baseUrl}/payment-success-register.html?ref=${reference}&userId=${user._id}`,
+                    cancelUrl: `${baseUrl}/register.html`,
+                    failureUrl: `${baseUrl}/payment-failed.html?ref=${reference}`,
+                    metadata: {
+                        userId: user._id.toString(),
+                        email: user.email,
+                        tier: selectedTier,
+                        tier_name: tierInfo.name,
+                        reference: reference,
+                        type: 'registration'
+                    }
+                };
+
+                // Make API request to Yoco
+                const yocoResponse = await fetch(YOCO_API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${YOCO_SECRET_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (yocoResponse.ok) {
+                    const yocoData = await yocoResponse.json();
+
+                    if (yocoData.redirectUrl) {
+                        // Store payment reference with user
+                        user.paymentReference = reference;
+                        await user.save();
+
+                        // Add payment URL to response
+                        response.data.paymentUrl = yocoData.redirectUrl;
+                        response.data.paymentReference = reference;
+                        response.message += ' Redirecting to payment gateway...';
+                    } else {
+                        console.error('No redirect URL from Yoco:', yocoData);
+                        response.message += ' Payment gateway unavailable. Please contact support.';
+                    }
+                } else {
+                    const errorData = await yocoResponse.json().catch(() => ({}));
+                    console.error('Yoco API error:', yocoResponse.status, errorData);
+                    response.message += ' Payment gateway unavailable. Please contact support.';
+                }
+            } catch (paymentError) {
+                console.error('Payment setup error:', paymentError);
+                response.message += ' Payment gateway unavailable. Please contact support.';
+            }
+        } else if (paymentMethod === 'cash') {
             response.message += ' You have FREE ACCESS until we receive your proof of payment.';
         } else if (paymentMethod === 'eft') {
             response.message += ' Please complete your EFT transfer to activate your account.';
@@ -267,6 +385,55 @@ router.post('/register', async (req, res) => {
             success: false,
             message: error.message || 'Error during registration',
             error: process.env.NODE_ENV === 'development' ? error.toString() : undefined
+        });
+    }
+});
+
+// Verify payment and update user status
+router.post('/verify-payment', async (req, res) => {
+    try {
+        const { userId, paymentReference, status } = req.body;
+
+        if (!userId || !paymentReference || !status) {
+            return res.status(400).json({
+                success: false,
+                message: 'Missing required fields'
+            });
+        }
+
+        // Find user by ID
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found'
+            });
+        }
+
+        // Update payment status
+        user.paymentStatus = status;
+        if (status === 'COMPLETED') {
+            user.accountStatus = 'ACTIVE'; // Activate account on successful payment
+        }
+
+        await user.save();
+
+        res.json({
+            success: true,
+            message: 'Payment status updated successfully',
+            data: {
+                userId: user._id,
+                accountStatus: user.accountStatus,
+                paymentStatus: user.paymentStatus
+            }
+        });
+
+    } catch (error) {
+        console.error('Payment verification error:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error verifying payment'
         });
     }
 });

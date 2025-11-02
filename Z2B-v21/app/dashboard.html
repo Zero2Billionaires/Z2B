@@ -1585,42 +1585,213 @@
             }
         }
 
-        // Initialize user as LIFETIME tier (Premium Legacy Builder) on page load
-        function initializeUser() {
-            // Check if user exists, if not create LIFETIME tier user
-            const storedUser = localStorage.getItem('z2b_current_user');
-            if (!storedUser || JSON.parse(storedUser).tier !== 'PLATINUM') {
-                // Set Mokoro Manana as PLATINUM tier user (Platinum Legacy Builder)
-                const platinumUser = {
-                    id: 'user_mokoro_manana',
-                    name: 'Mokoro Manana',
-                    email: 'mokoro.manana@z2b.co.za',
-                    phone: '+27 77 490 1639',
-                    tier: 'PLATINUM',
-                    tierName: 'Platinum Legacy Builder',
-                    aiFuel: 999999, // Unlimited AI Fuel for testing
-                    aiFuelDaily: 165, // 165 AI Fuel per day
-                    pvPoints: 249, // 249 PV Points
-                    ispCommission: 45, // 45% ISP Commission
-                    joinDate: new Date().toISOString(),
-                    isDemo: false,
-                    legacyBuilder: true, // Premium Legacy Builder status
-                    features: {
-                        allApps: true,
-                        unlimitedAiFuel: true,
-                        tscGenerations: 10,
-                        tpbGenerations: 10,
-                        tliGenerations: 10,
-                        qpbEligible: true,
-                        ceoEligible: true,
-                        marketplaceSales: true
-                    }
-                };
-                localStorage.setItem('z2b_current_user', JSON.stringify(platinumUser));
+        // API Configuration
+        const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? 'http://localhost:5000'
+            : 'https://z2b-production-3cd3.up.railway.app';
 
-                // Reload Z2BAppAccess to pick up new user
-                if (window.Z2BAppAccess) {
-                    window.Z2BAppAccess.currentUser = platinumUser;
+        // Initialize user - fetch real data from backend
+        async function initializeUser() {
+            // Check if user is logged in
+            const token = localStorage.getItem('z2b_token');
+            const storedUser = localStorage.getItem('z2b_current_user');
+
+            if (!token) {
+                // No token - redirect to login
+                alert('⚠️ Please login to access the dashboard');
+                window.location.href = 'landing-page.html';
+                return;
+            }
+
+            // Fetch fresh user data from backend
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/auth/me`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Session expired');
+                }
+
+                const result = await response.json();
+                if (result.success && result.data) {
+                    const user = result.data;
+
+                    // Check account status - PENDING users cannot access
+                    if (user.accountStatus === 'PENDING') {
+                        alert('⚠️ Your account is pending activation.\n\nPlease complete payment or wait for admin verification.\n\nFor cash deposits, send proof of payment to WhatsApp: 077 490 1639');
+                        localStorage.removeItem('z2b_token');
+                        localStorage.removeItem('z2b_current_user');
+                        window.location.href = 'landing-page.html';
+                        return;
+                    }
+
+                    if (user.accountStatus === 'SUSPENDED' || user.accountStatus === 'BLOCKED') {
+                        alert(`⛔ Your account has been ${user.accountStatus.toLowerCase()}.\n\nPlease contact support: 077 490 1639`);
+                        localStorage.removeItem('z2b_token');
+                        localStorage.removeItem('z2b_current_user');
+                        window.location.href = 'landing-page.html';
+                        return;
+                    }
+
+                    // Format user data for dashboard
+                    const dashboardUser = {
+                        id: user._id,
+                        name: `${user.firstName} ${user.lastName}`,
+                        email: user.email,
+                        phone: user.phone || '',
+                        tier: user.tier,
+                        tierName: getTierName(user.tier),
+                        referralCode: user.referralCode,
+                        accountStatus: user.accountStatus,
+                        aiFuel: user.fuelCredits || 0,
+                        pvPoints: user.currentMonthPV || 0,
+                        lifetimePV: user.lifetimePV || 0,
+                        joinDate: user.createdAt,
+                        directReferrals: user.directReferrals || 0,
+                        teamSize: user.totalTeamSize || 0,
+                        features: getTierFeatures(user.tier, user.freeAppAccess)
+                    };
+
+                    localStorage.setItem('z2b_current_user', JSON.stringify(dashboardUser));
+
+                    // Set up Z2BAppAccess
+                    if (window.Z2BAppAccess) {
+                        window.Z2BAppAccess.currentUser = dashboardUser;
+                    }
+
+                    // Apply tier-based restrictions
+                    applyTierRestrictions(user.tier, user.freeAppAccess);
+                } else {
+                    throw new Error('Invalid session');
+                }
+            } catch (error) {
+                console.error('Auth error:', error);
+                alert('⚠️ Session expired. Please login again.');
+                localStorage.removeItem('z2b_token');
+                localStorage.removeItem('z2b_current_user');
+                window.location.href = 'landing-page.html';
+            }
+        }
+
+        // Get tier display name
+        function getTierName(tier) {
+            const tierNames = {
+                'FAM': 'FAM - Free Affiliate',
+                'BRONZE': 'Bronze Legacy Builder',
+                'COPPER': 'Copper Legacy Builder',
+                'SILVER': 'Silver Legacy Builder',
+                'GOLD': 'Gold Legacy Builder',
+                'PLATINUM': 'Platinum Legacy Builder',
+                'LIFETIME': 'Lifetime Legacy Builder'
+            };
+            return tierNames[tier] || tier;
+        }
+
+        // Get tier-based features
+        function getTierFeatures(tier, freeAppAccess = {}) {
+            const features = {
+                allApps: false,
+                coachManlaw: false,
+                aiRefuel: false,
+                vidzie: false,
+                zynth: false,
+                glowie: false,
+                benown: false,
+                tscGenerations: 0,
+                tpbGenerations: 0,
+                tliGenerations: 0,
+                qpbEligible: false,
+                ceoEligible: false,
+                marketplaceSales: false
+            };
+
+            // FAM tier - Only Coach Manlaw + free app access
+            if (tier === 'FAM') {
+                features.coachManlaw = true;
+                if (freeAppAccess) {
+                    features.aiRefuel = freeAppAccess.aiRefuel || false;
+                    features.vidzie = freeAppAccess.vidzie || false;
+                    features.zynth = freeAppAccess.zynth || false;
+                    features.glowie = freeAppAccess.glowie || false;
+                    features.benown = freeAppAccess.benown || false;
+                }
+                return features;
+            }
+
+            // BRONZE tier - Only Coach Manlaw
+            if (tier === 'BRONZE') {
+                features.coachManlaw = true;
+                return features;
+            }
+
+            // COPPER and above - All features based on tier
+            if (['COPPER', 'SILVER', 'GOLD', 'PLATINUM', 'LIFETIME'].includes(tier)) {
+                features.allApps = true;
+                features.coachManlaw = true;
+                features.aiRefuel = true;
+                features.vidzie = true;
+                features.zynth = true;
+                features.glowie = true;
+                features.benown = true;
+                features.marketplaceSales = true;
+                features.tscGenerations = tier === 'COPPER' ? 3 : tier === 'SILVER' ? 5 : tier === 'GOLD' ? 7 : 10;
+                features.qpbEligible = true;
+                features.ceoEligible = ['GOLD', 'PLATINUM', 'LIFETIME'].includes(tier);
+            }
+
+            return features;
+        }
+
+        // Apply tier-based restrictions to UI
+        function applyTierRestrictions(tier, freeAppAccess = {}) {
+            const features = getTierFeatures(tier, freeAppAccess);
+
+            // Hide apps user cannot access
+            if (!features.aiRefuel) {
+                const aiRefuelLinks = document.querySelectorAll('[href*="ai-refuel"]');
+                aiRefuelLinks.forEach(el => el.parentElement.style.display = 'none');
+            }
+
+            if (!features.vidzie) {
+                const vidzieLinks = document.querySelectorAll('[href*="vidzie"]');
+                vidzieLinks.forEach(el => el.parentElement.style.display = 'none');
+            }
+
+            if (!features.zynth) {
+                const zynthLinks = document.querySelectorAll('[href*="zynth"]');
+                zynthLinks.forEach(el => el.parentElement.style.display = 'none');
+            }
+
+            if (!features.glowie) {
+                const glowieLinks = document.querySelectorAll('[href*="glowie"]');
+                glowieLinks.forEach(el => el.parentElement.style.display = 'none');
+            }
+
+            if (!features.benown) {
+                const benownLinks = document.querySelectorAll('[href*="benown"]');
+                benownLinks.forEach(el => el.parentElement.style.display = 'none');
+            }
+
+            // Show tier-appropriate message
+            if (tier === 'BRONZE') {
+                // Show only Coach Manlaw access message
+                const welcomeMsg = document.createElement('div');
+                welcomeMsg.style.cssText = 'background: #fff3cd; border: 2px solid #ffc107; padding: 1rem; margin: 1rem; border-radius: 10px;';
+                welcomeMsg.innerHTML = `
+                    <h5 style="color: #856404; margin-bottom: 0.5rem;">
+                        <i class="fas fa-info-circle"></i> Bronze Tier Access
+                    </h5>
+                    <p style="color: #856404; margin: 0;">
+                        You currently have access to <strong>Coach Manlaw</strong> training only.<br>
+                        Upgrade your tier to unlock AI Fuel, Vidzie, Zynth, Glowie, and more!
+                    </p>
+                `;
+                const mainContent = document.querySelector('.main-content');
+                if (mainContent) {
+                    mainContent.insertBefore(welcomeMsg, mainContent.firstChild);
                 }
             }
         }
@@ -2061,7 +2232,7 @@
 
         // Referral Link Functions
         async function loadReferralInfo() {
-            const API_BASE_URL = 'http://localhost:5000/api';
+            const API_BASE_URL = 'https://z2b-admin-backend-production.up.railway.app/api';
             const token = localStorage.getItem('z2b_auth_token') || localStorage.getItem('authToken');
 
             if (!token) {
