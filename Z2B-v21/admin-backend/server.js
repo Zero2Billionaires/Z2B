@@ -10,11 +10,15 @@ dotenv.config();
 // Initialize Express app
 const app = express();
 
-// Middleware
-app.use(cors({
-    origin: process.env.FRONTEND_URL || '*',
-    credentials: true
-}));
+// Middleware - CORS Configuration
+// Allow all origins for browser requests, or specific frontend if configured
+const corsOptions = {
+    origin: process.env.FRONTEND_URL || true, // true allows any origin and reflects the requesting origin
+    credentials: process.env.FRONTEND_URL ? true : false, // Only use credentials with specific origin
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+};
+app.use(cors(corsOptions));
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
