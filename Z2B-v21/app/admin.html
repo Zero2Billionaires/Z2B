@@ -471,6 +471,7 @@
                 <li><a href="#" class="menu-link" data-section="compensation"><i class="fas fa-dollar-sign"></i> Compensation Plan</a></li>
                 <li><a href="#" class="menu-link" data-section="branding"><i class="fas fa-palette"></i> Branding</a></li>
                 <li><a href="#" class="menu-link" data-section="payment"><i class="fas fa-credit-card"></i> Payment Gateways</a></li>
+                <li><a href="#" class="menu-link" data-section="fam"><i class="fas fa-user-clock"></i> FAM Management</a></li>
                 <li><a href="#" class="menu-link" data-section="statistics"><i class="fas fa-chart-bar"></i> Statistics</a></li>
             </ul>
         </div>
@@ -521,6 +522,71 @@
             <div id="compensation" class="content-section"></div>
             <div id="branding" class="content-section"></div>
             <div id="payment" class="content-section"></div>
+
+            <!-- FAM Management Section -->
+            <div id="fam" class="content-section">
+                <h2>FAM Tier Management</h2>
+                <p>Manage Free Access Members (FAM) - 3 Month Trial with 5 Credits/Month</p>
+
+                <!-- FAM Statistics Cards -->
+                <div class="stats-grid" style="margin-bottom: 2rem;">
+                    <div class="stat-card">
+                        <i class="fas fa-users stat-icon" style="color: var(--success);"></i>
+                        <div class="stat-info">
+                            <h3 id="famTotalCount">0</h3>
+                            <p>Total FAM Users</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-user-check stat-icon" style="color: var(--success);"></i>
+                        <div class="stat-info">
+                            <h3 id="famActiveCount">0</h3>
+                            <p>Active FAM (Within 3 Months)</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-user-times stat-icon" style="color: var(--danger);"></i>
+                        <div class="stat-info">
+                            <h3 id="famExpiredCount">0</h3>
+                            <p>Expired FAM (Need Upgrade)</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-exclamation-triangle stat-icon" style="color: var(--warning);"></i>
+                        <div class="stat-info">
+                            <h3 id="famExpiringSoonCount">0</h3>
+                            <p>Expiring Within 7 Days</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div style="display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap;">
+                    <button onclick="refreshFAMCredits()" class="primary-btn" style="background: var(--success);">
+                        <i class="fas fa-sync"></i> Refresh FAM Credits (Monthly)
+                    </button>
+                    <button onclick="checkFAMExpiry()" class="primary-btn" style="background: var(--warning);">
+                        <i class="fas fa-clock"></i> Check FAM Expiry (Daily)
+                    </button>
+                    <button onclick="loadFAMStats()" class="secondary-btn">
+                        <i class="fas fa-chart-line"></i> Reload Statistics
+                    </button>
+                </div>
+
+                <!-- FAM Members Expiring Soon -->
+                <div id="famExpiringSoonSection" style="display: none; margin-top: 2rem;">
+                    <h3>FAM Members Expiring Within 7 Days</h3>
+                    <div id="famExpiringSoonList" style="background: white; padding: 1rem; border-radius: 10px; margin-top: 1rem;">
+                        <!-- Expiring members list will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Last Action Result -->
+                <div id="famActionResult" style="display: none; margin-top: 2rem; padding: 1rem; border-radius: 10px; background: white;">
+                    <!-- Action results will be shown here -->
+                </div>
+            </div>
+
             <div id="statistics" class="content-section"></div>
         </div>
     </div>
@@ -544,7 +610,7 @@
         }
 
         // API Configuration
-        const API_URL = 'http://localhost:5000/api'; // Change to your backend URL
+        const API_URL = 'https://z2b-production-3cd3.up.railway.app/api'; // Production backend
         let authToken = localStorage.getItem('admin_token');
 
         // Login Form Handler
@@ -555,7 +621,7 @@
             const password = document.getElementById('password').value;
 
             try {
-                const response = await fetch(`${API_URL}/auth/login`, {
+                const response = await fetch(`${API_URL}/auth/admin/login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, password })
@@ -637,6 +703,7 @@
                 'compensation': 'Compensation Plan',
                 'branding': 'Branding Settings',
                 'payment': 'Payment Gateway Configuration',
+                'fam': 'FAM Tier Management',
                 'statistics': 'Platform Statistics'
             };
             document.getElementById('sectionTitle').textContent = titles[section];
@@ -732,6 +799,9 @@
                         break;
                     case 'payment':
                         displayPaymentSection();
+                        break;
+                    case 'fam':
+                        loadFAMStats();
                         break;
                     case 'stats':
                         displayStatsSection();
@@ -1524,7 +1594,7 @@
 
                 const result = await response.json();
                 if (result.success) {
-                    allUsers = result.users || [];
+                    allUsers = result.data || result.users || [];
                     renderUsersTable(allUsers);
                 } else {
                     document.getElementById('usersTableContainer').innerHTML = `
@@ -1555,6 +1625,7 @@
                         <tr style="background: var(--navy-blue); color: white;">
                             <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #ddd;">Name</th>
                             <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #ddd;">Email</th>
+                            <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #ddd;">Member #</th>
                             <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #ddd;">Phone</th>
                             <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #ddd;">Tier</th>
                             <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #ddd;">Status</th>
@@ -1564,8 +1635,13 @@
                     <tbody>
                         ${users.map((user, index) => `
                             <tr style="background: ${index % 2 === 0 ? '#f8f9fa' : 'white'}; border-bottom: 1px solid #eee;">
-                                <td style="padding: 1rem;">${user.name || 'N/A'}</td>
+                                <td style="padding: 1rem;">${user.firstName} ${user.lastName}</td>
                                 <td style="padding: 1rem;">${user.email || 'N/A'}</td>
+                                <td style="padding: 1rem;">
+                                    <span style="background: #e8f5e9; color: #28a745; padding: 0.3rem 0.8rem; border-radius: 5px; font-size: 0.85rem; font-weight: bold; font-family: monospace;">
+                                        ${user.referralCode || 'N/A'}
+                                    </span>
+                                </td>
                                 <td style="padding: 1rem;">${user.phone || 'N/A'}</td>
                                 <td style="padding: 1rem;">
                                     <span style="background: var(--gold); color: var(--navy-blue); padding: 0.3rem 0.8rem; border-radius: 5px; font-size: 0.85rem; font-weight: bold;">
@@ -1573,8 +1649,8 @@
                                     </span>
                                 </td>
                                 <td style="padding: 1rem;">
-                                    <span style="background: ${user.freeAccess ? '#28a745' : '#17a2b8'}; color: white; padding: 0.3rem 0.8rem; border-radius: 5px; font-size: 0.85rem;">
-                                        ${user.freeAccess ? 'Manual Access' : 'Active'}
+                                    <span style="background: ${user.createdByAdmin ? '#28a745' : '#17a2b8'}; color: white; padding: 0.3rem 0.8rem; border-radius: 5px; font-size: 0.85rem;">
+                                        ${user.createdByAdmin ? 'Manual Access' : 'Active'}
                                     </span>
                                 </td>
                                 <td style="padding: 1rem; text-align: center;">
@@ -1647,7 +1723,7 @@
             const phone = document.getElementById('newUserPhone').value.trim();
             const tier = document.getElementById('newUserTier').value;
             const password = document.getElementById('newUserPassword').value;
-            const freeAccess = document.getElementById('newUserFreeAccess').checked;
+            const isBetaTester = document.getElementById('newUserFreeAccess').checked;
 
             // Validation
             if (!name || !email || !password) {
@@ -1660,13 +1736,19 @@
                 return;
             }
 
+            // Split name into firstName and lastName
+            const nameParts = name.split(' ');
+            const firstName = nameParts[0];
+            const lastName = nameParts.slice(1).join(' ') || firstName;
+
             const userData = {
-                name,
+                firstName,
+                lastName,
                 email,
                 phone,
                 tier,
                 password,
-                freeAccess
+                isBetaTester
             };
 
             try {
@@ -1681,7 +1763,32 @@
 
                 const result = await response.json();
                 if (result.success) {
-                    alert('✅ User created successfully!');
+                    const memberId = result.data.referralCode || 'Not assigned';
+                    const referralLink = result.data.referralLink || `${window.location.origin}/register.html?ref=${memberId}`;
+
+                    // Create a detailed success message
+                    const successMessage = `✅ User created successfully!\n\n` +
+                        `📋 MEMBER DETAILS:\n` +
+                        `━━━━━━━━━━━━━━━━━━━━━━\n` +
+                        `👤 Name: ${firstName} ${lastName}\n` +
+                        `📧 Email: ${email}\n` +
+                        `🎯 Tier: ${tier}\n` +
+                        `🆔 Member ID: ${memberId}\n\n` +
+                        `🔗 REFERRAL LINK:\n${referralLink}\n\n` +
+                        `💡 TIP: Copy the Member ID and Referral Link above.\n` +
+                        `Share them with the new member for inviting purposes!`;
+
+                    alert(successMessage);
+
+                    // Copy referral link to clipboard
+                    if (navigator.clipboard) {
+                        navigator.clipboard.writeText(referralLink).then(() => {
+                            console.log('Referral link copied to clipboard');
+                        }).catch(err => {
+                            console.error('Could not copy text: ', err);
+                        });
+                    }
+
                     hideCreateUserModal();
                     loadUsersData();
                 } else {
@@ -1715,7 +1822,6 @@
             const name = document.getElementById('manualAccessName').value.trim();
             const email = document.getElementById('manualAccessEmail').value.trim();
             const phone = document.getElementById('manualAccessPhone').value.trim();
-            const idNumber = document.getElementById('manualAccessIdNumber').value.trim();
             const tier = document.getElementById('manualAccessTier').value;
             const sponsorCode = document.getElementById('manualAccessSponsorCode').value.trim();
             const password = document.getElementById('manualAccessPassword').value;
@@ -1731,15 +1837,20 @@
                 return;
             }
 
+            // Split name into firstName and lastName
+            const nameParts = name.split(' ');
+            const firstName = nameParts[0];
+            const lastName = nameParts.slice(1).join(' ') || firstName;
+
             const userData = {
-                name,
+                firstName,
+                lastName,
                 email,
                 phone,
-                idNumber,
                 tier,
                 sponsorCode,
                 password,
-                freeAccess: true // Mark as manual access
+                isBetaTester: false // Manual access users are not beta testers by default
             };
 
             try {
@@ -1773,7 +1884,7 @@
             detailsDiv.innerHTML = `
                 <div style="margin-bottom: 1rem;">
                     <strong style="color: var(--navy-blue);">Member Name:</strong><br>
-                    <span style="font-size: 1.1rem;">${userData.name}</span>
+                    <span style="font-size: 1.1rem;">${userData.firstName} ${userData.lastName}</span>
                 </div>
                 <div style="margin-bottom: 1rem;">
                     <strong style="color: var(--navy-blue);">Email:</strong><br>
@@ -1782,6 +1893,11 @@
                 <div style="margin-bottom: 1rem;">
                     <strong style="color: var(--navy-blue);">Membership Number (Referral Code):</strong><br>
                     <span style="font-size: 1.2rem; font-weight: bold; color: #28a745; background: #e8f5e9; padding: 0.5rem 1rem; border-radius: 5px; display: inline-block;">${userData.referralCode}</span>
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <strong style="color: var(--navy-blue);">Referral Link:</strong><br>
+                    <input type="text" value="https://z2blegacybuilders.co.za/tiers.html?ref=${userData.referralCode}" readonly style="width: 100%; padding: 0.5rem; border: 2px solid #28a745; border-radius: 5px; font-family: monospace; font-size: 0.9rem;" onclick="this.select(); document.execCommand('copy'); alert('Referral link copied to clipboard!');">
+                    <small style="color: #666; display: block; margin-top: 0.3rem;">Click to copy and share with prospects</small>
                 </div>
                 <div style="margin-bottom: 1rem;">
                     <strong style="color: var(--navy-blue);">User ID:</strong><br>
@@ -1871,6 +1987,147 @@
             } catch (error) {
                 alert('❌ Error deleting user. Please try again.');
                 console.error(error);
+            }
+        }
+
+        // ============================================
+        // FAM TIER MANAGEMENT FUNCTIONS
+        // ============================================
+
+        async function loadFAMStats() {
+            try {
+                const response = await fetch(`${API_URL}/users/fam/stats`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    displayFAMStats(result.data);
+                } else {
+                    alert('❌ Error loading FAM statistics');
+                }
+            } catch (error) {
+                console.error('Error loading FAM stats:', error);
+                alert('❌ Error loading FAM statistics. Please try again.');
+            }
+        }
+
+        function displayFAMStats(data) {
+            document.getElementById('famTotalCount').textContent = data.totalFAM || 0;
+            document.getElementById('famActiveCount').textContent = data.activeFAM || 0;
+            document.getElementById('famExpiredCount').textContent = data.expiredFAM || 0;
+            document.getElementById('famExpiringSoonCount').textContent = data.expiringSoonCount || 0;
+
+            // Display expiring soon list
+            if (data.expiringSoon && data.expiringSoon.length > 0) {
+                document.getElementById('famExpiringSoonSection').style.display = 'block';
+                const listHTML = data.expiringSoon.map(user => {
+                    const expiryDate = new Date(user.famExpiryDate).toLocaleDateString();
+                    return `
+                        <div style="padding: 0.5rem; border-bottom: 1px solid #eee;">
+                            <strong>${user.firstName} ${user.lastName}</strong> (${user.email})<br>
+                            <small>Expires: ${expiryDate} | Months Remaining: ${user.famMonthsRemaining}</small>
+                        </div>
+                    `;
+                }).join('');
+                document.getElementById('famExpiringSoonList').innerHTML = listHTML;
+            } else {
+                document.getElementById('famExpiringSoonSection').style.display = 'none';
+            }
+        }
+
+        async function refreshFAMCredits() {
+            if (!confirm('🔄 This will add 5 credits to all eligible FAM members.\n\nRun this once a month (30+ days since last refresh).\n\nContinue?')) {
+                return;
+            }
+
+            const resultDiv = document.getElementById('famActionResult');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = '<p><i class="fas fa-spinner fa-spin"></i> Refreshing FAM credits...</p>';
+
+            try {
+                const response = await fetch(`${API_URL}/users/fam/refresh-credits`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    const data = result.data;
+                    let html = `
+                        <h3 style="color: var(--success);">✅ FAM Credit Refresh Completed!</h3>
+                        <p><strong>Total FAM Users:</strong> ${data.totalFAMUsers}</p>
+                        <p><strong>Credits Refreshed:</strong> ${data.refreshedCount} users</p>
+                        <p><strong>Skipped (too soon):</strong> ${data.skippedCount} users</p>
+                    `;
+
+                    if (data.refreshResults && data.refreshResults.length > 0) {
+                        html += '<h4>Refreshed Users:</h4><ul>';
+                        data.refreshResults.forEach(user => {
+                            html += `<li>${user.name}: +5 credits (New Balance: ${user.newBalance}, Months Remaining: ${user.monthsRemaining})</li>`;
+                        });
+                        html += '</ul>';
+                    }
+
+                    resultDiv.innerHTML = html;
+                    loadFAMStats(); // Reload stats
+                } else {
+                    resultDiv.innerHTML = `<p style="color: var(--danger);">❌ Error: ${result.message}</p>`;
+                }
+            } catch (error) {
+                console.error('Error refreshing FAM credits:', error);
+                resultDiv.innerHTML = '<p style="color: var(--danger);">❌ Error refreshing credits. Please try again.</p>';
+            }
+        }
+
+        async function checkFAMExpiry() {
+            if (!confirm('⏰ This will suspend all FAM accounts that have expired (90+ days).\n\nRun this daily to check for expired accounts.\n\nContinue?')) {
+                return;
+            }
+
+            const resultDiv = document.getElementById('famActionResult');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = '<p><i class="fas fa-spinner fa-spin"></i> Checking FAM expiry...</p>';
+
+            try {
+                const response = await fetch(`${API_URL}/users/fam/check-expiry`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    const data = result.data;
+                    let html = `
+                        <h3 style="color: var(--warning);">⏰ FAM Expiry Check Completed!</h3>
+                        <p><strong>Expired Accounts:</strong> ${data.expiredCount}</p>
+                    `;
+
+                    if (data.expiredResults && data.expiredResults.length > 0) {
+                        html += '<h4>Suspended Users (Need Upgrade):</h4><ul>';
+                        data.expiredResults.forEach(user => {
+                            const expiredDate = new Date(user.expiredOn).toLocaleDateString();
+                            html += `<li>${user.name} (${user.email}) - Expired: ${expiredDate}</li>`;
+                        });
+                        html += '</ul>';
+                    } else {
+                        html += '<p>✅ No expired FAM accounts found. All FAM users are still within their 3-month trial period.</p>';
+                    }
+
+                    resultDiv.innerHTML = html;
+                    loadFAMStats(); // Reload stats
+                } else {
+                    resultDiv.innerHTML = `<p style="color: var(--danger);">❌ Error: ${result.message}</p>`;
+                }
+            } catch (error) {
+                console.error('Error checking FAM expiry:', error);
+                resultDiv.innerHTML = '<p style="color: var(--danger);">❌ Error checking expiry. Please try again.</p>';
             }
         }
     </script>

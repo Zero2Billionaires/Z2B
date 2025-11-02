@@ -86,6 +86,10 @@ const userSchema = new mongoose.Schema({
     accountType: { type: String },
     branchCode: { type: String },
 
+    // Payment Information
+    paymentReference: { type: String },
+    paymentStatus: { type: String, enum: ['PENDING', 'COMPLETED', 'FAILED'], default: 'PENDING' },
+
     // Metadata
     lastLogin: { type: Date },
     registrationIP: { type: String },
@@ -95,10 +99,21 @@ const userSchema = new mongoose.Schema({
     collection: 'users'
 });
 
-// Generate unique referral code before saving
+// Generate unique referral code before saving (Z2B + 7 digits)
 userSchema.pre('save', async function(next) {
     if (!this.referralCode) {
-        this.referralCode = `Z2B${Math.random().toString(36).substr(2, 8).toUpperCase()}`;
+        // Generate 7-digit random number (0000000 to 9999999)
+        const randomNum = Math.floor(Math.random() * 10000000);
+        this.referralCode = `Z2B${randomNum.toString().padStart(7, '0')}`;
+
+        // Ensure uniqueness - if code exists, regenerate
+        const User = mongoose.model('User');
+        const existingUser = await User.findOne({ referralCode: this.referralCode });
+        if (existingUser) {
+            // Recursively try again with a different number
+            this.referralCode = null;
+            return this.save();
+        }
     }
     next();
 });
