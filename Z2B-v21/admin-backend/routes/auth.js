@@ -5,8 +5,6 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const { sendWelcomeEmail } = require('../utils/emailService');
 
-// Admin Login
-
 // Unified Login - Handles both Admin (username) and User (email) logins
 router.post('/login', async (req, res) => {
     try {
@@ -119,6 +117,20 @@ router.post('/login', async (req, res) => {
         console.error('Login error:', error);
         res.status(500).json({
             success: false,
+            message: 'Server error during login'
+        });
+    }
+});
+
+module.exports = router;
+
+
+router.post('/register', async (req, res) => {
+    try {
+        const {
+            firstName,
+            lastName,
+            email,
             phone,
             password,
             tier,
