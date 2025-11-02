@@ -11,10 +11,13 @@ dotenv.config();
 const app = express();
 
 // Middleware - CORS Configuration
-// Allow all origins for browser requests, or specific frontend if configured
+// Fix: Use function to properly handle all origins without credentials
 const corsOptions = {
-    origin: process.env.FRONTEND_URL || true, // true allows any origin and reflects the requesting origin
-    credentials: process.env.FRONTEND_URL ? true : false, // Only use credentials with specific origin
+    origin: function (origin, callback) {
+        // Allow all origins
+        callback(null, true);
+    },
+    credentials: false, // Explicitly disable credentials
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
 };
