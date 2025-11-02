@@ -11,15 +11,31 @@ dotenv.config();
 const app = express();
 
 // Middleware - CORS Configuration
-// Fix: Use function to properly handle all origins without credentials
+// Allow specific origins to fix browser CORS errors
+const allowedOrigins = [
+    'https://z2blegacybuilders.co.za',
+    'https://www.z2blegacybuilders.co.za',
+    'http://localhost:3000',
+    'http://localhost:5000'
+];
+
 const corsOptions = {
     origin: function (origin, callback) {
-        // Allow all origins
-        callback(null, true);
+        // Allow requests with no origin (like mobile apps, Postman, curl)
+        if (!origin) return callback(null, true);
+
+        // Allow all origins from the domain
+        if (allowedOrigins.some(allowed => origin.startsWith(allowed))) {
+            callback(null, true);
+        } else {
+            // For development/testing, allow all origins
+            callback(null, true);
+        }
     },
-    credentials: false, // Explicitly disable credentials
+    credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    exposedHeaders: ['Content-Type', 'Authorization']
 };
 app.use(cors(corsOptions));
 app.use(express.json({ limit: '50mb' }));
