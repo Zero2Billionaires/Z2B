@@ -24,13 +24,9 @@ const corsOptions = {
         // Allow requests with no origin (like mobile apps, Postman, curl)
         if (!origin) return callback(null, true);
 
-        // Allow all origins from the domain
-        if (allowedOrigins.some(allowed => origin.startsWith(allowed))) {
-            callback(null, true);
-        } else {
-            // For development/testing, allow all origins
-            callback(null, true);
-        }
+        // Return the actual origin to reflect it in the response header
+        // This allows credentials to work properly with specific origins
+        callback(null, origin);
     },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
