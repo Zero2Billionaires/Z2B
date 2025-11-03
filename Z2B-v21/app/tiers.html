@@ -738,14 +738,14 @@
             once: true
         });
 
-        // Tier mapping to codes
+        // Tier mapping to codes (must match backend tier codes)
         const tierMapping = {
-            'FAM - Free Affiliate': 'FREE',
-            'Bronze Legacy Builder': 'STARTER',
-            'Copper Legacy Builder': 'PRO',
-            'Silver Legacy Builder': 'PRO',
-            'Gold Legacy Builder': 'ELITE',
-            'Platinum Legacy Builder': 'ELITE'
+            'FAM - Free Affiliate': 'FAM',
+            'Bronze Legacy Builder': 'BRONZE',
+            'Copper Legacy Builder': 'COPPER',
+            'Silver Legacy Builder': 'SILVER',
+            'Gold Legacy Builder': 'GOLD',
+            'Platinum Legacy Builder': 'PLATINUM'
         };
 
         // Handle tier selection with referral tracking
@@ -784,9 +784,15 @@
                     localStorage.setItem('z2b_referrer', referrerId);
                 }
 
-                // Redirect to Yoco payment page
+                // Build registration URL with tier and referrer
+                let registerUrl = `register.html?tier=${tierCode}`;
+                if (referrerId) {
+                    registerUrl += `&ref=${referrerId}`;
+                }
+
+                // Redirect to registration page
                 setTimeout(() => {
-                    window.location.href = 'https://pay.yoco.com/zero2billionaires-amavulandlela';
+                    window.location.href = registerUrl;
                 }, 2000);
             });
         });
