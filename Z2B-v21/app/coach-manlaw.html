@@ -1166,8 +1166,8 @@
                         </div>
                         <div class="message-time" id="welcomeTime">Just now</div>
                         <div style="margin-top: 1rem;">
-                            <button onclick="playIntroductionAudio()" class="sidebar-btn" style="width: 100%; padding: 1rem; background: linear-gradient(135deg, var(--success), var(--purple)); font-weight: 600;">
-                                <i class="fas fa-volume-up"></i> Listen to Introduction (Luke)
+                            <button id="introAudioBtn" onclick="playIntroductionAudio()" class="sidebar-btn" style="width: 100%; padding: 1rem; background: linear-gradient(135deg, var(--success), var(--purple)); font-weight: 600;">
+                                <i class="fas fa-volume-up"></i> <span id="introAudioText">Listen to Introduction</span>
                             </button>
                         </div>
                     </div>
@@ -1690,6 +1690,31 @@
                     <i class="fas fa-headphones"></i> Read along while listening! Audio will narrate the lesson below. Perfect for multitasking or reinforcing learning!
                 </p>
 
+                <!-- Voice Selection -->
+                <div style="background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem; border: 2px solid rgba(180, 95, 255, 0.3);">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.8rem;">
+                        <i class="fas fa-microphone-alt" style="color: var(--cyber-purple); font-size: 1.2rem;"></i>
+                        <strong style="color: var(--royal-gold);">Select Voice:</strong>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.8rem;">
+                        <button id="voiceManlaw" onclick="selectVoice('manlaw')" style="padding: 0.8rem; background: linear-gradient(135deg, var(--cyber-purple), #9347E0); border: 2px solid var(--cyber-purple); border-radius: 10px; color: white; font-weight: 600; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                            <i class="fas fa-magic"></i>
+                            <span>Manlaw (ZYNTH)</span>
+                        </button>
+                        <button id="voiceLuke" onclick="selectVoice('luke')" style="padding: 0.8rem; background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.2); border-radius: 10px; color: white; font-weight: 600; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                            <i class="fas fa-male"></i>
+                            <span>Luke (Male)</span>
+                        </button>
+                        <button id="voiceFemale" onclick="selectVoice('female')" style="padding: 0.8rem; background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.2); border-radius: 10px; color: white; font-weight: 600; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                            <i class="fas fa-female"></i>
+                            <span>Ayanda (Female)</span>
+                        </button>
+                    </div>
+                    <div id="voiceStatus" style="margin-top: 0.8rem; font-size: 0.85rem; color: var(--royal-gold-light); text-align: center;">
+                        <i class="fas fa-info-circle"></i> <span id="voiceStatusText">Using ZYNTH cloned voice</span>
+                    </div>
+                </div>
+
                 <div style="display: flex; align-items: center; gap: 1rem; margin-top: 1rem;">
                     <button type="button" id="playPauseBtn" onclick="toggleAudio()" style="width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, var(--success), var(--purple)); border: none; color: white; font-size: 1.2rem; cursor: pointer; box-shadow: 0 4px 15px rgba(76, 236, 196, 0.4); transition: all 0.3s;">
                         <i class="fas fa-play"></i>
@@ -2047,7 +2072,7 @@
                 'STARTER': 'Bronze',
                 'PRO': 'Copper',
                 'ELITE': 'Silver', // Silver, Gold, Platinum all use ELITE
-                'LIFETIME': 'Diamond'
+                'LIFETIME': 'Platinum'
             };
             return tierMap[user.tier] || 'FAM';
         }
@@ -2062,13 +2087,13 @@
         }
 
         function canAccessAudio() {
-            // Audio available for Copper and above (Copper,Silver,Gold,Platinum,Diamond)
-            return ['Copper', 'Silver', 'Gold', 'Platinum', 'Diamond'].includes(userTier);
+            // Audio available for Copper and above (Copper,Silver,Gold,Platinum)
+            return ['Copper', 'Silver', 'Gold', 'Platinum'].includes(userTier);
         }
 
         function canAccessVideo() {
             // Video available for Silver and above
-            return ['Silver', 'Gold', 'Platinum', 'Diamond'].includes(userTier);
+            return ['Silver', 'Gold', 'Platinum'].includes(userTier);
         }
 
         function showUpgradeNudge(feature, requiredTier) {
@@ -4512,8 +4537,9 @@ Respond as Coach Manlaw would - sharp, strategic, faith-filled, funny when appro
         // Call AI API via backend proxy (prevents CORS issues)
         async function callClaudeAPI(systemPrompt, userMessage, apiKey) {
             try {
-                // SECURITY: Use backend proxy - API key is handled server-side
-                const proxyUrl = window.location.origin + '/api/claude-proxy.php';
+                // SECURITY: Use Railway backend - API key is handled server-side
+                const API_BASE_URL = 'https://z2b-production-3cd3.up.railway.app/api';
+                const proxyUrl = `${API_BASE_URL}/coach/chat`;
 
                 const response = await fetch(proxyUrl, {
                     method: 'POST',
@@ -4528,7 +4554,7 @@ Respond as Coach Manlaw would - sharp, strategic, faith-filled, funny when appro
                 });
 
                 if (!response.ok) {
-                    const error = await response.json();
+                    const error = await response.json().catch(() => ({ error: 'API request failed' }));
                     throw new Error(error.error || 'API request failed');
                 }
 
@@ -4679,7 +4705,7 @@ Respond as Coach Manlaw would - sharp, strategic, faith-filled, funny when appro
 
             console.log(`📊 Estimated duration: ${formatTime(audioEstimatedDuration)} (${audioTotalChars} characters)`);
 
-            // Wait for voices to load and select best quality voice
+            // Wait for voices to load and select based on user preference
             let voiceSelected = false;
 
             const selectBestVoice = () => {
@@ -4690,38 +4716,71 @@ Respond as Coach Manlaw would - sharp, strategic, faith-filled, funny when appro
                     // Log all available voices for debugging
                     console.log('🌍 All voices:', voices.map(v => `${v.name} (${v.lang})`).join(', '));
 
-                    // Prefer African male voices (South African, Nigerian, Kenyan, etc.)
-                    const preferredVoice =
-                        // South African English voices (Microsoft, Google)
-                        voices.find(v => v.lang === 'en-ZA' && !v.name.toLowerCase().includes('female')) ||
-                        voices.find(v => v.lang === 'en-ZA') ||
+                    let preferredVoice = null;
 
-                        // African-accented English voices
-                        voices.find(v => (v.name.includes('Thabo') || v.name.includes('Luke')) && v.lang.startsWith('en')) || // Microsoft SA voices
-                        voices.find(v => v.name.includes('Nigerian') && v.lang.startsWith('en')) ||
-                        voices.find(v => v.name.includes('Kenyan') && v.lang.startsWith('en')) ||
+                    // Select voice based on user preference
+                    if (selectedVoiceType === 'luke') {
+                        // Luke - South African male voice
+                        preferredVoice =
+                            voices.find(v => v.name.includes('Luke') && v.lang.startsWith('en')) ||
+                            voices.find(v => v.lang === 'en-ZA' && !v.name.toLowerCase().includes('female')) ||
+                            voices.find(v => v.lang === 'en-ZA') ||
+                            voices.find(v => v.name.includes('Thabo') && v.lang.startsWith('en')) ||
+                            voices.find(v => v.name.includes('Google UK English Male')) ||
+                            voices.find(v => v.name.includes('Microsoft David')) ||
+                            voices.find(v => v.lang.startsWith('en-GB'));
 
-                        // General African region voices
-                        voices.find(v => v.lang.startsWith('en-') && (v.name.includes('Africa') || v.name.includes('ZA'))) ||
+                        console.log('🎤 Luke voice mode selected');
+                    } else if (selectedVoiceType === 'female') {
+                        // Female - South African/African female voice
+                        preferredVoice =
+                            voices.find(v => v.lang === 'en-ZA' && v.name.toLowerCase().includes('female')) ||
+                            voices.find(v => v.name.includes('Ayanda') && v.lang.startsWith('en')) ||
+                            voices.find(v => v.name.includes('Lerato') && v.lang.startsWith('en')) ||
+                            voices.find(v => v.name.includes('Google UK English Female')) ||
+                            voices.find(v => v.name.includes('Microsoft Zira')) ||
+                            voices.find(v => v.name.includes('Microsoft Hazel')) ||
+                            voices.find(v => v.lang.startsWith('en-GB') && v.name.toLowerCase().includes('female')) ||
+                            voices.find(v => v.lang.startsWith('en') && v.name.toLowerCase().includes('female'));
 
-                        // Fallback to quality English male voices
-                        voices.find(v => v.name.includes('Google UK English Male')) ||
-                        voices.find(v => v.name.includes('Microsoft David')) || // UK male
-                        voices.find(v => v.name.includes('Microsoft George')) || // UK male
-                        voices.find(v => v.name.includes('Google') && v.lang === 'en-GB') || // UK English
-                        voices.find(v => v.name.includes('Daniel') && v.lang.startsWith('en')) || // MacOS UK
+                        console.log('🎤 Female voice (Ayanda) mode selected');
+                    } else if (selectedVoiceType === 'manlaw') {
+                        // ZYNTH cloned voice - check if available, otherwise fallback to Luke
+                        const zynthVoice = localStorage.getItem('zynth_profile_complete');
 
-                        // Last resort fallback
-                        voices.find(v => v.lang.startsWith('en-GB')) || // Any UK voice
-                        voices.find(v => v.lang.startsWith('en-US')) || // US voice
-                        voices.find(v => v.lang.startsWith('en')); // Any English
+                        if (zynthVoice === 'true') {
+                            console.log('🎤 ZYNTH cloned voice available - will use for generation');
+                            isUsingZynthVoice = true;
+                            // Note: ZYNTH voice will be used via backend, but we still need a voice for browser TTS fallback
+                        } else {
+                            console.log('⚠️ ZYNTH voice not available - using Luke as fallback');
+                            isUsingZynthVoice = false;
+                        }
 
+                        // Fallback to Luke for browser TTS
+                        preferredVoice =
+                            voices.find(v => v.name.includes('Luke') && v.lang.startsWith('en')) ||
+                            voices.find(v => v.lang === 'en-ZA' && !v.name.toLowerCase().includes('female')) ||
+                            voices.find(v => v.name.includes('Thabo') && v.lang.startsWith('en')) ||
+                            voices.find(v => v.name.includes('Google UK English Male')) ||
+                            voices.find(v => v.lang.startsWith('en-GB'));
+                    }
+
+                    // Apply preferred voice or fallback
                     if (preferredVoice) {
                         currentUtterance.voice = preferredVoice;
                         console.log('✅ Selected voice:', preferredVoice.name, '(' + preferredVoice.lang + ')');
                         voiceSelected = true;
                     } else {
-                        console.log('⚠️ No preferred voice found, using default');
+                        // Last resort fallback
+                        const fallbackVoice = voices.find(v => v.lang.startsWith('en'));
+                        if (fallbackVoice) {
+                            currentUtterance.voice = fallbackVoice;
+                            console.log('⚠️ Using fallback voice:', fallbackVoice.name);
+                            voiceSelected = true;
+                        } else {
+                            console.log('⚠️ No voice found, using system default');
+                        }
                     }
                 }
             };
@@ -4932,6 +4991,81 @@ Respond as Coach Manlaw would - sharp, strategic, faith-filled, funny when appro
             alert('Seeking is not supported by the browser speech engine.\n\nYou can use the speed controls to adjust playback pace.');
         }
 
+        // Voice selection variables
+        let selectedVoiceType = localStorage.getItem('coach_voice_type') || 'manlaw'; // 'manlaw', 'luke', 'female'
+        let isUsingZynthVoice = false;
+
+        // Select voice type
+        function selectVoice(voiceType) {
+            console.log('🎤 Selecting voice:', voiceType);
+
+            selectedVoiceType = voiceType;
+            localStorage.setItem('coach_voice_type', voiceType);
+
+            // Update button styles
+            const buttons = {
+                'manlaw': document.getElementById('voiceManlaw'),
+                'luke': document.getElementById('voiceLuke'),
+                'female': document.getElementById('voiceFemale')
+            };
+
+            // Reset all buttons
+            Object.keys(buttons).forEach(key => {
+                if (buttons[key]) {
+                    buttons[key].style.background = 'rgba(255,255,255,0.1)';
+                    buttons[key].style.borderColor = 'rgba(255,255,255,0.2)';
+                }
+            });
+
+            // Highlight selected button
+            if (buttons[voiceType]) {
+                buttons[voiceType].style.background = 'linear-gradient(135deg, var(--cyber-purple), #9347E0)';
+                buttons[voiceType].style.borderColor = 'var(--cyber-purple)';
+            }
+
+            // Update status text
+            const statusText = document.getElementById('voiceStatusText');
+            if (statusText) {
+                const statusMessages = {
+                    'manlaw': 'Using ZYNTH cloned voice (Manlaw)',
+                    'luke': 'Using Luke (South African male voice)',
+                    'female': 'Using Ayanda (South African female voice)'
+                };
+                statusText.textContent = statusMessages[voiceType] || 'Voice selected';
+            }
+
+            // Update intro button text
+            updateIntroButtonText();
+
+            // If audio is currently playing, stop and reprepare with new voice
+            if (isAudioPlaying || currentUtterance) {
+                stopAudio();
+                alert(`Voice changed to ${voiceType === 'manlaw' ? 'ZYNTH Manlaw' : voiceType === 'luke' ? 'Luke' : 'Ayanda'}!\n\nClick play to hear the lesson in the new voice.`);
+            }
+        }
+
+        // Initialize voice selection on page load
+        function initializeVoiceSelection() {
+            // Set initial button state
+            selectVoice(selectedVoiceType);
+
+            // Update intro button text
+            updateIntroButtonText();
+        }
+
+        // Update intro button text based on selected voice
+        function updateIntroButtonText() {
+            const introText = document.getElementById('introAudioText');
+            if (introText) {
+                const voiceNames = {
+                    'manlaw': 'Listen to Introduction (Manlaw ZYNTH)',
+                    'luke': 'Listen to Introduction (Luke)',
+                    'female': 'Listen to Introduction (Ayanda)'
+                };
+                introText.textContent = voiceNames[selectedVoiceType] || 'Listen to Introduction';
+            }
+        }
+
         // Set audio playback speed
         function setAudioSpeed(speed) {
             console.log('⚡ Setting audio speed to:', speed);
@@ -5129,7 +5263,7 @@ Respond as Coach Manlaw would - sharp, strategic, faith-filled, funny when appro
 
         // ===== VIDZIE VIDEO COACHING INTEGRATION =====
 
-        const API_BASE_URL = 'http://localhost:5000/api';
+        const API_BASE_URL = 'https://z2b-production-3cd3.up.railway.app/api';
         let currentCoachingVideoId = null;
         let currentCoachingVideoUrl = null;
 
@@ -5238,7 +5372,7 @@ I am a Legacy Builder, You are a Legacy Builder, and Together we are Builders of
                 let errorMsg = error.message;
                 if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
                     errorMsg = 'Cannot connect to video generation server.\n\n' +
-                               'The backend server needs to be running at http://localhost:5000\n\n' +
+                               'The backend server needs to be running at https://z2b-production-3cd3.up.railway.app\n\n' +
                                'For now, use the animated slides in Watch mode, or use Listen mode with audio narration.';
                 }
 
@@ -5419,23 +5553,39 @@ I am a Legacy Builder, You are a Legacy Builder, and Together we are Builders of
         function initializePage() {
             console.log('🎯 Coach ManLaw: Initializing...');
 
-            // Initialize user as LIFETIME tier if not already set
+            // Initialize user as PLATINUM tier if not already set
             const storedUser = localStorage.getItem('z2b_current_user');
-            if (!storedUser || JSON.parse(storedUser).tier !== 'LIFETIME') {
-                console.log('🔧 Initializing user as LIFETIME tier (Premium Legacy Builder)');
-                const lifetimeUser = {
+            if (!storedUser || JSON.parse(storedUser).tier !== 'PLATINUM') {
+                console.log('🔧 Initializing user as PLATINUM tier (Platinum Legacy Builder)');
+                const platinumUser = {
                     id: 'user_mokoro_manana',
                     name: 'Mokoro Manana',
-                    tier: 'LIFETIME',
-                    aiFuel: 999999, // Unlimited AI Fuel
+                    email: 'mokoro.manana@z2b.co.za',
+                    phone: '+27 77 490 1639',
+                    tier: 'PLATINUM',
+                    tierName: 'Platinum Legacy Builder',
+                    aiFuel: 999999, // Unlimited AI Fuel for testing
+                    aiFuelDaily: 165, // 165 AI Fuel per day
+                    pvPoints: 249, // 249 PV Points
+                    ispCommission: 45, // 45% ISP Commission
                     joinDate: new Date().toISOString(),
                     isDemo: false,
-                    legacyBuilder: true // Premium Legacy Builder status
+                    legacyBuilder: true, // Premium Legacy Builder status
+                    features: {
+                        allApps: true,
+                        unlimitedAiFuel: true,
+                        tscGenerations: 10,
+                        tpbGenerations: 10,
+                        tliGenerations: 10,
+                        qpbEligible: true,
+                        ceoEligible: true,
+                        marketplaceSales: true
+                    }
                 };
-                localStorage.setItem('z2b_current_user', JSON.stringify(lifetimeUser));
+                localStorage.setItem('z2b_current_user', JSON.stringify(platinumUser));
                 // Update userTier variable
                 userTier = getUserTier();
-                console.log('✅ User initialized:', lifetimeUser.name, '- Tier:', userTier);
+                console.log('✅ User initialized:', platinumUser.name, '- Tier:', userTier);
             } else {
                 console.log('✅ User already initialized:', JSON.parse(storedUser).name);
             }
@@ -5462,6 +5612,9 @@ I am a Legacy Builder, You are a Legacy Builder, and Together we are Builders of
             const now = new Date();
             document.getElementById('welcomeTime').textContent =
                 now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+
+            // Initialize voice selection
+            initializeVoiceSelection();
 
             console.log('✅ Coach ManLaw: Ready!');
             console.log('Current Day:', currentDay);
@@ -5501,6 +5654,9 @@ I am a Legacy Builder, You are a Legacy Builder, and Together we are Builders of
         window.setLearningMode = setLearningMode;
         window.toggleAudio = toggleAudio;
         window.stopAudio = stopAudio;
+        window.selectVoice = selectVoice;
+        window.setAudioSpeed = setAudioSpeed;
+        window.seekAudio = seekAudio;
         window.playAnimatedLesson = playAnimatedLesson;
         window.restartAnimation = restartAnimation;
         window.pauseAnimation = pauseAnimation;

@@ -57,6 +57,7 @@ const userRoutes = require('./routes/users');
 const contentRoutes = require('./routes/content');
 const statsRoutes = require('./routes/stats');
 const paymentRoutes = require('./routes/payment');
+const coachRoutes = require('./routes/coach');
 
 // Use Routes
 app.use('/api/auth', authRoutes);
@@ -65,6 +66,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/content', contentRoutes);
 app.use('/api/stats', statsRoutes);
 app.use('/api/payment', paymentRoutes);
+app.use('/api/coach', coachRoutes);
 
 // Health Check Endpoint
 app.get('/api/health', (req, res) => {
