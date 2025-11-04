@@ -356,7 +356,7 @@
                 </div>
             </div>
             <p style="margin-top: 1.5rem; color: var(--light-gold); font-size: 0.9rem;">
-                <i class="fas fa-info-circle"></i> <strong>ISP rates:</strong> FAM 20%, Bronze 25%, Copper 30%, Silver 35%, Gold 40%, Platinum 45%, Diamond 0% (Whitelabel)<br>
+                <i class="fas fa-info-circle"></i> <strong>ISP rates:</strong> FAM 20%, Bronze 25%, Copper 30%, Silver 35%, Gold 40%, Platinum 45%<br>
                 <i class="fas fa-trophy"></i> <strong>QPB (Quick Pathfinder Bonus):</strong> First 3 sales = 8%, each additional set of 3 = 10% | Cycle: 4th-3rd monthly
             </p>
         </div>
@@ -391,13 +391,13 @@
     </div>
 
     <script>
-        const API_BASE_URL = 'http://localhost:5000/api';
+        const API_BASE_URL = 'https://z2b-production-3cd3.up.railway.app/api';
         let teamData = null;
         let currentGeneration = 'all';
 
         // Load referral stats
         async function loadReferralStats() {
-            const token = localStorage.getItem('z2b_auth_token') || localStorage.getItem('authToken');
+            const token = localStorage.getItem('z2b_token') || localStorage.getItem('authToken');
 
             if (!token) {
                 showDemoData();
@@ -477,15 +477,15 @@
 
         // Load team members
         async function loadTeamMembers() {
-            const token = localStorage.getItem('z2b_auth_token') || localStorage.getItem('authToken');
+            const token = localStorage.getItem('z2b_token') || localStorage.getItem('authToken');
 
             if (!token) {
-                showDemoTeam();
+                showNoTeamMessage();
                 return;
             }
 
             try {
-                const response = await fetch(`${API_BASE_URL}/referrals/team`, {
+                const response = await fetch(`${API_BASE_URL}/referrals/members`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -494,13 +494,18 @@
                 const data = await response.json();
 
                 if (data.success) {
-                    displayTeamMembers(data.data.members);
+                    if (data.data.members.length === 0) {
+                        showNoTeamMessage();
+                    } else {
+                        displayTeamMembers(data.data.members);
+                    }
                 } else {
-                    showDemoTeam();
+                    console.error('API returned error:', data.message);
+                    showNoTeamMessage();
                 }
             } catch (error) {
                 console.error('Error loading team members:', error);
-                showDemoTeam();
+                showNoTeamMessage();
             }
         }
 
@@ -575,15 +580,15 @@
 
         // Load specific generation
         async function loadGenerationMembers(gen) {
-            const token = localStorage.getItem('z2b_auth_token') || localStorage.getItem('authToken');
+            const token = localStorage.getItem('z2b_token') || localStorage.getItem('authToken');
 
             if (!token) {
-                showDemoTeam();
+                showNoTeamMessage();
                 return;
             }
 
             try {
-                const response = await fetch(`${API_BASE_URL}/referrals/team?generation=${gen}`, {
+                const response = await fetch(`${API_BASE_URL}/referrals/members?generation=${gen}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -592,13 +597,17 @@
                 const data = await response.json();
 
                 if (data.success) {
-                    displayTeamMembers(data.data.members);
+                    if (data.data.members.length === 0) {
+                        showNoTeamMessage();
+                    } else {
+                        displayTeamMembers(data.data.members);
+                    }
                 } else {
-                    showDemoTeam();
+                    showNoTeamMessage();
                 }
             } catch (error) {
                 console.error('Error loading generation members:', error);
-                showDemoTeam();
+                showNoTeamMessage();
             }
         }
 
@@ -651,6 +660,23 @@
             ];
 
             displayTeamMembers(demoMembers);
+        }
+
+        // Show "No team members yet" message
+        function showNoTeamMessage() {
+            const container = document.getElementById('teamMembersList');
+            container.innerHTML = `
+                <div style="text-align: center; padding: 4rem 2rem; color: var(--white);">
+                    <i class="fas fa-users" style="font-size: 4rem; color: var(--gold); margin-bottom: 1.5rem; opacity: 0.5;"></i>
+                    <h3 style="color: var(--gold); margin-bottom: 1rem;">No Team Members Yet</h3>
+                    <p style="font-size: 1.1rem; margin-bottom: 2rem;">
+                        Start building your team by sharing your referral link!
+                    </p>
+                    <a href="dashboard.html" class="btn" style="background: linear-gradient(135deg, var(--gold), var(--orange)); color: var(--dark-navy); padding: 1rem 2rem; border-radius: 10px; text-decoration: none; font-weight: bold; display: inline-block;">
+                        <i class="fas fa-share-alt"></i> Get My Referral Link
+                    </a>
+                </div>
+            `;
         }
 
         // Load data on page load
