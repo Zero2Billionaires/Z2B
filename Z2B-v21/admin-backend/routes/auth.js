@@ -241,13 +241,26 @@ router.post('/register', async (req, res) => {
             createdByAdmin: false
         };
 
-        // FAM Tier Auto-Benefits: 5 credits/month for 3 months + Coach Manlaw access
+        // Automatic Fuel Credit Allocation Based on Tier
+        const tierFuelCredits = {
+            'FAM': 5,           // Free Affiliate Member: 5 credits/month for 3 months
+            'BRONZE': 100,      // Bronze: 100 credits
+            'COPPER': 250,      // Copper: 250 credits
+            'SILVER': 500,      // Silver: 500 credits
+            'GOLD': 1000,       // Gold: 1,000 credits
+            'PLATINUM': 5000,   // Platinum: 5,000 credits
+            'LIFETIME': 10000   // Lifetime: 10,000 credits
+        };
+
+        // Assign fuel credits based on tier
+        userData.fuelCredits = tierFuelCredits[selectedTier] || 0;
+
+        // FAM Tier Special Benefits: 3-month access + Coach Manlaw
         if (selectedTier === 'FAM') {
             const now = new Date();
             const threeMonthsLater = new Date(now);
             threeMonthsLater.setMonth(threeMonthsLater.getMonth() + 3);
 
-            userData.fuelCredits = 5; // Initial 5 credits
             userData.famStartDate = now;
             userData.famExpiryDate = threeMonthsLater;
             userData.lastCreditRefresh = now;
