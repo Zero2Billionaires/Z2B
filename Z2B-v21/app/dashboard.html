@@ -1029,7 +1029,7 @@
                 <div class="stat-icon">
                     <i class="fas fa-dollar-sign"></i>
                 </div>
-                <div class="stat-value">R12,450</div>
+                <div class="stat-value" id="totalEarnings">R0</div>
                 <div class="stat-label">Total Earnings (This Month)</div>
             </div>
 
@@ -1041,7 +1041,7 @@
                 <div class="stat-icon">
                     <i class="fas fa-users"></i>
                 </div>
-                <div class="stat-value">47</div>
+                <div class="stat-value" id="teamMembers">0</div>
                 <div class="stat-label">Team Members</div>
             </div>
 
@@ -1053,7 +1053,7 @@
                 <div class="stat-icon" style="background: linear-gradient(135deg, var(--orange), var(--gold));">
                     <i class="fas fa-fire"></i>
                 </div>
-                <div class="stat-value" style="color: var(--orange);">600</div>
+                <div class="stat-value" style="color: var(--orange);" id="aiFuelRemaining">0</div>
                 <div class="stat-label">AI Fuel Remaining</div>
                 <button onclick="event.stopPropagation(); window.location.href='ai-refuel.html'" style="width: 100%; padding: 0.6rem; margin-top: 0.8rem; background: linear-gradient(135deg, var(--gold), var(--orange)); color: var(--navy-blue); border: none; border-radius: 50px; font-weight: bold; cursor: pointer; transition: all 0.3s; font-size: 0.9rem;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 15px rgba(255, 107, 53, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
                     <i class="fas fa-gas-pump"></i> Top Up Now
@@ -1068,7 +1068,7 @@
                 <div class="stat-icon">
                     <i class="fas fa-chart-line"></i>
                 </div>
-                <div class="stat-value">Level 7</div>
+                <div class="stat-value" id="currentDepth">Level 0</div>
                 <div class="stat-label">Current Depth</div>
             </div>
         </div>
@@ -1891,6 +1891,53 @@
             }
         }
 
+        function updateDashboardStats() {
+            // Wait for Z2BAppAccess to be available
+            if (!window.Z2BAppAccess) {
+                setTimeout(updateDashboardStats, 100);
+                return;
+            }
+
+            const user = window.Z2BAppAccess.currentUser;
+
+            // Update Total Earnings (default R0 for new users)
+            const totalEarningsEl = document.getElementById('totalEarnings');
+            if (totalEarningsEl) {
+                const earnings = user.monthlyEarnings || 0;
+                totalEarningsEl.textContent = `R${earnings.toLocaleString()}`;
+            }
+
+            // Update Team Members (actual count)
+            const teamMembersEl = document.getElementById('teamMembers');
+            if (teamMembersEl) {
+                const teamSize = user.teamSize || 0;
+                teamMembersEl.textContent = teamSize.toString();
+            }
+
+            // Update AI Fuel Remaining (actual fuel credits)
+            const aiFuelEl = document.getElementById('aiFuelRemaining');
+            if (aiFuelEl) {
+                const fuel = user.aiFuel || 0;
+                aiFuelEl.textContent = fuel.toString();
+            }
+
+            // Update Current Depth based on tier
+            const currentDepthEl = document.getElementById('currentDepth');
+            if (currentDepthEl) {
+                const tierDepth = {
+                    'FAM': 0,
+                    'BRONZE': 3,
+                    'COPPER': 5,
+                    'SILVER': 7,
+                    'GOLD': 9,
+                    'PLATINUM': 10,
+                    'LIFETIME': 10
+                };
+                const depth = tierDepth[user.tier] || 0;
+                currentDepthEl.textContent = `Level ${depth}`;
+            }
+        }
+
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('active');
         }
@@ -1918,7 +1965,10 @@
                 // Step 3: Update top bar
                 updateTopBar();
 
-                // Step 4: Initialize upgrade motivator
+                // Step 4: Update dashboard stats with actual user data
+                updateDashboardStats();
+
+                // Step 5: Initialize upgrade motivator
                 initializeUpgradeMotivator();
 
                 // Step 5: Update navigation with access badges
