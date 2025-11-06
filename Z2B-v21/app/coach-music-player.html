@@ -1,0 +1,1601 @@
+<!-- ========================================
+     COACH MANLAW MUSIC PLAYER MODULE
+     Add this entire section before </body> in coach-manlaw.html
+     ========================================
+-->
+
+<!-- Floating Music Player -->
+<div id="musicPlayerFloat" class="music-player-float">
+    <!-- Player Header -->
+    <div class="music-player-header">
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <i class="fas fa-music" style="color: var(--royal-gold);"></i>
+            <span style="font-weight: 700; font-size: 1rem;">MUSIC PLAYER</span>
+        </div>
+        <div style="display: flex; gap: 0.5rem;">
+            <button class="player-header-btn" onclick="minimizeMusicPlayer()" title="Minimize">
+                <i class="fas fa-minus"></i>
+            </button>
+            <button class="player-header-btn" onclick="closeMusicPlayer()" title="Close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mode Tabs -->
+    <div class="audio-mode-tabs">
+        <button class="mode-tab" id="lessonModeTab" onclick="switchAudioMode('lesson')">
+            <i class="fas fa-book-reader"></i> Lesson Audio
+        </button>
+        <button class="mode-tab active" id="musicModeTab" onclick="switchAudioMode('music')">
+            <i class="fas fa-headphones"></i> Background Music
+        </button>
+    </div>
+
+    <!-- Now Playing Display -->
+    <div class="now-playing-section">
+        <div class="album-art" id="albumArt">
+            <i class="fas fa-music"></i>
+        </div>
+        <div class="track-info">
+            <div class="track-title" id="currentTrackTitle">Select a track to play</div>
+            <div class="track-artist" id="currentTrackArtist">Coach Manlaw Library</div>
+        </div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-section">
+        <div class="time-display">
+            <span id="currentTime">0:00</span>
+            <span id="totalTime">0:00</span>
+        </div>
+        <div class="progress-bar-container" onclick="seekMusic(event)">
+            <div class="progress-bar" id="musicProgressBar"></div>
+        </div>
+    </div>
+
+    <!-- Playback Controls -->
+    <div class="playback-controls">
+        <button class="control-btn" onclick="previousTrack()" title="Previous">
+            <i class="fas fa-step-backward"></i>
+        </button>
+        <button class="control-btn play-btn" id="playPauseBtn" onclick="togglePlayPause()" title="Play/Pause">
+            <i class="fas fa-play"></i>
+        </button>
+        <button class="control-btn" onclick="nextTrack()" title="Next">
+            <i class="fas fa-step-forward"></i>
+        </button>
+        <button class="control-btn" id="shuffleBtn" onclick="toggleShuffle()" title="Shuffle">
+            <i class="fas fa-random"></i>
+        </button>
+        <button class="control-btn" id="repeatBtn" onclick="toggleRepeat()" title="Repeat">
+            <i class="fas fa-redo"></i>
+        </button>
+    </div>
+
+    <!-- Volume Control -->
+    <div class="volume-section">
+        <button class="volume-btn" onclick="toggleMute()">
+            <i class="fas fa-volume-up" id="volumeIcon"></i>
+        </button>
+        <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="60"
+               oninput="setVolume(this.value)">
+        <span id="volumeDisplay">60%</span>
+    </div>
+
+    <!-- Library Tabs -->
+    <div class="library-tabs">
+        <button class="lib-tab active" onclick="showLibraryTab('internal')">
+            <i class="fas fa-compact-disc"></i> Library
+        </button>
+        <button class="lib-tab" onclick="showLibraryTab('upload')">
+            <i class="fas fa-upload"></i> My Music
+        </button>
+        <button class="lib-tab" onclick="showLibraryTab('online')">
+            <i class="fas fa-globe"></i> Online
+        </button>
+        <button class="lib-tab" onclick="showLibraryTab('playlist')">
+            <i class="fas fa-list"></i> Playlist
+        </button>
+    </div>
+
+    <!-- Library Content -->
+    <div class="library-content">
+        <!-- Internal Library -->
+        <div id="internalLibrary" class="library-tab-content active">
+            <div class="library-search">
+                <input type="text" placeholder="Search tracks..." id="librarySearch" oninput="filterTracks(this.value)">
+            </div>
+            <div id="trackList" class="track-list">
+                <!-- Tracks will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Upload Music -->
+        <div id="uploadLibrary" class="library-tab-content">
+            <div class="upload-section">
+                <div style="text-align: center; padding: 2rem;">
+                    <i class="fas fa-cloud-upload-alt" style="font-size: 3rem; color: var(--royal-gold); margin-bottom: 1rem;"></i>
+                    <h4 style="margin-bottom: 1rem;">Upload Your Music</h4>
+                    <p style="opacity: 0.8; margin-bottom: 1.5rem; font-size: 0.9rem;">
+                        Upload MP3, WAV, or OGG files from your device
+                    </p>
+                    <input type="file" id="musicFileInput" accept="audio/*" multiple style="display: none;" onchange="handleMusicUpload(event)">
+                    <button class="upload-btn" onclick="document.getElementById('musicFileInput').click()">
+                        <i class="fas fa-plus"></i> Choose Files
+                    </button>
+                </div>
+                <div id="uploadedTracksList" class="track-list">
+                    <!-- Uploaded tracks will appear here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Online Music -->
+        <div id="onlineLibrary" class="library-tab-content">
+            <div class="online-section">
+                <h4><i class="fas fa-link"></i> Add Online Music</h4>
+                <input type="text" placeholder="Paste YouTube or SoundCloud URL" id="onlineUrlInput" class="url-input">
+                <button class="add-url-btn" onclick="addOnlineTrack()">
+                    <i class="fas fa-plus"></i> Add Track
+                </button>
+                <div class="online-info">
+                    <p><i class="fas fa-info-circle"></i> Supports YouTube and SoundCloud links</p>
+                </div>
+                <div id="onlineTracksList" class="track-list">
+                    <!-- Online tracks will appear here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Current Playlist -->
+        <div id="playlistLibrary" class="library-tab-content">
+            <div class="playlist-header">
+                <h4><i class="fas fa-list-music"></i> Current Playlist</h4>
+                <button class="clear-playlist-btn" onclick="clearPlaylist()">
+                    <i class="fas fa-trash"></i> Clear
+                </button>
+            </div>
+            <div id="currentPlaylist" class="playlist-display">
+                <!-- Current playlist will appear here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden Audio Element -->
+    <audio id="musicAudioPlayer" preload="metadata"></audio>
+
+    <!-- Hidden YouTube Player -->
+    <div id="ytPlayerContainer" style="display: none;">
+        <div id="ytPlayer"></div>
+    </div>
+</div>
+
+<!-- Minimized Player (Bottom Bar) -->
+<div id="musicPlayerMinimized" class="music-player-minimized" style="display: none;">
+    <div class="minimized-track-info">
+        <i class="fas fa-music" style="color: var(--royal-gold); margin-right: 0.5rem;"></i>
+        <span id="minimizedTrackTitle">No track playing</span>
+    </div>
+    <div class="minimized-controls">
+        <button class="mini-btn" onclick="previousTrack()">
+            <i class="fas fa-step-backward"></i>
+        </button>
+        <button class="mini-btn" id="miniPlayBtn" onclick="togglePlayPause()">
+            <i class="fas fa-play"></i>
+        </button>
+        <button class="mini-btn" onclick="nextTrack()">
+            <i class="fas fa-step-forward"></i>
+        </button>
+        <button class="mini-btn" onclick="expandMusicPlayer()">
+            <i class="fas fa-expand"></i>
+        </button>
+    </div>
+</div>
+
+<!-- Music Player CSS -->
+<style>
+/* ========================================
+   MUSIC PLAYER STYLES
+   ======================================== */
+
+.music-player-float {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 400px;
+    max-height: 700px;
+    background: linear-gradient(145deg, rgba(10, 31, 68, 0.98), rgba(3, 11, 31, 0.98));
+    backdrop-filter: blur(20px);
+    border: 2px solid var(--royal-gold);
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(255, 215, 0, 0.3);
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.music-player-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 107, 53, 0.05));
+    border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+    cursor: move;
+}
+
+.player-header-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: var(--royal-gold);
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.player-header-btn:hover {
+    background: var(--royal-gold);
+    color: var(--royal-blue-deep);
+}
+
+.audio-mode-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.mode-tab {
+    padding: 0.8rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    border-radius: 10px;
+    color: var(--white);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.mode-tab.active {
+    background: linear-gradient(135deg, var(--royal-gold), var(--royal-gold-dark));
+    color: var(--royal-blue-deep);
+    border-color: var(--royal-gold);
+}
+
+.mode-tab:hover:not(.active) {
+    background: rgba(255, 215, 0, 0.1);
+}
+
+.now-playing-section {
+    padding: 1.5rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.album-art {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, var(--royal-gold), var(--royal-gold-dark));
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: var(--royal-blue-deep);
+    flex-shrink: 0;
+}
+
+.track-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.track-title {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--royal-gold);
+    margin-bottom: 0.3rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.track-artist {
+    font-size: 0.8rem;
+    color: var(--white);
+    opacity: 0.7;
+}
+
+.progress-section {
+    padding: 0 1.5rem 1rem;
+}
+
+.time-display {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: var(--royal-gold);
+    margin-bottom: 0.5rem;
+}
+
+.progress-bar-container {
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--royal-gold), var(--royal-gold-light));
+    width: 0%;
+    transition: width 0.1s linear;
+}
+
+.playback-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.control-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    color: var(--royal-gold);
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+}
+
+.control-btn.play-btn {
+    width: 55px;
+    height: 55px;
+    background: linear-gradient(135deg, var(--royal-gold), var(--royal-gold-dark));
+    color: var(--royal-blue-deep);
+    border: none;
+    font-size: 1.3rem;
+}
+
+.control-btn:hover {
+    background: var(--royal-gold);
+    color: var(--royal-blue-deep);
+    transform: scale(1.1);
+}
+
+.control-btn.play-btn:hover {
+    transform: scale(1.15);
+}
+
+.control-btn.active {
+    background: var(--royal-gold);
+    color: var(--royal-blue-deep);
+}
+
+.volume-section {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0 1.5rem 1rem;
+}
+
+.volume-btn {
+    background: none;
+    border: none;
+    color: var(--royal-gold);
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.volume-btn:hover {
+    color: var(--royal-gold-light);
+    transform: scale(1.1);
+}
+
+.volume-slider {
+    flex: 1;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    outline: none;
+    -webkit-appearance: none;
+}
+
+.volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    background: var(--royal-gold);
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.volume-slider::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    background: var(--royal-gold);
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+}
+
+#volumeDisplay {
+    font-size: 0.8rem;
+    color: var(--royal-gold);
+    min-width: 40px;
+    text-align: right;
+}
+
+.library-tabs {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.3rem;
+    padding: 0 1rem;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.lib-tab {
+    padding: 0.6rem 0.3rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--white);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.lib-tab.active {
+    color: var(--royal-gold);
+    border-bottom-color: var(--royal-gold);
+    background: rgba(255, 215, 0, 0.1);
+}
+
+.lib-tab:hover:not(.active) {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.library-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.library-tab-content {
+    display: none;
+}
+
+.library-tab-content.active {
+    display: block;
+}
+
+.library-search {
+    margin-bottom: 1rem;
+}
+
+.library-search input {
+    width: 100%;
+    padding: 0.7rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    border-radius: 8px;
+    color: var(--white);
+    font-size: 0.9rem;
+}
+
+.track-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.track-item {
+    padding: 0.8rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 215, 0, 0.1);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.track-item:hover {
+    background: rgba(255, 215, 0, 0.1);
+    border-color: var(--royal-gold);
+}
+
+.track-item.playing {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 107, 53, 0.1));
+    border-color: var(--royal-gold);
+}
+
+.track-item-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.track-item-title {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--white);
+    margin-bottom: 0.2rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.track-item-details {
+    font-size: 0.75rem;
+    color: var(--royal-gold);
+    opacity: 0.8;
+}
+
+.track-item-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.track-action-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: var(--royal-gold);
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.track-action-btn:hover {
+    background: var(--royal-gold);
+    color: var(--royal-blue-deep);
+}
+
+.upload-btn,
+.add-url-btn {
+    padding: 0.8rem 1.5rem;
+    background: linear-gradient(135deg, var(--royal-gold), var(--royal-gold-dark));
+    border: none;
+    border-radius: 10px;
+    color: var(--royal-blue-deep);
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.upload-btn:hover,
+.add-url-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4);
+}
+
+.url-input {
+    width: 100%;
+    padding: 0.8rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    border-radius: 10px;
+    color: var(--white);
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.online-info {
+    margin-top: 1rem;
+    padding: 0.8rem;
+    background: rgba(255, 215, 0, 0.05);
+    border-left: 3px solid var(--royal-gold);
+    border-radius: 5px;
+    font-size: 0.8rem;
+    color: var(--royal-gold);
+}
+
+.playlist-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.clear-playlist-btn {
+    padding: 0.5rem 1rem;
+    background: rgba(255, 68, 68, 0.2);
+    border: 1px solid rgba(255, 68, 68, 0.5);
+    border-radius: 8px;
+    color: #FF4444;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.clear-playlist-btn:hover {
+    background: rgba(255, 68, 68, 0.3);
+}
+
+/* Minimized Player */
+.music-player-minimized {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: linear-gradient(145deg, rgba(10, 31, 68, 0.98), rgba(3, 11, 31, 0.98));
+    backdrop-filter: blur(20px);
+    border-top: 2px solid var(--royal-gold);
+    z-index: 10000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem;
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.minimized-track-info {
+    display: flex;
+    align-items: center;
+    color: var(--white);
+    font-weight: 600;
+}
+
+.minimized-controls {
+    display: flex;
+    gap: 1rem;
+}
+
+.mini-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    color: var(--royal-gold);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mini-btn:hover {
+    background: var(--royal-gold);
+    color: var(--royal-blue-deep);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .music-player-float {
+        width: 100%;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        border-radius: 20px 20px 0 0;
+        max-height: 80vh;
+    }
+
+    .playback-controls {
+        gap: 0.5rem;
+    }
+
+    .control-btn {
+        width: 40px;
+        height: 40px;
+    }
+
+    .control-btn.play-btn {
+        width: 50px;
+        height: 50px;
+    }
+}
+
+/* Scrollbar Styling */
+.library-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.library-content::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.library-content::-webkit-scrollbar-thumb {
+    background: var(--royal-gold);
+    border-radius: 3px;
+}
+
+.library-content::-webkit-scrollbar-thumb:hover {
+    background: var(--royal-gold-light);
+}
+</style>
+
+<!-- Music Player JavaScript -->
+<script>
+// ========================================
+// MUSIC PLAYER JAVASCRIPT
+// ========================================
+
+// Music Library Data
+const musicLibrary = [
+    {
+        id: 1,
+        title: "Deep Focus Flow",
+        artist: "Productivity Beats",
+        category: "Focus",
+        duration: "15:00",
+        url: "https://www.youtube.com/watch?v=jfKfPfyJRdk",
+        tags: ["focus", "concentration", "studying"]
+    },
+    {
+        id: 2,
+        title: "Entrepreneurial Ambition",
+        artist: "Motivation Sound",
+        category: "Motivation",
+        duration: "10:30",
+        url: "https://www.youtube.com/watch?v=ZXsQAXx_ao0",
+        tags: ["motivation", "ambition", "energy"]
+    },
+    {
+        id: 3,
+        title: "Morning Mindset Builder",
+        artist: "Legacy Sounds",
+        category: "Morning",
+        duration: "12:45",
+        url: "https://www.youtube.com/watch?v=hHW1oY26kxQ",
+        tags: ["morning", "mindset", "positive"]
+    },
+    {
+        id: 4,
+        title: "Strategic Thinking Session",
+        artist: "Study Music",
+        category: "Focus",
+        duration: "20:00",
+        url: "https://www.youtube.com/watch?v=5qap5aO4i9A",
+        tags: ["strategy", "thinking", "planning"]
+    },
+    {
+        id: 5,
+        title: "Legacy Builder Anthem",
+        artist: "Epic Motivation",
+        category: "Motivation",
+        duration: "8:30",
+        url: "https://www.youtube.com/watch?v=g-jwWYX7Jlo",
+        tags: ["legacy", "power", "confidence"]
+    },
+    {
+        id: 6,
+        title: "Calm Reflection Time",
+        artist: "Meditation Beats",
+        category: "Reflection",
+        duration: "18:00",
+        url: "https://www.youtube.com/watch?v=lTRiuFIWV54",
+        tags: ["calm", "reflection", "meditation"]
+    }
+];
+
+// Player State
+let currentPlaylist = [];
+let currentTrackIndex = 0;
+let isPlaying = false;
+let currentAudioMode = 'music'; // 'lesson' or 'music'
+let shuffleEnabled = false;
+let repeatMode = 'off'; // 'off', 'one', 'all'
+let musicVolume = 0.6;
+let isMuted = false;
+
+// Audio Elements
+const audioPlayer = document.getElementById('musicAudioPlayer');
+let ytPlayer = null;
+
+// Initialize Music Player
+function initializeMusicPlayer() {
+    console.log('🎵 Initializing Music Player...');
+
+    // Load saved preferences
+    loadMusicPreferences();
+
+    // Populate internal library
+    populateInternalLibrary();
+
+    // Load uploaded tracks
+    loadUploadedTracks();
+
+    // Load online tracks
+    loadOnlineTracks();
+
+    // Setup audio player events
+    setupAudioEvents();
+
+    // Load YouTube API
+    loadYouTubeAPI();
+
+    console.log('✅ Music Player initialized');
+}
+
+// Populate Internal Library
+function populateInternalLibrary() {
+    const trackList = document.getElementById('trackList');
+    trackList.innerHTML = musicLibrary.map(track => `
+        <div class="track-item" onclick="addTrackToPlaylist(${track.id})">
+            <div class="track-item-info">
+                <div class="track-item-title">${track.title}</div>
+                <div class="track-item-details">${track.category} • ${track.duration}</div>
+            </div>
+            <div class="track-item-actions">
+                <button class="track-action-btn" onclick="playTrackNow(${track.id}); event.stopPropagation();" title="Play Now">
+                    <i class="fas fa-play"></i>
+                </button>
+                <button class="track-action-btn" onclick="addTrackToPlaylist(${track.id}); event.stopPropagation();" title="Add to Playlist">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Add track to playlist
+function addTrackToPlaylist(trackId) {
+    const track = musicLibrary.find(t => t.id === trackId);
+    if (track && !currentPlaylist.find(t => t.id === trackId)) {
+        currentPlaylist.push(track);
+        updatePlaylistDisplay();
+        showNotification(`✅ Added: ${track.title}`);
+    }
+}
+
+// Play track immediately
+function playTrackNow(trackId) {
+    const track = musicLibrary.find(t => t.id === trackId);
+    if (track) {
+        currentPlaylist = [track, ...currentPlaylist.filter(t => t.id !== trackId)];
+        currentTrackIndex = 0;
+        playCurrentTrack();
+        updatePlaylistDisplay();
+    }
+}
+
+// Update Playlist Display
+function updatePlaylistDisplay() {
+    const container = document.getElementById('currentPlaylist');
+    if (currentPlaylist.length === 0) {
+        container.innerHTML = `
+            <div style="text-align: center; padding: 2rem; opacity: 0.5;">
+                <i class="fas fa-music" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+                <p>No tracks in playlist</p>
+                <p style="font-size: 0.85rem;">Add tracks from the library</p>
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = currentPlaylist.map((track, index) => `
+        <div class="track-item ${index === currentTrackIndex ? 'playing' : ''}" onclick="playTrackAtIndex(${index})">
+            <div class="track-item-info">
+                <div class="track-item-title">
+                    ${index === currentTrackIndex ? '<i class="fas fa-volume-up"></i> ' : ''}
+                    ${track.title}
+                </div>
+                <div class="track-item-details">${track.artist || track.category}</div>
+            </div>
+            <div class="track-item-actions">
+                <button class="track-action-btn" onclick="removeFromPlaylist(${index}); event.stopPropagation();">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Play track at specific index
+function playTrackAtIndex(index) {
+    currentTrackIndex = index;
+    playCurrentTrack();
+}
+
+// Play current track
+function playCurrentTrack() {
+    if (currentPlaylist.length === 0) return;
+
+    const track = currentPlaylist[currentTrackIndex];
+    console.log('🎵 Playing:', track.title);
+
+    // Update UI
+    document.getElementById('currentTrackTitle').textContent = track.title;
+    document.getElementById('currentTrackArtist').textContent = track.artist || track.category;
+    document.getElementById('minimizedTrackTitle').textContent = track.title;
+
+    // Check if YouTube link
+    if (track.url && (track.url.includes('youtube.com') || track.url.includes('youtu.be'))) {
+        playYouTubeTrack(track.url);
+    } else if (track.data) {
+        // Play uploaded file
+        audioPlayer.src = track.data;
+        audioPlayer.play();
+        isPlaying = true;
+        updatePlayPauseButton();
+    }
+
+    // Update playlist display
+    updatePlaylistDisplay();
+
+    // Save to preferences
+    saveMusicPreferences();
+}
+
+// YouTube Player Functions
+function loadYouTubeAPI() {
+    if (!window.YT) {
+        const tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        document.head.appendChild(tag);
+
+        window.onYouTubeIframeAPIReady = function() {
+            console.log('✅ YouTube API loaded');
+        };
+    }
+}
+
+function playYouTubeTrack(url) {
+    const videoId = extractYouTubeID(url);
+    if (!videoId) return;
+
+    if (!ytPlayer) {
+        ytPlayer = new YT.Player('ytPlayer', {
+            height: '0',
+            width: '0',
+            videoId: videoId,
+            playerVars: {
+                autoplay: 1,
+                controls: 0,
+                modestbranding: 1,
+                rel: 0
+            },
+            events: {
+                'onReady': onYTPlayerReady,
+                'onStateChange': onYTPlayerStateChange
+            }
+        });
+    } else {
+        ytPlayer.loadVideoById(videoId);
+        ytPlayer.playVideo();
+    }
+
+    isPlaying = true;
+    updatePlayPauseButton();
+}
+
+function onYTPlayerReady(event) {
+    event.target.setVolume(musicVolume * 100);
+    event.target.playVideo();
+}
+
+function onYTPlayerStateChange(event) {
+    if (event.data === YT.PlayerState.ENDED) {
+        playNextTrack();
+    } else if (event.data === YT.PlayerState.PLAYING) {
+        isPlaying = true;
+        updatePlayPauseButton();
+        startProgressUpdate();
+    } else if (event.data === YT.PlayerState.PAUSED) {
+        isPlaying = false;
+        updatePlayPauseButton();
+    }
+}
+
+function extractYouTubeID(url) {
+    const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[7].length === 11) ? match[7] : null;
+}
+
+// Playback Controls
+function togglePlayPause() {
+    if (currentPlaylist.length === 0) {
+        showNotification('⚠️ Add tracks to playlist first');
+        return;
+    }
+
+    if (isPlaying) {
+        pauseMusic();
+    } else {
+        resumeMusic();
+    }
+}
+
+function pauseMusic() {
+    if (ytPlayer && ytPlayer.pauseVideo) {
+        ytPlayer.pauseVideo();
+    } else if (audioPlayer) {
+        audioPlayer.pause();
+    }
+    isPlaying = false;
+    updatePlayPauseButton();
+}
+
+function resumeMusic() {
+    if (currentPlaylist.length === 0) {
+        playCurrentTrack();
+        return;
+    }
+
+    if (ytPlayer && ytPlayer.playVideo) {
+        ytPlayer.playVideo();
+    } else if (audioPlayer) {
+        audioPlayer.play();
+    }
+    isPlaying = true;
+    updatePlayPauseButton();
+}
+
+function stopMusic() {
+    if (ytPlayer && ytPlayer.stopVideo) {
+        ytPlayer.stopVideo();
+    } else if (audioPlayer) {
+        audioPlayer.pause();
+        audioPlayer.currentTime = 0;
+    }
+    isPlaying = false;
+    updatePlayPauseButton();
+    document.getElementById('musicProgressBar').style.width = '0%';
+}
+
+function nextTrack() {
+    if (repeatMode === 'one') {
+        playCurrentTrack();
+    } else if (currentTrackIndex < currentPlaylist.length - 1) {
+        currentTrackIndex++;
+        playCurrentTrack();
+    } else if (repeatMode === 'all') {
+        currentTrackIndex = 0;
+        playCurrentTrack();
+    } else {
+        stopMusic();
+    }
+}
+
+function previousTrack() {
+    if (currentTrackIndex > 0) {
+        currentTrackIndex--;
+        playCurrentTrack();
+    } else if (repeatMode === 'all') {
+        currentTrackIndex = currentPlaylist.length - 1;
+        playCurrentTrack();
+    }
+}
+
+// Update Play/Pause Button
+function updatePlayPauseButton() {
+    const icon = isPlaying ? '<i class="fas fa-pause"></i>' : '<i class="fas fa-play"></i>';
+    document.getElementById('playPauseBtn').innerHTML = icon;
+    document.getElementById('miniPlayBtn').innerHTML = icon;
+}
+
+// Toggle Shuffle
+function toggleShuffle() {
+    shuffleEnabled = !shuffleEnabled;
+    document.getElementById('shuffleBtn').classList.toggle('active', shuffleEnabled);
+
+    if (shuffleEnabled) {
+        // Shuffle playlist (keeping current track at index 0)
+        const currentTrack = currentPlaylist[currentTrackIndex];
+        const otherTracks = currentPlaylist.filter((_, i) => i !== currentTrackIndex);
+        currentPlaylist = [currentTrack, ...shuffleArray(otherTracks)];
+        currentTrackIndex = 0;
+    }
+
+    updatePlaylistDisplay();
+    showNotification(shuffleEnabled ? '🔀 Shuffle ON' : '🔀 Shuffle OFF');
+}
+
+// Toggle Repeat
+function toggleRepeat() {
+    const modes = ['off', 'one', 'all'];
+    const currentIndex = modes.indexOf(repeatMode);
+    repeatMode = modes[(currentIndex + 1) % modes.length];
+
+    const repeatBtn = document.getElementById('repeatBtn');
+    repeatBtn.classList.toggle('active', repeatMode !== 'off');
+
+    const messages = {
+        'off': '🔁 Repeat OFF',
+        'one': '🔂 Repeat One',
+        'all': '🔁 Repeat All'
+    };
+
+    showNotification(messages[repeatMode]);
+}
+
+// Volume Controls
+function setVolume(value) {
+    musicVolume = value / 100;
+    if (ytPlayer && ytPlayer.setVolume) {
+        ytPlayer.setVolume(value);
+    } else if (audioPlayer) {
+        audioPlayer.volume = musicVolume;
+    }
+
+    document.getElementById('volumeDisplay').textContent = value + '%';
+
+    // Update icon
+    const icon = document.getElementById('volumeIcon');
+    if (value == 0) {
+        icon.className = 'fas fa-volume-mute';
+    } else if (value < 50) {
+        icon.className = 'fas fa-volume-down';
+    } else {
+        icon.className = 'fas fa-volume-up';
+    }
+
+    isMuted = false;
+}
+
+function toggleMute() {
+    if (isMuted) {
+        setVolume(musicVolume * 100);
+        isMuted = false;
+    } else {
+        if (ytPlayer && ytPlayer.mute) {
+            ytPlayer.mute();
+        } else if (audioPlayer) {
+            audioPlayer.muted = true;
+        }
+        document.getElementById('volumeIcon').className = 'fas fa-volume-mute';
+        isMuted = true;
+    }
+}
+
+// Progress Bar
+function seekMusic(event) {
+    const container = event.currentTarget;
+    const clickX = event.offsetX;
+    const width = container.offsetWidth;
+    const percentage = (clickX / width);
+
+    if (ytPlayer && ytPlayer.getDuration) {
+        const duration = ytPlayer.getDuration();
+        ytPlayer.seekTo(duration * percentage);
+    } else if (audioPlayer) {
+        audioPlayer.currentTime = audioPlayer.duration * percentage;
+    }
+}
+
+// Setup Audio Events
+function setupAudioEvents() {
+    audioPlayer.addEventListener('timeupdate', () => {
+        if (!ytPlayer || !ytPlayer.getCurrentTime) {
+            const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+            document.getElementById('musicProgressBar').style.width = progress + '%';
+            document.getElementById('currentTime').textContent = formatTime(audioPlayer.currentTime);
+            document.getElementById('totalTime').textContent = formatTime(audioPlayer.duration);
+        }
+    });
+
+    audioPlayer.addEventListener('ended', () => {
+        nextTrack();
+    });
+
+    audioPlayer.addEventListener('loadedmetadata', () => {
+        document.getElementById('totalTime').textContent = formatTime(audioPlayer.duration);
+    });
+}
+
+// Progress Update for YouTube
+function startProgressUpdate() {
+    if (ytPlayer && ytPlayer.getCurrentTime) {
+        const updateInterval = setInterval(() => {
+            if (!isPlaying || !ytPlayer) {
+                clearInterval(updateInterval);
+                return;
+            }
+
+            const currentTime = ytPlayer.getCurrentTime();
+            const duration = ytPlayer.getDuration();
+            const progress = (currentTime / duration) * 100;
+
+            document.getElementById('musicProgressBar').style.width = progress + '%';
+            document.getElementById('currentTime').textContent = formatTime(currentTime);
+            document.getElementById('totalTime').textContent = formatTime(duration);
+        }, 1000);
+    }
+}
+
+// Format Time
+function formatTime(seconds) {
+    if (isNaN(seconds)) return '0:00';
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+}
+
+// Upload Music from Device
+function handleMusicUpload(event) {
+    const files = event.target.files;
+    let uploadCount = 0;
+
+    for (let file of files) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const track = {
+                id: 'user_' + Date.now() + '_' + uploadCount,
+                title: file.name.replace(/\.[^/.]+$/, ""),
+                artist: "My Music",
+                category: 'Uploaded',
+                source: 'device',
+                data: e.target.result,
+                size: file.size,
+                type: file.type
+            };
+
+            // Save to localStorage
+            let userMusic = JSON.parse(localStorage.getItem('user_music') || '[]');
+            userMusic.push(track);
+            localStorage.setItem('user_music', JSON.stringify(userMusic));
+
+            loadUploadedTracks();
+            showNotification(`✅ Uploaded: ${track.title}`);
+            uploadCount++;
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+// Load Uploaded Tracks
+function loadUploadedTracks() {
+    const userMusic = JSON.parse(localStorage.getItem('user_music') || '[]');
+    const container = document.getElementById('uploadedTracksList');
+
+    if (userMusic.length === 0) {
+        container.innerHTML = '<div style="text-align: center; padding: 1rem; opacity: 0.5;">No uploaded tracks yet</div>';
+        return;
+    }
+
+    container.innerHTML = userMusic.map((track, index) => `
+        <div class="track-item" onclick="playUploadedTrack('${track.id}')">
+            <div class="track-item-info">
+                <div class="track-item-title">${track.title}</div>
+                <div class="track-item-details">Uploaded • ${formatFileSize(track.size)}</div>
+            </div>
+            <div class="track-item-actions">
+                <button class="track-action-btn" onclick="deleteUploadedTrack('${track.id}'); event.stopPropagation();">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </div>
+    `).join('');
+}
+
+function playUploadedTrack(trackId) {
+    const userMusic = JSON.parse(localStorage.getItem('user_music') || '[]');
+    const track = userMusic.find(t => t.id === trackId);
+
+    if (track) {
+        currentPlaylist = [track, ...currentPlaylist.filter(t => t.id !== trackId)];
+        currentTrackIndex = 0;
+        playCurrentTrack();
+        updatePlaylistDisplay();
+    }
+}
+
+function deleteUploadedTrack(trackId) {
+    if (confirm('Delete this track?')) {
+        let userMusic = JSON.parse(localStorage.getItem('user_music') || '[]');
+        userMusic = userMusic.filter(t => t.id !== trackId);
+        localStorage.setItem('user_music', JSON.stringify(userMusic));
+        loadUploadedTracks();
+        showNotification('✅ Track deleted');
+    }
+}
+
+// Add Online Track
+function addOnlineTrack() {
+    const input = document.getElementById('onlineUrlInput');
+    const url = input.value.trim();
+
+    if (!url) {
+        showNotification('⚠️ Please enter a URL');
+        return;
+    }
+
+    if (!url.includes('youtube.com') && !url.includes('youtu.be') && !url.includes('soundcloud.com')) {
+        showNotification('⚠️ Only YouTube and SoundCloud links supported');
+        return;
+    }
+
+    const track = {
+        id: 'online_' + Date.now(),
+        title: 'Online Track ' + new Date().toLocaleTimeString(),
+        artist: 'Online',
+        category: 'Online',
+        source: 'online',
+        url: url
+    };
+
+    let onlineTracks = JSON.parse(localStorage.getItem('online_music') || '[]');
+    onlineTracks.push(track);
+    localStorage.setItem('online_music', JSON.stringify(onlineTracks));
+
+    input.value = '';
+    loadOnlineTracks();
+    showNotification('✅ Online track added');
+}
+
+// Load Online Tracks
+function loadOnlineTracks() {
+    const onlineTracks = JSON.parse(localStorage.getItem('online_music') || '[]');
+    const container = document.getElementById('onlineTracksList');
+
+    if (onlineTracks.length === 0) {
+        container.innerHTML = '<div style="text-align: center; padding: 1rem; opacity: 0.5;">No online tracks added yet</div>';
+        return;
+    }
+
+    container.innerHTML = onlineTracks.map(track => `
+        <div class="track-item" onclick="playOnlineTrack('${track.id}')">
+            <div class="track-item-info">
+                <div class="track-item-title">${track.title}</div>
+                <div class="track-item-details">YouTube/SoundCloud</div>
+            </div>
+            <div class="track-item-actions">
+                <button class="track-action-btn" onclick="deleteOnlineTrack('${track.id}'); event.stopPropagation();">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </div>
+    `).join('');
+}
+
+function playOnlineTrack(trackId) {
+    const onlineTracks = JSON.parse(localStorage.getItem('online_music') || '[]');
+    const track = onlineTracks.find(t => t.id === trackId);
+
+    if (track) {
+        currentPlaylist = [track, ...currentPlaylist.filter(t => t.id !== trackId)];
+        currentTrackIndex = 0;
+        playCurrentTrack();
+        updatePlaylistDisplay();
+    }
+}
+
+function deleteOnlineTrack(trackId) {
+    if (confirm('Remove this track?')) {
+        let onlineTracks = JSON.parse(localStorage.getItem('online_music') || '[]');
+        onlineTracks = onlineTracks.filter(t => t.id !== trackId);
+        localStorage.setItem('online_music', JSON.stringify(onlineTracks));
+        loadOnlineTracks();
+        showNotification('✅ Track removed');
+    }
+}
+
+// Clear Playlist
+function clearPlaylist() {
+    if (confirm('Clear entire playlist?')) {
+        currentPlaylist = [];
+        currentTrackIndex = 0;
+        stopMusic();
+        updatePlaylistDisplay();
+        showNotification('✅ Playlist cleared');
+    }
+}
+
+// Remove from Playlist
+function removeFromPlaylist(index) {
+    currentPlaylist.splice(index, 1);
+
+    if (index === currentTrackIndex) {
+        stopMusic();
+        if (currentPlaylist.length > 0) {
+            currentTrackIndex = Math.min(index, currentPlaylist.length - 1);
+        }
+    } else if (index < currentTrackIndex) {
+        currentTrackIndex--;
+    }
+
+    updatePlaylistDisplay();
+}
+
+// Library Tab Switching
+function showLibraryTab(tab) {
+    // Update tabs
+    document.querySelectorAll('.lib-tab').forEach(t => t.classList.remove('active'));
+    event.target.classList.add('active');
+
+    // Update content
+    document.querySelectorAll('.library-tab-content').forEach(c => c.classList.remove('active'));
+
+    const tabMap = {
+        'internal': 'internalLibrary',
+        'upload': 'uploadLibrary',
+        'online': 'onlineLibrary',
+        'playlist': 'playlistLibrary'
+    };
+
+    document.getElementById(tabMap[tab]).classList.add('active');
+}
+
+// Filter Tracks
+function filterTracks(query) {
+    const trackItems = document.querySelectorAll('#trackList .track-item');
+    query = query.toLowerCase();
+
+    trackItems.forEach(item => {
+        const title = item.querySelector('.track-item-title').textContent.toLowerCase();
+        const details = item.querySelector('.track-item-details').textContent.toLowerCase();
+        const matches = title.includes(query) || details.includes(query);
+        item.style.display = matches ? 'flex' : 'none';
+    });
+}
+
+// Switch Audio Mode
+function switchAudioMode(mode) {
+    currentAudioMode = mode;
+
+    document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+
+    if (mode === 'lesson') {
+        document.getElementById('lessonModeTab').classList.add('active');
+        stopMusic();
+        // Resume lesson TTS if it was playing
+        if (typeof resumeAudio === 'function') {
+            showNotification('🎙️ Switched to Lesson Audio mode');
+        }
+    } else {
+        document.getElementById('musicModeTab').classList.add('active');
+        // Stop lesson TTS
+        if (typeof stopAudio === 'function') {
+            stopAudio();
+        }
+        resumeMusic();
+        showNotification('🎵 Switched to Music mode');
+    }
+}
+
+// Player Visibility
+function closeMusicPlayer() {
+    document.getElementById('musicPlayerFloat').style.display = 'none';
+    if (isPlaying) {
+        document.getElementById('musicPlayerMinimized').style.display = 'flex';
+    }
+}
+
+function minimizeMusicPlayer() {
+    document.getElementById('musicPlayerFloat').style.display = 'none';
+    document.getElementById('musicPlayerMinimized').style.display = 'flex';
+}
+
+function expandMusicPlayer() {
+    document.getElementById('musicPlayerFloat').style.display = 'flex';
+    document.getElementById('musicPlayerMinimized').style.display = 'none';
+}
+
+// Show Player (for button in main interface)
+function showMusicPlayer() {
+    document.getElementById('musicPlayerFloat').style.display = 'flex';
+    document.getElementById('musicPlayerMinimized').style.display = 'none';
+}
+
+// Utility Functions
+function shuffleArray(array) {
+    const newArray = [...array];
+    for (let i = newArray.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+    }
+    return newArray;
+}
+
+function formatFileSize(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+}
+
+function showNotification(message) {
+    // Simple notification (can be enhanced)
+    console.log('📢', message);
+
+    // Optional: Create toast notification
+    const toast = document.createElement('div');
+    toast.textContent = message;
+    toast.style.cssText = `
+        position: fixed;
+        bottom: 100px;
+        right: 20px;
+        background: linear-gradient(135deg, rgba(10, 31, 68, 0.98), rgba(3, 11, 31, 0.98));
+        color: var(--royal-gold);
+        padding: 1rem 1.5rem;
+        border-radius: 10px;
+        border: 1px solid var(--royal-gold);
+        z-index: 10001;
+        font-weight: 600;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    `;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+}
+
+// Save/Load Preferences
+function saveMusicPreferences() {
+    const prefs = {
+        volume: musicVolume,
+        repeatMode,
+        shuffleEnabled,
+        playlist: currentPlaylist.map(t => ({ id: t.id, source: t.source || 'library' })),
+        currentTrackIndex
+    };
+    localStorage.setItem('music_prefs', JSON.stringify(prefs));
+}
+
+function loadMusicPreferences() {
+    const saved = localStorage.getItem('music_prefs');
+    if (saved) {
+        const prefs = JSON.parse(saved);
+        musicVolume = prefs.volume || 0.6;
+        repeatMode = prefs.repeatMode || 'off';
+        shuffleEnabled = prefs.shuffleEnabled || false;
+
+        // Restore volume
+        document.getElementById('volumeSlider').value = musicVolume * 100;
+        setVolume(musicVolume * 100);
+
+        // Restore controls state
+        document.getElementById('shuffleBtn').classList.toggle('active', shuffleEnabled);
+        document.getElementById('repeatBtn').classList.toggle('active', repeatMode !== 'off');
+    }
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🎵 Music Player DOM Ready');
+
+    // Wait a moment for other scripts to load
+    setTimeout(initializeMusicPlayer, 1000);
+});
+
+// Export functions to global scope
+window.initializeMusicPlayer = initializeMusicPlayer;
+window.showMusicPlayer = showMusicPlayer;
+window.closeMusicPlayer = closeMusicPlayer;
+window.minimizeMusicPlayer = minimizeMusicPlayer;
+window.expandMusicPlayer = expandMusicPlayer;
+window.switchAudioMode = switchAudioMode;
+window.togglePlayPause = togglePlayPause;
+window.nextTrack = nextTrack;
+window.previousTrack = previousTrack;
+window.toggleShuffle = toggleShuffle;
+window.toggleRepeat = toggleRepeat;
+window.setVolume = setVolume;
+window.toggleMute = toggleMute;
+window.seekMusic = seekMusic;
+window.showLibraryTab = showLibraryTab;
+window.filterTracks = filterTracks;
+window.handleMusicUpload = handleMusicUpload;
+window.addOnlineTrack = addOnlineTrack;
+window.clearPlaylist = clearPlaylist;
+
+console.log('✅ Music Player functions exported to global scope');
+</script>
