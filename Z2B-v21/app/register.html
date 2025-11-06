@@ -316,10 +316,25 @@
             ? 'http://localhost:5000'
             : 'https://z2b-production-3cd3.up.railway.app';
 
-        // Extract sponsor code from URL
+        // Extract sponsor code from URL or localStorage
         function getSponsorCodeFromURL() {
             const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get('ref') || urlParams.get('sponsor');
+            let sponsorCode = urlParams.get('ref') || urlParams.get('sponsor') || urlParams.get('referral');
+
+            // Fallback to localStorage if not in URL (persistent tracking)
+            if (!sponsorCode) {
+                sponsorCode = localStorage.getItem('z2b_sponsor_code');
+                if (sponsorCode) {
+                    console.log('✅ Sponsor code retrieved from localStorage:', sponsorCode);
+                }
+            } else {
+                // Update localStorage if URL has a sponsor code
+                localStorage.setItem('z2b_sponsor_code', sponsorCode);
+                localStorage.setItem('z2b_sponsor_timestamp', Date.now().toString());
+                console.log('✅ Sponsor code captured and stored:', sponsorCode);
+            }
+
+            return sponsorCode;
         }
 
         // Load sponsor information

@@ -2042,6 +2042,92 @@
                 navbar.style.backdropFilter = 'none';
             }
         });
+
+        // ===== REFERRAL TRACKING SYSTEM =====
+        // Capture and persist referral code across all pages
+        (function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const refCode = urlParams.get('ref') || urlParams.get('sponsor') || urlParams.get('referral');
+
+            if (refCode) {
+                // Store referral code in localStorage (persists across sessions)
+                localStorage.setItem('z2b_sponsor_code', refCode);
+                localStorage.setItem('z2b_sponsor_timestamp', Date.now().toString());
+                console.log('✅ Sponsor code captured:', refCode);
+            }
+
+            // Append sponsor code to all register links
+            function appendSponsorToLinks() {
+                const sponsorCode = localStorage.getItem('z2b_sponsor_code');
+                if (sponsorCode) {
+                    document.querySelectorAll('a[href*="register.html"], button[onclick*="register.html"]').forEach(element => {
+                        if (element.tagName === 'A') {
+                            const url = new URL(element.href, window.location.origin);
+                            if (!url.searchParams.has('ref')) {
+                                url.searchParams.set('ref', sponsorCode);
+                                element.href = url.toString();
+                            }
+                        } else if (element.tagName === 'BUTTON') {
+                            const onclick = element.getAttribute('onclick');
+                            if (onclick && !onclick.includes('?ref=')) {
+                                element.setAttribute('onclick', onclick.replace('register.html', `register.html?ref=${sponsorCode}`));
+                            }
+                        }
+                    });
+                }
+            }
+
+            // Run on page load
+            appendSponsorToLinks();
+
+            // Run when DOM changes (for dynamically added elements)
+            const observer = new MutationObserver(appendSponsorToLinks);
+            observer.observe(document.body, { childList: true, subtree: true });
+        })();
+
+        // ===== SECRET ADMIN ACCESS (5 CLICKS) =====
+        (function() {
+            let clickCount = 0;
+            let resetTimeout;
+
+            const brandElement = document.querySelector('.navbar-brand');
+
+            if (brandElement) {
+                brandElement.addEventListener('click', function(e) {
+                    clickCount++;
+
+                    // Reset counter after 3 seconds of inactivity
+                    clearTimeout(resetTimeout);
+                    resetTimeout = setTimeout(() => {
+                        clickCount = 0;
+                    }, 3000);
+
+                    // Show visual feedback
+                    if (clickCount < 5) {
+                        brandElement.style.transform = 'scale(0.95)';
+                        setTimeout(() => {
+                            brandElement.style.transform = 'scale(1)';
+                        }, 100);
+                    }
+
+                    // Unlock admin access after 5 clicks
+                    if (clickCount === 5) {
+                        clickCount = 0;
+                        brandElement.style.animation = 'pulse 0.5s ease-in-out 3';
+
+                        setTimeout(() => {
+                            if (confirm('🔐 Admin Access Detected!\n\nDo you want to proceed to the admin login?')) {
+                                window.location.href = 'admin.html';
+                            }
+                            brandElement.style.animation = '';
+                        }, 500);
+                    }
+                });
+
+                // Add transition for smooth animation
+                brandElement.style.transition = 'transform 0.1s ease';
+            }
+        })();
     </script>
 </body>
 </html>
