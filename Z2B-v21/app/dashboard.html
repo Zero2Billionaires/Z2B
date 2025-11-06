@@ -1599,7 +1599,7 @@
             if (!token) {
                 // No token - redirect to login
                 alert('⚠️ Please login to access the dashboard');
-                window.location.href = 'landing-page.html';
+                window.location.href = 'login.html';
                 return;
             }
 
@@ -1624,7 +1624,7 @@
                         alert(`⛔ Your account has been ${user.accountStatus.toLowerCase()}.\n\nPlease contact support: 077 490 1639`);
                         localStorage.removeItem('z2b_token');
                         localStorage.removeItem('z2b_current_user');
-                        window.location.href = 'landing-page.html';
+                        window.location.href = 'login.html';
                         return;
                     }
 
@@ -1646,7 +1646,7 @@
                             alert('⏰ Your 14-day trial has expired.\n\nPlease complete payment to continue accessing Coach Manlaw.\n\nFor cash deposits, send proof of payment to WhatsApp: 077 490 1639');
                             localStorage.removeItem('z2b_token');
                             localStorage.removeItem('z2b_current_user');
-                            window.location.href = 'landing-page.html';
+                            window.location.href = 'login.html';
                             return;
                         }
                     }
@@ -1693,7 +1693,7 @@
                 alert('⚠️ Session expired. Please login again.');
                 localStorage.removeItem('z2b_token');
                 localStorage.removeItem('z2b_current_user');
-                window.location.href = 'landing-page.html';
+                window.location.href = 'login.html';
             }
         }
 
