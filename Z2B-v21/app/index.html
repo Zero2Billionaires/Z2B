@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Z2B Legacy Builders - Your 90-Day Journey from Employee to Entrepreneur [PREVIEW]</title>
+    <title>Z2B Legacy Builders - Your 90-Day Journey from Employee to Entrepreneur</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
@@ -37,21 +37,6 @@
             overflow-x: hidden;
         }
 
-        /* Preview Banner */
-        .preview-banner {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(135deg, #FF6B35, #FFD700);
-            color: var(--navy-blue);
-            padding: 0.8rem;
-            text-align: center;
-            font-weight: bold;
-            z-index: 10000;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-        }
-
         /* Smooth Scrolling */
         html {
             scroll-behavior: smooth;
@@ -63,7 +48,7 @@
             padding: 1rem 0;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
             transition: all 0.3s;
-            margin-top: 50px;
+            margin-top: 0;
         }
 
         .navbar-brand {
@@ -1132,11 +1117,6 @@
     </style>
 </head>
 <body>
-    <!-- Preview Banner -->
-    <div class="preview-banner">
-        🔍 PREVIEW MODE - This is the NEW redesigned landing page. Current live version unchanged.
-    </div>
-
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
@@ -1975,7 +1955,7 @@
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
                 if (target) {
-                    const navbarHeight = document.querySelector('.navbar').offsetHeight + 50; // Account for preview banner
+                    const navbarHeight = document.querySelector('.navbar').offsetHeight;
                     const targetPosition = target.offsetTop - navbarHeight;
                     window.scrollTo({
                         top: targetPosition,
