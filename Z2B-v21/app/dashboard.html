@@ -1968,10 +1968,13 @@
                 // Step 4: Update dashboard stats with actual user data
                 updateDashboardStats();
 
-                // Step 5: Initialize upgrade motivator
+                // Step 5: Load referral info (membership number and link)
+                loadReferralInfo();
+
+                // Step 6: Initialize upgrade motivator
                 initializeUpgradeMotivator();
 
-                // Step 5: Update navigation with access badges
+                // Step 7: Update navigation with access badges
                 setTimeout(() => {
                     if (window.Z2BAppAccess) {
                         updateNavigationWithAccess();
@@ -2332,44 +2335,29 @@
 
         // Referral Link Functions
         async function loadReferralInfo() {
-            const API_BASE_URL = 'https://z2b-admin-backend-production.up.railway.app/api';
-            const token = localStorage.getItem('z2b_auth_token') || localStorage.getItem('authToken');
-
-            if (!token) {
-                console.log('No auth token found, using demo data');
-                // Show demo data
-                document.getElementById('membershipNumber').value = 'Z2B0000001';
-                document.getElementById('referralLink').value = 'https://z2blegacybuilders.co.za/join?ref=Z2B0000001';
+            // Wait for Z2BAppAccess to be available
+            if (!window.Z2BAppAccess || !window.Z2BAppAccess.currentUser) {
+                setTimeout(loadReferralInfo, 100);
                 return;
             }
 
-            try {
-                const response = await fetch(`${API_BASE_URL}/auth/me`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
+            const user = window.Z2BAppAccess.currentUser;
 
-                const data = await response.json();
-
-                if (data.success && data.user) {
-                    const membershipNumber = data.user.membershipNumber || 'Z2B0000001';
-                    const referralLink = data.user.referralStats?.referralLink ||
-                                       `https://z2blegacybuilders.co.za/join?ref=${membershipNumber}`;
-
-                    document.getElementById('membershipNumber').value = membershipNumber;
-                    document.getElementById('referralLink').value = referralLink;
-                } else {
-                    // Fallback to demo data
-                    document.getElementById('membershipNumber').value = 'Z2B0000001';
-                    document.getElementById('referralLink').value = 'https://z2blegacybuilders.co.za/join?ref=Z2B0000001';
-                }
-            } catch (error) {
-                console.error('Error loading referral info:', error);
-                // Fallback to demo data
-                document.getElementById('membershipNumber').value = 'Z2B0000001';
-                document.getElementById('referralLink').value = 'https://z2blegacybuilders.co.za/join?ref=Z2B0000001';
+            // Update membership number (use referralCode from user)
+            const membershipNumberEl = document.getElementById('membershipNumber');
+            if (membershipNumberEl && user.referralCode) {
+                membershipNumberEl.value = user.referralCode;
             }
+
+            // Update referral link with correct base URL
+            const referralLinkEl = document.getElementById('referralLink');
+            if (referralLinkEl && user.referralCode) {
+                // Use the actual domain from window location or default
+                const baseUrl = window.location.origin;
+                referralLinkEl.value = `${baseUrl}/register.html?ref=${user.referralCode}`;
+            }
+
+            console.log('✅ Referral info loaded for:', user.name, 'Code:', user.referralCode)
         }
 
         function copyMembershipNumber() {
