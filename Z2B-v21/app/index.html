@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Z2B Legacy Builders - Build Your Billion Dollar Legacy</title>
+    <title>Z2B Legacy Builders - Your 90-Day Journey from Employee to Entrepreneur [PREVIEW]</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
@@ -14,11 +14,14 @@
             --royal-gold: #D4AF37;
             --royal-gold-light: #F4E4C1;
             --royal-gold-shine: #FFE5A0;
+            --gold-brown: #8B7355;
+            --gold-brown-dark: #6B5744;
             --orange: #FF6B35;
             --light-gold: #FFF4CC;
             --dark-navy: #051428;
             --white: #FFFFFF;
             --light-bg: #FAF8F3;
+            --green: #27AE60;
         }
 
         * {
@@ -34,11 +37,33 @@
             overflow-x: hidden;
         }
 
+        /* Preview Banner */
+        .preview-banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #FF6B35, #FFD700);
+            color: var(--navy-blue);
+            padding: 0.8rem;
+            text-align: center;
+            font-weight: bold;
+            z-index: 10000;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Smooth Scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
         /* Navigation */
         .navbar {
             background: linear-gradient(135deg, var(--navy-blue) 0%, var(--dark-navy) 100%);
             padding: 1rem 0;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s;
+            margin-top: 50px;
         }
 
         .navbar-brand {
@@ -93,9 +118,9 @@
             color: var(--white);
         }
 
-        /* Hero Section */
+        /* Hero Section - 90-Day Journey Focus */
         .hero {
-            background: linear-gradient(135deg, var(--navy-blue) 0%, var(--dark-navy) 100%);
+            background: linear-gradient(135deg, var(--gold-brown) 0%, var(--gold-brown-dark) 50%, var(--navy-blue) 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -110,9 +135,23 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23FFD700" fill-opacity="0.1" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
-            background-size: cover;
-            background-position: bottom;
+            background: radial-gradient(circle at 30% 50%, rgba(255, 215, 0, 0.15), transparent 50%),
+                        radial-gradient(circle at 70% 50%, rgba(255, 107, 53, 0.1), transparent 50%);
+        }
+
+        .hero::after {
+            content: '🚀';
+            position: absolute;
+            font-size: 25rem;
+            opacity: 0.05;
+            right: -5%;
+            top: 10%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(5deg); }
         }
 
         .hero-content {
@@ -121,128 +160,32 @@
         }
 
         .hero h1 {
-            font-size: 4rem;
+            font-size: 3.5rem;
             font-weight: bold;
-            color: var(--gold);
-            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
-            margin-bottom: 1.5rem;
-        }
-
-        .hero .tagline {
-            font-size: 1.5rem;
             color: var(--white);
-            margin-bottom: 2rem;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.7);
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
         }
 
         .hero .highlight {
-            color: var(--orange);
-            font-weight: bold;
-        }
-
-        /* Stats Section */
-        .stats-section {
-            background: var(--white);
-            padding: 4rem 2rem;
-            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.1);
-        }
-
-        .stat-item {
-            text-align: center;
-            padding: 2rem;
-        }
-
-        .stat-number {
-            font-size: 3rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, var(--gold), var(--orange));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .stat-label {
-            color: var(--navy-blue);
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-top: 0.5rem;
-        }
-
-        /* Vision & Mission Section */
-        .vision-mission {
-            padding: 80px 0;
-            background: linear-gradient(to bottom, var(--white), var(--light-gold));
-        }
-
-        .vision-card, .mission-card {
-            background: var(--white);
-            padding: 3rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(10, 38, 71, 0.15);
-            margin-bottom: 2rem;
-            border-left: 5px solid var(--gold);
-            transition: all 0.3s;
-        }
-
-        .vision-card:hover, .mission-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 50px rgba(10, 38, 71, 0.25);
-            border-left-color: var(--orange);
-        }
-
-        .vision-card h3, .mission-card h3 {
-            color: var(--navy-blue);
-            font-size: 2rem;
-            font-weight: bold;
-            margin-bottom: 1.5rem;
-        }
-
-        .vision-card h3 i, .mission-card h3 i {
             color: var(--gold);
-            margin-right: 15px;
+            font-weight: 900;
         }
 
-        .vision-card p, .mission-card p {
-            font-size: 1.2rem;
-            line-height: 1.8;
-            color: var(--dark-navy);
+        .hero .tagline {
+            font-size: 1.4rem;
+            color: var(--light-gold);
+            margin-bottom: 2rem;
+            line-height: 1.6;
         }
 
-        /* Coach Manlaw Hero Section */
-        .coach-manlaw-hero {
-            background: linear-gradient(135deg, var(--orange) 0%, var(--gold) 100%);
-            padding: 100px 0;
+        .coach-avatar-hero {
+            width: 400px;
+            height: 400px;
+            margin: 0 auto;
             position: relative;
-            overflow: hidden;
-        }
-
-        .coach-manlaw-hero::before {
-            content: '🚀';
-            position: absolute;
-            font-size: 20rem;
-            opacity: 0.1;
-            right: -5%;
-            top: -10%;
-            animation: float 6s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-30px); }
-        }
-
-        .coach-avatar {
-            width: 300px;
-            height: 300px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--navy-blue), var(--dark-navy));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 10rem;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            margin: 0 auto 2rem;
-            border: 8px solid var(--white);
-            animation: pulse 2s ease-in-out infinite;
+            animation: pulse 3s ease-in-out infinite;
         }
 
         @keyframes pulse {
@@ -250,126 +193,153 @@
             50% { transform: scale(1.05); }
         }
 
-        .coach-title {
-            font-size: 3.5rem;
+        .coach-avatar-hero img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 20px 60px rgba(255, 215, 0, 0.5));
+        }
+
+        /* Problem Section */
+        .problem-section {
+            padding: 6rem 2rem;
+            background: linear-gradient(to bottom, var(--dark-navy), var(--navy-blue));
+            position: relative;
+        }
+
+        .problem-section h2 {
+            color: var(--gold);
+            font-size: 3rem;
             font-weight: bold;
-            color: var(--navy-blue);
             text-align: center;
-            margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
 
-        .coach-subtitle {
-            font-size: 1.5rem;
-            color: var(--dark-navy);
+        .problem-section p {
+            color: var(--white);
+            font-size: 1.3rem;
             text-align: center;
-            margin-bottom: 3rem;
+            max-width: 900px;
+            margin: 0 auto 3rem;
+            line-height: 1.8;
         }
 
-        .personality-blend {
+        .problem-cards {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
             margin-top: 3rem;
         }
 
-        .personality-card {
-            background: var(--white);
-            padding: 2rem;
-            border-radius: 15px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        .problem-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 2.5rem;
+            border-radius: 20px;
+            border: 2px solid rgba(255, 215, 0, 0.3);
             transition: all 0.3s;
         }
 
-        .personality-card:hover {
+        .problem-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            border-color: var(--gold);
+            box-shadow: 0 20px 60px rgba(255, 215, 0, 0.3);
         }
 
-        .personality-icon {
+        .problem-icon {
             font-size: 4rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .problem-title {
+            color: var(--gold);
+            font-size: 1.5rem;
+            font-weight: bold;
             margin-bottom: 1rem;
+            text-align: center;
         }
 
-        .personality-percentage {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: var(--navy-blue);
-            margin-bottom: 0.5rem;
+        .problem-description {
+            color: var(--white);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            text-align: center;
         }
 
-        .personality-name {
-            font-size: 1.3rem;
-            color: var(--orange);
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-        }
-
-        .personality-description {
-            color: var(--dark-navy);
-            font-size: 0.95rem;
-        }
-
-        /* 4M Billionaire Table Section */
-        .four-m-section {
-            background: linear-gradient(to bottom, var(--navy-blue), var(--dark-navy));
-            padding: 100px 0;
+        /* Solution Section - Coach Manlaw */
+        .solution-section {
+            padding: 6rem 2rem;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--orange) 100%);
             position: relative;
         }
 
-        .four-m-section h2 {
-            color: var(--gold);
+        .solution-section h2 {
+            color: var(--navy-blue);
             font-size: 3.5rem;
             font-weight: bold;
             text-align: center;
             margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
 
-        .four-m-section .subtitle {
-            color: var(--white);
+        .solution-section .subtitle {
+            color: var(--dark-navy);
             font-size: 1.5rem;
             text-align: center;
+            margin-bottom: 3rem;
+            font-weight: 600;
+        }
+
+        .coach-intro-box {
+            background: var(--white);
+            padding: 3rem;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             margin-bottom: 4rem;
         }
 
-        .table-legs-container {
+        .coach-avatar-large {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--navy-blue), var(--dark-navy));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8rem;
+            margin: 0 auto 2rem;
+            border: 8px solid var(--gold);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        /* 4 Legs Cards */
+        .four-legs-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2.5rem;
-            margin-bottom: 4rem;
+            gap: 2rem;
+            margin: 3rem 0;
         }
 
-        .table-leg {
-            background: linear-gradient(145deg, var(--white), var(--light-gold));
-            padding: 3rem 2rem;
+        .leg-card {
+            background: var(--white);
+            padding: 2.5rem 2rem;
             border-radius: 20px;
             text-align: center;
-            box-shadow: 0 15px 50px rgba(255, 215, 0, 0.3);
-            transition: all 0.4s;
-            position: relative;
-            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+            border-top: 5px solid var(--navy-blue);
         }
 
-        .table-leg::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 5px;
-            background: linear-gradient(90deg, var(--gold), var(--orange));
-        }
-
-        .table-leg:hover {
-            transform: translateY(-15px) scale(1.02);
-            box-shadow: 0 20px 60px rgba(255, 215, 0, 0.5);
+        .leg-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            border-top-color: var(--orange);
         }
 
         .leg-icon {
-            font-size: 5rem;
-            margin-bottom: 1.5rem;
+            font-size: 4rem;
+            margin-bottom: 1rem;
             background: linear-gradient(135deg, var(--navy-blue), var(--orange));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -377,7 +347,7 @@
         }
 
         .leg-title {
-            font-size: 2rem;
+            font-size: 1.5rem;
             font-weight: bold;
             color: var(--navy-blue);
             margin-bottom: 1rem;
@@ -385,91 +355,135 @@
 
         .leg-description {
             color: var(--dark-navy);
-            font-size: 1.1rem;
-            line-height: 1.7;
-        }
-
-        .table-top {
-            background: linear-gradient(135deg, var(--gold), var(--orange));
-            padding: 3rem;
-            border-radius: 20px;
-            text-align: center;
-            box-shadow: 0 20px 60px rgba(255, 215, 0, 0.4);
-            margin-top: 2rem;
-        }
-
-        .table-top h3 {
-            color: var(--navy-blue);
-            font-size: 2.5rem;
-            font-weight: bold;
-            margin-bottom: 1rem;
-        }
-
-        .table-top p {
-            color: var(--dark-navy);
-            font-size: 1.3rem;
-            font-weight: 500;
-        }
-
-        /* Features Section */
-        .features {
-            padding: 80px 0;
-            background: var(--white);
-        }
-
-        .section-title {
-            font-size: 3rem;
-            font-weight: bold;
-            color: var(--navy-blue);
-            text-align: center;
-            margin-bottom: 1rem;
-        }
-
-        .section-subtitle {
-            font-size: 1.3rem;
-            color: var(--dark-navy);
-            text-align: center;
-            margin-bottom: 4rem;
-        }
-
-        .feature-card {
-            background: linear-gradient(145deg, var(--white), var(--light-gold));
-            padding: 2.5rem;
-            border-radius: 20px;
-            text-align: center;
-            box-shadow: 0 10px 40px rgba(10, 38, 71, 0.1);
-            transition: all 0.3s;
-            margin-bottom: 2rem;
-            border-top: 4px solid var(--gold);
-            height: 100%;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 50px rgba(10, 38, 71, 0.2);
-            border-top-color: var(--orange);
-        }
-
-        .feature-icon {
-            font-size: 4rem;
-            color: var(--orange);
-            margin-bottom: 1.5rem;
-        }
-
-        .feature-title {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--navy-blue);
-            margin-bottom: 1rem;
-        }
-
-        .feature-description {
-            color: var(--dark-navy);
             font-size: 1rem;
             line-height: 1.6;
         }
 
-        /* Apps Section */
+        /* 7 Stages Timeline */
+        .stages-timeline {
+            background: var(--white);
+            padding: 3rem;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            margin-top: 4rem;
+        }
+
+        .stages-timeline h3 {
+            color: var(--navy-blue);
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .timeline-stages {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .stage-item {
+            background: linear-gradient(145deg, var(--light-gold), var(--white));
+            padding: 2rem 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            border: 3px solid var(--gold);
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .stage-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
+        }
+
+        .stage-number {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(135deg, var(--navy-blue), var(--orange));
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .stage-name {
+            color: var(--navy-blue);
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-top: 1rem;
+        }
+
+        /* Value Section */
+        .value-section {
+            padding: 6rem 2rem;
+            background: linear-gradient(to bottom, var(--white), var(--light-gold));
+        }
+
+        .value-section h2 {
+            color: var(--navy-blue);
+            font-size: 3.5rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .value-section .description {
+            color: var(--dark-navy);
+            font-size: 1.3rem;
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto 4rem;
+            line-height: 1.8;
+        }
+
+        .value-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .value-card {
+            background: var(--white);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(10, 38, 71, 0.15);
+            border-left: 6px solid var(--gold);
+            transition: all 0.3s;
+        }
+
+        .value-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 50px rgba(10, 38, 71, 0.25);
+            border-left-color: var(--orange);
+        }
+
+        .value-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .value-title {
+            color: var(--navy-blue);
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .value-text {
+            color: var(--dark-navy);
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        /* Apps Ecosystem Section */
         .apps-section {
             padding: 6rem 2rem;
             background: linear-gradient(135deg, var(--navy-blue), var(--dark-navy));
@@ -567,7 +581,71 @@
             font-size: 0.95rem;
         }
 
-        /* Beta Testers Promotion Section - TIME-LIMITED (Admin can remove this entire section) */
+        /* Distribution Section */
+        .distribution-section {
+            padding: 6rem 2rem;
+            background: linear-gradient(135deg, var(--green), #2ECC71);
+            position: relative;
+        }
+
+        .distribution-section h2 {
+            color: var(--white);
+            font-size: 3.5rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+        }
+
+        .distribution-section .description {
+            color: var(--white);
+            font-size: 1.4rem;
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto 3rem;
+            line-height: 1.8;
+        }
+
+        .distribution-box {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 3rem;
+            border-radius: 25px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .distribution-box h3 {
+            color: var(--navy-blue);
+            font-size: 2rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .distribution-box ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .distribution-box ul li {
+            color: var(--dark-navy);
+            font-size: 1.2rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(10, 38, 71, 0.1);
+        }
+
+        .distribution-box ul li:last-child {
+            border-bottom: none;
+        }
+
+        .distribution-box ul li i {
+            color: var(--gold);
+            margin-right: 1rem;
+            font-size: 1.5rem;
+        }
+
+        /* Beta Testers Promotion Section */
         .beta-promo-section {
             padding: 6rem 2rem;
             background: linear-gradient(135deg, #27AE60 0%, #2ECC71 50%, #52D073 100%);
@@ -725,7 +803,6 @@
             text-decoration: none;
             display: inline-block;
             margin-top: 2rem;
-            animation: pulse-glow 2s infinite;
         }
 
         .beta-cta-button:hover {
@@ -734,10 +811,76 @@
             color: var(--navy-blue);
         }
 
+        /* Community Section */
+        .community-section {
+            padding: 6rem 2rem;
+            background: linear-gradient(to bottom, var(--white), var(--light-bg));
+        }
+
+        .community-section h2 {
+            color: var(--navy-blue);
+            font-size: 3.5rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .community-section .description {
+            color: var(--dark-navy);
+            font-size: 1.3rem;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 4rem;
+            line-height: 1.8;
+        }
+
+        .community-placeholder {
+            background: var(--white);
+            padding: 4rem 3rem;
+            border-radius: 25px;
+            box-shadow: 0 15px 50px rgba(10, 38, 71, 0.15);
+            text-align: center;
+            border: 3px dashed var(--gold);
+        }
+
+        .community-placeholder i {
+            font-size: 6rem;
+            color: var(--gold);
+            margin-bottom: 2rem;
+        }
+
+        .community-placeholder h3 {
+            color: var(--navy-blue);
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+        }
+
+        .community-placeholder p {
+            color: var(--dark-navy);
+            font-size: 1.2rem;
+            line-height: 1.7;
+        }
+
         /* Tiers Section */
         .tiers-section {
             padding: 6rem 2rem;
             background: var(--light-bg);
+        }
+
+        .section-title {
+            color: var(--navy-blue);
+            font-size: 3rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            color: var(--dark-navy);
+            font-size: 1.3rem;
+            text-align: center;
+            margin-bottom: 4rem;
         }
 
         .tier-card {
@@ -784,9 +927,26 @@
             margin-bottom: 1rem;
         }
 
+        .tier-retail-price {
+            text-align: center;
+            font-size: 1.1rem;
+            color: #999;
+            text-decoration: line-through;
+            margin-bottom: 0.2rem;
+            font-weight: normal;
+        }
+
+        .tier-discount-label {
+            text-align: center;
+            font-size: 0.95rem;
+            color: var(--orange);
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
         .tier-price {
             text-align: center;
-            font-size: 3rem;
+            font-size: 3.5rem;
             font-weight: 900;
             background: linear-gradient(135deg, var(--gold), var(--orange));
             -webkit-background-clip: text;
@@ -821,22 +981,24 @@
 
         .btn-tier {
             width: 100%;
-            padding: 1rem;
+            padding: 1.5rem 2rem;
             border-radius: 50px;
             font-weight: bold;
-            font-size: 1.1rem;
+            font-size: 1.3rem;
             border: none;
             transition: all 0.3s;
+            cursor: pointer;
         }
 
         .btn-tier-primary {
-            background: linear-gradient(135deg, var(--gold), var(--orange));
-            color: var(--navy-blue);
+            background: var(--navy-blue);
+            color: var(--gold);
         }
 
         .btn-tier-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
+            background: var(--dark-navy);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(10, 38, 71, 0.5);
         }
 
         .btn-tier-secondary {
@@ -846,7 +1008,55 @@
 
         .btn-tier-secondary:hover {
             background: var(--dark-navy);
-            transform: translateY(-3px);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(10, 38, 71, 0.5);
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, var(--navy-blue), var(--dark-navy));
+            padding: 4rem 2rem 2rem;
+            color: var(--white);
+        }
+
+        .footer h5 {
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            font-weight: bold;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            padding: 0.5rem 0;
+        }
+
+        .footer-links a {
+            color: var(--white);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--gold);
+            padding-left: 10px;
+        }
+
+        .footer-bottom {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 215, 0, 0.3);
+            text-align: center;
+        }
+
+        .footer-tagline {
+            color: var(--gold);
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
         }
 
         /* CTA Section */
@@ -880,18 +1090,8 @@
             font-size: 1.2rem;
             transition: all 0.3s;
             box-shadow: 0 8px 30px rgba(255, 215, 0, 0.4);
-            animation: pulse-glow 2s infinite;
             text-decoration: none;
             display: inline-block;
-        }
-
-        @keyframes pulse-glow {
-            0%, 100% {
-                box-shadow: 0 8px 30px rgba(255, 215, 0, 0.4);
-            }
-            50% {
-                box-shadow: 0 12px 40px rgba(255, 215, 0, 0.6);
-            }
         }
 
         .btn-hero-primary:hover {
@@ -900,74 +1100,7 @@
             color: var(--navy-blue);
         }
 
-        /* Footer */
-        footer {
-            background: var(--dark-navy);
-            color: var(--white);
-            padding: 3rem 0 1rem;
-        }
-
-        .footer-brand {
-            color: var(--royal-gold-shine);
-            font-size: 1.5rem;
-            font-weight: 900;
-            margin-bottom: 1rem;
-        }
-
-        footer a {
-            color: var(--white);
-            text-decoration: none;
-            opacity: 0.8;
-            transition: all 0.3s;
-        }
-
-        footer a:hover {
-            color: var(--gold);
-            opacity: 1;
-        }
-
-        .footer-links {
-            list-style: none;
-            padding: 0;
-        }
-
-        .footer-links li {
-            margin-bottom: 0.8rem;
-        }
-
-        .footer-social {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .social-icon {
-            width: 45px;
-            height: 45px;
-            background: linear-gradient(135deg, var(--gold), var(--orange));
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--navy-blue);
-            font-size: 1.2rem;
-            transition: all 0.3s;
-        }
-
-        .social-icon:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(255, 215, 0, 0.4);
-        }
-
-        .footer-bottom {
-            text-align: center;
-            margin-top: 3rem;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            opacity: 0.7;
-        }
-
-        /* Responsive */
+        /* Responsive Design */
         @media (max-width: 768px) {
             .hero h1 {
                 font-size: 2.5rem;
@@ -977,29 +1110,33 @@
                 font-size: 1.2rem;
             }
 
-            .coach-title {
+            .section-title, .solution-section h2, .apps-section h2 {
                 font-size: 2.5rem;
             }
 
-            .four-m-section h2 {
-                font-size: 2.5rem;
+            .coach-avatar-hero {
+                width: 300px;
+                height: 300px;
             }
 
-            .table-legs-container {
+            .timeline-stages {
                 grid-template-columns: 1fr;
             }
 
-            .section-title {
-                font-size: 2rem;
-            }
-
-            .cta-title {
-                font-size: 2rem;
+            .four-legs-grid,
+            .value-cards,
+            .beta-benefits-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Preview Banner -->
+    <div class="preview-banner">
+        🔍 PREVIEW MODE - This is the NEW redesigned landing page. Current live version unchanged.
+    </div>
+
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
@@ -1007,19 +1144,18 @@
                 <i class="fas fa-gem"></i> Z2B LEGACY BUILDERS
                 <div style="font-size: 0.5rem; font-weight: 500; letter-spacing: 1px; margin-top: -5px;">TRANSFORMING EMPLOYEES TO ENTREPRENEURS</div>
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" style="background-color: var(--gold);">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#vision">Vision</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#income-streams">Income Streams</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#coach-manlaw">Coach Manlaw</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#4m-table">4M Table</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#apps">AI Apps</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#solution">Coach Manlaw</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#value">Our Values</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#ecosystem">Ecosystem</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#opportunity">Opportunity</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#beta">Beta Program</a></li>
                     <li class="nav-item"><a class="nav-link" href="#tiers">Membership</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
                     <li class="nav-item">
                         <button class="btn btn-outline-light ms-2" onclick="window.location.href='login.html'" style="border: 2px solid var(--gold);">
                             <i class="fas fa-sign-in-alt"></i> Login
@@ -1035,444 +1171,218 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
+    <!-- Hero Section - 90-Day Journey Focus -->
     <section id="home" class="hero">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-6 hero-content" data-aos="fade-right">
-                    <div style="background: linear-gradient(135deg, var(--gold), var(--orange)); color: var(--navy-blue); padding: 0.8rem 2rem; border-radius: 50px; display: inline-block; margin-bottom: 1.5rem; font-weight: bold; font-size: 1.1rem;">
-                        <i class="fas fa-rocket"></i> Transforming Employees to Entrepreneurs
-                    </div>
-                    <h1>Build Your<br><span class="highlight">Billion Dollar</span><br>Legacy Today</h1>
-                    <p class="tagline">Join the revolutionary platform where <strong>Coach Manlaw</strong> guides you from Zero to Billions through the proven <strong>4M Billionaire Table</strong> system.</p>
+                    <h1>Your <span class="highlight">90-Day Journey</span><br>from Employee to<br>Entrepreneur Begins with<br><span class="highlight">AI Coach Manlaw</span></h1>
+                    <p class="tagline">Transformation is the new currency — build your confidence, skills, and financial future one day at a time.</p>
                     <div class="mt-4">
-                        <a href="#coach-manlaw" class="btn btn-gold btn-lg me-3 mb-3">
-                            <i class="fas fa-robot"></i> Meet Coach Manlaw
+                        <a href="#solution" class="btn btn-gold btn-lg me-3 mb-3">
+                            <i class="fas fa-rocket"></i> Start Your 90-Day Journey
                         </a>
-                        <a href="#vision" class="btn btn-outline-light btn-lg mb-3">
-                            <i class="fas fa-rocket"></i> Our Vision
+                        <a href="#value" class="btn btn-outline-light btn-lg mb-3">
+                            Learn About Our Vision
                         </a>
                     </div>
                 </div>
                 <div class="col-lg-6" data-aos="fade-left">
-                    <div class="text-center">
-                        <i class="fas fa-trophy" style="font-size: 20rem; color: var(--gold); opacity: 0.9;"></i>
+                    <div class="coach-avatar-hero">
+                        <div style="width: 100%; height: 100%; border-radius: 50%; background: linear-gradient(135deg, var(--navy-blue), var(--dark-navy)); display: flex; align-items: center; justify-content: center; font-size: 12rem; border: 8px solid var(--gold); box-shadow: 0 20px 60px rgba(255, 215, 0, 0.5);">
+                            🤖
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Stats Section -->
-    <section class="stats-section">
+    <!-- Problem Section -->
+    <section id="problem" class="problem-section">
         <div class="container">
-            <div class="row">
-                <div class="col-md-3 col-6">
-                    <div class="stat-item">
-                        <div class="stat-number">8</div>
-                        <div class="stat-label">AI-Powered Apps</div>
-                    </div>
+            <h2 data-aos="fade-down">Millions of Employees Are Stuck</h2>
+            <p data-aos="fade-up">
+                Overworked, underpaid, and unfulfilled. The modern employment system has trapped millions in a cycle of survival, leaving no room for growth, creativity, or legacy building. It's time for transformation.
+            </p>
+
+            <div class="problem-cards">
+                <div class="problem-card" data-aos="flip-up" data-aos-delay="100">
+                    <div class="problem-icon">😞</div>
+                    <div class="problem-title">Overworked & Exhausted</div>
+                    <div class="problem-description">Working endless hours with no time for family, passion, or personal development.</div>
                 </div>
-                <div class="col-md-3 col-6">
-                    <div class="stat-item">
-                        <div class="stat-number">10</div>
-                        <div class="stat-label">Team Generations</div>
-                    </div>
+
+                <div class="problem-card" data-aos="flip-up" data-aos-delay="200">
+                    <div class="problem-icon">💸</div>
+                    <div class="problem-title">Underpaid & Struggling</div>
+                    <div class="problem-description">Living paycheck to paycheck with no path to financial freedom or wealth creation.</div>
                 </div>
-                <div class="col-md-3 col-6">
-                    <div class="stat-item">
-                        <div class="stat-number">7</div>
-                        <div class="stat-label">Income Streams</div>
-                    </div>
-                </div>
-                <div class="col-md-3 col-6">
-                    <div class="stat-item">
-                        <div class="stat-number">90</div>
-                        <div class="stat-label">Day Success Path</div>
-                    </div>
+
+                <div class="problem-card" data-aos="flip-up" data-aos-delay="300">
+                    <div class="problem-icon">😔</div>
+                    <div class="problem-title">Unfulfilled & Stuck</div>
+                    <div class="problem-description">Feeling trapped in a job with no purpose, impact, or legacy to leave behind.</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Vision & Mission Section -->
-    <section id="vision" class="vision-mission">
+    <!-- Solution Section - Coach Manlaw -->
+    <section id="solution" class="solution-section">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-6" data-aos="fade-up">
-                    <div class="vision-card">
-                        <h3><i class="fas fa-eye"></i>Our Vision</h3>
-                        <p>To transform 1 billion employees into entrepreneurs and ordinary people into extraordinary legacy builders.</p>
-                    </div>
-                </div>
-                <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
-                    <div class="mission-card">
-                        <h3><i class="fas fa-bullseye"></i>Our Mission</h3>
-                        <p>To empower individuals with the mindset, digital tools, and community support they need to transition from employment to entrepreneurship — creating systems of income, impact, and legacy through the Zero2Billionaires ecosystem.</p>
-                    </div>
-                </div>
-            </div>
+            <h2 data-aos="fade-down">Meet Coach Manlaw</h2>
+            <p class="subtitle" data-aos="fade-up">Your AI Mentor for Life, Leadership & Legacy</p>
 
-            <!-- Our Slogan -->
-            <div class="row mt-5">
-                <div class="col-12 text-center" data-aos="fade-up" data-aos-delay="200">
-                    <div style="background: linear-gradient(135deg, var(--navy-blue), var(--dark-navy)); padding: 3rem 2rem; border-radius: 20px; box-shadow: 0 15px 50px rgba(10, 38, 71, 0.3); border: 3px solid var(--gold);">
-                        <h3 style="color: var(--gold); font-size: 1.8rem; font-weight: bold; margin-bottom: 1.5rem; text-transform: uppercase; letter-spacing: 2px;">
-                            <i class="fas fa-quote-left"></i> Our Slogan <i class="fas fa-quote-right"></i>
+            <div class="coach-intro-box" data-aos="zoom-in">
+                <div class="row align-items-center">
+                    <div class="col-lg-4">
+                        <div class="coach-avatar-large">🤖</div>
+                    </div>
+                    <div class="col-lg-8">
+                        <h3 style="color: var(--navy-blue); font-size: 2.2rem; font-weight: bold; margin-bottom: 1.5rem;">
+                            In just 90 days, Coach Manlaw guides you through 7 Transformation Stages built on the 4 Legs of the Billionaire Table.
                         </h3>
-                        <p style="color: var(--white); font-size: 1.5rem; line-height: 1.8; font-weight: 600; margin: 0; font-style: italic;">
-                            I am a Pathfinder, You are a Pathfinder, and Together we are Builders of Legacies.
+                        <p style="color: var(--dark-navy); font-size: 1.2rem; line-height: 1.8; margin-bottom: 2rem;">
+                            Coach Manlaw is your personal AI transformation coach, available 24/7 to guide you from employee mindset to entrepreneurial success. Through proven frameworks and daily guidance, you'll transform your life in 90 days.
                         </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Word of Mouth Referral System & 6 Income Streams Section -->
-    <section id="income-streams" style="padding: 6rem 2rem; background: linear-gradient(135deg, #27AE60, #2ECC71); position: relative; overflow: hidden;">
-        <div style="content: '💰'; position: absolute; font-size: 25rem; opacity: 0.08; left: -8%; top: -15%;"></div>
-        <div class="container">
-            <!-- Section Header -->
-            <div class="text-center mb-5" data-aos="fade-down">
-                <div style="background: var(--white); color: #27AE60; padding: 0.8rem 2rem; border-radius: 50px; display: inline-block; margin-bottom: 1.5rem; font-weight: 900; font-size: 1rem; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
-                    💬 WORD-OF-MOUTH ADVERTISING
-                </div>
-                <h2 style="color: var(--white); font-size: 3.5rem; font-weight: 900; margin-bottom: 1.5rem; text-shadow: 3px 3px 6px rgba(0,0,0,0.4);">
-                    Turn Your Household Expenses<br>Into Income-Generating Assets
-                </h2>
-                <p style="color: var(--white); font-size: 1.4rem; max-width: 900px; margin: 0 auto; line-height: 1.8;">
-                    Our powerful Sales and Referral system has <strong style="color: var(--gold);">7 generous income streams</strong> including money members make from the marketplace - for simply encouraging other employees to ALSO use our Z2B Legacy Builders App.
-                </p>
-            </div>
-
-            <!-- 7 Income Streams Grid -->
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; margin-bottom: 4rem;">
-                <!-- 1. ISP -->
-                <div style="background: rgba(255,255,255,0.95); padding: 2.5rem; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); border-left: 5px solid var(--gold); transition: all 0.3s;" data-aos="flip-up" data-aos-delay="100">
-                    <div style="font-size: 3.5rem; margin-bottom: 1rem;">💵</div>
-                    <h3 style="color: var(--navy-blue); font-size: 1.6rem; font-weight: 900; margin-bottom: 1rem;">ISP - Individual Sales Profit</h3>
-                    <p style="color: var(--dark-navy); line-height: 1.7; margin-bottom: 1rem;">
-                        Earn <strong>20-45% commission</strong> on every app subscription you sell directly. Your commission rate increases with your membership tier.
-                    </p>
-                    <div style="background: linear-gradient(135deg, var(--gold), var(--orange)); padding: 1rem; border-radius: 10px; text-align: center;">
-                        <strong style="color: var(--navy-blue); font-size: 1.1rem;">Potential: R300 - R1,500/month</strong>
-                    </div>
-                </div>
-
-                <!-- 2. TSC -->
-                <div style="background: rgba(255,255,255,0.95); padding: 2.5rem; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); border-left: 5px solid var(--gold); transition: all 0.3s;" data-aos="flip-up" data-aos-delay="200">
-                    <div style="font-size: 3.5rem; margin-bottom: 1rem;">👥</div>
-                    <h3 style="color: var(--navy-blue); font-size: 1.6rem; font-weight: 900; margin-bottom: 1rem;">TSC - Team Sales Commission</h3>
-                    <p style="color: var(--dark-navy); line-height: 1.7; margin-bottom: 1rem;">
-                        Earn commissions on your team's sales <strong>up to 10 generations deep</strong>. Build once, earn forever from your entire organization.
-                    </p>
-                    <div style="background: linear-gradient(135deg, var(--gold), var(--orange)); padding: 1rem; border-radius: 10px; text-align: center;">
-                        <strong style="color: var(--navy-blue); font-size: 1.1rem;">Potential: R2,000 - R15,000/month</strong>
-                    </div>
-                </div>
-
-                <!-- 3. TPB -->
-                <div style="background: rgba(255,255,255,0.95); padding: 2.5rem; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); border-left: 5px solid var(--gold); transition: all 0.3s;" data-aos="flip-up" data-aos-delay="300">
-                    <div style="font-size: 3.5rem; margin-bottom: 1rem;">🎯</div>
-                    <h3 style="color: var(--navy-blue); font-size: 1.6rem; font-weight: 900; margin-bottom: 1rem;">TPB - Team Performance Bonus</h3>
-                    <p style="color: var(--dark-navy); line-height: 1.7; margin-bottom: 1rem;">
-                        Quarterly bonuses based on your team's overall performance. <strong>Paid every 3 months</strong> when your team hits volume targets.
-                    </p>
-                    <div style="background: linear-gradient(135deg, var(--gold), var(--orange)); padding: 1rem; border-radius: 10px; text-align: center;">
-                        <strong style="color: var(--navy-blue); font-size: 1.1rem;">Potential: R5,000 - R50,000/quarter</strong>
-                    </div>
-                </div>
-
-                <!-- 4. TLI -->
-                <div style="background: rgba(255,255,255,0.95); padding: 2.5rem; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); border-left: 5px solid var(--gold); transition: all 0.3s;" data-aos="flip-up" data-aos-delay="400">
-                    <div style="font-size: 3.5rem; margin-bottom: 1rem;">👑</div>
-                    <h3 style="color: var(--navy-blue); font-size: 1.6rem; font-weight: 900; margin-bottom: 1rem;">TLI - Team Leadership Incentive</h3>
-                    <p style="color: var(--dark-navy); line-height: 1.7; margin-bottom: 1rem;">
-                        <strong>10 levels of achievement bonuses</strong> as you build and lead your team. Unlock "Mama I Made It" and beyond!
-                    </p>
-                    <div style="background: linear-gradient(135deg, var(--gold), var(--orange)); padding: 1rem; border-radius: 10px; text-align: center;">
-                        <strong style="color: var(--navy-blue); font-size: 1.1rem;">Potential: R10,000 - R100,000/quarter</strong>
-                    </div>
-                </div>
-
-                <!-- 5. QPB -->
-                <div style="background: rgba(255,255,255,0.95); padding: 2.5rem; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); border-left: 5px solid var(--gold); transition: all 0.3s;" data-aos="flip-up" data-aos-delay="500">
-                    <div style="font-size: 3.5rem; margin-bottom: 1rem;">🚀</div>
-                    <h3 style="color: var(--navy-blue); font-size: 1.6rem; font-weight: 900; margin-bottom: 1rem;">QPB - Quick Pathfinder Bonus</h3>
-                    <p style="color: var(--dark-navy); line-height: 1.7; margin-bottom: 1rem;">
-                        Fast-start bonus designed to reward immediate action. Earn <strong>7.5% on your first 3 invited builders</strong>, then <strong>10% on each subsequent set of 3</strong>.
-                    </p>
-                    <div style="background: linear-gradient(135deg, var(--gold), var(--orange)); padding: 1rem; border-radius: 10px; text-align: center;">
-                        <strong style="color: var(--navy-blue); font-size: 1.1rem;">Potential: R500 - R5,000/month</strong>
-                    </div>
-                </div>
-
-                <!-- 6. CEO Awards & Competitions -->
-                <div style="background: rgba(255,255,255,0.95); padding: 2.5rem; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); border-left: 5px solid var(--gold); transition: all 0.3s;" data-aos="flip-up" data-aos-delay="600">
-                    <div style="font-size: 3.5rem; margin-bottom: 1rem;">🏆</div>
-                    <h3 style="color: var(--navy-blue); font-size: 1.6rem; font-weight: 900; margin-bottom: 1rem;">CEO Awards & Competitions</h3>
-                    <p style="color: var(--dark-navy); line-height: 1.7; margin-bottom: 1rem;">
-                        Special competitions and bonuses throughout the year. <strong>Luxury trips, cash bonuses, and exclusive recognition</strong> for top performers.
-                    </p>
-                    <div style="background: linear-gradient(135deg, var(--gold), var(--orange)); padding: 1rem; border-radius: 10px; text-align: center;">
-                        <strong style="color: var(--navy-blue); font-size: 1.1rem;">Potential: Variable (Paid Quarterly)</strong>
-                    </div>
-                </div>
-
-                <!-- 7. Marketplace Sales -->
-                <div style="background: rgba(255,255,255,0.95); padding: 2.5rem; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); border-left: 5px solid var(--gold); transition: all 0.3s;" data-aos="flip-up" data-aos-delay="700">
-                    <div style="font-size: 3.5rem; margin-bottom: 1rem;">🏪</div>
-                    <h3 style="color: var(--navy-blue); font-size: 1.6rem; font-weight: 900; margin-bottom: 1rem;">Marketplace Sales</h3>
-                    <p style="color: var(--dark-navy); line-height: 1.7; margin-bottom: 1rem;">
-                        Create and sell your own digital products, courses, and services. <strong>Keep 95% of your sales</strong> - only 5% Admin Fees!
-                    </p>
-                    <div style="background: linear-gradient(135deg, var(--gold), var(--orange)); padding: 1rem; border-radius: 10px; text-align: center;">
-                        <strong style="color: var(--navy-blue); font-size: 1.1rem;">Potential: Unlimited!</strong>
+                        <a href="register.html" class="btn btn-gold btn-lg">
+                            <i class="fas fa-user-plus"></i> Sign Up Free to Explore Coach Manlaw
+                        </a>
                     </div>
                 </div>
             </div>
 
-            <!-- Example Scenario: You + 3 Who Get 3 -->
-            <div style="background: rgba(0,0,0,0.3); padding: 3rem; border-radius: 20px; border: 3px solid var(--gold); box-shadow: 0 15px 50px rgba(0,0,0,0.4);" data-aos="zoom-in">
-                <h3 style="color: var(--gold); font-size: 2.2rem; font-weight: 900; text-align: center; margin-bottom: 2rem;">
-                    💰 Real Income Example: You + 3 Employees Who Also Get 3
+            <!-- 4 Legs of the Billionaire Table -->
+            <div data-aos="fade-up">
+                <h3 style="color: var(--navy-blue); font-size: 2.5rem; font-weight: bold; text-align: center; margin-bottom: 2rem;">
+                    The 4 Legs of the Billionaire Table
                 </h3>
-
-                <div style="background: rgba(255,255,255,0.1); padding: 2rem; border-radius: 15px; margin-bottom: 2rem;">
-                    <p style="color: var(--white); font-size: 1.2rem; line-height: 1.8; margin-bottom: 1.5rem;">
-                        <strong style="color: var(--gold);">Scenario:</strong> You invite 3 employees who each pay R960/month (Bronze Tier - or R480 as Beta Tester). They each do the same - inviting 3 more employees.
-                    </p>
-
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
-                        <div style="text-align: center; padding: 1.5rem; background: rgba(255,255,255,0.1); border-radius: 10px;">
-                            <div style="font-size: 2.5rem; color: var(--gold); font-weight: 900;">3</div>
-                            <div style="color: var(--white); font-size: 1rem;">Your Direct Referrals</div>
-                        </div>
-                        <div style="text-align: center; padding: 1.5rem; background: rgba(255,255,255,0.1); border-radius: 10px;">
-                            <div style="font-size: 2.5rem; color: var(--gold); font-weight: 900;">9</div>
-                            <div style="color: var(--white); font-size: 1rem;">Level 2 Members</div>
-                        </div>
-                        <div style="text-align: center; padding: 1.5rem; background: rgba(255,255,255,0.1); border-radius: 10px;">
-                            <div style="font-size: 2.5rem; color: var(--gold); font-weight: 900;">12</div>
-                            <div style="color: var(--white); font-size: 1rem;">Total Team Size</div>
-                        </div>
+                <div class="four-legs-grid">
+                    <div class="leg-card" data-aos="flip-up" data-aos-delay="100">
+                        <div class="leg-icon">🧠</div>
+                        <div class="leg-title">Mindset</div>
+                        <div class="leg-description">Transform your thinking patterns and beliefs to unlock unlimited potential.</div>
                     </div>
 
-                    <div style="background: linear-gradient(135deg, var(--gold), var(--orange)); padding: 2.5rem; border-radius: 15px; text-align: center;">
-                        <h4 style="color: var(--navy-blue); font-size: 1.5rem; font-weight: 900; margin-bottom: 1rem;">
-                            Your Potential Monthly Income:
-                        </h4>
-                        <div style="font-size: 3.5rem; font-weight: 900; color: var(--navy-blue); margin-bottom: 0.5rem;">
-                            R3,500 - R8,000
-                        </div>
-                        <p style="color: var(--navy-blue); font-size: 1.1rem; margin: 0;">
-                            <strong>From ISP + TSC alone!</strong> This doesn't include TPB, TLI, QPB, or Marketplace Sales.
-                        </p>
+                    <div class="leg-card" data-aos="flip-up" data-aos-delay="200">
+                        <div class="leg-icon">⚙️</div>
+                        <div class="leg-title">Systems</div>
+                        <div class="leg-description">Build automated processes and frameworks that generate consistent results.</div>
                     </div>
-                </div>
 
-                <div style="text-align: center; padding: 2rem; background: rgba(255,255,255,0.1); border-radius: 15px;">
-                    <p style="color: var(--white); font-size: 1.3rem; line-height: 1.8; margin-bottom: 1.5rem;">
-                        <strong style="color: var(--gold);">Imagine if each of those 9 Level 2 members also get 3...</strong><br>
-                        That's <strong style="color: var(--gold);">27 more people</strong> in your organization!
-                    </p>
-                    <p style="color: var(--gold); font-size: 1.5rem; font-weight: 900;">
-                        This is how employees become entrepreneurs, and household expenses become income-generating assets!
-                    </p>
+                    <div class="leg-card" data-aos="flip-up" data-aos-delay="300">
+                        <div class="leg-icon">🤝</div>
+                        <div class="leg-title">Relationships</div>
+                        <div class="leg-description">Cultivate meaningful connections that amplify your impact and opportunities.</div>
+                    </div>
+
+                    <div class="leg-card" data-aos="flip-up" data-aos-delay="400">
+                        <div class="leg-icon">👑</div>
+                        <div class="leg-title">Legacy</div>
+                        <div class="leg-description">Create lasting impact that transcends your lifetime and transforms generations.</div>
+                    </div>
                 </div>
             </div>
 
-            <!-- CTA -->
+            <!-- 7 Stages Timeline -->
+            <div class="stages-timeline" data-aos="zoom-in">
+                <h3>The 7-Stage Transformation Journey</h3>
+                <div class="timeline-stages">
+                    <div class="stage-item" data-aos="zoom-in" data-aos-delay="100" data-aos-duration="800">
+                        <div class="stage-number">1</div>
+                        <div class="stage-name">Awareness</div>
+                    </div>
+
+                    <div class="stage-item" data-aos="flip-left" data-aos-delay="200" data-aos-duration="800">
+                        <div class="stage-number">2</div>
+                        <div class="stage-name">Alignment</div>
+                    </div>
+
+                    <div class="stage-item" data-aos="fade-right" data-aos-delay="300" data-aos-duration="800">
+                        <div class="stage-number">3</div>
+                        <div class="stage-name">Action</div>
+                    </div>
+
+                    <div class="stage-item" data-aos="flip-up" data-aos-delay="400" data-aos-duration="800">
+                        <div class="stage-number">4</div>
+                        <div class="stage-name">Adjustment</div>
+                    </div>
+
+                    <div class="stage-item" data-aos="zoom-in-up" data-aos-delay="500" data-aos-duration="800">
+                        <div class="stage-number">5</div>
+                        <div class="stage-name">Acceleration</div>
+                    </div>
+
+                    <div class="stage-item" data-aos="fade-up" data-aos-delay="600" data-aos-duration="800">
+                        <div class="stage-number">6</div>
+                        <div class="stage-name">Ascension</div>
+                    </div>
+
+                    <div class="stage-item" data-aos="flip-right" data-aos-delay="700" data-aos-duration="800">
+                        <div class="stage-number">7</div>
+                        <div class="stage-name">Activation</div>
+                    </div>
+                </div>
+            </div>
+
             <div class="text-center mt-5" data-aos="fade-up">
-                <a href="#tiers" style="background: linear-gradient(135deg, var(--gold), var(--orange)); color: var(--navy-blue); padding: 1.5rem 3rem; border-radius: 50px; font-weight: 900; font-size: 1.3rem; text-decoration: none; display: inline-block; box-shadow: 0 10px 40px rgba(0,0,0,0.4); transition: all 0.3s;">
-                    <i class="fas fa-rocket"></i> START BUILDING YOUR INCOME STREAMS NOW
+                <a href="register.html" class="btn btn-lg" style="background: var(--navy-blue); color: var(--gold); padding: 1.2rem 3rem; border-radius: 50px; font-weight: bold; font-size: 1.2rem;">
+                    <i class="fas fa-user-plus"></i> Sign Up Free to Try Coach Manlaw
                 </a>
             </div>
         </div>
     </section>
 
-    <!-- Coach Manlaw Hero Section -->
-    <section id="coach-manlaw" class="coach-manlaw-hero">
+    <!-- Value Section - Transformation Before Transaction -->
+    <section id="value" class="value-section">
         <div class="container">
-            <div class="row">
-                <div class="col-12" data-aos="zoom-in">
-                    <div class="coach-avatar">🎯</div>
-                    <h2 class="coach-title">Meet Coach Manlaw</h2>
-                    <p class="coach-subtitle">Your Personal AI Billionaire Coach - Available 24/7</p>
+            <h2 data-aos="fade-down">Transformation Before Transaction</h2>
+            <p class="description" data-aos="fade-up">
+                At Z2B Legacy Builders, we believe in growing people first. Our members transform their mindset, skills, and habits before they ever think about income. This is not a get-rich-quick scheme — it's a genuine transformation platform.
+            </p>
+
+            <div class="value-cards">
+                <div class="value-card" data-aos="flip-up" data-aos-delay="100">
+                    <div class="value-icon">🌱</div>
+                    <div class="value-title">Growth First</div>
+                    <div class="value-text">
+                        We focus on personal development, mindset shifts, and skill building. When you grow, opportunities follow naturally.
+                    </div>
+                </div>
+
+                <div class="value-card" data-aos="flip-up" data-aos-delay="200">
+                    <div class="value-icon">🎯</div>
+                    <div class="value-title">Real Transformation</div>
+                    <div class="value-text">
+                        Our 90-Day Journey with Coach Manlaw creates lasting change. You'll see improvements in confidence, clarity, and capability.
+                    </div>
+                </div>
+
+                <div class="value-card" data-aos="flip-up" data-aos-delay="300">
+                    <div class="value-icon">💎</div>
+                    <div class="value-title">Earn by Sharing</div>
+                    <div class="value-text">
+                        Once transformed, you naturally want to share this experience. That's when income becomes a byproduct of helping others transform too.
+                    </div>
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-lg-10 offset-lg-1">
-                    <div class="text-center mb-5" data-aos="fade-up">
-                        <p style="font-size: 1.3rem; color: var(--navy-blue); font-weight: 500;">
-                            Coach Manlaw is the world's first hybrid AI personality combining the wisdom of four legendary business minds. Available 24/7 to guide you, motivate you, and help you build your billion-dollar legacy.
-                        </p>
-                    </div>
-
-                    <div class="personality-blend">
-                        <div class="personality-card" data-aos="flip-left" data-aos-delay="100">
-                            <div class="personality-icon">😄</div>
-                            <div class="personality-percentage">10%</div>
-                            <div class="personality-name">Humor</div>
-                            <p class="personality-description">Infectious humor that keeps you motivated and entertained on your journey</p>
-                        </div>
-
-                        <div class="personality-card" data-aos="flip-left" data-aos-delay="200">
-                            <div class="personality-icon">❤️</div>
-                            <div class="personality-percentage">20%</div>
-                            <div class="personality-name">Emotional Intelligence</div>
-                            <div class="personality-subtitle" style="font-size: 1rem; color: var(--navy-blue); font-weight: 600; margin-bottom: 1rem;">A Principle-Centered Path to Lasting Growth</div>
-                            <p class="personality-description">Develop the inner strength to lead yourself before leading others. This principle-centered approach teaches you to act with integrity, think win-win, and communicate with empathy. By mastering emotional intelligence and timeless habits of effectiveness, you create balance, build trust, and achieve success that endures.</p>
-                            <div class="personality-outcomes" style="text-align: left; margin-top: 1rem;">
-                                <strong style="color: var(--navy-blue);">Key Outcomes:</strong>
-                                <ul style="margin-top: 0.5rem; padding-left: 1.2rem; color: var(--dark-navy); font-size: 0.9rem;">
-                                    <li>Build self-awareness and emotional regulation</li>
-                                    <li>Develop win-win thinking and collaboration skills</li>
-                                    <li>Master empathetic communication and active listening</li>
-                                    <li>Create balanced habits for sustainable success</li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <div class="personality-card" data-aos="flip-left" data-aos-delay="300">
-                            <div class="personality-icon">🙏</div>
-                            <div class="personality-percentage">35%</div>
-                            <div class="personality-name">The Kingdom of God Wealth Blueprint</div>
-                            <p class="personality-description">Faith-Based Leadership inside Coach Manlaw is a transformational mentoring system built on timeless biblical principles for creating, multiplying, and sustaining wealth with purpose. It integrates spiritual wisdom with modern entrepreneurship, helping users align their business goals with divine calling and generational legacy.</p>
-                            <div class="personality-outcomes" style="text-align: left; margin-top: 1rem;">
-                                <strong style="color: var(--navy-blue);">Key Outcomes:</strong>
-                                <ul style="margin-top: 0.5rem; padding-left: 1.2rem; color: var(--dark-navy); font-size: 0.9rem;">
-                                    <li>Align business goals with biblical principles</li>
-                                    <li>Build wealth with purpose and spiritual wisdom</li>
-                                    <li>Create generational legacy through faith-led entrepreneurship</li>
-                                    <li>Integrate divine calling into business strategy</li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <div class="personality-card" data-aos="flip-left" data-aos-delay="400">
-                            <div class="personality-icon">🎯</div>
-                            <div class="personality-percentage">35%</div>
-                            <div class="personality-name">Strategic Execution</div>
-                            <p class="personality-description">Turn insight into impact. Strategic Execution is about implementing data-driven, tactical business strategies that accelerate growth and scale results rapidly. Drawing from proven business frameworks, this approach focuses on making smarter decisions, optimizing systems, and executing with precision.</p>
-                            <p class="personality-description">We combine analytics with actionable strategies to help you identify high-leverage opportunities, eliminate inefficiencies, and build scalable operations. Whether you're growing your first business or optimizing a thriving one, Strategic Execution gives you the tools, structure, and clarity to scale fast — without guesswork.</p>
-                            <div class="personality-outcomes" style="text-align: left; margin-top: 1rem;">
-                                <strong style="color: var(--navy-blue);">Key Outcomes:</strong>
-                                <ul style="margin-top: 0.5rem; padding-left: 1.2rem; color: var(--dark-navy); font-size: 0.9rem;">
-                                    <li>Develop and execute data-backed growth strategies</li>
-                                    <li>Build repeatable systems for predictable revenue</li>
-                                    <li>Accelerate scaling with precision and confidence</li>
-                                    <li>Turn business insights into measurable results</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+            <div class="text-center mt-5" data-aos="fade-up">
+                <div style="background: var(--white); padding: 3rem; border-radius: 25px; box-shadow: 0 15px 50px rgba(10, 38, 71, 0.15); border: 3px solid var(--gold); max-width: 800px; margin: 0 auto;">
+                    <h3 style="color: var(--navy-blue); font-size: 2rem; font-weight: bold; margin-bottom: 1.5rem;">
+                        <i class="fas fa-quote-left"></i> Our Promise <i class="fas fa-quote-right"></i>
+                    </h3>
+                    <p style="color: var(--dark-navy); font-size: 1.3rem; line-height: 1.8; font-style: italic; margin: 0;">
+                        "We don't promise overnight riches. We promise a proven path to transformation that builds real confidence, real skills, and real opportunities for lasting legacy."
+                    </p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- 4M Billionaire Table Section -->
-    <section id="4m-table" class="four-m-section">
-        <div class="container">
-            <h2 data-aos="fade-down">The 4M Billionaire Table</h2>
-            <p class="subtitle" data-aos="fade-up">Four Powerful Legs Supporting Your Journey to Wealth</p>
-
-            <div class="table-legs-container">
-                <div class="table-leg" data-aos="zoom-in" data-aos-delay="100">
-                    <div class="leg-icon">🧠</div>
-                    <h3 class="leg-title">Mindset Mystery</h3>
-                    <p class="leg-description">Transform your thinking from scarcity to abundance. Develop the billionaire mindset through daily coaching, affirmations, and proven psychological frameworks.</p>
-                </div>
-
-                <div class="table-leg" data-aos="zoom-in" data-aos-delay="200">
-                    <div class="leg-icon">💰</div>
-                    <h3 class="leg-title">Money Moves</h3>
-                    <p class="leg-description">Master financial literacy, investment strategies, wealth multiplication, and marketing. Learn the exact money management and customer attraction systems used by the ultra-wealthy.</p>
-                </div>
-
-                <div class="table-leg" data-aos="zoom-in" data-aos-delay="300">
-                    <div class="leg-icon">⚙️</div>
-                    <h3 class="leg-title">Legacy Missions</h3>
-                    <p class="leg-description">Build scalable systems, automation, and purpose-driven businesses. Lead high-performing teams with systems for delegation, management, and creating organizational excellence at scale.</p>
-                </div>
-
-                <div class="table-leg" data-aos="zoom-in" data-aos-delay="400">
-                    <div class="leg-icon">🌍</div>
-                    <h3 class="leg-title">Momentum Movement</h3>
-                    <p class="leg-description">Create lasting impact and influence. Build community, develop leadership, and transform your mission into a movement that changes lives and builds generational wealth.</p>
-                </div>
-            </div>
-
-            <div class="table-top" data-aos="flip-up">
-                <h3>The Result: Your Billion Dollar Legacy</h3>
-                <p>When all four legs are strong, your table (your business empire) stands unshakeable. Coach Manlaw ensures you master each pillar systematically.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Features Section -->
-    <section id="features" class="features">
-        <div class="container">
-            <h2 class="section-title" data-aos="fade-down">Why Choose Z2B Legacy Builders?</h2>
-            <p class="section-subtitle" data-aos="fade-up">The Complete System for Building Lasting Wealth</p>
-
-            <div class="row">
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
-                    <div class="feature-card">
-                        <div class="feature-icon"><i class="fas fa-brain"></i></div>
-                        <h3 class="feature-title">AI-Powered Tools</h3>
-                        <p class="feature-description">Access 7 cutting-edge AI applications that automate sales, marketing, content creation, and business growth.</p>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
-                    <div class="feature-card">
-                        <div class="feature-icon"><i class="fas fa-users"></i></div>
-                        <h3 class="feature-title">Team Building</h3>
-                        <p class="feature-description">Build a legacy team with up to 10 generations and earn commissions from every level of your organization.</p>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
-                    <div class="feature-card">
-                        <div class="feature-icon"><i class="fas fa-dollar-sign"></i></div>
-                        <h3 class="feature-title">Multiple Income Streams</h3>
-                        <p class="feature-description">Earn through ISP, QPB, TSC, TLI, and marketplace sales. Diversified income for lasting financial security.</p>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
-                    <div class="feature-card">
-                        <div class="feature-icon"><i class="fas fa-graduation-cap"></i></div>
-                        <h3 class="feature-title">90-Day Curriculum</h3>
-                        <p class="feature-description">Master the 4 Legs of a Billionaire Table: MINDSET MYSTERY, MONEY MOVES, LEGACY MISSION, and MOMENTUM MOVEMENT with Coach Manlaw.</p>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="500">
-                    <div class="feature-card">
-                        <div class="feature-icon"><i class="fas fa-store"></i></div>
-                        <h3 class="feature-title">Digital Marketplace</h3>
-                        <p class="feature-description">Create and sell your own digital products, courses, and services to our growing community.</p>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="600">
-                    <div class="feature-card">
-                        <div class="feature-icon"><i class="fas fa-robot"></i></div>
-                        <h3 class="feature-title">24/7 AI Coaching</h3>
-                        <p class="feature-description">Coach Manlaw is always available to answer questions, provide guidance, and keep you accountable to your goals.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Apps Section -->
-    <section class="apps-section" id="apps">
+    <!-- Ecosystem Section -->
+    <section id="ecosystem" class="apps-section">
         <div class="container">
             <h2 class="section-title">Z2B AI-Powered Apps Ecosystem</h2>
             <p class="section-subtitle">Transform Your Business with Cutting-Edge AI Applications</p>
@@ -1657,8 +1567,35 @@
         </div>
     </section>
 
-    <!-- ⚡ BETA TESTERS PROMOTION - TIME LIMITED (Admin can remove this entire section when promotion ends) -->
-    <section class="beta-promo-section" data-aos="fade-up">
+    <!-- Distribution Opportunity Section -->
+    <section id="opportunity" class="distribution-section">
+        <div class="container">
+            <h2 data-aos="fade-down">Earn by Sharing Transformation</h2>
+            <p class="description" data-aos="fade-up">
+                After experiencing your own transformation, you can share this life-changing platform with others and get rewarded for spreading the mission. Our peer-to-peer model ensures that those who help others transform are recognized and compensated fairly.
+            </p>
+
+            <div class="distribution-box" data-aos="zoom-in">
+                <h3>Why This Works</h3>
+                <ul>
+                    <li><i class="fas fa-check-circle"></i> <strong>You Transform First</strong> — Experience real change before sharing</li>
+                    <li><i class="fas fa-check-circle"></i> <strong>Authentic Sharing</strong> — Share from genuine experience, not sales scripts</li>
+                    <li><i class="fas fa-check-circle"></i> <strong>7 Income Streams</strong> — Multiple ways to earn as you help others</li>
+                    <li><i class="fas fa-check-circle"></i> <strong>10 Generations Deep</strong> — Build a lasting legacy organization</li>
+                    <li><i class="fas fa-check-circle"></i> <strong>Ethical & Transparent</strong> — No fake promises, just real opportunities</li>
+                </ul>
+
+                <div class="text-center mt-4">
+                    <a href="income.html" class="btn btn-lg" style="background: linear-gradient(135deg, var(--navy-blue), var(--dark-navy)); color: var(--gold); padding: 1rem 2.5rem; border-radius: 50px; font-weight: bold; text-decoration: none; display: inline-block;">
+                        <i class="fas fa-arrow-right"></i> See How You're Rewarded
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Beta Tester & Social Proof Section -->
+    <section id="beta" class="beta-promo-section" data-aos="fade-up">
         <div class="container text-center">
             <!-- Limited Time Badge -->
             <div class="beta-badge">⚡ LIMITED TIME OFFER - FIRST 100 ONLY ⚡</div>
@@ -1667,7 +1604,7 @@
             <h2 class="beta-title">SPECIAL LIFETIME BETA TESTERS<br>PROFIT SHARING</h2>
 
             <!-- Subtitle -->
-            <p class="beta-subtitle">Exclusive Benefits for Our First 100 App Buyers (Bronze, Silver, Gold & Platinum)</p>
+            <p class="beta-subtitle">Exclusive Benefits for Our First 100 App Buyers (Bronze, Copper, Silver, Gold & Platinum)</p>
 
             <!-- Counter -->
             <div class="beta-counter" data-aos="zoom-in" data-aos-delay="100">
@@ -1675,41 +1612,68 @@
                 <div class="beta-counter-label">Chairs on the Billion Dollar Table</div>
             </div>
 
-            <!-- Benefits Grid -->
+            <!-- Benefits Grid - 7 Benefits -->
             <div class="beta-benefits-grid">
-                <!-- Benefit 1: 50% OFF Z2B MEMBERSHIP -->
-                <div class="beta-benefit-card" data-aos="flip-up" data-aos-delay="100" style="border: 3px solid #FFD700; background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 107, 53, 0.1));">
-                    <span class="beta-benefit-icon" style="font-size: 3rem;">💰</span>
-                    <h3 class="beta-benefit-title" style="color: #FFD700; font-size: 1.4rem;">50% OFF Z2B MEMBERSHIP</h3>
-                    <p class="beta-benefit-description" style="font-size: 1.1rem; font-weight: 600;">
-                        Lock in beta pricing with 50% discount on your Z2B membership! While future members pay FULL PRICE (Bronze R960, Copper R1,980, Silver R2,980, Gold R4,980, Platinum R6,980), the first 100 Beta Testers pay HALF - that's R480 for Bronze, R990 for Copper, R1,490 for Silver, R2,490 for Gold, and R3,490 for Platinum!
-                    </p>
-                </div>
-
-                <!-- Benefit 2: 10% OFF OTHER AI APPS -->
+                <!-- Benefit 1: Lifetime Profit Sharing -->
                 <div class="beta-benefit-card" data-aos="flip-up" data-aos-delay="200">
-                    <span class="beta-benefit-icon">🤖</span>
-                    <h3 class="beta-benefit-title">10% OFF OTHER AI APPS</h3>
+                    <span class="beta-benefit-icon">💰</span>
+                    <h3 class="beta-benefit-title">Lifetime Beta Testers Profit Sharing</h3>
                     <p class="beta-benefit-description">
-                        Get exclusive 10% discount on all other AI Apps in the Z2B ecosystem! Save on every tool you need to build your empire. This discount applies to all our premium AI applications beyond your main membership.
+                        Receive quarterly profit sharing for life! Our Board of Directors will allocate a percentage of profits every quarter based on the previous quarter's performance. As a founding member, you'll share in our success forever.
                     </p>
                 </div>
 
-                <!-- Benefit 3: PLUS 1 HOLIDAY INCENTIVE -->
+                <!-- Benefit 2: 10% Discount on Future Apps -->
                 <div class="beta-benefit-card" data-aos="flip-up" data-aos-delay="300">
-                    <span class="beta-benefit-icon">✈️</span>
-                    <h3 class="beta-benefit-title">PLUS 1 HOLIDAY INCENTIVE</h3>
+                    <span class="beta-benefit-icon">🎁</span>
+                    <h3 class="beta-benefit-title">10% Discount on ALL Future Apps</h3>
                     <p class="beta-benefit-description">
-                        When you qualify for the Holiday Leadership Incentive, your Plus 1 travels FREE at company cost! Bring your partner, spouse, or family member to celebrate your success together - all expenses paid by Z2B!
+                        Get exclusive 10% off every new app we release in the future (not including current apps). Be the first to access cutting-edge AI tools at a permanent discount as we expand our ecosystem.
                     </p>
                 </div>
 
-                <!-- Benefit 4: 30 DAYS FREE ALL 7 AI APPS -->
+                <!-- Benefit 3: CEO Awards -->
                 <div class="beta-benefit-card" data-aos="flip-up" data-aos-delay="400">
-                    <span class="beta-benefit-icon">🎁</span>
-                    <h3 class="beta-benefit-title">30 DAYS FREE ALL 7 AI APPS</h3>
+                    <span class="beta-benefit-icon">✈️</span>
+                    <h3 class="beta-benefit-title">CEO Awards - Fully Paid Plus 1</h3>
                     <p class="beta-benefit-description">
-                        Gain 100% FREE access to all 7 AI Apps for 30 days as per Coach Manlaw Coaching! Experience the full power of the platform including AI Refuel, Vidzie, Zynth, Glowie, Benown, and more. Explore everything before you commit!
+                        When you qualify for Holiday Leadership incentives, we'll pay all expenses for your Plus 1! Bring your partner, friend, or family member on exclusive company trips - completely on us.
+                    </p>
+                </div>
+
+                <!-- Benefit 4: 30 Days Free Access to All Apps -->
+                <div class="beta-benefit-card" data-aos="flip-up" data-aos-delay="500">
+                    <span class="beta-benefit-icon">🎉</span>
+                    <h3 class="beta-benefit-title">30 Days FREE Access to ALL 8 Apps</h3>
+                    <p class="beta-benefit-description">
+                        As one of our first 100 Beta Testers, get instant 30-day full access to all our other 8 AI-powered apps! Experience the complete Zyronic Suite platform and discover how our tools can transform your business.
+                    </p>
+                </div>
+
+                <!-- Benefit 5: Money-Back Guarantee -->
+                <div class="beta-benefit-card" data-aos="flip-up" data-aos-delay="600">
+                    <span class="beta-benefit-icon">🛡️</span>
+                    <h3 class="beta-benefit-title">Money-Back Guarantee</h3>
+                    <p class="beta-benefit-description">
+                        Full refund if no transformation within 90 days. We stand behind our promise of real change and transformation - your success is our guarantee.
+                    </p>
+                </div>
+
+                <!-- Benefit 6: Early Access Recognition -->
+                <div class="beta-benefit-card" data-aos="flip-up" data-aos-delay="700">
+                    <span class="beta-benefit-icon">🏆</span>
+                    <h3 class="beta-benefit-title">Early Access Recognition</h3>
+                    <p class="beta-benefit-description">
+                        Your name appears on the "Founding Visionaries Wall" as a pioneer of this movement. Be forever recognized as one of the first 100 legacy builders who believed in the vision.
+                    </p>
+                </div>
+
+                <!-- Benefit 7: Priority Partner Option -->
+                <div class="beta-benefit-card" data-aos="flip-up" data-aos-delay="800">
+                    <span class="beta-benefit-icon">🎯</span>
+                    <h3 class="beta-benefit-title">Priority Partner Option</h3>
+                    <p class="beta-benefit-description">
+                        First rights to leadership positions and referral bonuses post-launch. Get exclusive early access to new income opportunities and partnership programs before anyone else.
                     </p>
                 </div>
             </div>
@@ -1739,50 +1703,68 @@
         </div>
     </section>
 
+    <!-- Community Section -->
+    <section id="community" class="community-section">
+        <div class="container">
+            <h2 data-aos="fade-down">Join a Global Movement of Legacy Builders</h2>
+            <p class="description" data-aos="fade-up">
+                You're not alone on this journey. Join thousands of like-minded individuals who are transforming from employees to entrepreneurs, building legacies that will impact generations.
+            </p>
+
+            <div class="community-placeholder" data-aos="zoom-in">
+                <i class="fas fa-users"></i>
+                <h3>Real Stories Coming Soon</h3>
+                <p>
+                    As our first Beta Testers complete their 90-Day Transformation Journey with Coach Manlaw, their authentic stories, video testimonials, and transformation diaries will appear here. No fake reviews. No stock photos. Just real people achieving real results.
+                </p>
+                <p style="margin-top: 2rem; font-size: 1.3rem; color: var(--navy-blue); font-weight: bold;">
+                    🎯 Will YOUR story be here next?
+                </p>
+
+                <div class="text-center mt-4">
+                    <a href="#tiers" class="btn btn-gold btn-lg">
+                        <i class="fas fa-flag"></i> Join the 90-Day Challenge
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Tiers Section -->
     <section class="tiers-section" id="tiers">
         <div class="container">
-            <h2 class="section-title">Choose Your Membership Tier</h2>
-            <p class="section-subtitle">Start Free, Scale to Unlimited. Build Your Legacy at Your Own Pace.</p>
+            <h2 class="section-title" data-aos="fade-down">Choose Your Membership Tier</h2>
+            <p class="section-subtitle" data-aos="fade-up">Start Free, Scale to Unlimited. Build Your Legacy at Your Own Pace.</p>
 
             <!-- First Row of Tiers -->
             <div class="row g-4 mb-4">
                 <!-- FAM (Free Affiliate Marketer) -->
-                <div class="col-lg-3 col-md-6" id="fam-tier">
+                <div class="col-lg-3 col-md-6" data-aos="flip-up" data-aos-delay="100">
                     <div class="tier-card" style="border: 3px solid #4CAF50;">
                         <div class="tier-badge" style="background: linear-gradient(135deg, #4CAF50, #8BC34A);">FREE START</div>
                         <h3 class="tier-name">FAM - Free Affiliate</h3>
                         <div class="tier-price">R0</div>
-                        <div class="tier-period">FREE for 90 Days</div>
+                        <div class="tier-period">FREE for 30 Days</div>
                         <ul class="tier-features">
                             <li><i class="fas fa-check"></i> FREE Registration</li>
                             <li><i class="fas fa-check"></i> 20% ISP Commission</li>
                             <li><i class="fas fa-check"></i> Unique Builder ID & Link</li>
-                            <li><i class="fas fa-check"></i> Sell All Our Apps</li>
-                            <li><i class="fas fa-times" style="color: #999;"></i> No PV Points</li>
-                            <li><i class="fas fa-times" style="color: #999;"></i> No TSC</li>
-                            <li><i class="fas fa-times" style="color: #999;"></i> No TPB</li>
-                            <li><i class="fas fa-times" style="color: #999;"></i> No TLI</li>
-                            <li><i class="fas fa-times" style="color: #999;"></i> No AI Apps Access</li>
+                            <li><i class="fas fa-check"></i> Access to Training Materials</li>
+                            <li><i class="fas fa-check"></i> No Monthly Fees for 30 Days</li>
                         </ul>
-                        <div style="background: rgba(255, 107, 53, 0.15); border: 2px solid var(--orange); border-radius: 8px; padding: 0.8rem; margin: 0.8rem 0; font-size: 0.85rem;">
-                            <strong style="color: var(--orange);">⏰ 90-Day Trial Period</strong><br>
-                            <span style="color: #000000; line-height: 1.5;">Upgrade to Bronze or higher within 90 days or your account will be deleted. This ensures only serious builders remain in the system.</span>
-                        </div>
-                        <button class="btn-tier btn-tier-secondary" onclick="window.open('https://wa.me/27774901639?text=Hi!%20I%20want%20to%20join%20the%20FAM%20tier%20(Free)', '_blank')">
-                            Join FREE Now
+                        <button class="btn-tier btn-tier-primary" onclick="window.location.href='register.html'">
+                            <i class="fas fa-rocket"></i> Start Free
                         </button>
                     </div>
                 </div>
 
-                <!-- Bronze -->
+                <!-- Bronze Tier -->
                 <div class="col-lg-3 col-md-6">
                     <div class="tier-card">
                         <h3 class="tier-name">Bronze</h3>
-                        <div class="tier-price" style="color: #FF6B35; font-size: 3.5rem; font-weight: 900; margin: 0.5rem 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.2);">R480</div>
-                        <div style="background: linear-gradient(135deg, #FF6B35, #FFD700); color: #000; font-weight: bold; font-size: 1rem; padding: 0.5rem 1rem; border-radius: 25px; display: inline-block; margin: 0.5rem 0; box-shadow: 0 4px 15px rgba(255,107,53,0.4);">🔥 50% OFF - FIRST 100 ONLY!</div>
-                        <div style="font-size: 0.85rem; color: #666; margin-top: 0.3rem;"><span style="text-decoration: line-through;">Normal Price: R960</span></div>
-                        <div style="background: rgba(255,107,53,0.1); border: 2px solid #FF6B35; border-radius: 10px; padding: 0.5rem; margin-top: 0.5rem; font-size: 0.8rem; color: #000; font-weight: 600;">⚠️ After 100 buyers: R960/month</div>
+                        <div class="tier-retail-price">Retail: R960</div>
+                        <div class="tier-discount-label">50% Beta Discount</div>
+                        <div class="tier-price">R480</div>
                         <div class="tier-period">Pay as You Go Refuel</div>
                         <ul class="tier-features">
                             <li><i class="fas fa-check"></i> <strong>PV:</strong> 24 Points</li>
@@ -1795,20 +1777,19 @@
                             <li><i class="fas fa-check"></i> Basic Training</li>
                             <li><i class="fas fa-times" style="color: #999;"></i> No TLI (Upgrade Required)</li>
                         </ul>
-                        <button class="btn-tier btn-tier-secondary yoco-payment-btn" data-tier-code="BRONZE" data-tier-name="Bronze Legacy Builder" data-tier-price="480">
-                            Get Bronze
+                        <button class="btn-tier btn-tier-secondary" onclick="window.location.href='register.html'">
+                            Choose Bronze
                         </button>
                     </div>
                 </div>
 
-                <!-- Copper -->
+                <!-- Copper Tier -->
                 <div class="col-lg-3 col-md-6">
                     <div class="tier-card">
                         <h3 class="tier-name">Copper</h3>
-                        <div class="tier-price" style="color: #FF6B35; font-size: 3.5rem; font-weight: 900; margin: 0.5rem 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.2);">R990</div>
-                        <div style="background: linear-gradient(135deg, #FF6B35, #FFD700); color: #000; font-weight: bold; font-size: 1rem; padding: 0.5rem 1rem; border-radius: 25px; display: inline-block; margin: 0.5rem 0; box-shadow: 0 4px 15px rgba(255,107,53,0.4);">🔥 50% OFF - FIRST 100 ONLY!</div>
-                        <div style="font-size: 0.85rem; color: #666; margin-top: 0.3rem;"><span style="text-decoration: line-through;">Normal Price: R1,980</span></div>
-                        <div style="background: rgba(255,107,53,0.1); border: 2px solid #FF6B35; border-radius: 10px; padding: 0.5rem; margin-top: 0.5rem; font-size: 0.8rem; color: #000; font-weight: 600;">⚠️ After 100 buyers: R1,980/month</div>
+                        <div class="tier-retail-price">Retail: R1,960</div>
+                        <div class="tier-discount-label">50% Beta Discount</div>
+                        <div class="tier-price">R980</div>
                         <div class="tier-period">Pay as You Go Refuel</div>
                         <ul class="tier-features">
                             <li><i class="fas fa-check"></i> <strong>PV:</strong> 50 Points</li>
@@ -1821,20 +1802,19 @@
                             <li><i class="fas fa-check"></i> Advanced Training</li>
                             <li><i class="fas fa-times" style="color: #999;"></i> No TLI (Upgrade Required)</li>
                         </ul>
-                        <button class="btn-tier btn-tier-secondary yoco-payment-btn" data-tier-code="COPPER" data-tier-name="Copper Legacy Builder" data-tier-price="980">
-                            Get Copper
+                        <button class="btn-tier btn-tier-secondary" onclick="window.location.href='register.html'">
+                            Choose Copper
                         </button>
                     </div>
                 </div>
 
-                <!-- Silver -->
+                <!-- Silver Tier -->
                 <div class="col-lg-3 col-md-6">
                     <div class="tier-card">
                         <h3 class="tier-name">Silver</h3>
-                        <div class="tier-price" style="color: #FF6B35; font-size: 3.5rem; font-weight: 900; margin: 0.5rem 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.2);">R1,490</div>
-                        <div style="background: linear-gradient(135deg, #FF6B35, #FFD700); color: #000; font-weight: bold; font-size: 1rem; padding: 0.5rem 1rem; border-radius: 25px; display: inline-block; margin: 0.5rem 0; box-shadow: 0 4px 15px rgba(255,107,53,0.4);">🔥 50% OFF - FIRST 100 ONLY!</div>
-                        <div style="font-size: 0.85rem; color: #666; margin-top: 0.3rem;"><span style="text-decoration: line-through;">Normal Price: R2,980</span></div>
-                        <div style="background: rgba(255,107,53,0.1); border: 2px solid #FF6B35; border-radius: 10px; padding: 0.5rem; margin-top: 0.5rem; font-size: 0.8rem; color: #000; font-weight: 600;">⚠️ After 100 buyers: R2,980/month</div>
+                        <div class="tier-retail-price">Retail: R2,960</div>
+                        <div class="tier-discount-label">50% Beta Discount</div>
+                        <div class="tier-price">R1,480</div>
                         <div class="tier-period">Pay as You Go Refuel</div>
                         <ul class="tier-features">
                             <li><i class="fas fa-check"></i> <strong>PV:</strong> 74 Points</li>
@@ -1847,55 +1827,23 @@
                             <li><i class="fas fa-check"></i> Marketplace Access</li>
                             <li><i class="fas fa-check"></i> Priority Support</li>
                         </ul>
-                        <button class="btn-tier btn-tier-secondary yoco-payment-btn" data-tier-code="SILVER" data-tier-name="Silver Legacy Builder" data-tier-price="1480">
-                            Get Silver
+                        <button class="btn-tier btn-tier-secondary" onclick="window.location.href='register.html'">
+                            Choose Silver
                         </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Free Trial Notice -->
-            <div class="text-center mb-5">
-                <div style="background: linear-gradient(135deg, var(--gold), var(--orange)); padding: 1.5rem 2rem; border-radius: 15px; display: inline-block; box-shadow: 0 8px 30px rgba(255, 215, 0, 0.3);">
-                    <p style="color: var(--navy-blue); font-size: 1.2rem; font-weight: bold; margin: 0;">
-                        <i class="fas fa-gift"></i> Get 7-Day FREE Access to Bronze Tier - No Credit Card Required!
-                    </p>
-                </div>
-            </div>
-
-            <!-- URGENT: Lock in 50% Discount -->
-            <div class="text-center mb-5" style="margin-top: 2rem;">
-                <div style="background: linear-gradient(135deg, rgba(255, 107, 53, 0.95), rgba(255, 215, 0, 0.95)); padding: 2rem 2.5rem; border-radius: 20px; display: inline-block; box-shadow: 0 10px 50px rgba(255, 107, 53, 0.4); border: 3px solid #FFD700; max-width: 900px;">
-                    <h3 style="color: #000; font-size: 1.8rem; font-weight: 900; margin-bottom: 1rem;">
-                        ⏰ LOCK IN YOUR 50% DISCOUNT FOREVER!
-                    </h3>
-                    <p style="color: #000; font-size: 1.2rem; font-weight: 600; margin-bottom: 0.8rem; line-height: 1.6;">
-                        <strong style="font-size: 1.3rem;">Only the First 100 Beta Testers qualify!</strong><br>
-                        Sign Up Today and pay these discounted prices FOREVER while future members pay DOUBLE!
-                    </p>
-                    <div style="background: rgba(0, 0, 0, 0.1); padding: 1rem; border-radius: 10px; margin-top: 1rem;">
-                        <p style="color: #000; font-size: 1rem; font-weight: 600; margin: 0;">
-                            Bronze: <span style="text-decoration: line-through;">R960</span> <strong style="color: #FF0000; font-size: 1.2rem;">R480</strong> | 
-                            Copper: <span style="text-decoration: line-through;">R1,980</span> <strong style="color: #FF0000; font-size: 1.2rem;">R990</strong> | 
-                            Silver: <span style="text-decoration: line-through;">R2,980</span> <strong style="color: #FF0000; font-size: 1.2rem;">R1,490</strong><br>
-                            Gold: <span style="text-decoration: line-through;">R4,980</span> <strong style="color: #FF0000; font-size: 1.2rem;">R2,490</strong> | 
-                            Platinum: <span style="text-decoration: line-through;">R6,980</span> <strong style="color: #FF0000; font-size: 1.2rem;">R3,490</strong>
-                        </p>
                     </div>
                 </div>
             </div>
 
             <!-- Second Row of Tiers -->
             <div class="row g-4">
-                <!-- Gold (Featured) -->
+                <!-- Gold Tier (Featured) -->
                 <div class="col-lg-4 col-md-6">
                     <div class="tier-card featured">
                         <div class="tier-badge">MOST POPULAR</div>
                         <h3 class="tier-name">Gold</h3>
-                        <div class="tier-price" style="color: #FF6B35; font-size: 3.5rem; font-weight: 900; margin: 0.5rem 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.2);">R2,490</div>
-                        <div style="background: linear-gradient(135deg, #FF6B35, #FFD700); color: #000; font-weight: bold; font-size: 1rem; padding: 0.5rem 1rem; border-radius: 25px; display: inline-block; margin: 0.5rem 0; box-shadow: 0 4px 15px rgba(255,107,53,0.4);">🔥 50% OFF - FIRST 100 ONLY!</div>
-                        <div style="font-size: 0.85rem; color: #666; margin-top: 0.3rem;"><span style="text-decoration: line-through;">Normal Price: R4,980</span></div>
-                        <div style="background: rgba(255,107,53,0.1); border: 2px solid #FF6B35; border-radius: 10px; padding: 0.5rem; margin-top: 0.5rem; font-size: 0.8rem; color: #000; font-weight: 600;">⚠️ After 100 buyers: R4,980/month</div>
+                        <div class="tier-retail-price">Retail: R5,960</div>
+                        <div class="tier-discount-label">50% Beta Discount</div>
+                        <div class="tier-price">R2,980</div>
                         <div class="tier-period">Pay as You Go Refuel</div>
                         <ul class="tier-features">
                             <li><i class="fas fa-check"></i> <strong>PV:</strong> 149 Points</li>
@@ -1909,20 +1857,19 @@
                             <li><i class="fas fa-check"></i> Sales Funnel</li>
                             <li><i class="fas fa-check"></i> VIP Support</li>
                         </ul>
-                        <button class="btn-tier btn-tier-primary yoco-payment-btn" data-tier-code="GOLD" data-tier-name="Gold Legacy Builder" data-tier-price="2980">
-                            Start Building
+                        <button class="btn-tier btn-tier-primary" onclick="window.location.href='register.html'">
+                            Choose Gold
                         </button>
                     </div>
                 </div>
 
-                <!-- Platinum -->
+                <!-- Platinum Tier -->
                 <div class="col-lg-4 col-md-6">
                     <div class="tier-card">
                         <h3 class="tier-name">Platinum</h3>
-                        <div class="tier-price" style="color: #FF6B35; font-size: 3.5rem; font-weight: 900; margin: 0.5rem 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.2);">R3,490</div>
-                        <div style="background: linear-gradient(135deg, #FF6B35, #FFD700); color: #000; font-weight: bold; font-size: 1rem; padding: 0.5rem 1rem; border-radius: 25px; display: inline-block; margin: 0.5rem 0; box-shadow: 0 4px 15px rgba(255,107,53,0.4);">🔥 50% OFF - FIRST 100 ONLY!</div>
-                        <div style="font-size: 0.85rem; color: #666; margin-top: 0.3rem;"><span style="text-decoration: line-through;">Normal Price: R6,980</span></div>
-                        <div style="background: rgba(255,107,53,0.1); border: 2px solid #FF6B35; border-radius: 10px; padding: 0.5rem; margin-top: 0.5rem; font-size: 0.8rem; color: #000; font-weight: 600;">⚠️ After 100 buyers: R6,980/month</div>
+                        <div class="tier-retail-price">Retail: R9,960</div>
+                        <div class="tier-discount-label">50% Beta Discount</div>
+                        <div class="tier-price">R4,980</div>
                         <div class="tier-period">Pay as You Go Refuel</div>
                         <ul class="tier-features">
                             <li><i class="fas fa-check"></i> <strong>PV:</strong> 249 Points</li>
@@ -1936,108 +1883,11 @@
                             <li><i class="fas fa-check"></i> Done-For-You Campaigns</li>
                             <li><i class="fas fa-check"></i> Personal Success Coach</li>
                         </ul>
-                        <button class="btn-tier btn-tier-primary yoco-payment-btn" data-tier-code="PLATINUM" data-tier-name="Platinum Legacy Builder" data-tier-price="4980">
-                            Go Platinum
+                        <button class="btn-tier btn-tier-primary" onclick="window.location.href='register.html'">
+                            Choose Platinum
                         </button>
                     </div>
                 </div>
-
-            </div>
-
-            <!-- IMPORTANT: Monthly PV Requirements Notice -->
-            <div style="background: linear-gradient(135deg, rgba(255, 107, 53, 0.2), rgba(255, 215, 0, 0.2)); border: 3px solid var(--orange); border-radius: 20px; padding: 2.5rem; margin-top: 3rem; box-shadow: 0 10px 40px rgba(255, 107, 53, 0.3);">
-                <div style="text-align: center; margin-bottom: 1.5rem;">
-                    <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: var(--orange); margin-bottom: 1rem;"></i>
-                    <h2 style="color: var(--orange); font-size: 2rem; margin-bottom: 0.5rem; font-weight: bold;">
-                        ⚠️ IMPORTANT: Monthly PV Requirements to Qualify
-                    </h2>
-                    <p style="color: var(--navy-blue); font-size: 1.2rem; font-weight: 600;">
-                        Payment is Pay as You Go, BUT Income Qualification Requires Monthly PV
-                    </p>
-                </div>
-
-                <div style="background: rgba(10, 38, 71, 0.6); padding: 1.5rem; border-radius: 15px; margin-bottom: 1.5rem;">
-                    <p style="color: var(--white); font-size: 1.1rem; line-height: 1.8; margin-bottom: 1rem;">
-                        <strong style="color: var(--white);">Yes, you can pay as you go with AI Fuel purchases</strong> - no monthly subscriptions or commitments.
-                        <strong style="color: var(--orange);">HOWEVER</strong>, to qualify for income streams and team commissions each month,
-                        <strong style="color: var(--orange); text-decoration: underline;">you MUST maintain minimum monthly PV (Point Value)</strong>.
-                    </p>
-                    <p style="color: var(--white); font-size: 1rem; line-height: 1.6; margin: 0;">
-                        <i class="fas fa-info-circle"></i> <strong>What this means:</strong> Buy AI Fuel when you need it, but to earn commissions and bonuses each month,
-                        you must purchase enough to meet your tier's minimum PV requirement.
-                    </p>
-                </div>
-
-                <!-- PV Requirements Table -->
-                <h3 style="color: var(--navy-blue); text-align: center; margin-bottom: 1.5rem; font-size: 1.5rem;">
-                    📊 Minimum Monthly PV Requirements by Tier
-                </h3>
-
-                <div style="overflow-x: auto;">
-                    <table style="width: 100%; border-collapse: collapse; background: var(--white); border-radius: 10px; overflow: hidden; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);">
-                        <thead>
-                            <tr style="background: linear-gradient(135deg, var(--orange), #FF8C42); color: var(--white);">
-                                <th style="padding: 1rem; text-align: left; font-size: 1.1rem; border-bottom: 3px solid var(--navy-blue);">Membership Tier</th>
-                                <th style="padding: 1rem; text-align: center; font-size: 1.1rem; border-bottom: 3px solid var(--navy-blue);">Monthly Cost</th>
-                                <th style="padding: 1rem; text-align: center; font-size: 1.1rem; border-bottom: 3px solid var(--navy-blue);">Minimum Monthly PV</th>
-                                <th style="padding: 1rem; text-align: center; font-size: 1.1rem; border-bottom: 3px solid var(--navy-blue);">ISP Commission</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr style="background: rgba(10, 38, 71, 0.05); border-bottom: 2px solid rgba(10, 38, 71, 0.1);">
-                                <td style="padding: 1rem; color: var(--navy-blue); font-weight: 600;">🌱 FAM - Free Affiliate</td>
-                                <td style="padding: 1rem; text-align: center; color: var(--navy-blue);">R0</td>
-                                <td style="padding: 1rem; text-align: center; color: var(--orange); font-weight: bold;">0 PV</td>
-                                <td style="padding: 1rem; text-align: center; color: var(--navy-blue);">20%</td>
-                            </tr>
-                            <tr style="background: var(--white); border-bottom: 2px solid rgba(10, 38, 71, 0.1);">
-                                <td style="padding: 1rem; color: var(--navy-blue); font-weight: 600;">🥉 Bronze Legacy Builder</td>
-                                <td style="padding: 1rem; text-align: center; color: var(--navy-blue);">R960<br><span style="color: #FF6B35; font-weight: bold; font-size: 0.85rem;">🔥 Beta: R480</span></td>
-                                <td style="padding: 1rem; text-align: center; color: var(--orange); font-weight: bold;">24 PV</td>
-                                <td style="padding: 1rem; text-align: center; color: var(--navy-blue);">25%</td>
-                            </tr>
-                            <tr style="background: rgba(10, 38, 71, 0.05); border-bottom: 2px solid rgba(10, 38, 71, 0.1);">
-                                <td style="padding: 1rem; color: var(--navy-blue); font-weight: 600;">🥈 Copper Legacy Builder</td>
-                                <td style="padding: 1rem; text-align: center; color: var(--navy-blue);">R1,980<br><span style="color: #FF6B35; font-weight: bold; font-size: 0.85rem;">🔥 Beta: R990</span></td>
-                                <td style="padding: 1rem; text-align: center; color: var(--orange); font-weight: bold;">50 PV</td>
-                                <td style="padding: 1rem; text-align: center; color: var(--navy-blue);">30%</td>
-                            </tr>
-                            <tr style="background: var(--white); border-bottom: 2px solid rgba(10, 38, 71, 0.1);">
-                                <td style="padding: 1rem; color: var(--navy-blue); font-weight: 600;">🥈 Silver Legacy Builder</td>
-                                <td style="padding: 1rem; text-align: center; color: var(--navy-blue);">R2,980<br><span style="color: #FF6B35; font-weight: bold; font-size: 0.85rem;">🔥 Beta: R1,490</span></td>
-                                <td style="padding: 1rem; text-align: center; color: var(--orange); font-weight: bold;">74 PV</td>
-                                <td style="padding: 1rem; text-align: center; color: var(--navy-blue);">35%</td>
-                            </tr>
-                            <tr style="background: rgba(10, 38, 71, 0.05); border-bottom: 2px solid rgba(10, 38, 71, 0.1);">
-                                <td style="padding: 1rem; color: var(--navy-blue); font-weight: 600;">🥇 Gold Legacy Builder</td>
-                                <td style="padding: 1rem; text-align: center; color: var(--navy-blue);">R4,980<br><span style="color: #FF6B35; font-weight: bold; font-size: 0.85rem;">🔥 Beta: R2,490</span></td>
-                                <td style="padding: 1rem; text-align: center; color: var(--orange); font-weight: bold;">149 PV</td>
-                                <td style="padding: 1rem; text-align: center; color: var(--navy-blue);">40%</td>
-                            </tr>
-                            <tr style="background: var(--white); border-bottom: 2px solid rgba(10, 38, 71, 0.1);">
-                                <td style="padding: 1rem; color: var(--navy-blue); font-weight: 600;">💎 Platinum Legacy Builder</td>
-                                <td style="padding: 1rem; text-align: center; color: var(--navy-blue);">R6,980<br><span style="color: #FF6B35; font-weight: bold; font-size: 0.85rem;">🔥 Beta: R3,490</span></td>
-                                <td style="padding: 1rem; text-align: center; color: var(--orange); font-weight: bold;">249 PV</td>
-                                <td style="padding: 1rem; text-align: center; color: var(--navy-blue);">45%</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div style="background: rgba(255, 107, 53, 0.2); border-left: 4px solid var(--orange); padding: 1.2rem; margin-top: 1.5rem; border-radius: 8px;">
-                    <p style="color: #000000; font-size: 1rem; line-height: 1.7; margin: 0;">
-                        <strong style="color: var(--orange);">📌 Important Note:</strong>
-                        If you don't meet your tier's minimum monthly PV, you will <strong>NOT qualify</strong> for:
-                        <br>• Team Sales Commissions (TSC)
-                        <br>• Team Performance Bonuses (TPB)
-                        <br>• Team Leadership Incentives (TLI)
-                        <br>• Quick Pathfinder Bonus (QPB)
-                        <br>• CEO Awards eligibility
-                        <br><br>
-                        <strong style="color: #000000;">You can still earn ISP (Individual Sales Profit) on your direct sales, but team-based income requires maintaining your monthly PV.</strong>
-                    </p>
-                </div>
-
             </div>
         </div>
     </section>
@@ -2045,78 +1895,49 @@
     <!-- CTA Section -->
     <section class="cta-section" id="contact">
         <div class="container">
-            <h2 class="cta-title">Ready to Build Your Billion-Dollar Legacy?</h2>
-            <p class="cta-subtitle">
-                Join thousands of entrepreneurs transforming their financial future with AI-powered tools and proven team-building strategies.
+            <h2 data-aos="fade-down" style="color: white; font-weight: bold; font-size: 3rem; margin-bottom: 1.5rem;">Ready to Begin Your Transformation?</h2>
+            <p data-aos="fade-up" style="color: var(--gold); font-size: 1.3rem; font-weight: 500; line-height: 1.8;">
+                Join the first 100 visionaries who will prove that transformation is possible. Start your 90-Day Journey with Coach Manlaw today.
             </p>
-            <div style="background: rgba(255, 255, 255, 0.1); border: 2px solid var(--gold); padding: 2rem; border-radius: 20px; margin: 3rem auto; max-width: 600px;">
-                <h3 style="color: var(--royal-gold-shine); font-size: 1.8rem; font-weight: bold; margin-bottom: 1.5rem; text-align: center;">
-                    <i class="fab fa-whatsapp"></i> Contact Us on WhatsApp
-                </h3>
-                <div style="text-align: center; margin-bottom: 2rem;">
-                    <a href="https://wa.me/27774901639" style="color: var(--royal-gold-shine); font-size: 2rem; font-weight: bold; text-decoration: none; display: block; margin-bottom: 0.5rem;">
-                        <i class="fas fa-phone-alt"></i> 0774901639
-                    </a>
-                    <p style="color: var(--white); opacity: 0.9; font-size: 1.1rem;">Click to chat or call us directly</p>
-                </div>
-                <div style="text-align: center;">
-                    <a href="https://wa.me/27774901639" class="btn-hero-primary">
-                        <i class="fab fa-whatsapp"></i> Message Us on WhatsApp
-                    </a>
-                </div>
-            </div>
-            <div style="text-align: center; margin-top: 2rem;">
-                <p style="color: var(--white); opacity: 0.8;">
-                    <i class="fas fa-envelope"></i> Sales: sales@z2blegacybuilders.co.za | Support: support@z2blegacybuilders.co.za
-                </p>
-                <p style="color: var(--white); opacity: 0.8; margin-top: 0.5rem;">
-                    <i class="fas fa-globe"></i> Website: z2blegacybuilders.co.za
-                </p>
+            <div data-aos="zoom-in">
+                <a href="#tiers" class="btn btn-lg" style="background: var(--navy-blue); color: var(--gold); padding: 1.2rem 3rem; border-radius: 50px; font-weight: bold; text-decoration: none; display: inline-block; font-size: 1.3rem;">
+                    <i class="fas fa-rocket"></i> Start Your 90-Day Journey
+                </a>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer>
+    <footer class="footer">
         <div class="container">
             <div class="row">
-                <div class="col-lg-4 mb-4">
-                    <div class="footer-brand">
-                        <i class="fas fa-gem"></i> Z2B LEGACY
-                    </div>
-                    <p style="opacity: 0.8;">
-                        Transforming Employees to Entrepreneurs. Build your billion-dollar legacy with AI-powered tools and proven team-building strategies.
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5>About Z2B</h5>
+                    <p style="color: var(--white); opacity: 0.9; line-height: 1.7;">
+                        Z2B Legacy Builders is a transformation company with a distribution network — helping employees become entrepreneurs through AI-powered coaching and proven frameworks.
                     </p>
-                    <div class="footer-social">
-                        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
-                    </div>
                 </div>
-                <div class="col-lg-2 col-md-6 mb-4">
-                    <h5 style="color: var(--gold); margin-bottom: 1.5rem;">Platform</h5>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5>Quick Links</h5>
                     <ul class="footer-links">
-                        <li><a href="#vision">Vision</a></li>
-                        <li><a href="#income-streams">Income Streams</a></li>
-                        <li><a href="#coach-manlaw">Coach Manlaw</a></li>
-                        <li><a href="#4m-table">4M Table</a></li>
-                        <li><a href="#apps">AI Apps</a></li>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#solution">Coach Manlaw</a></li>
+                        <li><a href="#ecosystem">Ecosystem</a></li>
+                        <li><a href="#beta">Beta Program</a></li>
                         <li><a href="#tiers">Membership</a></li>
-                        <li><a href="#contact">Contact</a></li>
                     </ul>
                 </div>
                 <div class="col-lg-3 col-md-6 mb-4">
-                    <h5 style="color: var(--gold); margin-bottom: 1.5rem;">Resources</h5>
+                    <h5>Legal</h5>
                     <ul class="footer-links">
-                        <li><a href="#">Training</a></li>
-                        <li><a href="#">Documentation</a></li>
-                        <li><a href="#">Community</a></li>
-                        <li><a href="#">Support</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Refund Policy</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Affiliate Disclaimer</a></li>
                     </ul>
                 </div>
                 <div class="col-lg-3 col-md-6 mb-4">
-                    <h5 style="color: var(--gold); margin-bottom: 1.5rem;">Contact</h5>
+                    <h5>Contact</h5>
                     <ul class="footer-links">
                         <li><a href="https://wa.me/27774901639"><i class="fab fa-whatsapp"></i> WhatsApp: 0774901639</a></li>
                         <li><i class="fas fa-envelope"></i> sales@z2blegacybuilders.co.za</li>
@@ -2127,17 +1948,21 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p style="color: var(--gold); font-weight: 600; font-size: 1.1rem; margin-bottom: 0.5rem;">
-                    <i class="fas fa-rocket"></i> Transforming Employees to Entrepreneurs
+                <p class="footer-tagline">
+                    <i class="fas fa-rocket"></i> Z2B Legacy Builders – Transforming Employees to Entrepreneurs and Ordinary People to Extraordinary Legacy Builders
                 </p>
-                <p>&copy; 2025 Z2B Legacy Builders. All Rights Reserved. Built with <i class="fas fa-heart" style="color: var(--orange);"></i> for Future Billionaires.</p>
+                <p style="color: var(--white); opacity: 0.8; margin-top: 1rem;">
+                    &copy; 2025 Z2B Legacy Builders. All Rights Reserved. Built with <i class="fas fa-heart" style="color: var(--orange);"></i> for Future Billionaires.
+                </p>
             </div>
         </div>
     </footer>
 
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
+        // Initialize AOS (Animate On Scroll)
         AOS.init({
             duration: 1000,
             once: true,
@@ -2150,272 +1975,27 @@
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
                 if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
+                    const navbarHeight = document.querySelector('.navbar').offsetHeight + 50; // Account for preview banner
+                    const targetPosition = target.offsetTop - navbarHeight;
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
                     });
                 }
             });
         });
-    </script>
 
-    <!-- Yoco Payment Integration -->
-    <script>
-        // Yoco Payment Integration for Tier Purchases
-        document.addEventListener('DOMContentLoaded', function() {
-            const paymentButtons = document.querySelectorAll('.yoco-payment-btn');
-
-            paymentButtons.forEach(button => {
-                button.addEventListener('click', async function() {
-                    const tierCode = this.dataset.tierCode;
-                    const tierName = this.dataset.tierName;
-                    const tierPrice = this.dataset.tierPrice;
-
-                    // Store original button content
-                    const originalContent = this.innerHTML;
-
-                    // Show loading state
-                    this.disabled = true;
-                    this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-
-                    try {
-                        console.log('[Z2B Payment] Button clicked:', tierCode, tierName);
-                        console.log('[Z2B Payment] Current URL:', window.location.href);
-                        
-                        // Get referral code from URL if present
-                        const urlParams = new URLSearchParams(window.location.search);
-                        const referralCode = urlParams.get('ref') || localStorage.getItem('z2b_referrer');
-                        console.log('[Z2B Payment] Referral code:', referralCode);
-
-                        // Redirect to register page with tier
-                        let registerUrl = `register.html?tier=${tierCode}`;
-                        if (referralCode) {
-                            registerUrl += `&ref=${referralCode}`;
-                        }
-                        window.location.href = registerUrl;
-                    } catch (error) {
-                        console.error('[Z2B Payment] ERROR:', error);
-                        console.error('[Z2B Payment] Error details:', error.message, error.stack);
-
-                        alert('Unable to process payment. Please try again or contact support at 0774901639');
-
-                        // Restore button
-                        this.disabled = false;
-                        this.innerHTML = originalContent;
-                    }
-                });
-            });
-
-            // Store referral code from URL if present
-            const urlParams = new URLSearchParams(window.location.search);
-            const refCode = urlParams.get('ref');
-            if (refCode) {
-                localStorage.setItem('z2b_referrer', refCode);
+        // Navbar background change on scroll
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.style.background = 'linear-gradient(135deg, rgba(10, 38, 71, 0.95) 0%, rgba(5, 20, 40, 0.95) 100%)';
+                navbar.style.backdropFilter = 'blur(10px)';
+            } else {
+                navbar.style.background = 'linear-gradient(135deg, var(--navy-blue) 0%, var(--dark-navy) 100%)';
+                navbar.style.backdropFilter = 'none';
             }
         });
-    </script>
-
-    <!-- Secret Admin Login via Copyright Click -->
-    <script>
-        // Secret Admin Access via Copyright
-        (function() {
-            let clickCount = 0;
-            let clickTimer = null;
-            const copyrightElement = document.querySelector('.footer-bottom p:last-child');
-            
-            if (copyrightElement) {
-                copyrightElement.style.cursor = 'pointer';
-                copyrightElement.style.userSelect = 'none';
-                
-                copyrightElement.addEventListener('click', function() {
-                    clickCount++;
-                    
-                    // Reset after 3 seconds of inactivity
-                    clearTimeout(clickTimer);
-                    clickTimer = setTimeout(() => {
-                        clickCount = 0;
-                    }, 3000);
-                    
-                    // Show progress
-                    if (clickCount >= 1 && clickCount < 5) {
-                        this.style.transform = 'scale(1.05)';
-                        setTimeout(() => {
-                            this.style.transform = 'scale(1)';
-                        }, 100);
-                    }
-                    
-                    // After 5 clicks, redirect to admin
-                    if (clickCount === 5) {
-                        this.style.background = 'linear-gradient(135deg, #FFD700, #FF6B35)';
-                        this.style.padding = '0.5rem';
-                        this.style.borderRadius = '10px';
-                        
-                        setTimeout(() => {
-                            window.location.href = '/admin.html';
-                        }, 500);
-                    }
-                });
-            }
-        })();
-    </script>
-
-    <!-- Referral Tracking System -->
-    <script>
-        (function() {
-            console.log('🔗 Referral Tracking System Initialized');
-
-            // Get referral code from URL
-            function getReferralCodeFromURL() {
-                const urlParams = new URLSearchParams(window.location.search);
-                return urlParams.get('ref') || urlParams.get('sponsor');
-            }
-
-            // Save referral code to sessionStorage
-            function saveReferralCode(code) {
-                if (code) {
-                    sessionStorage.setItem('z2b_referral_code', code);
-                    localStorage.setItem('z2b_referral_code', code); // Also save to localStorage for persistence
-                    console.log('✅ Referral code saved:', code);
-                }
-            }
-
-            // Get saved referral code
-            function getSavedReferralCode() {
-                return sessionStorage.getItem('z2b_referral_code') ||
-                       localStorage.getItem('z2b_referral_code');
-            }
-
-            // Update all registration links with referral code
-            function updateRegistrationLinks() {
-                const referralCode = getSavedReferralCode();
-
-                if (referralCode) {
-                    console.log('🔗 Updating registration links with code:', referralCode);
-
-                    // Find all links and buttons that go to register.html
-                    const registerLinks = document.querySelectorAll('a[href*="register.html"], button[onclick*="register.html"]');
-
-                    registerLinks.forEach(element => {
-                        if (element.tagName === 'A') {
-                            // Update anchor href
-                            const currentHref = element.getAttribute('href');
-                            if (currentHref && !currentHref.includes('ref=')) {
-                                const separator = currentHref.includes('?') ? '&' : '?';
-                                element.setAttribute('href', currentHref + separator + 'ref=' + referralCode);
-                                console.log('✅ Updated link:', element.getAttribute('href'));
-                            }
-                        } else if (element.tagName === 'BUTTON') {
-                            // Update button onclick
-                            const currentOnclick = element.getAttribute('onclick');
-                            if (currentOnclick && currentOnclick.includes('register.html')) {
-                                // Replace the onclick to include referral code
-                                const updatedOnclick = currentOnclick.replace(
-                                    /register\.html(\?[^'"]*)?(["'])/g,
-                                    function(match, params, quote) {
-                                        const hasParams = params && params.length > 1;
-                                        const separator = hasParams ? '&' : '?';
-                                        return 'register.html' + (params || '') + separator + 'ref=' + referralCode + quote;
-                                    }
-                                );
-                                element.setAttribute('onclick', updatedOnclick);
-                                console.log('✅ Updated button onclick');
-                            }
-                        }
-                    });
-
-                    // Also update the tier selection function if it exists
-                    if (typeof selectTier === 'function') {
-                        // Override selectTier to include referral code
-                        const originalSelectTier = window.selectTier;
-                        window.selectTier = function(tierCode, tierName) {
-                            console.log('🎯 Tier selected with referral tracking:', tierCode, referralCode);
-                            let registerUrl = `register.html?tier=${tierCode}`;
-                            if (referralCode) {
-                                registerUrl += `&ref=${referralCode}`;
-                            }
-                            window.location.href = registerUrl;
-                        };
-                        console.log('✅ selectTier function updated with referral tracking');
-                    }
-
-                    // Show notification that referral is tracked
-                    const sponsorNotice = document.createElement('div');
-                    sponsorNotice.style.cssText = `
-                        position: fixed;
-                        top: 20px;
-                        right: 20px;
-                        background: linear-gradient(135deg, #4CAF50, #45a049);
-                        color: white;
-                        padding: 1rem 1.5rem;
-                        border-radius: 12px;
-                        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-                        z-index: 10000;
-                        font-weight: 600;
-                        display: flex;
-                        align-items: center;
-                        gap: 0.5rem;
-                        animation: slideIn 0.5s ease-out;
-                    `;
-                    sponsorNotice.innerHTML = `
-                        <i class="fas fa-check-circle"></i>
-                        <span>Referral Code Tracked: ${referralCode}</span>
-                    `;
-                    document.body.appendChild(sponsorNotice);
-
-                    // Remove notification after 5 seconds
-                    setTimeout(() => {
-                        sponsorNotice.style.animation = 'slideOut 0.5s ease-in';
-                        setTimeout(() => sponsorNotice.remove(), 500);
-                    }, 5000);
-                }
-            }
-
-            // Add animations
-            const style = document.createElement('style');
-            style.textContent = `
-                @keyframes slideIn {
-                    from {
-                        transform: translateX(400px);
-                        opacity: 0;
-                    }
-                    to {
-                        transform: translateX(0);
-                        opacity: 1;
-                    }
-                }
-                @keyframes slideOut {
-                    from {
-                        transform: translateX(0);
-                        opacity: 1;
-                    }
-                    to {
-                        transform: translateX(400px);
-                        opacity: 0;
-                    }
-                }
-            `;
-            document.head.appendChild(style);
-
-            // Initialize on page load
-            document.addEventListener('DOMContentLoaded', function() {
-                // Check if referral code in URL
-                const urlReferralCode = getReferralCodeFromURL();
-
-                if (urlReferralCode) {
-                    // Save it
-                    saveReferralCode(urlReferralCode);
-                    console.log('✅ Captured referral code from URL:', urlReferralCode);
-                }
-
-                // Update all registration links
-                updateRegistrationLinks();
-
-                // Re-update links after a short delay (in case they're loaded dynamically)
-                setTimeout(updateRegistrationLinks, 1000);
-            });
-
-            console.log('✅ Referral Tracking System Ready');
-        })();
     </script>
 </body>
 </html>
