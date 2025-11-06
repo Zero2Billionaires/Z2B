@@ -56,6 +56,15 @@
             font-weight: bold;
             color: var(--gold) !important;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .navbar-logo {
+            height: 50px;
+            width: auto;
+            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.5));
         }
 
         .nav-link {
@@ -296,6 +305,13 @@
             margin: 0 auto 2rem;
             border: 8px solid var(--gold);
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .coach-avatar-large img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         /* 4 Legs Cards */
@@ -1121,8 +1137,11 @@
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
             <a class="navbar-brand" href="#home">
-                <i class="fas fa-gem"></i> Z2B LEGACY BUILDERS
-                <div style="font-size: 0.5rem; font-weight: 500; letter-spacing: 1px; margin-top: -5px;">TRANSFORMING EMPLOYEES TO ENTREPRENEURS</div>
+                <img src="images/z2b-logo.png" alt="Z2B Logo" class="navbar-logo">
+                <div>
+                    <div style="font-size: 1.8rem; font-weight: bold;">Z2B LEGACY BUILDERS</div>
+                    <div style="font-size: 0.5rem; font-weight: 500; letter-spacing: 1px; margin-top: -5px;">TRANSFORMING EMPLOYEES TO ENTREPRENEURS</div>
+                </div>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" style="background-color: var(--gold);">
                 <span class="navbar-toggler-icon"></span>
@@ -1217,7 +1236,9 @@
             <div class="coach-intro-box" data-aos="zoom-in">
                 <div class="row align-items-center">
                     <div class="col-lg-4">
-                        <div class="coach-avatar-large">🤖</div>
+                        <div class="coach-avatar-large">
+                            <img src="images/coach-manlaw.png" alt="Coach ManLaw">
+                        </div>
                     </div>
                     <div class="col-lg-8">
                         <h3 style="color: var(--navy-blue); font-size: 2.2rem; font-weight: bold; margin-bottom: 1.5rem;">
