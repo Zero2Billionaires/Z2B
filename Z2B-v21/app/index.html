@@ -396,16 +396,18 @@
 
         .timeline-stages {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
         .stage-item {
             background: linear-gradient(145deg, var(--light-gold), var(--white));
-            padding: 4rem 3rem;
-            border-radius: 30px;
+            padding: 3rem 2rem;
+            border-radius: 20px;
             text-align: center;
-            border: 6px solid var(--gold);
+            border: 4px solid var(--gold);
             transition: all 0.3s;
             position: relative;
         }
@@ -417,11 +419,11 @@
 
         .stage-number {
             position: absolute;
-            top: -30px;
+            top: -25px;
             left: 50%;
             transform: translateX(-50%);
-            width: 70px;
-            height: 70px;
+            width: 50px;
+            height: 50px;
             background: linear-gradient(135deg, var(--navy-blue), var(--orange));
             color: var(--white);
             border-radius: 50%;
@@ -429,21 +431,21 @@
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            font-size: 2rem;
+            font-size: 1.5rem;
         }
 
         .stage-name {
             color: var(--navy-blue);
-            font-size: 2.4rem;
+            font-size: 1.6rem;
             font-weight: bold;
-            margin-top: 2rem;
+            margin-top: 1.5rem;
         }
 
         .stage-description {
             color: var(--dark-navy);
-            font-size: 1.8rem;
-            line-height: 2.8;
-            margin-top: 1rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            margin-top: 0.75rem;
             opacity: 0.85;
         }
 
@@ -1127,6 +1129,13 @@
         }
 
         /* Responsive Design */
+        @media (max-width: 1024px) {
+            .timeline-stages {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+        }
+
         @media (max-width: 768px) {
             .hero h1 {
                 font-size: 2.5rem;
@@ -1146,6 +1155,7 @@
 
             .timeline-stages {
                 grid-template-columns: 1fr;
+                gap: 1.5rem;
             }
 
             .four-legs-grid,
