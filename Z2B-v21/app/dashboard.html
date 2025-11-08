@@ -83,6 +83,14 @@
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
         }
 
+        .sidebar-logo {
+            width: 60px;
+            height: auto;
+            display: block;
+            margin: 0 auto 1rem auto;
+            filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.5));
+        }
+
         .nav-item {
             padding: 0.8rem 1.5rem;
             cursor: pointer;
@@ -859,6 +867,7 @@
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-brand" onclick="openAdminDoor()" title="Click 3 times for Admin Access">
+            <img src="images/z2b-logo.png" alt="Z2B Logo" class="sidebar-logo">
             <h3><i class="fas fa-gem"></i> Z2B LEGACY</h3>
             <p
                 style="font-size: 0.7rem; margin-top: 0.5rem; color: var(--gold); font-weight: 600; letter-spacing: 0.5px;">
@@ -1417,7 +1426,7 @@
                             <i class="fas fa-robot"></i>
                             <span>Chat with Coach</span>
                         </div>
-                        <div class="quick-action-btn">
+                        <div class="quick-action-btn" onclick="openInviteBuilderModal()">
                             <div class="feature-tooltip">
                                 📨 Generate your unique referral link and invite new builders to join your team. Earn
                                 ISP commissions instantly and build your legacy organization!
@@ -1433,7 +1442,7 @@
                             <i class="fas fa-shopping-cart"></i>
                             <span>Browse Market</span>
                         </div>
-                        <div class="quick-action-btn">
+                        <div class="quick-action-btn" onclick="window.location.href='vidzie.html'">
                             <div class="feature-tooltip">
                                 🎥 Access our extensive library of training videos covering mindset, money, marketing,
                                 and management. Learn the skills you need to build a billion-dollar legacy!
@@ -1465,7 +1474,7 @@
                             <i class="fas fa-gas-pump" style="color: var(--orange);"></i>
                             <span>AI Fuel Top-Up</span>
                         </div>
-                        <div class="quick-action-btn">
+                        <div class="quick-action-btn" onclick="openShareLinkModal()">
                             <div class="feature-tooltip">
                                 🔗 Share your referral link on social media, via email, or with prospects. Track your
                                 referrals and watch your team grow!
@@ -1597,11 +1606,37 @@
                         return;
                     }
 
-                    // PENDING users get 14-day grace period for Coach Manlaw
+                    // PENDING users (paid tiers only) get 14-day grace period for Coach Manlaw
+                    // FAM tier users have 30-day free trial (not PENDING logic)
                     let isPendingGracePeriod = false;
                     let daysRemaining = 0;
+                    let isFAMTrial = false;
+                    let famDaysRemaining = 0;
 
-                    if (user.accountStatus === 'PENDING') {
+                    // Check FAM tier 30-day trial
+                    if (user.tier === 'FAM' && user.famExpiryDate) {
+                        isFAMTrial = true;
+                        const now = new Date();
+                        const expiryDate = new Date(user.famExpiryDate);
+                        famDaysRemaining = Math.ceil((expiryDate - now) / (1000 * 60 * 60 * 24));
+
+                        // Cap at 30 days maximum (for users with old 90-day expiry in database)
+                        if (famDaysRemaining > 30) {
+                            famDaysRemaining = 30;
+                        }
+
+                        if (famDaysRemaining <= 0) {
+                            // FAM trial expired
+                            alert('⏰ Your 30-day FREE trial has expired.\n\n✨ Upgrade to Bronze tier (R480/month) to continue accessing Coach Manlaw and unlock more features!\n\nContact support via WhatsApp: 077 490 1639');
+                            localStorage.removeItem('z2b_token');
+                            localStorage.removeItem('z2b_current_user');
+                            window.location.href = 'login.html';
+                            return;
+                        }
+                    }
+
+                    // PENDING logic only for paid tiers (not FAM)
+                    if (user.accountStatus === 'PENDING' && user.tier !== 'FAM') {
                         const createdDate = new Date(user.createdAt);
                         const now = new Date();
                         const daysSinceCreation = Math.floor((now - createdDate) / (1000 * 60 * 60 * 24));
@@ -1612,7 +1647,7 @@
                             isPendingGracePeriod = true;
                         } else {
                             // Grace period expired - block access
-                            alert('⏰ Your 14-day trial has expired.\n\nPlease complete payment to continue accessing Coach Manlaw.\n\nFor cash deposits, send proof of payment to WhatsApp: 077 490 1639');
+                            alert('⏰ Your 14-day grace period has expired.\n\nPlease complete payment to continue accessing Coach Manlaw.\n\nFor cash deposits, send proof of payment to WhatsApp: 077 490 1639');
                             localStorage.removeItem('z2b_token');
                             localStorage.removeItem('z2b_current_user');
                             window.location.href = 'login.html';
@@ -1632,6 +1667,9 @@
                         accountStatus: user.accountStatus,
                         isPendingGracePeriod: isPendingGracePeriod,
                         graceDaysRemaining: daysRemaining,
+                        isFAMTrial: isFAMTrial,
+                        famDaysRemaining: famDaysRemaining,
+                        famExpiryDate: user.famExpiryDate,
                         aiFuel: user.fuelCredits || 0,
                         pvPoints: user.currentMonthPV || 0,
                         lifetimePV: user.lifetimePV || 0,
@@ -1643,13 +1681,21 @@
 
                     localStorage.setItem('z2b_current_user', JSON.stringify(dashboardUser));
 
-                    // Set up Z2BAppAccess
-                    if (window.Z2BAppAccess) {
-                        window.Z2BAppAccess.currentUser = dashboardUser;
+                    // Set up Z2BAppAccess - ensure it exists and set current user
+                    if (!window.Z2BAppAccess) {
+                        window.Z2BAppAccess = {};
                     }
+                    window.Z2BAppAccess.currentUser = dashboardUser;
+                    console.log('✅ User initialized:', {
+                        name: dashboardUser.name,
+                        tier: dashboardUser.tier,
+                        tierName: dashboardUser.tierName
+                    });
 
                     // Apply tier-based restrictions
-                    if (isPendingGracePeriod) {
+                    if (isFAMTrial) {
+                        applyFAMTrialRestrictions(famDaysRemaining);
+                    } else if (isPendingGracePeriod) {
                         applyPendingRestrictions(daysRemaining);
                     } else {
                         applyTierRestrictions(user.tier, user.freeAppAccess);
@@ -1786,6 +1832,67 @@
             }
         }
 
+        // Apply restrictions for FAM tier users (30-day free trial)
+        function applyFAMTrialRestrictions(famDaysRemaining) {
+            // Hide apps not included in FAM tier
+            const appsToHide = ['ai-refuel', 'vidzie', 'zynth', 'glowie', 'benown'];
+            appsToHide.forEach(app => {
+                const links = document.querySelectorAll(`[href*="${app}"]`);
+                links.forEach(el => el.parentElement.style.display = 'none');
+            });
+
+            // Show FAM trial status banner
+            const famBanner = document.createElement('div');
+            famBanner.style.cssText = 'background: linear-gradient(135deg, #4CAF50, #66BB6A); border: 3px solid #2E7D32; padding: 1.5rem; margin: 1rem; border-radius: 15px; box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);';
+            famBanner.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                    <div style="background: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-gift" style="font-size: 2rem; color: #4CAF50;"></i>
+                    </div>
+                    <div style="flex: 1;">
+                        <h4 style="color: white; margin: 0; font-size: 1.5rem; font-weight: bold;">
+                            🎉 FREE 30-Day Trial - ${famDaysRemaining} Days Remaining
+                        </h4>
+                        <p style="color: rgba(255,255,255,0.9); margin: 0.5rem 0 0 0;">
+                            Enjoying your FREE Coach Manlaw experience
+                        </p>
+                    </div>
+                </div>
+                <div style="background: rgba(255,255,255,0.15); padding: 1rem; border-radius: 10px; backdrop-filter: blur(10px);">
+                    <p style="color: white; margin: 0 0 1rem 0; font-size: 1.05rem; line-height: 1.6;">
+                        <strong>📚 Current Access:</strong> Coach Manlaw AI Training<br>
+                        <strong>⏳ Trial Expires In:</strong> ${famDaysRemaining} day${famDaysRemaining > 1 ? 's' : ''}<br>
+                        <strong>🔥 Weekly Credits:</strong> 5 AI Fuel credits per week
+                    </p>
+                    <div style="background: white; padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+                        <p style="color: #2E7D32; margin: 0 0 0.5rem 0; font-weight: 600;">
+                            <i class="fas fa-star"></i> Upgrade to Bronze (R480/month) to unlock:
+                        </p>
+                        <ul style="color: #495057; margin: 0; padding-left: 1.5rem;">
+                            <li><strong>100 AI Fuel</strong> monthly credits</li>
+                            <li><strong>Team Sales Commission (TSC)</strong> - 3 generations</li>
+                            <li><strong>Individual Sales Profit (ISP)</strong> - up to 45%</li>
+                            <li><strong>Marketplace</strong> access to sell digital products</li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+            const mainContent = document.querySelector('.main-content');
+            if (mainContent) {
+                mainContent.insertBefore(famBanner, mainContent.firstChild);
+            }
+
+            // Dim (but don't completely hide) income/compensation features
+            const compensationLinks = document.querySelectorAll('[href*="income"], [href*="compensation"], [href*="team"]');
+            compensationLinks.forEach(el => {
+                if (el.parentElement) {
+                    el.parentElement.style.opacity = '0.5';
+                    el.style.pointerEvents = 'none';
+                    el.setAttribute('title', 'Upgrade to Bronze tier to unlock');
+                }
+            });
+        }
+
         // Apply restrictions for PENDING users (14-day grace period)
         function applyPendingRestrictions(daysRemaining) {
             // Hide ALL apps except Coach Manlaw
@@ -1808,14 +1915,14 @@
                             ⏰ PAYMENT PENDING - ${daysRemaining} Days Remaining
                         </h4>
                         <p style="color: rgba(255,255,255,0.9); margin: 0.5rem 0 0 0;">
-                            Your account is in 14-day trial period
+                            Your account is in 14-day grace period
                         </p>
                     </div>
                 </div>
                 <div style="background: rgba(255,255,255,0.15); padding: 1rem; border-radius: 10px; backdrop-filter: blur(10px);">
                     <p style="color: white; margin: 0 0 1rem 0; font-size: 1.05rem; line-height: 1.6;">
                         <strong>📚 Current Access:</strong> Coach Manlaw training only<br>
-                        <strong>⏳ Trial Expires In:</strong> ${daysRemaining} day${daysRemaining > 1 ? 's' : ''}<br>
+                        <strong>⏳ Grace Period Expires In:</strong> ${daysRemaining} day${daysRemaining > 1 ? 's' : ''}<br>
                         <strong>💳 Action Required:</strong> Complete payment to unlock full features
                     </p>
                     <div style="background: white; padding: 1rem; border-radius: 8px; margin-top: 1rem;">
@@ -1849,17 +1956,22 @@
         // Update top bar with tier from Z2BAppAccess
         function updateTopBar() {
             // Wait for Z2BAppAccess to be available
-            if (!window.Z2BAppAccess) {
+            if (!window.Z2BAppAccess || !window.Z2BAppAccess.currentUser) {
+                console.log('⏳ Waiting for user data...', window.Z2BAppAccess);
                 setTimeout(updateTopBar, 100);
                 return;
             }
 
             const user = window.Z2BAppAccess.currentUser;
+            console.log('✅ Updating top bar with user:', user);
 
             // Update user name
             const userNameEl = document.getElementById('userName');
-            if (userNameEl) {
+            if (userNameEl && user.name) {
                 userNameEl.textContent = user.name;
+                console.log('✅ User name updated:', user.name);
+            } else {
+                console.warn('⚠️ Cannot update user name:', { userNameEl, userName: user.name });
             }
 
             // Update tier badge - use tierName from user object
@@ -1867,7 +1979,8 @@
             if (tierBadgeEl) {
                 if (user.tierName) {
                     tierBadgeEl.textContent = user.tierName;
-                } else {
+                    console.log('✅ Tier badge updated:', user.tierName);
+                } else if (user.tier) {
                     // Fallback tier names
                     const tierNames = {
                         'FAM': 'FAM - Free Affiliate',
@@ -1876,10 +1989,15 @@
                         'SILVER': 'Silver Legacy Builder',
                         'GOLD': 'Gold Legacy Builder',
                         'PLATINUM': 'Platinum Legacy Builder',
-                        'LIFETIME': 'Platinum Legacy Builder'
+                        'LIFETIME': 'Lifetime Legacy Builder'
                     };
                     tierBadgeEl.textContent = tierNames[user.tier] || user.tier;
+                    console.log('✅ Tier badge updated (fallback):', tierNames[user.tier]);
+                } else {
+                    console.warn('⚠️ No tier information available');
                 }
+            } else {
+                console.warn('⚠️ Tier badge element not found');
             }
 
             // Update avatar initials
@@ -1888,6 +2006,7 @@
                 const nameParts = user.name.split(' ');
                 const initials = nameParts.map(part => part[0]).join('');
                 avatarEl.textContent = initials.toUpperCase();
+                console.log('✅ Avatar updated:', initials);
             }
         }
 
@@ -1944,42 +2063,42 @@
 
         // MASTER INITIALIZATION - Consolidate all initialization in correct order
         document.addEventListener('DOMContentLoaded', function () {
-            // Wait for app-config.js to load, then initialize everything in sequence
-            function masterInit() {
-                if (!window.Z2BAppAccess || !window.Z2B_TIERS || !window.Z2B_APPS) {
-                    setTimeout(masterInit, 50);
-                    return;
-                }
+            // Initialize Z2BAppAccess if not loaded from external JS
+            if (!window.Z2BAppAccess) {
+                window.Z2BAppAccess = {};
+            }
+            if (!window.Z2B_TIERS) {
+                window.Z2B_TIERS = {};
+            }
+            if (!window.Z2B_APPS) {
+                window.Z2B_APPS = {};
+            }
 
-                // Step 1: Initialize user as LIFETIME tier (Premium Legacy Builder)
-                initializeUser();
+            // Wait for dependencies, then initialize everything in sequence
+            async function masterInit() {
 
-                // Step 2: Force reload Z2BAppAccess to pick up the LIFETIME user
-                if (window.Z2BAppAccess) {
-                    const lifetimeUser = JSON.parse(localStorage.getItem('z2b_current_user'));
-                    if (lifetimeUser) {
-                        window.Z2BAppAccess.currentUser = lifetimeUser;
-                    }
-                }
+                // Step 1: Initialize user and WAIT for user data to load from API
+                await initializeUser();
 
-                // Step 3: Update top bar
+                // Step 2: Update top bar with loaded user data
                 updateTopBar();
 
-                // Step 4: Update dashboard stats with actual user data
+                // Step 3: Update dashboard stats with actual user data
                 updateDashboardStats();
 
-                // Step 5: Load referral info (membership number and link)
+                // Step 4: Load referral info (membership number and link)
                 loadReferralInfo();
 
-                // Step 6: Initialize upgrade motivator
+                // Step 5: Initialize upgrade motivator
                 initializeUpgradeMotivator();
 
                 // Step 7: Update navigation with access badges
-                setTimeout(() => {
-                    if (window.Z2BAppAccess) {
-                        updateNavigationWithAccess();
-                    }
-                }, 100);
+                // Note: Commented out to prevent errors when app-config.js not loaded
+                // setTimeout(() => {
+                //     if (window.Z2BAppAccess) {
+                //         updateNavigationWithAccess();
+                //     }
+                // }, 100);
             }
 
             // Start master initialization
@@ -2039,8 +2158,66 @@
             }
         }
 
+        // Invite Builder Modal
+        function openInviteBuilderModal() {
+            const user = window.Z2BAppAccess?.currentUser;
+            if (!user || !user.referralCode) {
+                alert('⚠️ Unable to load your referral information. Please refresh the page.');
+                return;
+            }
+
+            const frontendURL = 'https://z2blegacybuilders.co.za';
+            const referralLink = `${frontendURL}/register.html?ref=${user.referralCode}`;
+
+            const message = `📨 Invite Builders to Your Team!\n\nYour Referral Code: ${user.referralCode}\n\nYour Referral Link:\n${referralLink}\n\n✨ Share this link with prospects to earn ISP commissions and build your legacy!\n\nLink copied to clipboard!`;
+
+            // Copy to clipboard
+            navigator.clipboard.writeText(referralLink).then(() => {
+                alert(message);
+            }).catch(() => {
+                alert(message.replace('Link copied to clipboard!', 'Copy the link above manually.'));
+            });
+        }
+
+        // Share Link Modal
+        function openShareLinkModal() {
+            const user = window.Z2BAppAccess?.currentUser;
+            if (!user || !user.referralCode) {
+                alert('⚠️ Unable to load your referral information. Please refresh the page.');
+                return;
+            }
+
+            const frontendURL = 'https://z2blegacybuilders.co.za';
+            const referralLink = `${frontendURL}/register.html?ref=${user.referralCode}`;
+
+            const shareMessage = `🚀 Join me in building a billion-dollar legacy with Z2B Legacy Builders!\n\n✨ Get access to:\n- Coach Manlaw AI Training\n- 7 Income Streams\n- Exclusive AI Apps\n- Network Marketing Tools\n\nRegister now: ${referralLink}`;
+
+            // Try to use native share API if available
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Join Z2B Legacy Builders',
+                    text: shareMessage,
+                    url: referralLink
+                }).catch(() => {
+                    // Fallback if share cancelled
+                    copyAndAlert(referralLink);
+                });
+            } else {
+                // Fallback to copy to clipboard
+                copyAndAlert(referralLink);
+            }
+        }
+
+        function copyAndAlert(link) {
+            navigator.clipboard.writeText(link).then(() => {
+                alert(`🔗 Your Referral Link:\n\n${link}\n\n✅ Link copied to clipboard!\n\nShare it on:\n- WhatsApp\n- Facebook\n- Email\n- SMS\n\nStart building your team today!`);
+            }).catch(() => {
+                alert(`🔗 Your Referral Link:\n\n${link}\n\nCopy this link and share it with prospects!`);
+            });
+        }
+
         // Tier Upgrade Motivator Logic
-        function initializeUpgradeMotivator() {
+        async function initializeUpgradeMotivator() {
             // Get current user tier from Z2BAppAccess
             const userTierCode = window.Z2BAppAccess.currentUser.tier; // e.g., 'GOLD'
             const tierData = window.Z2B_TIERS[userTierCode];
@@ -2057,15 +2234,50 @@
             };
 
             const currentUserTier = tierDisplayMap[userTierCode] || 'FAM';
-            const monthlyTeamSales = 8500; // Example: R8,500 in team sales this month
-            const newBuildersThisMonth = 5; // Number of new builders invited this month
+
+            // Get REAL statistics from user data and backend
+            const currentUser = window.Z2BAppAccess.currentUser;
+            const monthlyTeamSales = (currentUser.pvPoints || 0) * 10; // PV points × R10 average
+
+            // Fetch monthly referrals from backend
+            let monthlyReferrals = 0;
+            try {
+                const token = localStorage.getItem('z2b_token');
+                const response = await fetch(`${API_BASE_URL}/api/auth/me/monthly-stats`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    monthlyReferrals = result.data.monthlyReferrals || 0;
+                    console.log('✅ Monthly referrals loaded:', monthlyReferrals);
+                } else {
+                    console.warn('⚠️ Could not load monthly stats, using total referrals');
+                    monthlyReferrals = currentUser.directReferrals || 0;
+                }
+            } catch (error) {
+                console.error('❌ Error loading monthly stats:', error);
+                // Fallback to total referrals if API fails
+                monthlyReferrals = currentUser.directReferrals || 0;
+            }
 
             const motivatorContainer = document.getElementById('upgradeMotivator');
 
-            // Calculate upgrade deadline (3rd of next month)
-            const now = new Date();
-            const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 3);
-            const daysLeft = Math.ceil((nextMonth - now) / (1000 * 60 * 60 * 24));
+            // Calculate deadline: FAM users show trial expiry, paid tiers show upgrade deadline
+            let daysLeft = 0;
+            let deadlineText = '';
+
+            if (currentUserTier === 'FAM' && window.Z2BAppAccess.currentUser.famDaysRemaining) {
+                // FAM tier: Show trial expiry countdown
+                daysLeft = window.Z2BAppAccess.currentUser.famDaysRemaining;
+                deadlineText = `⏰ Trial Expires: <span class="countdown-timer">${daysLeft} days left</span>`;
+            } else {
+                // Paid tiers: Show monthly upgrade deadline (3rd of next month)
+                const now = new Date();
+                const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 3);
+                daysLeft = Math.ceil((nextMonth - now) / (1000 * 60 * 60 * 24));
+                deadlineText = `⏰ Upgrade Deadline: <span class="countdown-timer">${daysLeft} days left</span> (by 3rd)`;
+            }
 
             // Tier-specific motivator content
             const motivatorData = {
@@ -2077,7 +2289,7 @@
                     missedAIFuel: '100 AI Fuel',
                     missedPV: '100 PV Points',
                     spilloverWarning: true,
-                    newBuildersCount: newBuildersThisMonth
+                    newBuildersCount: monthlyReferrals // Real count from database (this month only)
                 },
                 'Bronze': {
                     nextTier: 'Copper',
@@ -2130,7 +2342,7 @@
                         What You're Missing Out On This Month
                     </div>
                     <div class="upgrade-deadline">
-                        ⏰ Upgrade Deadline: <span class="countdown-timer">${daysLeft} days left</span> (by 3rd)
+                        ${deadlineText}
                     </div>
                 </div>
 
@@ -2157,11 +2369,11 @@
                     ` : ''}
                 </div>
 
-                ${data.spilloverWarning ? `
+                ${data.spilloverWarning && data.newBuildersCount > 0 ? `
                 <div class="spillover-warning">
                     <div class="warning-icon">⚠️</div>
                     <h4>CRITICAL: Your New Builders Are At Risk!</h4>
-                    <p><strong>You invited ${data.newBuildersCount} new builders this month.</strong> If you don't upgrade to at least Bronze by the 3rd of next month, <strong style="color: var(--orange);">they will be LOST to you FOREVER!</strong></p>
+                    <p><strong>You invited ${data.newBuildersCount} new builder${data.newBuildersCount > 1 ? 's' : ''} this month.</strong> If you don't upgrade to at least Bronze by the 3rd of next month, <strong style="color: var(--orange);">they will be LOST to you FOREVER!</strong></p>
                     <p>They will be allocated as <strong>spillovers to active builders</strong> who ARE qualified. You'll only keep the one-time 20% ISP commission from this month.</p>
                     <p><strong style="color: var(--gold);">Upgrade now to secure them in your team and start earning TSC, TLI, and build your legacy!</strong></p>
                 </div>
@@ -2446,7 +2658,7 @@
                     <label style="display: block; color: var(--royal-gold-light); margin-bottom: 0.5rem; font-weight: 600;">
                         <i class="fas fa-lock"></i> Password
                     </label>
-                    <input type="password" id="adminPassword" required style="width: 100%; padding: 0.8rem; border: 2px solid var(--royal-gold); border-radius: 10px; background: rgba(255,255,255,0.1); color: white; font-size: 1rem;">
+                    <input type="password" id="adminLoginPassword" required style="width: 100%; padding: 0.8rem; border: 2px solid var(--royal-gold); border-radius: 10px; background: rgba(255,255,255,0.1); color: white; font-size: 1rem;">
                 </div>
 
                 <div id="adminLoginError" style="display: none; background: rgba(255,0,0,0.2); border: 1px solid #ff4444; color: #ff6666; padding: 0.8rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.9rem;">
@@ -2520,7 +2732,7 @@
             const modal = document.getElementById('adminLoginModal');
             modal.style.display = 'none';
             document.getElementById('adminUsername').value = '';
-            document.getElementById('adminPassword').value = '';
+            document.getElementById('adminLoginPassword').value = '';
             hideAdminLoginError();
         }
 
@@ -2537,7 +2749,7 @@
 
         async function handleAdminLogin() {
             const username = document.getElementById('adminUsername').value;
-            const password = document.getElementById('adminPassword').value;
+            const password = document.getElementById('adminLoginPassword').value;
 
             if (!username || !password) {
                 showAdminLoginError('Please enter both username and password');
@@ -2693,8 +2905,9 @@
     </script>
 
     <!-- Z2B Ecosystem Integration -->
-    <script src="../js/app-config.js"></script>
-    <script src="../js/ecosystem-footer.js"></script>
+    <!-- Note: Commented out to prevent 404 errors. Enable if js/ folder is deployed to production -->
+    <!-- <script src="../js/app-config.js"></script> -->
+    <!-- <script src="../js/ecosystem-footer.js"></script> -->
 </body>
 
 </html>
