@@ -179,8 +179,9 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">ID Number *</label>
-                        <input type="text" class="form-control" id="idNumber" name="idNumber" required>
+                        <label class="form-label">Z2B SPONSOR ID *</label>
+                        <input type="text" class="form-control" id="idNumber" name="idNumber" placeholder="Auto-filled from referral link or enter manually" required>
+                        <small class="text-muted">Your sponsor's ID will auto-fill if you used a referral link</small>
                     </div>
 
                     <div class="mb-4">
@@ -342,6 +343,12 @@
             const sponsorCode = getSponsorCodeFromURL();
             if (sponsorCode) {
                 document.getElementById('sponsorCode').value = sponsorCode;
+
+                // Auto-fill the Z2B SPONSOR ID field
+                document.getElementById('idNumber').value = sponsorCode;
+                document.getElementById('idNumber').style.backgroundColor = '#e8f5e9';
+                document.getElementById('idNumber').style.borderColor = '#4CAF50';
+
                 document.getElementById('sponsorInfo').style.display = 'block';
                 document.getElementById('sponsorDetails').innerHTML = `<i class="fas fa-spinner fa-spin"></i> Loading sponsor information...`;
 
@@ -410,17 +417,17 @@
                     paymentMethod: document.querySelector('input[name="paymentMethod"]:checked')?.value
                 };
 
-                // Validate payment method
-                if (!formData.paymentMethod) {
-                    alert('Please select a payment method');
+                // Validate tier selection first
+                if (!formData.tier) {
+                    alert('Please select a membership tier');
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = originalText;
                     return;
                 }
 
-                // Validate tier selection
-                if (!formData.tier || formData.tier === 'FAM') {
-                    alert('Please select a paid membership tier');
+                // For paid tiers, validate payment method
+                if (formData.tier !== 'FAM' && !formData.paymentMethod) {
+                    alert('Please select a payment method');
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = originalText;
                     return;
@@ -440,8 +447,13 @@
                     // Show success message
                     alert(`🎉 Registration Successful!\n\nWelcome ${formData.firstName}!\n\nYour Member ID: ${result.data.referralCode}\n\nA welcome email with your login credentials and referral link has been sent to ${formData.email}`);
 
-                    // Handle payment redirection
-                    if (formData.paymentMethod === 'cash') {
+                    // Handle FAM tier (Free Access Member - no payment required)
+                    if (formData.tier === 'FAM') {
+                        alert('🎉 Welcome to your FREE 30-Day Coach Manlaw Trial!\n\nYou get 5 AI credits per week to experience Coach Manlaw.\n\nLogin to your dashboard to start your transformation journey!');
+                        window.location.href = 'dashboard.html';
+                    }
+                    // Handle payment redirection for paid tiers
+                    else if (formData.paymentMethod === 'cash') {
                         alert('You now have FREE ACCESS to your selected tier!\n\nPlease make your deposit and send proof of payment to WhatsApp: 077 490 1639');
                         window.location.href = 'dashboard.html';
                     } else if (formData.paymentMethod === 'online') {
