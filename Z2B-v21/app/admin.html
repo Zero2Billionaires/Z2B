@@ -526,7 +526,7 @@
             <!-- FAM Management Section -->
             <div id="fam" class="content-section">
                 <h2>FAM Tier Management</h2>
-                <p>Manage Free Access Members (FAM) - 3 Month Trial with 5 Credits/Month</p>
+                <p>Manage Free Access Members (FAM) - 30 Day Trial with 5 Credits/Week</p>
 
                 <!-- FAM Statistics Cards -->
                 <div class="stats-grid" style="margin-bottom: 2rem;">
@@ -621,7 +621,7 @@
             const password = document.getElementById('password').value;
 
             try {
-                const response = await fetch(`${API_URL}/auth/admin/login`, {
+                const response = await fetch(`${API_URL}/auth/login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, password })
