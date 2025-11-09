@@ -528,15 +528,19 @@
             members.forEach((member, index) => {
                 const initials = getInitials(member.fullName);
                 const joinDate = new Date(member.joinedDate).toLocaleDateString();
+                const genBadge = member.generation || 1;
 
                 html += `
-                    <div class="team-member-card">
+                    <div class="team-member-card" style="cursor: pointer; transition: all 0.3s;" onclick="toggleMemberDetails('member-${index}')">
                         <div class="member-info">
                             <div class="member-avatar">${initials}</div>
                             <div class="member-details">
-                                <div class="member-name">${member.fullName}</div>
+                                <div class="member-name">
+                                    ${member.fullName}
+                                    <i class="fas fa-chevron-down" id="chevron-member-${index}" style="font-size: 0.8rem; margin-left: 0.5rem; transition: transform 0.3s;"></i>
+                                </div>
                                 <div class="member-meta">
-                                    <span class="generation-badge">Gen 1</span>
+                                    <span class="generation-badge">Gen ${genBadge}</span>
                                     <span class="tier-badge">${member.tier}</span>
                                     <span style="margin-left: 0.5rem;">
                                         <i class="fas fa-calendar"></i> Joined ${joinDate}
@@ -547,11 +551,79 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Expandable Details Section -->
+                        <div id="member-${index}" style="display: none; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 2px solid rgba(255,215,0,0.3);">
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+                                <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 10px;">
+                                    <div style="color: var(--gold); font-weight: bold; margin-bottom: 0.5rem;">
+                                        <i class="fas fa-envelope"></i> Email
+                                    </div>
+                                    <div style="color: var(--white); word-break: break-all;">${member.email || 'Not provided'}</div>
+                                    ${member.email ? `<button onclick="event.stopPropagation(); copyToClipboard('${member.email}', 'Email')" style="margin-top: 0.5rem; padding: 0.4rem 0.8rem; background: var(--navy-blue); color: var(--gold); border: 1px solid var(--gold); border-radius: 5px; cursor: pointer; font-size: 0.85rem;">
+                                        <i class="fas fa-copy"></i> Copy
+                                    </button>` : ''}
+                                </div>
+
+                                <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 10px;">
+                                    <div style="color: var(--gold); font-weight: bold; margin-bottom: 0.5rem;">
+                                        <i class="fas fa-phone"></i> Phone / WhatsApp
+                                    </div>
+                                    <div style="color: var(--white);">${member.phone || 'Not provided'}</div>
+                                    ${member.phone ? `
+                                        <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+                                            <button onclick="event.stopPropagation(); copyToClipboard('${member.phone}', 'Phone')" style="flex: 1; padding: 0.4rem 0.8rem; background: var(--navy-blue); color: var(--gold); border: 1px solid var(--gold); border-radius: 5px; cursor: pointer; font-size: 0.85rem;">
+                                                <i class="fas fa-copy"></i> Copy
+                                            </button>
+                                            <button onclick="event.stopPropagation(); window.open('https://wa.me/${member.phone.replace(/^0/, '27')}', '_blank')" style="flex: 1; padding: 0.4rem 0.8rem; background: #25D366; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 0.85rem;">
+                                                <i class="fab fa-whatsapp"></i> WhatsApp
+                                            </button>
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            </div>
+
+                            <div style="background: rgba(255,215,0,0.1); padding: 1rem; border-radius: 10px; border: 2px solid var(--gold);">
+                                <div style="color: var(--gold); font-weight: bold; margin-bottom: 0.5rem;">
+                                    <i class="fas fa-link"></i> Their Referral Link
+                                </div>
+                                <div style="display: flex; gap: 0.5rem; align-items: center;">
+                                    <input type="text" value="${member.referralLink}" readonly style="flex: 1; padding: 0.6rem; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,215,0,0.5); border-radius: 5px; color: var(--white); font-size: 0.9rem;">
+                                    <button onclick="event.stopPropagation(); copyToClipboard('${member.referralLink}', 'Referral link')" style="padding: 0.6rem 1.2rem; background: var(--gold); color: var(--navy-blue); border: none; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 0.9rem;">
+                                        <i class="fas fa-copy"></i> Copy Link
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 `;
             });
 
             container.innerHTML = html;
+        }
+
+        // Toggle member details
+        function toggleMemberDetails(memberId) {
+            const detailsDiv = document.getElementById(memberId);
+            const chevron = document.getElementById(`chevron-${memberId}`);
+
+            if (detailsDiv.style.display === 'none') {
+                detailsDiv.style.display = 'block';
+                chevron.style.transform = 'rotate(180deg)';
+            } else {
+                detailsDiv.style.display = 'none';
+                chevron.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        // Copy to clipboard
+        function copyToClipboard(text, label) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert(`${label} copied to clipboard!`);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+                alert('Failed to copy. Please try again.');
+            });
         }
 
         // Get initials from name

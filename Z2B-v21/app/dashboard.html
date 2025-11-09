@@ -1042,16 +1042,16 @@
                 <div class="stat-label">Total Earnings (This Month)</div>
             </div>
 
-            <div class="stat-card">
+            <div class="stat-card" style="cursor: pointer; transition: all 0.3s;" onclick="window.location.href='team.html'" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 10px 25px rgba(255,215,0,0.3)';" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='';">
                 <div class="feature-tooltip">
                     👥 The total number of builders in your team across all generations. Grow your team to increase your
-                    earnings and unlock deeper TSC and TLI levels!
+                    earnings and unlock deeper TSC and TLI levels! <strong>Click to view your team details!</strong>
                 </div>
                 <div class="stat-icon">
                     <i class="fas fa-users"></i>
                 </div>
                 <div class="stat-value" id="teamMembers">0</div>
-                <div class="stat-label">Team Members</div>
+                <div class="stat-label">Team Members <i class="fas fa-external-link-alt" style="font-size: 0.8rem; margin-left: 0.5rem;"></i></div>
             </div>
 
             <div class="stat-card" style="background: linear-gradient(145deg, #FFF4CC, #FFE5A0); border-left-color: var(--orange); cursor: pointer;" onclick="window.location.href='ai-refuel.html'">
