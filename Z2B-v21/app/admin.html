@@ -1157,6 +1157,327 @@
 
         // ========== END COMMUNICATIONS FUNCTIONS ==========
 
+        // ========== USER MANAGEMENT COMMUNICATIONS ==========
+
+        // Update selected count
+        function updateSelectedCount() {
+            const checkboxes = document.querySelectorAll('.user-checkbox:checked');
+            const count = checkboxes.length;
+            const countElement = document.getElementById('selectedCount');
+            if (countElement) {
+                countElement.textContent = count;
+            }
+        }
+
+        // Select all users
+        function selectAllUsers() {
+            const checkboxes = document.querySelectorAll('.user-checkbox');
+            checkboxes.forEach(cb => cb.checked = true);
+            const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+            if (selectAllCheckbox) selectAllCheckbox.checked = true;
+            updateSelectedCount();
+        }
+
+        // Deselect all users
+        function deselectAllUsers() {
+            const checkboxes = document.querySelectorAll('.user-checkbox');
+            checkboxes.forEach(cb => cb.checked = false);
+            const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+            if (selectAllCheckbox) selectAllCheckbox.checked = false;
+            updateSelectedCount();
+        }
+
+        // Toggle all users
+        function toggleAllUsers(checked) {
+            const checkboxes = document.querySelectorAll('.user-checkbox');
+            checkboxes.forEach(cb => cb.checked = checked);
+            updateSelectedCount();
+        }
+
+        // Get selected users
+        function getSelectedUsers() {
+            const checkboxes = document.querySelectorAll('.user-checkbox:checked');
+            const users = [];
+            checkboxes.forEach(cb => {
+                try {
+                    const userData = cb.getAttribute('data-user');
+                    const user = JSON.parse(userData.replace(/&#39;/g, "'"));
+                    users.push(user);
+                } catch (e) {
+                    console.error('Error parsing user data:', e);
+                }
+            });
+            return users;
+        }
+
+        // Send to selected users
+        function sendToSelected(channel) {
+            const users = getSelectedUsers();
+
+            if (users.length === 0) {
+                alert('Please select at least one builder');
+                return;
+            }
+
+            // Switch to communications section
+            const commLink = document.querySelector('[data-section="communications"]');
+            if (commLink) {
+                commLink.click();
+            }
+
+            // Wait for section to load, then pre-fill data
+            setTimeout(() => {
+                if (channel === 'whatsapp') {
+                    // Open WhatsApp for each selected user
+                    const phoneNumbers = users.map(u => u.phone).filter(p => p);
+                    if (phoneNumbers.length === 0) {
+                        alert('No phone numbers found for selected builders');
+                        return;
+                    }
+
+                    // Show template selector
+                    showMessageTemplateModal(users, channel);
+                } else if (channel === 'sms') {
+                    // Show SMS tab and pre-fill
+                    const smsTab = document.querySelector('[data-tab="sms"]');
+                    if (smsTab) smsTab.click();
+
+                    showMessageTemplateModal(users, channel);
+                } else if (channel === 'email') {
+                    // Show email tab and pre-fill
+                    const emailTab = document.querySelector('[data-tab="email"]');
+                    if (emailTab) emailTab.click();
+
+                    showMessageTemplateModal(users, channel);
+                }
+            }, 300);
+        }
+
+        // Send to individual user
+        function sendToUser(user, channel) {
+            // Switch to communications section
+            const commLink = document.querySelector('[data-section="communications"]');
+            if (commLink) {
+                commLink.click();
+            }
+
+            setTimeout(() => {
+                if (channel === 'whatsapp') {
+                    if (!user.phone) {
+                        alert('No phone number found for this user');
+                        return;
+                    }
+                    // Open WhatsApp directly
+                    const formattedPhone = user.phone.replace(/^0/, '27');
+                    const message = `Hi ${user.firstName}, `;
+                    window.open(`https://wa.me/${formattedPhone}?text=${encodeURIComponent(message)}`, '_blank');
+                } else if (channel === 'sms') {
+                    const smsTab = document.querySelector('[data-tab="sms"]');
+                    if (smsTab) smsTab.click();
+
+                    setTimeout(() => {
+                        document.querySelector('input[name="sms-recipient"][value="individual"]').checked = true;
+                        document.querySelector('input[name="sms-recipient"][value="individual"]').dispatchEvent(new Event('change'));
+                        document.getElementById('sms-phone').value = user.phone || '';
+                        document.getElementById('sms-message').value = `Hi ${user.firstName}, `;
+                        document.getElementById('sms-message').focus();
+                    }, 100);
+                } else if (channel === 'email') {
+                    const emailTab = document.querySelector('[data-tab="email"]');
+                    if (emailTab) emailTab.click();
+
+                    setTimeout(() => {
+                        document.querySelector('input[name="email-recipient"][value="individual"]').checked = true;
+                        document.querySelector('input[name="email-recipient"][value="individual"]').dispatchEvent(new Event('change'));
+                        document.getElementById('email-address').value = user.email || '';
+                        document.getElementById('email-subject').value = `Hi ${user.firstName}`;
+                        document.getElementById('email-message').value = `Hi ${user.firstName},\n\n`;
+                        document.getElementById('email-message').focus();
+                    }, 100);
+                }
+            }, 300);
+        }
+
+        // View user details modal
+        function viewUserDetails(user) {
+            const referralLink = `${window.location.origin}/register.html?ref=${user.referralCode}`;
+
+            const modal = document.createElement('div');
+            modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 10000; padding: 2rem;';
+
+            modal.innerHTML = `
+                <div style="background: white; padding: 2rem; border-radius: 15px; max-width: 600px; width: 100%; max-height: 90vh; overflow-y: auto;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <h2 style="margin: 0; color: var(--navy-blue);">
+                            <i class="fas fa-user-circle"></i> Builder Details
+                        </h2>
+                        <button onclick="this.closest('div').closest('div').remove()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #666;">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+
+                    <div style="background: linear-gradient(135deg, var(--navy-blue), var(--medium-blue)); color: white; padding: 1.5rem; border-radius: 10px; margin-bottom: 1.5rem;">
+                        <h3 style="margin: 0 0 0.5rem 0;">${user.firstName} ${user.lastName}</h3>
+                        <p style="margin: 0; opacity: 0.9;">${user.tier || 'FAM'} Legacy Builder</p>
+                    </div>
+
+                    <div style="display: grid; gap: 1rem;">
+                        <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px;">
+                            <label style="font-weight: bold; color: var(--navy-blue); font-size: 0.85rem;">Z2B MEMBER ID</label>
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem;">
+                                <span style="background: #e8f5e9; color: #28a745; padding: 0.5rem 1rem; border-radius: 5px; font-weight: bold; font-family: monospace; flex: 1;">${user.referralCode || 'N/A'}</span>
+                                <button onclick="navigator.clipboard.writeText('${user.referralCode}')" style="padding: 0.5rem 1rem; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px;">
+                            <label style="font-weight: bold; color: var(--navy-blue); font-size: 0.85rem;">EMAIL</label>
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem;">
+                                <span style="flex: 1; font-family: monospace;">${user.email || 'N/A'}</span>
+                                <button onclick="navigator.clipboard.writeText('${user.email || ''}')" style="padding: 0.5rem 1rem; background: var(--navy-blue); color: var(--gold); border: none; border-radius: 5px; cursor: pointer;">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px;">
+                            <label style="font-weight: bold; color: var(--navy-blue); font-size: 0.85rem;">PHONE / WHATSAPP</label>
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem;">
+                                <span style="flex: 1; font-family: monospace;">${user.phone || 'N/A'}</span>
+                                <button onclick="navigator.clipboard.writeText('${user.phone || ''}')" style="padding: 0.5rem 1rem; background: #25D366; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px;">
+                            <label style="font-weight: bold; color: var(--navy-blue); font-size: 0.85rem;">REFERRAL LINK</label>
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem;">
+                                <input type="text" value="${referralLink}" readonly style="flex: 1; padding: 0.5rem; border: 1px solid #ddd; border-radius: 5px; font-size: 0.85rem; font-family: monospace;">
+                                <button onclick="navigator.clipboard.writeText('${referralLink}'); alert('Link copied!')" style="padding: 0.5rem 1rem; background: var(--gold); color: var(--navy-blue); border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                                    <i class="fas fa-copy"></i> Copy
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                        <button onclick='sendToUser(${JSON.stringify(user).replace(/'/g, "&#39;")}, "whatsapp"); this.closest("div").closest("div").remove();' style="flex: 1; padding: 0.8rem; background: #25D366; color: white; border: none; border-radius: 50px; cursor: pointer; font-weight: bold;">
+                            <i class="fab fa-whatsapp"></i> WhatsApp
+                        </button>
+                        <button onclick='sendToUser(${JSON.stringify(user).replace(/'/g, "&#39;")}, "sms"); this.closest("div").closest("div").remove();' style="flex: 1; padding: 0.8rem; background: var(--orange); color: white; border: none; border-radius: 50px; cursor: pointer; font-weight: bold;">
+                            <i class="fas fa-sms"></i> SMS
+                        </button>
+                        <button onclick='sendToUser(${JSON.stringify(user).replace(/'/g, "&#39;")}, "email"); this.closest("div").closest("div").remove();' style="flex: 1; padding: 0.8rem; background: var(--navy-blue); color: var(--gold); border: none; border-radius: 50px; cursor: pointer; font-weight: bold;">
+                            <i class="fas fa-envelope"></i> Email
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+
+            // Close on outside click
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            });
+        }
+
+        // Message template modal
+        function showMessageTemplateModal(users, channel) {
+            const modal = document.createElement('div');
+            modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 10000; padding: 2rem;';
+
+            const templates = {
+                welcome: `Hi {name},\n\nWelcome to Z2B Legacy Builders! Your journey to financial freedom starts now. Check your dashboard for resources and start building your legacy today! 💎`,
+                upgrade: `Hi {name},\n\nReady to unlock the full Z2B experience? Upgrade to ${users[0]?.tier === 'FAM' ? 'Bronze' : 'the next tier'} and get instant access to all apps + bonus AI credits! Limited time: 50% off beta pricing! 🚀`,
+                followup: `Hi {name},\n\nI noticed you haven't logged in recently. Need any help getting started? I'm here to support your success! Let's build your legacy together. 💪`,
+                announcement: `Hi {name},\n\nExciting news! We've just launched new features on Z2B. Login to your dashboard to explore them. Your success is our priority! ✨`,
+                custom: `Hi {name},\n\n`
+            };
+
+            modal.innerHTML = `
+                <div style="background: white; padding: 2rem; border-radius: 15px; max-width: 600px; width: 100%; max-height: 90vh; overflow-y: auto;">
+                    <h2 style="margin: 0 0 1rem 0; color: var(--navy-blue);">
+                        <i class="fas fa-envelope-open-text"></i> Choose Message Template
+                    </h2>
+                    <p style="color: #666; margin-bottom: 1.5rem;">Sending to ${users.length} builder(s) via ${channel}</p>
+
+                    <div style="display: grid; gap: 1rem; margin-bottom: 1.5rem;">
+                        ${Object.keys(templates).map(key => `
+                            <button onclick="selectTemplate('${key}', '${channel}', this)" style="text-align: left; padding: 1rem; background: #f8f9fa; border: 2px solid #e0e0e0; border-radius: 10px; cursor: pointer; transition: all 0.3s;">
+                                <strong style="color: var(--navy-blue); display: block; margin-bottom: 0.5rem; text-transform: capitalize;">${key} Message</strong>
+                                <small style="color: #666; white-space: pre-wrap;">${templates[key].substring(0, 100)}...</small>
+                            </button>
+                        `).join('')}
+                    </div>
+
+                    <button onclick="this.closest('div').closest('div').remove()" style="width: 100%; padding: 1rem; background: #6c757d; color: white; border: none; border-radius: 50px; cursor: pointer; font-weight: bold;">
+                        Cancel
+                    </button>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+
+            window.selectTemplate = function(templateKey, channel, button) {
+                const users = getSelectedUsers();
+                const template = templates[templateKey];
+
+                modal.remove();
+
+                if (channel === 'whatsapp') {
+                    users.forEach((user, index) => {
+                        if (!user.phone) return;
+                        const message = template.replace(/{name}/g, user.firstName);
+                        const formattedPhone = user.phone.replace(/^0/, '27');
+                        setTimeout(() => {
+                            window.open(`https://wa.me/${formattedPhone}?text=${encodeURIComponent(message)}`, '_blank');
+                        }, index * 2000);
+                    });
+                    alert(`Opening WhatsApp for ${users.length} builder(s). Each will open in a new tab with 2-second delays.`);
+                } else if (channel === 'sms') {
+                    const smsTab = document.querySelector('[data-tab="sms"]');
+                    if (smsTab) smsTab.click();
+                    setTimeout(() => {
+                        // Set to individual or all based on count
+                        if (users.length === 1) {
+                            document.querySelector('input[name="sms-recipient"][value="individual"]').checked = true;
+                            document.querySelector('input[name="sms-recipient"][value="individual"]').dispatchEvent(new Event('change'));
+                            document.getElementById('sms-phone').value = users[0].phone;
+                            document.getElementById('sms-message').value = template.replace(/{name}/g, users[0].firstName);
+                        } else {
+                            // For multiple, use first name as placeholder
+                            document.getElementById('sms-message').value = template.replace(/{name}/g, '[Name]');
+                            alert('Template loaded! Remember to personalize {name} tags before sending to multiple users.');
+                        }
+                    }, 100);
+                } else if (channel === 'email') {
+                    const emailTab = document.querySelector('[data-tab="email"]');
+                    if (emailTab) emailTab.click();
+                    setTimeout(() => {
+                        if (users.length === 1) {
+                            document.querySelector('input[name="email-recipient"][value="individual"]').checked = true;
+                            document.querySelector('input[name="email-recipient"][value="individual"]').dispatchEvent(new Event('change'));
+                            document.getElementById('email-address').value = users[0].email;
+                            document.getElementById('email-subject').value = templateKey.charAt(0).toUpperCase() + templateKey.slice(1);
+                            document.getElementById('email-message').value = template.replace(/{name}/g, users[0].firstName);
+                        } else {
+                            document.getElementById('email-subject').value = templateKey.charAt(0).toUpperCase() + templateKey.slice(1);
+                            document.getElementById('email-message').value = template;
+                            alert('Template loaded! The {name} tag will be automatically replaced for each recipient.');
+                        }
+                    }, 100);
+                }
+            };
+        }
+
+        // ========== END USER MANAGEMENT COMMUNICATIONS ==========
+
         // Check if already logged in
         if (authToken) {
             verifyToken();
@@ -2122,23 +2443,66 @@
                 return;
             }
 
+            // Communication Action Buttons
+            const actionButtonsHTML = `
+                <div style="background: white; padding: 1.5rem; border-radius: 10px; margin-bottom: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                        <div>
+                            <h4 style="margin: 0 0 0.5rem 0; color: var(--navy-blue);">
+                                <span id="selectedCount">0</span> Builder(s) Selected
+                            </h4>
+                            <button onclick="selectAllUsers()" style="padding: 0.5rem 1rem; background: var(--navy-blue); color: var(--gold); border: none; border-radius: 5px; cursor: pointer; font-size: 0.85rem; margin-right: 0.5rem;">
+                                <i class="fas fa-check-square"></i> Select All
+                            </button>
+                            <button onclick="deselectAllUsers()" style="padding: 0.5rem 1rem; background: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 0.85rem;">
+                                <i class="fas fa-square"></i> Deselect All
+                            </button>
+                        </div>
+                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                            <button onclick="sendToSelected('whatsapp')" style="padding: 0.7rem 1.5rem; background: #25D366; color: white; border: none; border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 0.9rem;">
+                                <i class="fab fa-whatsapp"></i> WhatsApp Selected
+                            </button>
+                            <button onclick="sendToSelected('sms')" style="padding: 0.7rem 1.5rem; background: linear-gradient(135deg, var(--gold), var(--orange)); color: var(--navy-blue); border: none; border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 0.9rem;">
+                                <i class="fas fa-sms"></i> SMS Selected
+                            </button>
+                            <button onclick="sendToSelected('email')" style="padding: 0.7rem 1.5rem; background: var(--navy-blue); color: var(--gold); border: none; border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 0.9rem;">
+                                <i class="fas fa-envelope"></i> Email Selected
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
             const tableHTML = `
+                ${actionButtonsHTML}
                 <table style="width: 100%; border-collapse: collapse;">
                     <thead>
                         <tr style="background: var(--navy-blue); color: white;">
+                            <th style="padding: 1rem; text-align: center; border-bottom: 2px solid #ddd; width: 50px;">
+                                <input type="checkbox" id="selectAllCheckbox" onchange="toggleAllUsers(this.checked)" style="width: 18px; height: 18px; cursor: pointer;">
+                            </th>
                             <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #ddd;">Name</th>
                             <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #ddd;">Email</th>
                             <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #ddd;">Member #</th>
                             <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #ddd;">Phone</th>
                             <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #ddd;">Tier</th>
-                            <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #ddd;">Status</th>
-                            <th style="padding: 1rem; text-align: center; border-bottom: 2px solid #ddd;">Actions</th>
+                            <th style="padding: 1rem; text-align: center; border-bottom: 2px solid #ddd;">Quick Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         ${users.map((user, index) => `
-                            <tr style="background: ${index % 2 === 0 ? '#f8f9fa' : 'white'}; border-bottom: 1px solid #eee;">
-                                <td style="padding: 1rem;">${user.firstName} ${user.lastName}</td>
+                            <tr style="background: ${index % 2 === 0 ? '#f8f9fa' : 'white'}; border-bottom: 1px solid #eee;" class="user-row">
+                                <td style="padding: 1rem; text-align: center;">
+                                    <input type="checkbox" class="user-checkbox" data-user='${JSON.stringify(user).replace(/'/g, "&#39;")}' onchange="updateSelectedCount()" style="width: 18px; height: 18px; cursor: pointer;">
+                                </td>
+                                <td style="padding: 1rem;">
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <strong>${user.firstName} ${user.lastName}</strong>
+                                        <button onclick='viewUserDetails(${JSON.stringify(user).replace(/'/g, "&#39;")})' style="padding: 0.2rem 0.5rem; background: #17a2b8; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 0.75rem;">
+                                            <i class="fas fa-info-circle"></i> View
+                                        </button>
+                                    </div>
+                                </td>
                                 <td style="padding: 1rem;">${user.email || 'N/A'}</td>
                                 <td style="padding: 1rem;">
                                     <span style="background: #e8f5e9; color: #28a745; padding: 0.3rem 0.8rem; border-radius: 5px; font-size: 0.85rem; font-weight: bold; font-family: monospace;">
@@ -2151,18 +2515,24 @@
                                         ${user.tier || 'FAM'}
                                     </span>
                                 </td>
-                                <td style="padding: 1rem;">
-                                    <span style="background: ${user.createdByAdmin ? '#28a745' : '#17a2b8'}; color: white; padding: 0.3rem 0.8rem; border-radius: 5px; font-size: 0.85rem;">
-                                        ${user.createdByAdmin ? 'Manual Access' : 'Active'}
-                                    </span>
-                                </td>
                                 <td style="padding: 1rem; text-align: center;">
-                                    <button onclick='editUser(${JSON.stringify(user).replace(/'/g, "\\'")} )' style="padding: 0.4rem 0.8rem; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; margin-right: 0.5rem; font-size: 0.85rem;">
-                                        <i class="fas fa-edit"></i> Edit
-                                    </button>
-                                    <button onclick="deleteUser('${user._id}')" style="padding: 0.4rem 0.8rem; background: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 0.85rem;">
-                                        <i class="fas fa-trash"></i> Delete
-                                    </button>
+                                    <div style="display: flex; gap: 0.3rem; justify-content: center; flex-wrap: wrap;">
+                                        <button onclick='sendToUser(${JSON.stringify(user).replace(/'/g, "&#39;")}, "whatsapp")' title="Send WhatsApp" style="padding: 0.4rem 0.7rem; background: #25D366; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 0.85rem;">
+                                            <i class="fab fa-whatsapp"></i>
+                                        </button>
+                                        <button onclick='sendToUser(${JSON.stringify(user).replace(/'/g, "&#39;")}, "sms")' title="Send SMS" style="padding: 0.4rem 0.7rem; background: var(--orange); color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 0.85rem;">
+                                            <i class="fas fa-sms"></i>
+                                        </button>
+                                        <button onclick='sendToUser(${JSON.stringify(user).replace(/'/g, "&#39;")}, "email")' title="Send Email" style="padding: 0.4rem 0.7rem; background: var(--navy-blue); color: var(--gold); border: none; border-radius: 5px; cursor: pointer; font-size: 0.85rem;">
+                                            <i class="fas fa-envelope"></i>
+                                        </button>
+                                        <button onclick='editUser(${JSON.stringify(user).replace(/'/g, "&#39;")})' title="Edit User" style="padding: 0.4rem 0.7rem; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 0.85rem;">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button onclick="deleteUser('${user._id}')" title="Delete User" style="padding: 0.4rem 0.7rem; background: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 0.85rem;">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
                         `).join('')}
