@@ -138,15 +138,20 @@ router.get('/members', verifyUserToken, async (req, res) => {
         if (generation === 'all' || generation === '1') {
             // Get Generation 1 (direct referrals)
             const gen1 = await User.find({ sponsorId: user._id })
-                .select('firstName lastName email tier referralCode createdAt')
+                .select('firstName lastName email phone tier referralCode createdAt')
                 .sort({ createdAt: -1 });
 
             members = members.concat(gen1.map(m => ({
                 fullName: `${m.firstName} ${m.lastName}`,
+                firstName: m.firstName,
+                lastName: m.lastName,
+                email: m.email,
+                phone: m.phone,
                 membershipNumber: m.referralCode,
                 tier: m.tier,
                 joinedDate: m.createdAt,
-                generation: 1
+                generation: 1,
+                referralLink: `https://z2blegacybuilders.co.za/register.html?ref=${m.referralCode}`
             })));
         }
 
@@ -156,15 +161,20 @@ router.get('/members', verifyUserToken, async (req, res) => {
             const gen1Ids = gen1.map(m => m._id);
 
             const gen2 = await User.find({ sponsorId: { $in: gen1Ids } })
-                .select('firstName lastName email tier referralCode createdAt')
+                .select('firstName lastName email phone tier referralCode createdAt')
                 .sort({ createdAt: -1 });
 
             members = members.concat(gen2.map(m => ({
                 fullName: `${m.firstName} ${m.lastName}`,
+                firstName: m.firstName,
+                lastName: m.lastName,
+                email: m.email,
+                phone: m.phone,
                 membershipNumber: m.referralCode,
                 tier: m.tier,
                 joinedDate: m.createdAt,
-                generation: 2
+                generation: 2,
+                referralLink: `https://z2blegacybuilders.co.za/register.html?ref=${m.referralCode}`
             })));
         }
 
@@ -176,15 +186,20 @@ router.get('/members', verifyUserToken, async (req, res) => {
             const gen2Ids = gen2.map(m => m._id);
 
             const gen3 = await User.find({ sponsorId: { $in: gen2Ids } })
-                .select('firstName lastName email tier referralCode createdAt')
+                .select('firstName lastName email phone tier referralCode createdAt')
                 .sort({ createdAt: -1 });
 
             members = members.concat(gen3.map(m => ({
                 fullName: `${m.firstName} ${m.lastName}`,
+                firstName: m.firstName,
+                lastName: m.lastName,
+                email: m.email,
+                phone: m.phone,
                 membershipNumber: m.referralCode,
                 tier: m.tier,
                 joinedDate: m.createdAt,
-                generation: 3
+                generation: 3,
+                referralLink: `https://z2blegacybuilders.co.za/register.html?ref=${m.referralCode}`
             })));
         }
 
