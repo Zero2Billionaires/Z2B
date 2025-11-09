@@ -467,6 +467,7 @@
                 <li><a href="#" class="menu-link active" data-section="overview"><i class="fas fa-tachometer-alt"></i> Overview</a></li>
                 <li><a href="#" class="menu-link" data-section="tiers"><i class="fas fa-layer-group"></i> Tiers & Pricing</a></li>
                 <li><a href="#" class="menu-link" data-section="users"><i class="fas fa-users"></i> User Management</a></li>
+                <li><a href="#" class="menu-link" data-section="communications"><i class="fas fa-comments"></i> Communications</a></li>
                 <li><a href="#" class="menu-link" data-section="content"><i class="fas fa-book"></i> Content Management</a></li>
                 <li><a href="#" class="menu-link" data-section="compensation"><i class="fas fa-dollar-sign"></i> Compensation Plan</a></li>
                 <li><a href="#" class="menu-link" data-section="branding"><i class="fas fa-palette"></i> Branding</a></li>
@@ -518,6 +519,202 @@
             <!-- Other sections will be added via JavaScript -->
             <div id="tiers" class="content-section"></div>
             <div id="users" class="content-section"></div>
+
+            <!-- Communications Section -->
+            <div id="communications" class="content-section">
+                <h2><i class="fas fa-comments"></i> Communications Center</h2>
+                <p>Contact your builders via WhatsApp, SMS, or Email</p>
+
+                <!-- Communication Tabs -->
+                <div style="display: flex; gap: 1rem; margin-bottom: 2rem; border-bottom: 2px solid #e0e0e0;">
+                    <button class="comm-tab active" data-tab="whatsapp" style="padding: 1rem 2rem; border: none; background: none; cursor: pointer; border-bottom: 3px solid var(--gold); font-weight: bold; color: var(--navy-blue);">
+                        <i class="fab fa-whatsapp"></i> WhatsApp
+                    </button>
+                    <button class="comm-tab" data-tab="sms" style="padding: 1rem 2rem; border: none; background: none; cursor: pointer; border-bottom: 3px solid transparent; color: #666;">
+                        <i class="fas fa-sms"></i> SMS
+                    </button>
+                    <button class="comm-tab" data-tab="email" style="padding: 1rem 2rem; border: none; background: none; cursor: pointer; border-bottom: 3px solid transparent; color: #666;">
+                        <i class="fas fa-envelope"></i> Email
+                    </button>
+                </div>
+
+                <!-- WhatsApp Tab Content -->
+                <div id="whatsapp-content" class="comm-content active">
+                    <div style="background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                        <h3 style="color: #25D366; margin-bottom: 1.5rem;"><i class="fab fa-whatsapp"></i> Send WhatsApp Message</h3>
+
+                        <!-- Recipient Selection -->
+                        <div style="margin-bottom: 1.5rem;">
+                            <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--navy-blue);">Send To:</label>
+                            <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                    <input type="radio" name="whatsapp-recipient" value="all" checked>
+                                    <span>All Builders</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                    <input type="radio" name="whatsapp-recipient" value="tier">
+                                    <span>By Tier</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                    <input type="radio" name="whatsapp-recipient" value="individual">
+                                    <span>Individual</span>
+                                </label>
+                            </div>
+
+                            <!-- Tier Selection (hidden by default) -->
+                            <div id="whatsapp-tier-select" style="display: none; margin-top: 1rem;">
+                                <select id="whatsapp-tier" style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 8px;">
+                                    <option value="">Select Tier...</option>
+                                    <option value="FAM">FAM - Free Affiliate</option>
+                                    <option value="BRONZE">Bronze Legacy Builder</option>
+                                    <option value="COPPER">Copper Legacy Builder</option>
+                                    <option value="SILVER">Silver Legacy Builder</option>
+                                    <option value="GOLD">Gold Legacy Builder</option>
+                                    <option value="PLATINUM">Platinum Legacy Builder</option>
+                                    <option value="LIFETIME">Lifetime Legacy Builder</option>
+                                </select>
+                            </div>
+
+                            <!-- Individual Selection (hidden by default) -->
+                            <div id="whatsapp-individual-select" style="display: none; margin-top: 1rem;">
+                                <input type="text" id="whatsapp-phone" placeholder="Enter phone number (e.g., 0774901639)" style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 8px;">
+                            </div>
+                        </div>
+
+                        <!-- Message -->
+                        <div style="margin-bottom: 1.5rem;">
+                            <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--navy-blue);">Message:</label>
+                            <textarea id="whatsapp-message" rows="6" placeholder="Type your message here..." style="width: 100%; padding: 1rem; border: 2px solid #e0e0e0; border-radius: 8px; font-family: inherit; resize: vertical;"></textarea>
+                            <small style="color: #666;">Message will be sent via WhatsApp Web or WhatsApp Business API</small>
+                        </div>
+
+                        <!-- Send Button -->
+                        <button onclick="sendWhatsAppMessage()" style="padding: 1rem 3rem; background: #25D366; color: white; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; font-size: 1.1rem;">
+                            <i class="fab fa-whatsapp"></i> Send WhatsApp Message
+                        </button>
+                    </div>
+                </div>
+
+                <!-- SMS Tab Content -->
+                <div id="sms-content" class="comm-content" style="display: none;">
+                    <div style="background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                        <h3 style="color: #FF6B35; margin-bottom: 1.5rem;"><i class="fas fa-sms"></i> Send SMS</h3>
+
+                        <!-- Recipient Selection -->
+                        <div style="margin-bottom: 1.5rem;">
+                            <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--navy-blue);">Send To:</label>
+                            <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                    <input type="radio" name="sms-recipient" value="all" checked>
+                                    <span>All Builders</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                    <input type="radio" name="sms-recipient" value="tier">
+                                    <span>By Tier</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                    <input type="radio" name="sms-recipient" value="individual">
+                                    <span>Individual</span>
+                                </label>
+                            </div>
+
+                            <!-- Tier Selection -->
+                            <div id="sms-tier-select" style="display: none; margin-top: 1rem;">
+                                <select id="sms-tier" style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 8px;">
+                                    <option value="">Select Tier...</option>
+                                    <option value="FAM">FAM - Free Affiliate</option>
+                                    <option value="BRONZE">Bronze Legacy Builder</option>
+                                    <option value="COPPER">Copper Legacy Builder</option>
+                                    <option value="SILVER">Silver Legacy Builder</option>
+                                    <option value="GOLD">Gold Legacy Builder</option>
+                                    <option value="PLATINUM">Platinum Legacy Builder</option>
+                                    <option value="LIFETIME">Lifetime Legacy Builder</option>
+                                </select>
+                            </div>
+
+                            <!-- Individual Selection -->
+                            <div id="sms-individual-select" style="display: none; margin-top: 1rem;">
+                                <input type="text" id="sms-phone" placeholder="Enter phone number (e.g., 0774901639)" style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 8px;">
+                            </div>
+                        </div>
+
+                        <!-- Message -->
+                        <div style="margin-bottom: 1.5rem;">
+                            <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--navy-blue);">Message:</label>
+                            <textarea id="sms-message" rows="4" placeholder="Type your SMS message here... (Max 160 characters recommended)" maxlength="160" style="width: 100%; padding: 1rem; border: 2px solid #e0e0e0; border-radius: 8px; font-family: inherit; resize: vertical;"></textarea>
+                            <small style="color: #666;"><span id="sms-char-count">0</span>/160 characters</small>
+                        </div>
+
+                        <!-- Send Button -->
+                        <button onclick="sendSMS()" style="padding: 1rem 3rem; background: linear-gradient(135deg, var(--gold), var(--orange)); color: var(--navy-blue); border: none; border-radius: 50px; font-weight: bold; cursor: pointer; font-size: 1.1rem;">
+                            <i class="fas fa-sms"></i> Send SMS
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Email Tab Content -->
+                <div id="email-content" class="comm-content" style="display: none;">
+                    <div style="background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                        <h3 style="color: var(--navy-blue); margin-bottom: 1.5rem;"><i class="fas fa-envelope"></i> Send Email</h3>
+
+                        <!-- Recipient Selection -->
+                        <div style="margin-bottom: 1.5rem;">
+                            <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--navy-blue);">Send To:</label>
+                            <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                    <input type="radio" name="email-recipient" value="all" checked>
+                                    <span>All Builders</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                    <input type="radio" name="email-recipient" value="tier">
+                                    <span>By Tier</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                    <input type="radio" name="email-recipient" value="individual">
+                                    <span>Individual</span>
+                                </label>
+                            </div>
+
+                            <!-- Tier Selection -->
+                            <div id="email-tier-select" style="display: none; margin-top: 1rem;">
+                                <select id="email-tier" style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 8px;">
+                                    <option value="">Select Tier...</option>
+                                    <option value="FAM">FAM - Free Affiliate</option>
+                                    <option value="BRONZE">Bronze Legacy Builder</option>
+                                    <option value="COPPER">Copper Legacy Builder</option>
+                                    <option value="SILVER">Silver Legacy Builder</option>
+                                    <option value="GOLD">Gold Legacy Builder</option>
+                                    <option value="PLATINUM">Platinum Legacy Builder</option>
+                                    <option value="LIFETIME">Lifetime Legacy Builder</option>
+                                </select>
+                            </div>
+
+                            <!-- Individual Selection -->
+                            <div id="email-individual-select" style="display: none; margin-top: 1rem;">
+                                <input type="text" id="email-address" placeholder="Enter email address" style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 8px;">
+                            </div>
+                        </div>
+
+                        <!-- Subject -->
+                        <div style="margin-bottom: 1.5rem;">
+                            <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--navy-blue);">Subject:</label>
+                            <input type="text" id="email-subject" placeholder="Email subject" style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 8px;">
+                        </div>
+
+                        <!-- Message -->
+                        <div style="margin-bottom: 1.5rem;">
+                            <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--navy-blue);">Message:</label>
+                            <textarea id="email-message" rows="8" placeholder="Type your email message here..." style="width: 100%; padding: 1rem; border: 2px solid #e0e0e0; border-radius: 8px; font-family: inherit; resize: vertical;"></textarea>
+                        </div>
+
+                        <!-- Send Button -->
+                        <button onclick="sendEmail()" style="padding: 1rem 3rem; background: var(--navy-blue); color: var(--gold); border: none; border-radius: 50px; font-weight: bold; cursor: pointer; font-size: 1.1rem;">
+                            <i class="fas fa-envelope"></i> Send Email
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             <div id="content" class="content-section"></div>
             <div id="compensation" class="content-section"></div>
             <div id="branding" class="content-section"></div>
@@ -653,6 +850,312 @@
             localStorage.removeItem('admin_token');
             location.reload();
         }
+
+        // ========== COMMUNICATIONS FUNCTIONS ==========
+
+        // Tab Switching
+        document.addEventListener('DOMContentLoaded', function() {
+            const commTabs = document.querySelectorAll('.comm-tab');
+            commTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabName = this.getAttribute('data-tab');
+
+                    // Remove active class from all tabs
+                    commTabs.forEach(t => {
+                        t.classList.remove('active');
+                        t.style.borderBottom = '3px solid transparent';
+                        t.style.fontWeight = 'normal';
+                        t.style.color = '#666';
+                    });
+
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+                    this.style.borderBottom = '3px solid var(--gold)';
+                    this.style.fontWeight = 'bold';
+                    this.style.color = 'var(--navy-blue)';
+
+                    // Hide all content
+                    document.querySelectorAll('.comm-content').forEach(content => {
+                        content.style.display = 'none';
+                    });
+
+                    // Show selected content
+                    document.getElementById(tabName + '-content').style.display = 'block';
+                });
+            });
+
+            // WhatsApp recipient change listeners
+            const whatsappRecipients = document.querySelectorAll('input[name="whatsapp-recipient"]');
+            whatsappRecipients.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    document.getElementById('whatsapp-tier-select').style.display = this.value === 'tier' ? 'block' : 'none';
+                    document.getElementById('whatsapp-individual-select').style.display = this.value === 'individual' ? 'block' : 'none';
+                });
+            });
+
+            // SMS recipient change listeners
+            const smsRecipients = document.querySelectorAll('input[name="sms-recipient"]');
+            smsRecipients.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    document.getElementById('sms-tier-select').style.display = this.value === 'tier' ? 'block' : 'none';
+                    document.getElementById('sms-individual-select').style.display = this.value === 'individual' ? 'block' : 'none';
+                });
+            });
+
+            // Email recipient change listeners
+            const emailRecipients = document.querySelectorAll('input[name="email-recipient"]');
+            emailRecipients.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    document.getElementById('email-tier-select').style.display = this.value === 'tier' ? 'block' : 'none';
+                    document.getElementById('email-individual-select').style.display = this.value === 'individual' ? 'block' : 'none';
+                });
+            });
+
+            // SMS character counter
+            const smsTextarea = document.getElementById('sms-message');
+            if (smsTextarea) {
+                smsTextarea.addEventListener('input', function() {
+                    document.getElementById('sms-char-count').textContent = this.value.length;
+                });
+            }
+        });
+
+        // Send WhatsApp Message
+        async function sendWhatsAppMessage() {
+            const recipientType = document.querySelector('input[name="whatsapp-recipient"]:checked').value;
+            const message = document.getElementById('whatsapp-message').value.trim();
+
+            if (!message) {
+                alert('Please enter a message');
+                return;
+            }
+
+            let recipients = [];
+            let phoneNumbers = [];
+
+            try {
+                if (recipientType === 'all') {
+                    // Get all users
+                    const response = await fetch(`${API_URL}/users?limit=10000`, {
+                        headers: { 'Authorization': `Bearer ${authToken}` }
+                    });
+                    const data = await response.json();
+                    if (data.success && data.data) {
+                        phoneNumbers = data.data.map(user => user.phone).filter(p => p);
+                        recipients = data.data.map(user => `${user.firstName} ${user.lastName}`);
+                    }
+                } else if (recipientType === 'tier') {
+                    const tier = document.getElementById('whatsapp-tier').value;
+                    if (!tier) {
+                        alert('Please select a tier');
+                        return;
+                    }
+                    // Get users by tier
+                    const response = await fetch(`${API_URL}/users?tier=${tier}&limit=10000`, {
+                        headers: { 'Authorization': `Bearer ${authToken}` }
+                    });
+                    const data = await response.json();
+                    if (data.success && data.data) {
+                        phoneNumbers = data.data.map(user => user.phone).filter(p => p);
+                        recipients = data.data.map(user => `${user.firstName} ${user.lastName}`);
+                    }
+                } else if (recipientType === 'individual') {
+                    const phone = document.getElementById('whatsapp-phone').value.trim();
+                    if (!phone) {
+                        alert('Please enter a phone number');
+                        return;
+                    }
+                    phoneNumbers = [phone];
+                }
+
+                if (phoneNumbers.length === 0) {
+                    alert('No phone numbers found for selected recipients');
+                    return;
+                }
+
+                // Open WhatsApp Web for each number
+                const encodedMessage = encodeURIComponent(message);
+
+                if (confirm(`Send WhatsApp message to ${phoneNumbers.length} recipient(s)?`)) {
+                    phoneNumbers.forEach((phone, index) => {
+                        setTimeout(() => {
+                            // Format phone number (remove leading 0, add country code)
+                            let formattedPhone = phone.replace(/^0/, '27'); // Assuming South Africa
+                            window.open(`https://wa.me/${formattedPhone}?text=${encodedMessage}`, '_blank');
+                        }, index * 2000); // 2 second delay between each
+                    });
+
+                    alert(`Opening WhatsApp for ${phoneNumbers.length} recipient(s). Each will open in a new tab with 2-second delays.`);
+                }
+            } catch (error) {
+                console.error('WhatsApp send error:', error);
+                alert('Error sending WhatsApp message: ' + error.message);
+            }
+        }
+
+        // Send SMS
+        async function sendSMS() {
+            const recipientType = document.querySelector('input[name="sms-recipient"]:checked').value;
+            const message = document.getElementById('sms-message').value.trim();
+
+            if (!message) {
+                alert('Please enter a message');
+                return;
+            }
+
+            if (message.length > 160) {
+                if (!confirm('Message is longer than 160 characters and may be sent as multiple SMS. Continue?')) {
+                    return;
+                }
+            }
+
+            let phoneNumbers = [];
+
+            try {
+                if (recipientType === 'all') {
+                    const response = await fetch(`${API_URL}/users?limit=10000`, {
+                        headers: { 'Authorization': `Bearer ${authToken}` }
+                    });
+                    const data = await response.json();
+                    if (data.success && data.data) {
+                        phoneNumbers = data.data.map(user => user.phone).filter(p => p);
+                    }
+                } else if (recipientType === 'tier') {
+                    const tier = document.getElementById('sms-tier').value;
+                    if (!tier) {
+                        alert('Please select a tier');
+                        return;
+                    }
+                    const response = await fetch(`${API_URL}/users?tier=${tier}&limit=10000`, {
+                        headers: { 'Authorization': `Bearer ${authToken}` }
+                    });
+                    const data = await response.json();
+                    if (data.success && data.data) {
+                        phoneNumbers = data.data.map(user => user.phone).filter(p => p);
+                    }
+                } else if (recipientType === 'individual') {
+                    const phone = document.getElementById('sms-phone').value.trim();
+                    if (!phone) {
+                        alert('Please enter a phone number');
+                        return;
+                    }
+                    phoneNumbers = [phone];
+                }
+
+                if (phoneNumbers.length === 0) {
+                    alert('No phone numbers found for selected recipients');
+                    return;
+                }
+
+                // Send SMS via backend
+                const response = await fetch(`${API_URL}/communications/sms`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({
+                        recipients: phoneNumbers,
+                        message: message
+                    })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    alert(`SMS sent successfully to ${phoneNumbers.length} recipient(s)!`);
+                    document.getElementById('sms-message').value = '';
+                } else {
+                    alert('SMS sending failed: ' + (result.message || 'Unknown error'));
+                }
+            } catch (error) {
+                console.error('SMS send error:', error);
+                alert('Error sending SMS. Please check your SMS gateway configuration.');
+            }
+        }
+
+        // Send Email
+        async function sendEmail() {
+            const recipientType = document.querySelector('input[name="email-recipient"]:checked').value;
+            const subject = document.getElementById('email-subject').value.trim();
+            const message = document.getElementById('email-message').value.trim();
+
+            if (!subject) {
+                alert('Please enter an email subject');
+                return;
+            }
+
+            if (!message) {
+                alert('Please enter a message');
+                return;
+            }
+
+            let emails = [];
+
+            try {
+                if (recipientType === 'all') {
+                    const response = await fetch(`${API_URL}/users?limit=10000`, {
+                        headers: { 'Authorization': `Bearer ${authToken}` }
+                    });
+                    const data = await response.json();
+                    if (data.success && data.data) {
+                        emails = data.data.map(user => user.email).filter(e => e);
+                    }
+                } else if (recipientType === 'tier') {
+                    const tier = document.getElementById('email-tier').value;
+                    if (!tier) {
+                        alert('Please select a tier');
+                        return;
+                    }
+                    const response = await fetch(`${API_URL}/users?tier=${tier}&limit=10000`, {
+                        headers: { 'Authorization': `Bearer ${authToken}` }
+                    });
+                    const data = await response.json();
+                    if (data.success && data.data) {
+                        emails = data.data.map(user => user.email).filter(e => e);
+                    }
+                } else if (recipientType === 'individual') {
+                    const email = document.getElementById('email-address').value.trim();
+                    if (!email) {
+                        alert('Please enter an email address');
+                        return;
+                    }
+                    emails = [email];
+                }
+
+                if (emails.length === 0) {
+                    alert('No email addresses found for selected recipients');
+                    return;
+                }
+
+                // Send email via backend
+                const response = await fetch(`${API_URL}/communications/email`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({
+                        recipients: emails,
+                        subject: subject,
+                        message: message
+                    })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    alert(`Email sent successfully to ${emails.length} recipient(s)!`);
+                    document.getElementById('email-subject').value = '';
+                    document.getElementById('email-message').value = '';
+                } else {
+                    alert('Email sending failed: ' + (result.message || 'Unknown error'));
+                }
+            } catch (error) {
+                console.error('Email send error:', error);
+                alert('Error sending email. Please check your email service configuration.');
+            }
+        }
+
+        // ========== END COMMUNICATIONS FUNCTIONS ==========
 
         // Check if already logged in
         if (authToken) {
