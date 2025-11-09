@@ -78,7 +78,11 @@ app.get('/api/health', (req, res) => {
         status: 'OK',
         message: 'Z2B Admin Backend is running',
         timestamp: new Date().toISOString(),
-        version: '1.0.1'  // Added version to trigger deployment
+        version: '1.0.2',  // Force Railway redeploy
+        endpoints: {
+            referrals: '/api/referrals/stats',
+            members: '/api/referrals/members'
+        }
     });
 });
 
