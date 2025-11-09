@@ -1255,47 +1255,26 @@
 
         // Send to individual user
         function sendToUser(user, channel) {
-            // Switch to communications section
-            const commLink = document.querySelector('[data-section="communications"]');
-            if (commLink) {
-                commLink.click();
+            // Validate user has contact info
+            if (channel === 'whatsapp' && !user.phone) {
+                alert('No phone number found for this user');
+                return;
+            }
+            if (channel === 'sms' && !user.phone) {
+                alert('No phone number found for this user');
+                return;
+            }
+            if (channel === 'email' && !user.email) {
+                alert('No email address found for this user');
+                return;
             }
 
-            setTimeout(() => {
-                if (channel === 'whatsapp') {
-                    if (!user.phone) {
-                        alert('No phone number found for this user');
-                        return;
-                    }
-                    // Open WhatsApp directly
-                    const formattedPhone = user.phone.replace(/^0/, '27');
-                    const message = `Hi ${user.firstName}, `;
-                    window.open(`https://wa.me/${formattedPhone}?text=${encodeURIComponent(message)}`, '_blank');
-                } else if (channel === 'sms') {
-                    const smsTab = document.querySelector('[data-tab="sms"]');
-                    if (smsTab) smsTab.click();
+            // Store user for template modal
+            window.currentCommunicationUser = user;
+            window.currentCommunicationChannel = channel;
 
-                    setTimeout(() => {
-                        document.querySelector('input[name="sms-recipient"][value="individual"]').checked = true;
-                        document.querySelector('input[name="sms-recipient"][value="individual"]').dispatchEvent(new Event('change'));
-                        document.getElementById('sms-phone').value = user.phone || '';
-                        document.getElementById('sms-message').value = `Hi ${user.firstName}, `;
-                        document.getElementById('sms-message').focus();
-                    }, 100);
-                } else if (channel === 'email') {
-                    const emailTab = document.querySelector('[data-tab="email"]');
-                    if (emailTab) emailTab.click();
-
-                    setTimeout(() => {
-                        document.querySelector('input[name="email-recipient"][value="individual"]').checked = true;
-                        document.querySelector('input[name="email-recipient"][value="individual"]').dispatchEvent(new Event('change'));
-                        document.getElementById('email-address').value = user.email || '';
-                        document.getElementById('email-subject').value = `Hi ${user.firstName}`;
-                        document.getElementById('email-message').value = `Hi ${user.firstName},\n\n`;
-                        document.getElementById('email-message').focus();
-                    }, 100);
-                }
-            }, 300);
+            // Show template modal for selection
+            showMessageTemplateModal([user], channel);
         }
 
         // View user details modal
@@ -1392,12 +1371,17 @@
             const modal = document.createElement('div');
             modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 10000; padding: 2rem;';
 
+            // Get first user for template preview
+            const firstUser = users[0];
+            const tier = firstUser?.tier || 'FAM';
+            const nextTier = tier === 'FAM' ? 'Bronze' : tier === 'Bronze' ? 'Copper' : tier === 'Copper' ? 'Silver' : tier === 'Silver' ? 'Gold' : tier === 'Gold' ? 'Platinum' : 'Lifetime';
+
             const templates = {
-                welcome: `Hi {name},\n\nWelcome to Z2B Legacy Builders! Your journey to financial freedom starts now. Check your dashboard for resources and start building your legacy today! 💎`,
-                upgrade: `Hi {name},\n\nReady to unlock the full Z2B experience? Upgrade to ${users[0]?.tier === 'FAM' ? 'Bronze' : 'the next tier'} and get instant access to all apps + bonus AI credits! Limited time: 50% off beta pricing! 🚀`,
-                followup: `Hi {name},\n\nI noticed you haven't logged in recently. Need any help getting started? I'm here to support your success! Let's build your legacy together. 💪`,
-                announcement: `Hi {name},\n\nExciting news! We've just launched new features on Z2B. Login to your dashboard to explore them. Your success is our priority! ✨`,
-                custom: `Hi {name},\n\n`
+                welcome: `Hi {name},\n\nWelcome to Z2B Legacy Builders! 🎉\n\nYour Details:\n👤 Name: {name}\n🆔 Z2B Member ID: {z2bId}\n🏆 Tier: {tier}\n🔗 Your Referral Link: {referralLink}\n\nYour journey to financial freedom starts now! Check your dashboard for resources and start building your legacy today! 💎\n\nLet's build wealth together!\nCoach ManLaw`,
+                upgrade: `Hi {name},\n\nReady to unlock the full Z2B experience? 🚀\n\nYour Current Details:\n👤 Name: {name}\n🆔 Z2B Member ID: {z2bId}\n🏆 Current Tier: {tier}\n🔗 Your Referral Link: {referralLink}\n\nUpgrade from ${tier} to ${nextTier} today and get:\n✅ Instant access to all apps\n✅ Bonus AI credits\n✅ Higher commission rates\n✅ More earning potential\n\nLimited time: 50% off beta pricing!\n\nReady to level up?\nCoach ManLaw`,
+                followup: `Hi {name},\n\nI noticed you haven't logged in recently. 👋\n\nYour Account:\n👤 Name: {name}\n🆔 Z2B Member ID: {z2bId}\n🏆 Tier: {tier}\n🔗 Your Referral Link: {referralLink}\n\nNeed any help getting started? I'm here to support your success!\n\nRemember, your referral link is ready to share - start building your team today!\n\nLet's build your legacy together. 💪\nCoach ManLaw`,
+                announcement: `Hi {name},\n\nExciting news! 🎉\n\nYour Details:\n👤 Name: {name}\n🆔 Z2B Member ID: {z2bId}\n🏆 Tier: {tier}\n🔗 Your Referral Link: {referralLink}\n\nWe've just launched new features on Z2B! Login to your dashboard to explore them.\n\nYour success is our priority! ✨\n\nCoach ManLaw`,
+                custom: `Hi {name},\n\nYour Details:\n👤 Name: {name}\n🆔 Z2B Member ID: {z2bId}\n🏆 Tier: {tier}\n🔗 Your Referral Link: {referralLink}\n\n`
             };
 
             modal.innerHTML = `
@@ -1428,18 +1412,22 @@
                 const users = getSelectedUsers();
                 const template = templates[templateKey];
 
+                // Function to replace all template variables with user data
+                function fillTemplate(template, user) {
+                    const referralLink = `${window.location.origin}/register.html?ref=${user.referralCode || 'N/A'}`;
+                    return template
+                        .replace(/{name}/g, user.firstName || 'Builder')
+                        .replace(/{z2bId}/g, user.referralCode || 'N/A')
+                        .replace(/{tier}/g, user.tier || 'FAM')
+                        .replace(/{referralLink}/g, referralLink);
+                }
+
+                // Close template modal
                 modal.remove();
 
                 if (channel === 'whatsapp') {
-                    users.forEach((user, index) => {
-                        if (!user.phone) return;
-                        const message = template.replace(/{name}/g, user.firstName);
-                        const formattedPhone = user.phone.replace(/^0/, '27');
-                        setTimeout(() => {
-                            window.open(`https://wa.me/${formattedPhone}?text=${encodeURIComponent(message)}`, '_blank');
-                        }, index * 2000);
-                    });
-                    alert(`Opening WhatsApp for ${users.length} builder(s). Each will open in a new tab with 2-second delays.`);
+                    // Show editable message modal before opening WhatsApp
+                    showEditMessageModal(users, channel, template, fillTemplate);
                 } else if (channel === 'sms') {
                     const smsTab = document.querySelector('[data-tab="sms"]');
                     if (smsTab) smsTab.click();
@@ -1449,11 +1437,11 @@
                             document.querySelector('input[name="sms-recipient"][value="individual"]').checked = true;
                             document.querySelector('input[name="sms-recipient"][value="individual"]').dispatchEvent(new Event('change'));
                             document.getElementById('sms-phone').value = users[0].phone;
-                            document.getElementById('sms-message').value = template.replace(/{name}/g, users[0].firstName);
+                            document.getElementById('sms-message').value = fillTemplate(template, users[0]);
                         } else {
                             // For multiple, use first name as placeholder
-                            document.getElementById('sms-message').value = template.replace(/{name}/g, '[Name]');
-                            alert('Template loaded! Remember to personalize {name} tags before sending to multiple users.');
+                            document.getElementById('sms-message').value = template;
+                            alert('Template loaded! The system will automatically personalize each message with member details when sending.');
                         }
                     }, 100);
                 } else if (channel === 'email') {
@@ -1465,15 +1453,121 @@
                             document.querySelector('input[name="email-recipient"][value="individual"]').dispatchEvent(new Event('change'));
                             document.getElementById('email-address').value = users[0].email;
                             document.getElementById('email-subject').value = templateKey.charAt(0).toUpperCase() + templateKey.slice(1);
-                            document.getElementById('email-message').value = template.replace(/{name}/g, users[0].firstName);
+                            document.getElementById('email-message').value = fillTemplate(template, users[0]);
                         } else {
                             document.getElementById('email-subject').value = templateKey.charAt(0).toUpperCase() + templateKey.slice(1);
                             document.getElementById('email-message').value = template;
-                            alert('Template loaded! The {name} tag will be automatically replaced for each recipient.');
+                            alert('Template loaded! The system will automatically personalize each email with member details when sending.');
                         }
                     }, 100);
                 }
             };
+        }
+
+        // Edit message modal for WhatsApp (allows editing before sending)
+        function showEditMessageModal(users, channel, template, fillTemplate) {
+            const editModal = document.createElement('div');
+            editModal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 10000; padding: 2rem;';
+
+            // If single user, fill template immediately. If multiple, show first user's data as example
+            const previewUser = users[0];
+            const prefilledMessage = fillTemplate(template, previewUser);
+
+            editModal.innerHTML = `
+                <div style="background: white; padding: 2rem; border-radius: 15px; max-width: 700px; width: 100%; max-height: 90vh; overflow-y: auto;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <h2 style="margin: 0; color: var(--navy-blue);">
+                            <i class="fab fa-whatsapp" style="color: #25D366;"></i> Edit WhatsApp Message
+                        </h2>
+                        <button onclick="this.closest('div').closest('div').remove()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #666;">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+
+                    <div style="background: #e8f5e9; border-left: 4px solid #25D366; padding: 1rem; border-radius: 5px; margin-bottom: 1.5rem;">
+                        <p style="margin: 0; color: #2e7d32; font-size: 0.9rem;">
+                            <i class="fas fa-info-circle"></i>
+                            ${users.length === 1
+                                ? `Sending to: <strong>${users[0].firstName} ${users[0].lastName}</strong> (${users[0].phone})`
+                                : `Sending to <strong>${users.length} builders</strong>. Each message will be personalized with their details.`
+                            }
+                        </p>
+                    </div>
+
+                    ${users.length === 1 ? `
+                        <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                            <strong style="color: var(--navy-blue); display: block; margin-bottom: 0.5rem;">Member Details:</strong>
+                            <div style="font-size: 0.9rem; color: #666; display: grid; gap: 0.3rem;">
+                                <div>👤 Name: <strong>${users[0].firstName} ${users[0].lastName}</strong></div>
+                                <div>🆔 Z2B ID: <strong>${users[0].referralCode || 'N/A'}</strong></div>
+                                <div>🏆 Tier: <strong>${users[0].tier || 'FAM'}</strong></div>
+                                <div>📱 Phone: <strong>${users[0].phone || 'N/A'}</strong></div>
+                            </div>
+                        </div>
+                    ` : ''}
+
+                    <label style="font-weight: bold; color: var(--navy-blue); display: block; margin-bottom: 0.5rem;">
+                        Message Preview & Edit:
+                    </label>
+                    <textarea id="whatsappMessageEditor" style="width: 100%; min-height: 300px; padding: 1rem; border: 2px solid #e0e0e0; border-radius: 10px; font-family: inherit; font-size: 0.95rem; resize: vertical; margin-bottom: 1rem;">${prefilledMessage}</textarea>
+
+                    <div style="font-size: 0.85rem; color: #666; margin-bottom: 1.5rem;">
+                        <i class="fas fa-lightbulb"></i> You can edit the message above before sending. ${users.length > 1 ? 'Each builder will receive a personalized version.' : ''}
+                    </div>
+
+                    <div style="display: flex; gap: 1rem;">
+                        <button onclick="this.closest('div').closest('div').remove()" style="flex: 1; padding: 1rem; background: #6c757d; color: white; border: none; border-radius: 50px; cursor: pointer; font-weight: bold;">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                        <button id="sendWhatsAppBtn" style="flex: 2; padding: 1rem; background: #25D366; color: white; border: none; border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 1rem;">
+                            <i class="fab fa-whatsapp"></i> Send via WhatsApp
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(editModal);
+
+            // Handle send button click
+            document.getElementById('sendWhatsAppBtn').addEventListener('click', function() {
+                const editedMessage = document.getElementById('whatsappMessageEditor').value;
+
+                if (!editedMessage.trim()) {
+                    alert('Message cannot be empty!');
+                    return;
+                }
+
+                // Close modal
+                editModal.remove();
+
+                // Send to each user
+                users.forEach((user, index) => {
+                    if (!user.phone) {
+                        console.log('No phone for user:', user);
+                        return;
+                    }
+
+                    // For multiple users, personalize the edited message
+                    let personalizedMessage = editedMessage;
+                    if (users.length > 1) {
+                        personalizedMessage = fillTemplate(editedMessage, user);
+                    }
+
+                    const formattedPhone = user.phone.replace(/^0/, '27');
+                    setTimeout(() => {
+                        window.open(`https://wa.me/${formattedPhone}?text=${encodeURIComponent(personalizedMessage)}`, '_blank');
+                    }, index * 2000);
+                });
+
+                alert(`Opening WhatsApp for ${users.length} builder(s). Each will open in a new tab with 2-second delays. Please click Send in each WhatsApp window.`);
+            });
+
+            // Close on outside click
+            editModal.addEventListener('click', (e) => {
+                if (e.target === editModal) {
+                    editModal.remove();
+                }
+            });
         }
 
         // ========== END USER MANAGEMENT COMMUNICATIONS ==========
