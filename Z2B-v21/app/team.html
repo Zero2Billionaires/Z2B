@@ -394,6 +394,7 @@
         const API_BASE_URL = 'https://z2b-production-3cd3.up.railway.app/api';
         let teamData = null;
         let currentGeneration = 'all';
+        let allMembers = [];  // Store all members for filtering
 
         // Load referral stats
         async function loadReferralStats() {
@@ -415,7 +416,7 @@
 
                 if (data.success) {
                     teamData = data.data;
-                    displayStats(data.data);
+                    displayStats(data.data, 'all');
                     loadTeamMembers();
                 } else {
                     showDemoData();
@@ -426,52 +427,94 @@
             }
         }
 
-        // Display stats
-        function displayStats(data) {
-            document.getElementById('totalTeamSize').textContent = data.stats.totalTeamSize || 0;
-            document.getElementById('directReferrals').textContent = data.stats.directReferrals || 0;
-            document.getElementById('teamDepth').textContent = '3'; // Max 3 generations currently
-
+        // Display stats based on selected generation
+        function displayStats(data, generation = 'all') {
+            // Always show individual generation counts
             document.getElementById('gen1Count').textContent = data.stats.generation1 || 0;
             document.getElementById('gen2Count').textContent = data.stats.generation2 || 0;
             document.getElementById('gen3Count').textContent = data.stats.generation3 || 0;
+
+            // Update stats based on selected generation
+            let displayTeamSize, displayDirectReferrals, displayISP, displayTSC, displayQPB, displayTotal;
+
+            if (generation === 'all') {
+                // Show totals for all generations
+                displayTeamSize = data.stats.totalTeamSize || 0;
+                displayDirectReferrals = data.stats.directReferrals || 0;
+                displayISP = data.stats.potentialIncome.ISP || 0;
+                displayTSC = data.stats.potentialIncome.TSC || 0;
+                displayQPB = data.stats.potentialIncome.QPB || 0;
+                displayTotal = data.stats.potentialIncome.estimated || 0;
+            } else if (generation === '1') {
+                // Show only Gen 1 stats
+                displayTeamSize = data.stats.generation1 || 0;
+                displayDirectReferrals = data.stats.generation1 || 0;
+                displayISP = data.stats.potentialIncome.ISP || 0;  // ISP only from Gen 1
+                displayTSC = 0;  // No TSC from Gen 1
+                displayQPB = data.stats.potentialIncome.QPB || 0;  // QPB only from Gen 1
+                displayTotal = displayISP + displayQPB;
+            } else if (generation === '2') {
+                // Show only Gen 2 stats
+                const gen2 = data.stats.generation2 || 0;
+                displayTeamSize = gen2;
+                displayDirectReferrals = 0;  // Gen 2 are not direct referrals
+                displayISP = 0;  // No ISP from Gen 2
+                displayTSC = Math.round(gen2 * 480 * 0.05);  // 5% TSC for Gen 2
+                displayQPB = 0;  // No QPB from Gen 2
+                displayTotal = displayTSC;
+            } else if (generation === '3') {
+                // Show only Gen 3 stats
+                const gen3 = data.stats.generation3 || 0;
+                displayTeamSize = gen3;
+                displayDirectReferrals = 0;  // Gen 3 are not direct referrals
+                displayISP = 0;  // No ISP from Gen 3
+                displayTSC = Math.round(gen3 * 480 * 0.03);  // 3% TSC for Gen 3
+                displayQPB = 0;  // No QPB from Gen 3
+                displayTotal = displayTSC;
+            }
+
+            // Update display
+            document.getElementById('totalTeamSize').textContent = displayTeamSize;
+            document.getElementById('directReferrals').textContent = displayDirectReferrals;
+            document.getElementById('teamDepth').textContent = '3'; // Max 3 generations currently
 
             // Display tier and ISP rate
             document.getElementById('userTier').textContent = data.tier || 'FAM';
             document.getElementById('ispRate').textContent = data.tierISPRate || '20%';
 
-            const ispIncome = data.stats.potentialIncome.ISP || 0;
-            const tscIncome = data.stats.potentialIncome.TSC || 0;
-            const qpbBonus = data.stats.potentialIncome.QPB || 0;
-            const totalIncome = data.stats.potentialIncome.estimated || 0;
+            document.getElementById('ispIncome').textContent = `R${displayISP}`;
+            document.getElementById('tscIncome').textContent = `R${displayTSC}`;
+            document.getElementById('qpbBonus').textContent = `R${displayQPB}`;
+            document.getElementById('totalPotential').textContent = `R${displayTotal}`;
+            document.getElementById('estimatedIncome').textContent = `R${displayTotal}`;
 
-            document.getElementById('ispIncome').textContent = `R${ispIncome}`;
-            document.getElementById('tscIncome').textContent = `R${tscIncome}`;
-            document.getElementById('qpbBonus').textContent = `R${qpbBonus}`;
-            document.getElementById('totalPotential').textContent = `R${totalIncome}`;
-            document.getElementById('estimatedIncome').textContent = `R${totalIncome}`;
-
-            // Display QPB status
-            const qpbProgress = data.stats.qpbProgress;
-            if (qpbProgress) {
-                // Build status text
-                let statusText = '';
-                if (qpbProgress.completeSets > 0) {
-                    statusText = `✅ ${qpbProgress.completeSets} set(s) earned! `;
-                    if (qpbProgress.remainingSales > 0) {
-                        statusText += `${qpbProgress.remainingSales}/3 toward next set`;
+            // Display QPB status (only relevant for Gen 1 / All)
+            if (generation === 'all' || generation === '1') {
+                const qpbProgress = data.stats.qpbProgress;
+                if (qpbProgress) {
+                    // Build status text
+                    let statusText = '';
+                    if (qpbProgress.completeSets > 0) {
+                        statusText = `✅ ${qpbProgress.completeSets} set(s) earned! `;
+                        if (qpbProgress.remainingSales > 0) {
+                            statusText += `${qpbProgress.remainingSales}/3 toward next set`;
+                        } else {
+                            statusText += `Ready for next set!`;
+                        }
                     } else {
-                        statusText += `Ready for next set!`;
+                        statusText = `${qpbProgress.totalSalesThisCycle}/3 sales this cycle`;
                     }
-                } else {
-                    statusText = `${qpbProgress.totalSalesThisCycle}/3 sales this cycle`;
-                }
-                document.getElementById('qpbStatus').textContent = statusText;
+                    document.getElementById('qpbStatus').textContent = statusText;
 
-                // Show cycle dates
-                const cycleStart = new Date(qpbProgress.cycleStart).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short' });
-                const cycleEnd = new Date(qpbProgress.cycleEnd).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short' });
-                document.getElementById('qpbCycle').textContent = `Cycle: ${cycleStart} - ${cycleEnd} (${qpbProgress.daysRemaining} days left)`;
+                    // Show cycle dates
+                    const cycleStart = new Date(qpbProgress.cycleStart).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short' });
+                    const cycleEnd = new Date(qpbProgress.cycleEnd).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short' });
+                    document.getElementById('qpbCycle').textContent = `Cycle: ${cycleStart} - ${cycleEnd} (${qpbProgress.daysRemaining} days left)`;
+                }
+            } else {
+                // For Gen 2 and Gen 3, QPB doesn't apply
+                document.getElementById('qpbStatus').textContent = 'N/A (Only for direct referrals)';
+                document.getElementById('qpbCycle').textContent = 'QPB only applies to Generation 1';
             }
         }
 
@@ -494,6 +537,7 @@
                 const data = await response.json();
 
                 if (data.success) {
+                    allMembers = data.data.members;  // Store all members
                     if (data.data.members.length === 0) {
                         showNoTeamMessage();
                     } else {
@@ -642,6 +686,11 @@
             });
             document.querySelector(`[data-gen="${gen}"]`).classList.add('active');
 
+            // Update stats display based on selected generation
+            if (teamData) {
+                displayStats(teamData, gen);
+            }
+
             // Reload members with filter
             if (gen === 'all') {
                 loadTeamMembers();
@@ -719,7 +768,8 @@
                 }
             };
 
-            displayStats(demoStats);
+            teamData = demoStats;  // Store for filtering
+            displayStats(demoStats, 'all');
             showDemoTeam();
         }
 
