@@ -77,7 +77,8 @@ app.get('/api/health', (req, res) => {
     res.json({
         status: 'OK',
         message: 'Z2B Admin Backend is running',
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        version: '1.0.1'  // Added version to trigger deployment
     });
 });
 
