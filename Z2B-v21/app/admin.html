@@ -1384,6 +1384,9 @@
                 custom: `Hi {name},\n\nYour Details:\n👤 Name: {name}\n🆔 Z2B Member ID: {z2bId}\n🏆 Tier: {tier}\n🔗 Your Referral Link: {referralLink}\n\n`
             };
 
+            // Load custom saved templates from localStorage
+            const savedTemplates = JSON.parse(localStorage.getItem('z2b_custom_templates') || '{}');
+
             modal.innerHTML = `
                 <div style="background: white; padding: 2rem; border-radius: 15px; max-width: 600px; width: 100%; max-height: 90vh; overflow-y: auto;">
                     <h2 style="margin: 0 0 1rem 0; color: var(--navy-blue);">
@@ -1398,6 +1401,20 @@
                                 <small style="color: #666; white-space: pre-wrap;">${templates[key].substring(0, 100)}...</small>
                             </button>
                         `).join('')}
+
+                        ${Object.keys(savedTemplates).map(key => `
+                            <button onclick="selectTemplate('saved_${key}', '${channel}', this)" style="text-align: left; padding: 1rem; background: #fff3cd; border: 2px solid #ffc107; border-radius: 10px; cursor: pointer; transition: all 0.3s; position: relative;">
+                                <button onclick="event.stopPropagation(); deleteCustomTemplate('${key}')" style="position: absolute; top: 0.5rem; right: 0.5rem; background: #dc3545; color: white; border: none; border-radius: 50%; width: 25px; height: 25px; cursor: pointer; font-size: 0.8rem; display: flex; align-items: center; justify-content: center;">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                                <strong style="color: #856404; display: block; margin-bottom: 0.5rem;">⭐ ${key}</strong>
+                                <small style="color: #856404; white-space: pre-wrap;">${savedTemplates[key].substring(0, 100)}...</small>
+                            </button>
+                        `).join('')}
+
+                        <button onclick="draftNewMessage('${channel}')" style="text-align: center; padding: 1.5rem; background: linear-gradient(135deg, var(--navy-blue), var(--medium-blue)); color: var(--gold); border: 2px solid var(--gold); border-radius: 10px; cursor: pointer; transition: all 0.3s; font-weight: bold;">
+                            <i class="fas fa-plus-circle"></i> Draft New Message
+                        </button>
                     </div>
 
                     <button onclick="this.closest('div').closest('div').remove()" style="width: 100%; padding: 1rem; background: #6c757d; color: white; border: none; border-radius: 50px; cursor: pointer; font-weight: bold;">
@@ -1408,9 +1425,14 @@
 
             document.body.appendChild(modal);
 
+            // Store users, channel, and templates for access in selectTemplate
+            window.currentTemplateUsers = users;
+            window.currentCommunicationChannel = channel;
+            window.currentTemplates = {...templates, ...Object.fromEntries(Object.entries(savedTemplates).map(([k, v]) => [`saved_${k}`, v]))};
+
             window.selectTemplate = function(templateKey, channel, button) {
-                const users = getSelectedUsers();
-                const template = templates[templateKey];
+                const users = window.currentTemplateUsers || [];
+                const template = window.currentTemplates[templateKey];
 
                 // Function to replace all template variables with user data
                 function fillTemplate(template, user) {
@@ -1568,6 +1590,182 @@
                     editModal.remove();
                 }
             });
+        }
+
+        // Draft new custom message
+        function draftNewMessage(channel) {
+            // Close the template selection modal
+            document.querySelectorAll('body > div').forEach(div => {
+                if (div.style.cssText.includes('rgba(0,0,0,0.7)')) {
+                    div.remove();
+                }
+            });
+
+            const users = window.currentTemplateUsers || [];
+            const draftModal = document.createElement('div');
+            draftModal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 10000; padding: 2rem;';
+
+            draftModal.innerHTML = `
+                <div style="background: white; padding: 2rem; border-radius: 15px; max-width: 700px; width: 100%; max-height: 90vh; overflow-y: auto;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <h2 style="margin: 0; color: var(--navy-blue);">
+                            <i class="fas fa-edit"></i> Draft New Message
+                        </h2>
+                        <button onclick="this.closest('div').closest('div').remove()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #666;">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+
+                    <div style="background: #e3f2fd; border-left: 4px solid #2196F3; padding: 1rem; border-radius: 5px; margin-bottom: 1.5rem;">
+                        <p style="margin: 0; color: #1565c0; font-size: 0.9rem;">
+                            <i class="fas fa-info-circle"></i>
+                            Sending to <strong>${users.length} builder(s)</strong> via ${channel}. Use placeholders: <code>{name}</code>, <code>{z2bId}</code>, <code>{tier}</code>, <code>{referralLink}</code>
+                        </p>
+                    </div>
+
+                    ${users.length === 1 ? `
+                        <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                            <strong style="color: var(--navy-blue); display: block; margin-bottom: 0.5rem;">Member Details (for reference):</strong>
+                            <div style="font-size: 0.9rem; color: #666; display: grid; gap: 0.3rem;">
+                                <div>👤 Name: <strong>${users[0].firstName} ${users[0].lastName}</strong></div>
+                                <div>🆔 Z2B ID: <strong>${users[0].referralCode || 'N/A'}</strong></div>
+                                <div>🏆 Tier: <strong>${users[0].tier || 'FAM'}</strong></div>
+                                <div>🔗 Link: <strong>${window.location.origin}/register.html?ref=${users[0].referralCode || 'N/A'}</strong></div>
+                            </div>
+                        </div>
+                    ` : ''}
+
+                    <label style="font-weight: bold; color: var(--navy-blue); display: block; margin-bottom: 0.5rem;">
+                        Your Message:
+                    </label>
+                    <textarea id="customMessageDraft" placeholder="Hi {name},
+
+Your Details:
+👤 Name: {name}
+🆔 Z2B Member ID: {z2bId}
+🏆 Tier: {tier}
+🔗 Your Referral Link: {referralLink}
+
+Write your message here..." style="width: 100%; min-height: 300px; padding: 1rem; border: 2px solid #e0e0e0; border-radius: 10px; font-family: inherit; font-size: 0.95rem; resize: vertical; margin-bottom: 1rem;"></textarea>
+
+                    <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 1rem; border-radius: 5px; margin-bottom: 1.5rem;">
+                        <label style="font-weight: bold; color: #856404; display: block; margin-bottom: 0.5rem;">
+                            💾 Save this message as template? (Optional)
+                        </label>
+                        <input type="text" id="templateName" placeholder="e.g., Payment Reminder, Team Celebration, etc." style="width: 100%; padding: 0.75rem; border: 2px solid #ffc107; border-radius: 8px; font-size: 0.95rem;">
+                        <small style="color: #856404; display: block; margin-top: 0.5rem;">Leave empty to use once without saving</small>
+                    </div>
+
+                    <div style="display: flex; gap: 1rem;">
+                        <button onclick="this.closest('div').closest('div').remove()" style="flex: 1; padding: 1rem; background: #6c757d; color: white; border: none; border-radius: 50px; cursor: pointer; font-weight: bold;">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                        <button id="useCustomMessage" style="flex: 2; padding: 1rem; background: #28a745; color: white; border: none; border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 1rem;">
+                            <i class="fas fa-paper-plane"></i> Use This Message
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(draftModal);
+
+            // Handle use message button
+            document.getElementById('useCustomMessage').addEventListener('click', function() {
+                const customMessage = document.getElementById('customMessageDraft').value.trim();
+                const templateName = document.getElementById('templateName').value.trim();
+
+                if (!customMessage) {
+                    alert('Please write a message before continuing!');
+                    return;
+                }
+
+                // Save as template if name provided
+                if (templateName) {
+                    const savedTemplates = JSON.parse(localStorage.getItem('z2b_custom_templates') || '{}');
+                    savedTemplates[templateName] = customMessage;
+                    localStorage.setItem('z2b_custom_templates', JSON.stringify(savedTemplates));
+                    alert(`✅ Template "${templateName}" saved successfully! You can use it anytime.`);
+                }
+
+                // Close draft modal
+                draftModal.remove();
+
+                // Function to replace template variables
+                function fillTemplate(template, user) {
+                    const referralLink = `${window.location.origin}/register.html?ref=${user.referralCode || 'N/A'}`;
+                    return template
+                        .replace(/{name}/g, user.firstName || 'Builder')
+                        .replace(/{z2bId}/g, user.referralCode || 'N/A')
+                        .replace(/{tier}/g, user.tier || 'FAM')
+                        .replace(/{referralLink}/g, referralLink);
+                }
+
+                // Show edit message modal or send directly based on channel
+                if (channel === 'whatsapp') {
+                    showEditMessageModal(users, channel, customMessage, fillTemplate);
+                } else if (channel === 'sms') {
+                    const smsTab = document.querySelector('[data-tab="sms"]');
+                    if (smsTab) smsTab.click();
+                    setTimeout(() => {
+                        if (users.length === 1) {
+                            document.querySelector('input[name="sms-recipient"][value="individual"]').checked = true;
+                            document.querySelector('input[name="sms-recipient"][value="individual"]').dispatchEvent(new Event('change'));
+                            document.getElementById('sms-phone').value = users[0].phone;
+                            document.getElementById('sms-message').value = fillTemplate(customMessage, users[0]);
+                        } else {
+                            document.getElementById('sms-message').value = customMessage;
+                            alert('Template loaded! The system will automatically personalize each message with member details when sending.');
+                        }
+                    }, 100);
+                } else if (channel === 'email') {
+                    const emailTab = document.querySelector('[data-tab="email"]');
+                    if (emailTab) emailTab.click();
+                    setTimeout(() => {
+                        if (users.length === 1) {
+                            document.querySelector('input[name="email-recipient"][value="individual"]').checked = true;
+                            document.querySelector('input[name="email-recipient"][value="individual"]').dispatchEvent(new Event('change'));
+                            document.getElementById('email-address').value = users[0].email;
+                            document.getElementById('email-subject').value = 'Message from Z2B';
+                            document.getElementById('email-message').value = fillTemplate(customMessage, users[0]);
+                        } else {
+                            document.getElementById('email-subject').value = 'Message from Z2B';
+                            document.getElementById('email-message').value = customMessage;
+                            alert('Template loaded! The system will automatically personalize each email with member details when sending.');
+                        }
+                    }, 100);
+                }
+            });
+
+            // Close on outside click
+            draftModal.addEventListener('click', (e) => {
+                if (e.target === draftModal) {
+                    draftModal.remove();
+                }
+            });
+        }
+
+        // Delete custom template
+        function deleteCustomTemplate(templateName) {
+            if (confirm(`Are you sure you want to delete the template "${templateName}"?`)) {
+                const savedTemplates = JSON.parse(localStorage.getItem('z2b_custom_templates') || '{}');
+                delete savedTemplates[templateName];
+                localStorage.setItem('z2b_custom_templates', JSON.stringify(savedTemplates));
+                alert(`Template "${templateName}" deleted successfully!`);
+
+                // Refresh the template modal
+                document.querySelectorAll('body > div').forEach(div => {
+                    if (div.style.cssText.includes('rgba(0,0,0,0.7)')) {
+                        div.remove();
+                    }
+                });
+
+                // Reopen with updated templates
+                const users = window.currentTemplateUsers;
+                const channel = window.currentCommunicationChannel;
+                if (users && channel) {
+                    showMessageTemplateModal(users, channel);
+                }
+            }
         }
 
         // ========== END USER MANAGEMENT COMMUNICATIONS ==========
