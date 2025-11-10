@@ -2597,13 +2597,21 @@
         function shareViaWhatsApp() {
             const referralLink = document.getElementById('referralLink').value;
             const membershipNumber = document.getElementById('membershipNumber').value;
-            const message = `🚀 Join me on the Zero to Billionaires journey!\\n\\n` +
-                          `I'm transforming from employee to entrepreneur using Z2B's AI-powered platform.\\n\\n` +
-                          `✨ 7 Income Streams\\n` +
-                          `🤖 AI Coach & Tools\\n` +
-                          `💰 Build Legacy Wealth\\n\\n` +
+            const message = `🚀 Join Me on the Zero2Billionaires Journey!\\n\\n` +
+                          `I'm transforming from Employee to Entrepreneur through the Z2B Legacy Builders 90-Day AI-Powered Transformation Program — guided by Coach Manlaw and built on the 4 Pillars of Wealth Creation:\\n` +
+                          `1️⃣ Mindset & Personal Foundation\\n` +
+                          `2️⃣ Systems & Strategies\\n` +
+                          `3️⃣ Relationships & Networks\\n` +
+                          `4️⃣ Legacy & Long-View Thinking\\n\\n` +
+                          `🌟 Through the 7 Transformation Stages, I'm unlocking my potential — from Awareness to Activation — while learning to build 7 Streams of Income designed to create lasting Legacy Wealth.\\n\\n` +
+                          `💡 Inside Z2B, you'll discover:\\n` +
+                          `🤖 AI Coach & Smart Tools for daily transformation\\n` +
+                          `💰 Real-World Income Paths through entrepreneurial systems\\n` +
+                          `🌍 A supportive community of future billionaires in the making\\n\\n` +
+                          `---\\n\\n` +
+                          `🔥 Ready to start your transformation?\\n` +
                           `Use my referral code: ${membershipNumber}\\n` +
-                          `Sign up here: ${referralLink}\\n\\n` +
+                          `Join here 👉 www.z2blegacybuilders.co.za/register.html?ref=${membershipNumber}\\n\\n` +
                           `Let's build our billion-dollar legacies together!`;
 
             const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
@@ -2613,18 +2621,23 @@
         function shareViaEmail() {
             const referralLink = document.getElementById('referralLink').value;
             const membershipNumber = document.getElementById('membershipNumber').value;
-            const subject = 'Join Me on Zero to Billionaires!';
-            const body = `Hi there,\\n\\n` +
-                       `I'm excited to invite you to join the Zero to Billionaires platform!\\n\\n` +
-                       `Z2B is transforming employees into entrepreneurs with:\\n` +
-                       `✨ 7 generous income streams\\n` +
-                       `🤖 AI-powered coaching and business tools\\n` +
-                       `💰 Multiple ways to build wealth and legacy\\n\\n` +
+            const subject = '🚀 Join Me on the Zero2Billionaires Journey!';
+            const body = `🚀 Join Me on the Zero2Billionaires Journey!\\n\\n` +
+                       `I'm transforming from Employee to Entrepreneur through the Z2B Legacy Builders 90-Day AI-Powered Transformation Program — guided by Coach Manlaw and built on the 4 Pillars of Wealth Creation:\\n` +
+                       `1️⃣ Mindset & Personal Foundation\\n` +
+                       `2️⃣ Systems & Strategies\\n` +
+                       `3️⃣ Relationships & Networks\\n` +
+                       `4️⃣ Legacy & Long-View Thinking\\n\\n` +
+                       `🌟 Through the 7 Transformation Stages, I'm unlocking my potential — from Awareness to Activation — while learning to build 7 Streams of Income designed to create lasting Legacy Wealth.\\n\\n` +
+                       `💡 Inside Z2B, you'll discover:\\n` +
+                       `🤖 AI Coach & Smart Tools for daily transformation\\n` +
+                       `💰 Real-World Income Paths through entrepreneurial systems\\n` +
+                       `🌍 A supportive community of future billionaires in the making\\n\\n` +
+                       `---\\n\\n` +
+                       `🔥 Ready to start your transformation?\\n` +
                        `Use my referral code: ${membershipNumber}\\n` +
-                       `Sign up here: ${referralLink}\\n\\n` +
-                       `Let's build our billion-dollar legacies together!\\n\\n` +
-                       `To your success,\\n` +
-                       `Your Z2B Partner`;
+                       `Join here 👉 www.z2blegacybuilders.co.za/register.html?ref=${membershipNumber}\\n\\n` +
+                       `Let's build our billion-dollar legacies together!`;
 
             const mailtoUrl = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
             window.location.href = mailtoUrl;
