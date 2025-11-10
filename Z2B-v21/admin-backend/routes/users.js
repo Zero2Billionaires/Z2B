@@ -507,7 +507,8 @@ router.get('/fam/stats', verifyToken, async (req, res) => {
 // Get Team Network / Family Tree for Admin
 router.get('/team-tree', verifyToken, async (req, res) => {
     try {
-        const userId = req.query.userId; // Optional: get tree for specific user, otherwise get all
+        const userId = req.query.userId; // MongoDB _id
+        const memberId = req.query.memberId; // Z2B member ID (e.g., Z2BGL123)
 
         // Recursive function to build team tree
         async function buildTreeNode(user) {
@@ -540,13 +541,21 @@ router.get('/team-tree', verifyToken, async (req, res) => {
 
         let treeData;
 
-        if (userId) {
-            // Get tree for specific user
-            const user = await User.findById(userId).select('firstName lastName email referralCode tier memberId createdAt accountStatus sponsorId');
+        if (userId || memberId) {
+            // Get tree for specific user by MongoDB _id or Z2B member ID
+            let user;
+            if (memberId) {
+                // Search by Z2B member ID (e.g., Z2BGL123)
+                user = await User.findOne({ memberId: memberId }).select('firstName lastName email referralCode tier memberId createdAt accountStatus sponsorId');
+            } else {
+                // Search by MongoDB _id
+                user = await User.findById(userId).select('firstName lastName email referralCode tier memberId createdAt accountStatus sponsorId');
+            }
+
             if (!user) {
                 return res.status(404).json({
                     success: false,
-                    message: 'User not found'
+                    message: memberId ? `User with member ID ${memberId} not found` : 'User not found'
                 });
             }
             treeData = await buildTreeNode(user);
