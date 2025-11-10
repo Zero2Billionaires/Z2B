@@ -3376,7 +3376,7 @@ Write your message here..." style="width: 100%; min-height: 300px; padding: 1rem
 
                 const response = await fetch(`${API_URL}/users/team-tree`, {
                     headers: {
-                        'Authorization': `Bearer ${getAuthToken()}`
+                        'Authorization': `Bearer ${authToken}`
                     }
                 });
 
@@ -3388,11 +3388,11 @@ Write your message here..." style="width: 100%; min-height: 300px; padding: 1rem
                     updateTreeStats(result.data);
                     await populateUserSelect();
                 } else {
-                    showToast(result.message, 'error');
+                    alert('❌ Error: ' + result.message);
                 }
             } catch (error) {
                 console.error('Error loading team tree:', error);
-                showToast('Error loading team network. Please try again.', 'error');
+                alert('❌ Error loading team network. Please try again.');
             } finally {
                 document.getElementById('treeLoading').style.display = 'none';
             }
@@ -3411,7 +3411,7 @@ Write your message here..." style="width: 100%; min-height: 300px; padding: 1rem
 
                 const response = await fetch(`${API_URL}/users/team-tree?userId=${userId}`, {
                     headers: {
-                        'Authorization': `Bearer ${getAuthToken()}`
+                        'Authorization': `Bearer ${authToken}`
                     }
                 });
 
@@ -3422,11 +3422,11 @@ Write your message here..." style="width: 100%; min-height: 300px; padding: 1rem
                     displayTree(result.data);
                     updateTreeStats(result.data);
                 } else {
-                    showToast(result.message, 'error');
+                    alert('❌ Error: ' + result.message);
                 }
             } catch (error) {
                 console.error('Error loading user tree:', error);
-                showToast('Error loading user network. Please try again.', 'error');
+                alert('❌ Error loading user network. Please try again.');
             } finally {
                 document.getElementById('treeLoading').style.display = 'none';
             }
@@ -3534,7 +3534,7 @@ Write your message here..." style="width: 100%; min-height: 300px; padding: 1rem
             try {
                 const response = await fetch(`${API_URL}/users?limit=1000`, {
                     headers: {
-                        'Authorization': `Bearer ${getAuthToken()}`
+                        'Authorization': `Bearer ${authToken}`
                     }
                 });
 
@@ -3547,7 +3547,7 @@ Write your message here..." style="width: 100%; min-height: 300px; padding: 1rem
                     result.data.forEach(user => {
                         const option = document.createElement('option');
                         option.value = user._id;
-                        option.textContent = `${user.firstName} ${user.lastName} (${user.email})`;
+                        option.textContent = `${user.memberId || 'No ID'} - ${user.firstName} ${user.lastName}`;
                         select.appendChild(option);
                     });
                 }
@@ -3558,7 +3558,7 @@ Write your message here..." style="width: 100%; min-height: 300px; padding: 1rem
 
         function exportTreeImage() {
             // Use html2canvas library to convert tree to image
-            showToast('Generating image... This may take a moment for large networks.', 'info');
+            alert('⏳ Generating image... This may take a moment for large networks.');
 
             // Load html2canvas dynamically
             if (typeof html2canvas === 'undefined') {
@@ -3587,17 +3587,17 @@ Write your message here..." style="width: 100%; min-height: 300px; padding: 1rem
                     link.download = `Z2B-Team-Network-${new Date().toISOString().split('T')[0]}.png`;
                     link.click();
                     URL.revokeObjectURL(url);
-                    showToast('Network image exported successfully!', 'success');
+                    alert('✅ Network image exported successfully!');
                 });
             }).catch(error => {
                 console.error('Error capturing image:', error);
-                showToast('Error exporting image. Please try again.', 'error');
+                alert('❌ Error exporting image. Please try again.');
             });
         }
 
         function shareTree() {
             if (!currentTreeData) {
-                showToast('Please load a network tree first', 'error');
+                alert('❌ Please load a network tree first');
                 return;
             }
 
@@ -3610,7 +3610,7 @@ Write your message here..." style="width: 100%; min-height: 300px; padding: 1rem
                     text: text,
                     url: window.location.href
                 }).then(() => {
-                    showToast('Shared successfully!', 'success');
+                    alert('✅ Shared successfully!');
                 }).catch(error => {
                     console.log('Error sharing:', error);
                     copyShareText(text);
@@ -3629,7 +3629,7 @@ Write your message here..." style="width: 100%; min-height: 300px; padding: 1rem
                     window.open(whatsappUrl, '_blank');
                 }
             }).catch(error => {
-                showToast('Could not copy to clipboard', 'error');
+                alert('❌ Could not copy to clipboard');
             });
         }
 
