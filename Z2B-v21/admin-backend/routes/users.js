@@ -504,4 +504,86 @@ router.get('/fam/stats', verifyToken, async (req, res) => {
     }
 });
 
+// Get Team Network / Family Tree for Admin
+router.get('/team-tree', verifyToken, async (req, res) => {
+    try {
+        const userId = req.query.userId; // Optional: get tree for specific user, otherwise get all
+
+        // Recursive function to build team tree
+        async function buildTreeNode(user) {
+            const children = await User.find({ sponsorId: user._id })
+                .select('firstName lastName email referralCode tier memberId createdAt accountStatus')
+                .lean();
+
+            const node = {
+                id: user._id.toString(),
+                name: `${user.firstName} ${user.lastName}`,
+                email: user.email,
+                referralCode: user.referralCode,
+                memberId: user.memberId,
+                tier: user.tier,
+                joinedDate: user.createdAt,
+                status: user.accountStatus,
+                teamSize: 0,
+                children: []
+            };
+
+            // Recursively build children nodes
+            for (const child of children) {
+                const childNode = await buildTreeNode(child);
+                node.children.push(childNode);
+                node.teamSize += 1 + childNode.teamSize; // Count child + all their descendants
+            }
+
+            return node;
+        }
+
+        let treeData;
+
+        if (userId) {
+            // Get tree for specific user
+            const user = await User.findById(userId).select('firstName lastName email referralCode tier memberId createdAt accountStatus sponsorId');
+            if (!user) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'User not found'
+                });
+            }
+            treeData = await buildTreeNode(user);
+        } else {
+            // Get all root users (users with no sponsor or invalid sponsorId)
+            const rootUsers = await User.find({
+                $or: [
+                    { sponsorId: null },
+                    { sponsorId: { $exists: false } }
+                ]
+            }).select('firstName lastName email referralCode tier memberId createdAt accountStatus').lean();
+
+            // Build trees for all root users
+            treeData = {
+                name: 'Z2B Legacy Builders Network',
+                children: [],
+                teamSize: 0
+            };
+
+            for (const rootUser of rootUsers) {
+                const rootNode = await buildTreeNode(rootUser);
+                treeData.children.push(rootNode);
+                treeData.teamSize += 1 + rootNode.teamSize;
+            }
+        }
+
+        res.json({
+            success: true,
+            data: treeData
+        });
+    } catch (error) {
+        console.error('Error building team tree:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error building team tree'
+        });
+    }
+});
+
 module.exports = router;
