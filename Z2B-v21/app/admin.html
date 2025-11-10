@@ -467,6 +467,7 @@
                 <li><a href="#" class="menu-link active" data-section="overview"><i class="fas fa-tachometer-alt"></i> Overview</a></li>
                 <li><a href="#" class="menu-link" data-section="tiers"><i class="fas fa-layer-group"></i> Tiers & Pricing</a></li>
                 <li><a href="#" class="menu-link" data-section="users"><i class="fas fa-users"></i> User Management</a></li>
+                <li><a href="#" class="menu-link" data-section="team-network"><i class="fas fa-sitemap"></i> Team Network</a></li>
                 <li><a href="#" class="menu-link" data-section="communications"><i class="fas fa-comments"></i> Communications</a></li>
                 <li><a href="#" class="menu-link" data-section="content"><i class="fas fa-book"></i> Content Management</a></li>
                 <li><a href="#" class="menu-link" data-section="compensation"><i class="fas fa-dollar-sign"></i> Compensation Plan</a></li>
@@ -519,6 +520,73 @@
             <!-- Other sections will be added via JavaScript -->
             <div id="tiers" class="content-section"></div>
             <div id="users" class="content-section"></div>
+
+            <!-- Team Network Section -->
+            <div id="team-network" class="content-section">
+                <h2><i class="fas fa-sitemap"></i> Team Network Visualization</h2>
+                <p>View and share the complete team family tree structure</p>
+
+                <!-- Controls -->
+                <div style="background: rgba(255,215,0,0.05); padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem; border: 1px solid rgba(255,215,0,0.2);">
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; justify-content: space-between;">
+                        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                            <button onclick="loadTeamTree()" style="padding: 0.8rem 1.5rem; background: linear-gradient(135deg, #FFD700, #FFA500); border: none; border-radius: 8px; color: #0A2647; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);">
+                                <i class="fas fa-sync-alt"></i> Load Network
+                            </button>
+                            <select id="userSelect" onchange="loadSpecificUserTree()" style="padding: 0.8rem 1rem; background: rgba(10,38,71,0.8); border: 1px solid rgba(255,215,0,0.3); border-radius: 8px; color: white;">
+                                <option value="">View Full Network</option>
+                            </select>
+                        </div>
+                        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                            <button onclick="exportTreeImage()" style="padding: 0.8rem 1.5rem; background: rgba(10,38,71,0.8); border: 1px solid rgba(255,215,0,0.3); border-radius: 8px; color: white; font-weight: 600; cursor: pointer;">
+                                <i class="fas fa-image"></i> Export as Image
+                            </button>
+                            <button onclick="shareTree()" style="padding: 0.8rem 1.5rem; background: linear-gradient(135deg, #25D366, #128C7E); border: none; border-radius: 8px; color: white; font-weight: 600; cursor: pointer;">
+                                <i class="fas fa-share-alt"></i> Share Network
+                            </button>
+                            <button onclick="printTree()" style="padding: 0.8rem 1.5rem; background: rgba(10,38,71,0.8); border: 1px solid rgba(255,215,0,0.3); border-radius: 8px; color: white; font-weight: 600; cursor: pointer;">
+                                <i class="fas fa-print"></i> Print
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tree Stats -->
+                <div id="treeStats" style="display: none; background: linear-gradient(135deg, rgba(10,38,71,0.6), rgba(3,11,31,0.8)); padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem; border: 1px solid rgba(255,215,0,0.2);">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
+                        <div>
+                            <div style="font-size: 2rem; font-weight: 700; color: #FFD700;" id="totalMembers">0</div>
+                            <div style="font-size: 0.9rem; opacity: 0.8;">Total Members</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 2rem; font-weight: 700; color: #00FF88;" id="activeMembers">0</div>
+                            <div style="font-size: 0.9rem; opacity: 0.8;">Active Members</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 2rem; font-weight: 700; color: #60A5FA;" id="totalLevels">0</div>
+                            <div style="font-size: 0.9rem; opacity: 0.8;">Network Depth</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 2rem; font-weight: 700; color: #B45FFF;" id="rootMembers">0</div>
+                            <div style="font-size: 0.9rem; opacity: 0.8;">Top-Level Members</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Loading State -->
+                <div id="treeLoading" style="display: none; text-align: center; padding: 3rem;">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: #FFD700;"></i>
+                    <p style="margin-top: 1rem; font-size: 1.1rem;">Building team network tree...</p>
+                </div>
+
+                <!-- Tree Container -->
+                <div id="teamTreeContainer" style="background: rgba(10,38,71,0.4); padding: 2rem; border-radius: 10px; border: 1px solid rgba(255,215,0,0.2); overflow-x: auto; min-height: 400px;">
+                    <div style="text-align: center; padding: 3rem; opacity: 0.6;">
+                        <i class="fas fa-sitemap" style="font-size: 4rem; color: #FFD700; opacity: 0.3;"></i>
+                        <p style="margin-top: 1rem; font-size: 1.1rem;">Click "Load Network" to view the team structure</p>
+                    </div>
+                </div>
+            </div>
 
             <!-- Communications Section -->
             <div id="communications" class="content-section">
@@ -3294,6 +3362,315 @@ Write your message here..." style="width: 100%; min-height: 300px; padding: 1rem
                 console.error('Error checking FAM expiry:', error);
                 resultDiv.innerHTML = '<p style="color: var(--danger);">❌ Error checking expiry. Please try again.</p>';
             }
+        }
+
+        // ========== TEAM NETWORK FUNCTIONS ==========
+
+        let currentTreeData = null;
+
+        async function loadTeamTree() {
+            try {
+                document.getElementById('treeLoading').style.display = 'block';
+                document.getElementById('teamTreeContainer').innerHTML = '';
+                document.getElementById('treeStats').style.display = 'none';
+
+                const response = await fetch(`${API_URL}/users/team-tree`, {
+                    headers: {
+                        'Authorization': `Bearer ${getAuthToken()}`
+                    }
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    currentTreeData = result.data;
+                    displayTree(result.data);
+                    updateTreeStats(result.data);
+                    await populateUserSelect();
+                } else {
+                    showToast(result.message, 'error');
+                }
+            } catch (error) {
+                console.error('Error loading team tree:', error);
+                showToast('Error loading team network. Please try again.', 'error');
+            } finally {
+                document.getElementById('treeLoading').style.display = 'none';
+            }
+        }
+
+        async function loadSpecificUserTree() {
+            const userId = document.getElementById('userSelect').value;
+            if (!userId) {
+                loadTeamTree();
+                return;
+            }
+
+            try {
+                document.getElementById('treeLoading').style.display = 'block';
+                document.getElementById('teamTreeContainer').innerHTML = '';
+
+                const response = await fetch(`${API_URL}/users/team-tree?userId=${userId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${getAuthToken()}`
+                    }
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    currentTreeData = result.data;
+                    displayTree(result.data);
+                    updateTreeStats(result.data);
+                } else {
+                    showToast(result.message, 'error');
+                }
+            } catch (error) {
+                console.error('Error loading user tree:', error);
+                showToast('Error loading user network. Please try again.', 'error');
+            } finally {
+                document.getElementById('treeLoading').style.display = 'none';
+            }
+        }
+
+        function displayTree(data) {
+            const container = document.getElementById('teamTreeContainer');
+            container.innerHTML = buildTreeHTML(data, 0);
+        }
+
+        function buildTreeHTML(node, level) {
+            const tierColors = {
+                'FAM': '#95a5a6',
+                'BRONZE': '#CD7F32',
+                'COPPER': '#B87333',
+                'SILVER': '#C0C0C0',
+                'GOLD': '#FFD700',
+                'PLATINUM': '#E5E4E2',
+                'LIFETIME': '#FF006E'
+            };
+
+            const statusIcons = {
+                'active': '<i class="fas fa-check-circle" style="color: #00FF88;"></i>',
+                'inactive': '<i class="fas fa-times-circle" style="color: #ff4444;"></i>',
+                'suspended': '<i class="fas fa-pause-circle" style="color: #ffaa00;"></i>'
+            };
+
+            const tierColor = tierColors[node.tier] || '#60A5FA';
+            const statusIcon = statusIcons[node.status] || '';
+            const hasChildren = node.children && node.children.length > 0;
+
+            let html = `
+                <div style="margin-left: ${level * 30}px; margin-bottom: 1rem;">
+                    <div style="background: linear-gradient(135deg, rgba(10,38,71,0.8), rgba(3,11,31,0.9)); padding: 1rem 1.5rem; border-radius: 10px; border-left: 4px solid ${tierColor}; box-shadow: 0 4px 15px rgba(0,0,0,0.3); display: inline-block; min-width: 350px;">
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <div style="width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, ${tierColor}, ${tierColor}80); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.2rem; color: white; flex-shrink: 0;">
+                                ${node.name.split(' ').map(n => n[0]).join('')}
+                            </div>
+                            <div style="flex: 1;">
+                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.3rem;">
+                                    <span style="font-weight: 700; font-size: 1.1rem; color: #FFD700;">${node.name}</span>
+                                    ${statusIcon}
+                                </div>
+                                <div style="font-size: 0.85rem; opacity: 0.8;">${node.email}</div>
+                                <div style="display: flex; gap: 1rem; margin-top: 0.5rem; font-size: 0.8rem;">
+                                    <span style="background: ${tierColor}30; padding: 0.2rem 0.6rem; border-radius: 4px; color: ${tierColor}; font-weight: 600;">${node.tier}</span>
+                                    <span style="color: #60A5FA;"><i class="fas fa-users"></i> Team: ${node.teamSize}</span>
+                                    ${node.referralCode ? `<span style="color: #B45FFF;"><i class="fas fa-id-card"></i> ${node.referralCode}</span>` : ''}
+                                </div>
+                            </div>
+                            ${hasChildren ? `
+                                <div style="background: rgba(255,215,0,0.1); width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #FFD700; font-weight: 700;">
+                                    ${node.children.length}
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Recursively add children
+            if (hasChildren) {
+                html += `<div style="border-left: 2px dashed rgba(255,215,0,0.2); margin-left: ${level * 30 + 20}px; padding-left: 20px;">`;
+                for (const child of node.children) {
+                    html += buildTreeHTML(child, level + 1);
+                }
+                html += '</div>';
+            }
+
+            return html;
+        }
+
+        function updateTreeStats(data) {
+            let totalCount = 0;
+            let activeCount = 0;
+            let maxDepth = 0;
+            let rootCount = 0;
+
+            function traverseTree(node, depth) {
+                totalCount++;
+                if (node.status === 'active') activeCount++;
+                maxDepth = Math.max(maxDepth, depth);
+
+                if (node.children && node.children.length > 0) {
+                    node.children.forEach(child => traverseTree(child, depth + 1));
+                }
+            }
+
+            if (data.children && data.children.length > 0) {
+                rootCount = data.children.length;
+                data.children.forEach(child => traverseTree(child, 1));
+            } else if (data.name && data.name !== 'Z2B Legacy Builders Network') {
+                rootCount = 1;
+                traverseTree(data, 0);
+            }
+
+            document.getElementById('totalMembers').textContent = totalCount;
+            document.getElementById('activeMembers').textContent = activeCount;
+            document.getElementById('totalLevels').textContent = maxDepth;
+            document.getElementById('rootMembers').textContent = rootCount;
+            document.getElementById('treeStats').style.display = 'block';
+        }
+
+        async function populateUserSelect() {
+            try {
+                const response = await fetch(`${API_URL}/users?limit=1000`, {
+                    headers: {
+                        'Authorization': `Bearer ${getAuthToken()}`
+                    }
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    const select = document.getElementById('userSelect');
+                    select.innerHTML = '<option value="">View Full Network</option>';
+
+                    result.data.forEach(user => {
+                        const option = document.createElement('option');
+                        option.value = user._id;
+                        option.textContent = `${user.firstName} ${user.lastName} (${user.email})`;
+                        select.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading users for select:', error);
+            }
+        }
+
+        function exportTreeImage() {
+            // Use html2canvas library to convert tree to image
+            showToast('Generating image... This may take a moment for large networks.', 'info');
+
+            // Load html2canvas dynamically
+            if (typeof html2canvas === 'undefined') {
+                const script = document.createElement('script');
+                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+                script.onload = () => captureTreeImage();
+                document.head.appendChild(script);
+            } else {
+                captureTreeImage();
+            }
+        }
+
+        function captureTreeImage() {
+            const container = document.getElementById('teamTreeContainer');
+
+            html2canvas(container, {
+                backgroundColor: '#0A2647',
+                scale: 2,
+                logging: false
+            }).then(canvas => {
+                // Convert canvas to blob and download
+                canvas.toBlob(blob => {
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = `Z2B-Team-Network-${new Date().toISOString().split('T')[0]}.png`;
+                    link.click();
+                    URL.revokeObjectURL(url);
+                    showToast('Network image exported successfully!', 'success');
+                });
+            }).catch(error => {
+                console.error('Error capturing image:', error);
+                showToast('Error exporting image. Please try again.', 'error');
+            });
+        }
+
+        function shareTree() {
+            if (!currentTreeData) {
+                showToast('Please load a network tree first', 'error');
+                return;
+            }
+
+            const text = `Check out the Z2B Legacy Builders Team Network!\\n\\nTotal Members: ${document.getElementById('totalMembers').textContent}\\nActive Members: ${document.getElementById('activeMembers').textContent}\\nNetwork Depth: ${document.getElementById('totalLevels').textContent} levels\\n\\nBuilding billion-dollar legacies together! 🚀`;
+
+            // Check if Web Share API is available
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Z2B Team Network',
+                    text: text,
+                    url: window.location.href
+                }).then(() => {
+                    showToast('Shared successfully!', 'success');
+                }).catch(error => {
+                    console.log('Error sharing:', error);
+                    copyShareText(text);
+                });
+            } else {
+                // Fallback: Copy to clipboard and show WhatsApp option
+                copyShareText(text);
+            }
+        }
+
+        function copyShareText(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
+                const confirmed = confirm('Share text copied to clipboard!\\n\\nWould you like to share via WhatsApp?');
+                if (confirmed) {
+                    window.open(whatsappUrl, '_blank');
+                }
+            }).catch(error => {
+                showToast('Could not copy to clipboard', 'error');
+            });
+        }
+
+        function printTree() {
+            const container = document.getElementById('teamTreeContainer');
+            const printWindow = window.open('', '_blank');
+
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Z2B Team Network</title>
+                    <style>
+                        body {
+                            font-family: Arial, sans-serif;
+                            background: #0A2647;
+                            color: white;
+                            padding: 2rem;
+                        }
+                        h1 {
+                            color: #FFD700;
+                            margin-bottom: 2rem;
+                        }
+                        @media print {
+                            body { background: white; color: black; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <h1>Z2B Legacy Builders - Team Network</h1>
+                    <p>Generated: ${new Date().toLocaleString()}</p>
+                    <hr style="border-color: #FFD700; margin: 2rem 0;">
+                    ${container.innerHTML}
+                </body>
+                </html>
+            `);
+
+            printWindow.document.close();
+            setTimeout(() => {
+                printWindow.print();
+            }, 500);
         }
     </script>
 </body>
