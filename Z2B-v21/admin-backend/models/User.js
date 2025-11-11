@@ -12,6 +12,8 @@ const userSchema = new mongoose.Schema({
     password: { type: String, required: true },
     isEmailVerified: { type: Boolean, default: false },
     emailVerificationToken: { type: String },
+    resetPasswordToken: { type: String },
+    resetPasswordExpires: { type: Date },
 
     // Tier & Membership
     tier: {
@@ -39,11 +41,11 @@ const userSchema = new mongoose.Schema({
         transactionId: String
     }],
 
-    // FAM Tier Benefits (3 months, 5 credits/month)
+    // FAM Tier Benefits (30 days, 5 credits/week)
     famStartDate: { type: Date },
     famExpiryDate: { type: Date },
     lastCreditRefresh: { type: Date },
-    famMonthsRemaining: { type: Number, default: 0 },
+    famWeeksRemaining: { type: Number, default: 0 },
 
     // PV Points
     currentMonthPV: { type: Number, default: 0 },

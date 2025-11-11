@@ -243,7 +243,7 @@ router.post('/register', async (req, res) => {
 
         // Automatic Fuel Credit Allocation Based on Tier
         const tierFuelCredits = {
-            'FAM': 5,           // Free Affiliate Member: 5 credits/month for 3 months
+            'FAM': 5,           // Free Affiliate Member: 5 credits/week for 30 days
             'BRONZE': 100,      // Bronze: 100 credits
             'COPPER': 250,      // Copper: 250 credits
             'SILVER': 500,      // Silver: 500 credits
@@ -255,16 +255,16 @@ router.post('/register', async (req, res) => {
         // Assign fuel credits based on tier
         userData.fuelCredits = tierFuelCredits[selectedTier] || 0;
 
-        // FAM Tier Special Benefits: 3-month access + Coach Manlaw
+        // FAM Tier Special Benefits: 30-day access + Coach Manlaw
         if (selectedTier === 'FAM') {
             const now = new Date();
-            const threeMonthsLater = new Date(now);
-            threeMonthsLater.setMonth(threeMonthsLater.getMonth() + 3);
+            const thirtyDaysLater = new Date(now);
+            thirtyDaysLater.setDate(thirtyDaysLater.getDate() + 30);
 
             userData.famStartDate = now;
-            userData.famExpiryDate = threeMonthsLater;
+            userData.famExpiryDate = thirtyDaysLater;
             userData.lastCreditRefresh = now;
-            userData.famMonthsRemaining = 3;
+            userData.famWeeksRemaining = 4;  // 30 days = ~4 weeks
             userData.freeAppAccess = {
                 coachManlaw: true // Auto-enable Coach Manlaw for FAM
             };
@@ -447,6 +447,129 @@ router.post('/verify-payment', async (req, res) => {
         res.status(500).json({
             success: false,
             message: 'Error verifying payment'
+        });
+    }
+});
+
+// Password Reset Request - Send reset email with token
+router.post('/forgot-password', async (req, res) => {
+    try {
+        const { email } = req.body;
+
+        // Validate email
+        if (!email) {
+            return res.status(400).json({
+                success: false,
+                message: 'Email address is required'
+            });
+        }
+
+        // Find user by email
+        const user = await User.findOne({ email: email.toLowerCase() });
+
+        // Always return success message for security (don't reveal if email exists)
+        if (!user) {
+            return res.json({
+                success: true,
+                message: 'If an account exists with that email, a password reset link has been sent.'
+            });
+        }
+
+        // Generate reset token
+        const crypto = require('crypto');
+        const resetToken = crypto.randomBytes(32).toString('hex');
+
+        // Hash token before saving to database
+        const hashedToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+
+        // Set token and expiry (1 hour)
+        user.resetPasswordToken = hashedToken;
+        user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+        await user.save();
+
+        // Create reset URL
+        const frontendURL = process.env.FRONTEND_URL || 'https://z2blegacybuilders.co.za';
+        const resetUrl = `${frontendURL}/reset-password.html?token=${resetToken}`;
+
+        // Send password reset email
+        const { sendPasswordResetEmail } = require('../utils/passwordResetEmail');
+        const emailResult = await sendPasswordResetEmail(user, resetUrl);
+
+        if (!emailResult.success) {
+            console.error('Failed to send password reset email:', emailResult.error);
+        }
+
+        res.json({
+            success: true,
+            message: 'If an account exists with that email, a password reset link has been sent.'
+        });
+
+    } catch (error) {
+        console.error('Forgot password error:', error);
+        res.status(500).json({
+            success: false,
+            message: 'An error occurred. Please try again later.'
+        });
+    }
+});
+
+// Password Reset Confirmation - Verify token and update password
+router.post('/reset-password', async (req, res) => {
+    try {
+        const { token, password } = req.body;
+
+        // Validate input
+        if (!token || !password) {
+            return res.status(400).json({
+                success: false,
+                message: 'Token and password are required'
+            });
+        }
+
+        // Validate password strength
+        if (password.length < 6) {
+            return res.status(400).json({
+                success: false,
+                message: 'Password must be at least 6 characters long'
+            });
+        }
+
+        // Hash the token to compare with database
+        const crypto = require('crypto');
+        const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+
+        // Find user with valid token
+        const user = await User.findOne({
+            resetPasswordToken: hashedToken,
+            resetPasswordExpires: { $gt: Date.now() }
+        });
+
+        if (!user) {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid or expired reset token. Please request a new password reset.'
+            });
+        }
+
+        // Hash new password
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Update password and clear reset fields
+        user.password = hashedPassword;
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpires = undefined;
+        await user.save();
+
+        res.json({
+            success: true,
+            message: 'Password has been reset successfully. You can now login with your new password.'
+        });
+
+    } catch (error) {
+        console.error('Reset password error:', error);
+        res.status(500).json({
+            success: false,
+            message: 'An error occurred. Please try again later.'
         });
     }
 });
