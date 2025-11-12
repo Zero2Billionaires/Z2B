@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const { sendWelcomeEmail } = require('../utils/emailService');
+const { sendRegistrationConfirmation, sendPasswordResetNotification, sendPaymentConfirmation, sendReferralAlert } = require('../utils/whatsappService');
 
 // Tier configurations for payment
 const TIER_PRICES = {
@@ -299,6 +300,23 @@ router.post('/register', async (req, res) => {
             console.error('Failed to send welcome email:', err);
         });
 
+        // Send WhatsApp registration confirmation
+        if (user.phone) {
+            sendRegistrationConfirmation(user).catch(err => {
+                console.error('Failed to send WhatsApp confirmation:', err);
+            });
+        }
+
+        // Send WhatsApp alert to sponsor (if has sponsor)
+        if (sponsorId) {
+            const sponsor = await User.findById(sponsorId);
+            if (sponsor && sponsor.phone) {
+                sendReferralAlert(sponsor, user).catch(err => {
+                    console.error('Failed to send sponsor WhatsApp alert:', err);
+                });
+            }
+        }
+
         // Return success response
         const response = {
             success: true,
@@ -432,6 +450,18 @@ router.post('/verify-payment', async (req, res) => {
 
         await user.save();
 
+        // Send WhatsApp payment confirmation (if payment completed)
+        if (status === 'COMPLETED' && user.phone) {
+            const paymentDetails = {
+                amount: user.tier === 'FAM' ? 0 : 'N/A',
+                tier: user.tier,
+                reference: paymentReference
+            };
+            sendPaymentConfirmation(user, paymentDetails).catch(err => {
+                console.error('Failed to send WhatsApp payment confirmation:', err);
+            });
+        }
+
         res.json({
             success: true,
             message: 'Payment status updated successfully',
@@ -497,6 +527,13 @@ router.post('/forgot-password', async (req, res) => {
 
         if (!emailResult.success) {
             console.error('Failed to send password reset email:', emailResult.error);
+        }
+
+        // Send WhatsApp password reset notification
+        if (user.phone) {
+            sendPasswordResetNotification(user, resetUrl).catch(err => {
+                console.error('Failed to send WhatsApp password reset notification:', err);
+            });
         }
 
         res.json({
