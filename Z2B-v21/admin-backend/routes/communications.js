@@ -5,6 +5,9 @@ const nodemailer = require('nodemailer');
 // Middleware to verify admin authentication
 const { verifyToken } = require('../middleware/auth');
 
+// WhatsApp Service
+const { sendWhatsAppMessage } = require('../utils/whatsappService');
+
 // SMS Configuration (using Africa's Talking or similar SMS gateway)
 // You'll need to install: npm install africastalking
 // Or use Twilio: npm install twilio
@@ -66,6 +69,82 @@ router.post('/sms', verifyToken, async (req, res) => {
         res.status(500).json({
             success: false,
             message: 'Failed to send SMS',
+            error: error.message
+        });
+    }
+});
+
+
+// Send WhatsApp Route (Bulk Messaging)
+router.post('/whatsapp', verifyToken, async (req, res) => {
+    try {
+        const { recipients, message } = req.body;
+
+        if (!recipients || !Array.isArray(recipients) || recipients.length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: 'Recipients array is required'
+            });
+        }
+
+        if (!message) {
+            return res.status(400).json({
+                success: false,
+                message: 'Message is required'
+            });
+        }
+
+        const results = {
+            total: recipients.length,
+            successful: 0,
+            failed: 0,
+            errors: []
+        };
+
+        // Send WhatsApp to each recipient with delay to avoid rate limiting
+        for (let i = 0; i < recipients.length; i++) {
+            const phone = recipients[i];
+            
+            try {
+                const result = await sendWhatsAppMessage(phone, message);
+                
+                if (result.success) {
+                    results.successful++;
+                    console.log(`WhatsApp sent to ${phone} via ${result.provider}`);
+                } else {
+                    results.failed++;
+                    results.errors.push({
+                        phone,
+                        error: result.error
+                    });
+                    console.error(`Failed to send to ${phone}: ${result.error}`);
+                }
+            } catch (error) {
+                results.failed++;
+                results.errors.push({
+                    phone,
+                    error: error.message
+                });
+                console.error(`Error sending to ${phone}:`, error);
+            }
+
+            // Add delay between messages to avoid rate limiting (500ms)
+            if (i < recipients.length - 1) {
+                await new Promise(resolve => setTimeout(resolve, 500));
+            }
+        }
+
+        res.json({
+            success: results.successful > 0,
+            message: `WhatsApp messages sent: ${results.successful} successful, ${results.failed} failed`,
+            data: results
+        });
+
+    } catch (error) {
+        console.error('WhatsApp bulk send error:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to send WhatsApp messages',
             error: error.message
         });
     }

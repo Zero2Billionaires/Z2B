@@ -504,6 +504,44 @@ router.get('/fam/stats', verifyToken, async (req, res) => {
     }
 });
 
+
+// Get Total Company Stats (always returns total counts)
+router.get('/company-stats', verifyToken, async (req, res) => {
+    try {
+        const totalMembers = await User.countDocuments({});
+        const activeMembers = await User.countDocuments({ accountStatus: 'ACTIVE' });
+        const pendingMembers = await User.countDocuments({ accountStatus: 'PENDING' });
+        const suspendedMembers = await User.countDocuments({ accountStatus: 'SUSPENDED' });
+
+        // Count members by tier
+        const tierCounts = await User.aggregate([
+            { $group: { _id: '$tier', count: { $sum: 1 } } }
+        ]);
+
+        const tierBreakdown = {};
+        tierCounts.forEach(t => {
+            tierBreakdown[t._id] = t.count;
+        });
+
+        res.json({
+            success: true,
+            data: {
+                totalMembers,
+                activeMembers,
+                pendingMembers,
+                suspendedMembers,
+                tierBreakdown
+            }
+        });
+    } catch (error) {
+        console.error('Error fetching company stats:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error fetching company statistics'
+        });
+    }
+});
+
 // Get Team Network / Family Tree for Admin
 router.get('/team-tree', verifyToken, async (req, res) => {
     try {
@@ -540,6 +578,7 @@ router.get('/team-tree', verifyToken, async (req, res) => {
         }
 
         let treeData;
+        let viewType = 'full'; // 'full' or 'individual'
 
         if (userId || memberId) {
             // Get tree for specific user by MongoDB _id or Z2B member ID
@@ -559,6 +598,7 @@ router.get('/team-tree', verifyToken, async (req, res) => {
                 });
             }
             treeData = await buildTreeNode(user);
+            viewType = 'individual';
         } else {
             // Get all root users (users with no sponsor or invalid sponsorId)
             const rootUsers = await User.find({
@@ -580,11 +620,19 @@ router.get('/team-tree', verifyToken, async (req, res) => {
                 treeData.children.push(rootNode);
                 treeData.teamSize += 1 + rootNode.teamSize;
             }
+            viewType = 'full';
         }
+
+        // Always include total company member count
+        const totalCompanyMembers = await User.countDocuments({});
+        const activeCompanyMembers = await User.countDocuments({ accountStatus: 'ACTIVE' });
 
         res.json({
             success: true,
-            data: treeData
+            data: treeData,
+            viewType,
+            totalCompanyMembers,
+            activeCompanyMembers
         });
     } catch (error) {
         console.error('Error building team tree:', error);
