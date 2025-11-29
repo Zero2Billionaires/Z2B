@@ -80,8 +80,9 @@ app.get('/api/health', (req, res) => {
         status: 'OK',
         message: 'Z2B Admin Backend is running',
         timestamp: new Date().toISOString(),
-        version: '1.0.2',  // Force Railway redeploy
+        version: '1.0.3',  // Password reset endpoints active
         endpoints: {
+            auth: '/api/auth/forgot-password',
             referrals: '/api/referrals/stats',
             members: '/api/referrals/members'
         }
