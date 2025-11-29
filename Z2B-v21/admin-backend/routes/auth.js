@@ -531,6 +531,8 @@ router.post('/verify-payment', async (req, res) => {
     }
 });
 
+console.log('✅ Auth routes: verify-payment registered');
+
 // Password Reset Request - Send reset email with token
 router.post('/forgot-password', async (req, res) => {
     try {
@@ -600,6 +602,8 @@ router.post('/forgot-password', async (req, res) => {
     }
 });
 
+console.log('✅ Auth routes: forgot-password registered');
+
 // Password Reset Confirmation - Verify token and update password
 router.post('/reset-password', async (req, res) => {
     try {
@@ -660,6 +664,9 @@ router.post('/reset-password', async (req, res) => {
         });
     }
 });
+
+console.log('✅ Auth routes: reset-password registered');
+console.log('✅ Auth routes file loaded completely - all routes registered');
 
 module.exports = router;
 // DEPLOYMENT TEST 1762032783
