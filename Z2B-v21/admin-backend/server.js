@@ -60,6 +60,7 @@ const paymentRoutes = require('./routes/payment');
 const coachRoutes = require('./routes/coach');
 const referralsRoutes = require('./routes/referrals');
 const communicationsRoutes = require('./routes/communications');
+const questionnaireRoutes = require('./routes/questionnaire');
 
 // Use Routes
 app.use('/api/auth', authRoutes);
@@ -71,6 +72,7 @@ app.use('/api/payment', paymentRoutes);
 app.use('/api/coach', coachRoutes);
 app.use('/api/referrals', referralsRoutes);
 app.use('/api/communications', communicationsRoutes);
+app.use('/api/questionnaire', questionnaireRoutes);
 
 // Health Check Endpoint
 app.get('/api/health', (req, res) => {
