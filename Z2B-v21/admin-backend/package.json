@@ -1,7 +1,7 @@
 {
   "name": "z2b-admin-backend",
-  "version": "1.0.0",
-  "description": "Z2B Legacy Builders Admin Panel Backend",
+  "version": "1.0.5",
+  "description": "Z2B Legacy Builders Admin Panel Backend - Password Reset Active",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
