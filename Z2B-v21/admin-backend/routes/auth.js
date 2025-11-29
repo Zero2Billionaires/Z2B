@@ -138,6 +138,46 @@ router.post('/login', async (req, res) => {
     }
 });
 
+// Helper function to check if trial has ended
+async function checkAndUpdateTrialStatus(user) {
+    if (!user.onFreeTrial) {
+        return user; // Not on trial, no check needed
+    }
+
+    const TRIAL_CREDIT_LIMIT = 100;
+    let trialEnded = false;
+    let trialEndReason = '';
+
+    // Check if 30 days have passed
+    const now = new Date();
+    const expiryDate = new Date(user.trialExpiryDate || user.famExpiryDate);
+    if (now > expiryDate) {
+        trialEnded = true;
+        trialEndReason = '30-day period expired';
+    }
+
+    // Check if trial credits exhausted (100 credits used)
+    const creditsUsed = user.trialCreditsUsed || 0;
+    const creditsRemaining = TRIAL_CREDIT_LIMIT - creditsUsed;
+
+    if (creditsRemaining <= 0) {
+        trialEnded = true;
+        trialEndReason = 'Trial credits exhausted (100 credits used)';
+    }
+
+    // If trial ended, update user status
+    if (trialEnded) {
+        user.onFreeTrial = false;
+        user.paymentStatus = 'PAYMENT_REQUIRED';
+        user.accountStatus = 'TRIAL_ENDED';
+        user.trialEndReason = trialEndReason;
+        user.trialEndedAt = new Date();
+        await user.save();
+    }
+
+    return user;
+}
+
 // Get current user data - requires authentication
 router.get('/me', async (req, res) => {
     try {
@@ -154,7 +194,7 @@ router.get('/me', async (req, res) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
         // Find user by ID from token
-        const user = await User.findById(decoded.userId).select('-password');
+        let user = await User.findById(decoded.userId).select('-password');
 
         if (!user) {
             return res.status(404).json({
@@ -162,6 +202,9 @@ router.get('/me', async (req, res) => {
                 message: 'User not found'
             });
         }
+
+        // Check and update trial status
+        user = await checkAndUpdateTrialStatus(user);
 
         return res.json({
             success: true,
@@ -221,10 +264,8 @@ router.post('/register', async (req, res) => {
         // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Determine account status based on payment method
-        let accountStatus = 'PENDING'; // Default - all new registrations need verification
-        // Cash deposits remain PENDING until admin verifies proof of payment
-        // Only online payments with successful checkout get ACTIVE status
+        // ALL TIERS GET 30-DAY FREE TRIAL - Payment due after trial ends
+        let accountStatus = 'ACTIVE'; // Everyone gets immediate access with free trial
 
         // Prepare user data
         const selectedTier = tier || 'FAM';
@@ -239,7 +280,9 @@ router.post('/register', async (req, res) => {
             sponsorCode,
             accountStatus,
             isEmailVerified: true, // Auto-verify for public registration
-            createdByAdmin: false
+            createdByAdmin: false,
+            onFreeTrial: true, // Mark as on free trial
+            paymentStatus: 'TRIAL' // Payment not required during trial
         };
 
         // Automatic Fuel Credit Allocation Based on Tier
@@ -253,23 +296,32 @@ router.post('/register', async (req, res) => {
             'LIFETIME': 10000   // Lifetime: 10,000 credits
         };
 
-        // Assign fuel credits based on tier
-        userData.fuelCredits = tierFuelCredits[selectedTier] || 0;
+        // FREE TRIAL CREDIT LIMIT: All tiers capped at Bronze level (100 credits) during trial
+        // Trial ends when EITHER 30 days pass OR 100 credits used (whichever comes first)
+        const TRIAL_CREDIT_LIMIT = 100; // Bronze equivalent
 
-        // FAM Tier Special Benefits: 30-day access + Coach Manlaw
-        if (selectedTier === 'FAM') {
-            const now = new Date();
-            const thirtyDaysLater = new Date(now);
-            thirtyDaysLater.setDate(thirtyDaysLater.getDate() + 30);
+        // Assign fuel credits: Bronze level (100) during trial, full tier credits after payment
+        userData.fuelCredits = TRIAL_CREDIT_LIMIT;
+        userData.trialCreditLimit = TRIAL_CREDIT_LIMIT;
+        userData.trialCreditsUsed = 0;
+        userData.fullTierCredits = tierFuelCredits[selectedTier] || 0; // Store for after payment
 
-            userData.famStartDate = now;
-            userData.famExpiryDate = thirtyDaysLater;
-            userData.lastCreditRefresh = now;
-            userData.famWeeksRemaining = 4;  // 30 days = ~4 weeks
-            userData.freeAppAccess = {
-                coachManlaw: true // Auto-enable Coach Manlaw for FAM
-            };
-        }
+        // ALL TIERS: 30-day FREE TRIAL + Full Access
+        const now = new Date();
+        const thirtyDaysLater = new Date(now);
+        thirtyDaysLater.setDate(thirtyDaysLater.getDate() + 30);
+
+        userData.trialStartDate = now;
+        userData.trialExpiryDate = thirtyDaysLater;
+        userData.famStartDate = now; // Keep for backward compatibility
+        userData.famExpiryDate = thirtyDaysLater; // Keep for backward compatibility
+        userData.lastCreditRefresh = now;
+        userData.famWeeksRemaining = 4;  // 30 days = ~4 weeks
+
+        // All tiers get Coach Manlaw access during trial
+        userData.freeAppAccess = {
+            coachManlaw: true
+        };
 
         // Create new user
         const user = new User(userData);
