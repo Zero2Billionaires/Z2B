@@ -219,9 +219,7 @@ router.get('/me', async (req, res) => {
     }
 });
 
-module.exports = router;
-
-
+// Registration endpoint
 router.post('/register', async (req, res) => {
     try {
         const {
