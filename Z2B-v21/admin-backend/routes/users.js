@@ -313,6 +313,66 @@ router.post('/:id/change-tier', verifyToken, async (req, res) => {
     }
 });
 
+// Admin-Initiated Password Reset
+router.post('/:id/reset-password', verifyToken, async (req, res) => {
+    try {
+        const { newPassword, sendNotification } = req.body;
+
+        const user = await User.findById(req.params.id);
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found'
+            });
+        }
+
+        // Generate random password if not provided
+        const passwordToSet = newPassword || Math.random().toString(36).slice(-10) + '@Z2B';
+
+        // Hash the new password
+        const hashedPassword = await bcrypt.hash(passwordToSet, 10);
+
+        // Update password and clear any existing reset tokens
+        user.password = hashedPassword;
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpires = undefined;
+        user.accountNotes = (user.accountNotes || '') +
+            `\n[${new Date().toISOString()}] Admin reset password`;
+
+        await user.save();
+
+        // Send notification to user if requested
+        if (sendNotification !== false) {
+            const { sendPasswordResetNotification } = require('../utils/whatsappService');
+            const frontendURL = process.env.FRONTEND_URL || 'https://z2blegacybuilders.co.za';
+            const loginUrl = `${frontendURL}/dashboard.html`;
+
+            if (user.phone) {
+                sendPasswordResetNotification(user, loginUrl).catch(err => {
+                    console.error('Failed to send WhatsApp notification:', err);
+                });
+            }
+        }
+
+        res.json({
+            success: true,
+            message: 'Password reset successfully',
+            data: {
+                userId: user._id,
+                email: user.email,
+                temporaryPassword: newPassword ? undefined : passwordToSet,
+                notificationSent: sendNotification !== false && user.phone ? true : false
+            }
+        });
+    } catch (error) {
+        console.error('Error resetting password:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error resetting user password'
+        });
+    }
+});
+
 // Delete User
 router.delete('/:id', verifyToken, async (req, res) => {
     try {
