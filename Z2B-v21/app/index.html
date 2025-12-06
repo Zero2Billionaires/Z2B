@@ -1164,9 +1164,240 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* Floating Questionnaire CTA Banner */
+        .questionnaire-float {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 1200px;
+            background: linear-gradient(135deg, var(--navy-blue) 0%, var(--dark-navy) 100%);
+            border-radius: 15px 15px 0 0;
+            box-shadow: 0 -5px 30px rgba(0, 0, 0, 0.4);
+            padding: 1rem 2rem;
+            z-index: 999;
+            display: none;
+            opacity: 1;
+            transition: all 0.3s ease;
+            border-top: 4px solid var(--gold);
+        }
+
+        .questionnaire-float.hidden {
+            display: none !important;
+        }
+
+        .questionnaire-close {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            right: 15px;
+            background: rgba(255, 215, 0, 0.2);
+            color: var(--gold);
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            line-height: 1;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .questionnaire-close:hover {
+            background: var(--gold);
+            color: var(--navy-blue);
+            transform: translateY(-50%) rotate(90deg);
+        }
+
+        .questionnaire-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+            padding-right: 3rem;
+        }
+
+        .questionnaire-text {
+            flex: 1;
+        }
+
+        .questionnaire-content h3 {
+            color: var(--gold);
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin: 0 0 0.3rem 0;
+            line-height: 1.3;
+        }
+
+        .questionnaire-content p {
+            color: var(--white);
+            font-size: 0.9rem;
+            line-height: 1.4;
+            margin: 0;
+            opacity: 0.9;
+        }
+
+        .questionnaire-btn {
+            background: linear-gradient(135deg, var(--gold), var(--orange));
+            color: var(--navy-blue);
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .questionnaire-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(255, 215, 0, 0.5);
+            color: var(--navy-blue);
+        }
+
+        /* Tablet Optimization */
+        @media (max-width: 992px) {
+            .questionnaire-float {
+                width: 95%;
+                padding: 0.9rem 1.5rem;
+            }
+
+            .questionnaire-content {
+                gap: 1.5rem;
+            }
+
+            .questionnaire-content h3 {
+                font-size: 1.1rem;
+            }
+
+            .questionnaire-content p {
+                font-size: 0.85rem;
+            }
+
+            .questionnaire-btn {
+                padding: 0.7rem 1.5rem;
+                font-size: 0.95rem;
+            }
+        }
+
+        /* Mobile Optimization */
+        @media (max-width: 768px) {
+            .questionnaire-float {
+                width: 100%;
+                padding: 0.8rem 1rem;
+                border-radius: 0;
+            }
+
+            .questionnaire-content {
+                flex-direction: column;
+                gap: 0.8rem;
+                align-items: center;
+                text-align: center;
+                padding-right: 0;
+                width: 100%;
+            }
+
+            .questionnaire-text {
+                width: 100%;
+                padding: 0 3.5rem 0 0.5rem;
+            }
+
+            .questionnaire-content h3 {
+                font-size: 0.95rem;
+                text-align: center;
+                width: 100%;
+                line-height: 1.4;
+                padding: 0 0.5rem;
+            }
+
+            .questionnaire-content p {
+                font-size: 0.8rem;
+                line-height: 1.4;
+                text-align: center;
+                width: 100%;
+            }
+
+            .questionnaire-btn {
+                padding: 0.7rem 1.5rem;
+                font-size: 0.9rem;
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+
+            .questionnaire-close {
+                width: 28px;
+                height: 28px;
+                font-size: 1.1rem;
+                right: 18px;
+                top: 10px;
+                transform: none;
+            }
+        }
+
+        /* Small Mobile */
+        @media (max-width: 480px) {
+            .questionnaire-float {
+                padding: 0.75rem 0.8rem;
+            }
+
+            .questionnaire-text {
+                padding: 0 3rem 0 0.3rem;
+            }
+
+            .questionnaire-content h3 {
+                font-size: 0.9rem;
+                line-height: 1.35;
+            }
+
+            .questionnaire-content p {
+                font-size: 0.78rem;
+                line-height: 1.35;
+            }
+
+            .questionnaire-btn {
+                padding: 0.65rem 1.2rem;
+                font-size: 0.88rem;
+                max-width: 280px;
+            }
+
+            .questionnaire-close {
+                width: 26px;
+                height: 26px;
+                font-size: 1rem;
+                right: 15px;
+                top: 8px;
+            }
+        }
     </style>
 </head>
 <body>
+    <!-- Floating Questionnaire CTA Banner -->
+    <div id="questionnaireFloat" class="questionnaire-float">
+        <button class="questionnaire-close" onclick="closeQuestionnaireFloat()" aria-label="Close">&times;</button>
+        <div class="questionnaire-content">
+            <div class="questionnaire-text">
+                <h3>🎯 Discover Your Entrepreneurial<br>Readiness Score</h3>
+                <p>Take our 5-minute assessment and unlock your<br>personalized transformation roadmap</p>
+            </div>
+            <a href="questionnaire.html" class="questionnaire-btn">
+                <i class="fas fa-clipboard-check"></i> Start Free Assessment
+            </a>
+        </div>
+    </div>
+
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
@@ -1189,6 +1420,7 @@
                     <li class="nav-item"><a class="nav-link" href="#opportunity">Opportunity</a></li>
                     <li class="nav-item"><a class="nav-link" href="#beta">Beta Program</a></li>
                     <li class="nav-item"><a class="nav-link" href="#tiers">Membership</a></li>
+                    <li class="nav-item"><a class="nav-link" href="questionnaire.html" style="color: var(--gold) !important; font-weight: 600;"><i class="fas fa-clipboard-check"></i> Discovery</a></li>
                     <li class="nav-item">
                         <button class="btn btn-outline-light ms-2" onclick="window.location.href='login.html'" style="border: 2px solid var(--gold);">
                             <i class="fas fa-sign-in-alt"></i> Login
@@ -1211,12 +1443,16 @@
                 <div class="col-lg-6 hero-content" data-aos="fade-right">
                     <h1>Your <span class="highlight">90-Day Journey</span><br>from Employee to<br>Entrepreneur Begins with<br><span class="highlight">AI Coach Manlaw</span></h1>
                     <p class="tagline">Transformation is the new currency — build your confidence, skills, and financial future one day at a time.</p>
+                    <div style="background: rgba(255, 215, 0, 0.2); padding: 1rem; border-radius: 10px; border: 2px solid var(--gold); margin: 1.5rem 0;">
+                        <h3 style="color: var(--gold); margin: 0 0 0.5rem 0; font-size: 1.5rem;">🎁 30-DAY FREE TRIAL - ALL TIERS!</h3>
+                        <p style="color: white; margin: 0; font-size: 1.1rem;">Start your transformation journey with <strong>ZERO payment</strong> for 30 days. Full access to all features. Payment only due after your trial ends!</p>
+                    </div>
                     <div class="mt-4">
-                        <a href="#solution" class="btn btn-gold btn-lg me-3 mb-3">
-                            <i class="fas fa-rocket"></i> Start Your 90-Day Journey
+                        <a href="register.html" class="btn btn-gold btn-lg me-3 mb-3" style="animation: pulse 2s infinite;">
+                            <i class="fas fa-gift"></i> Start FREE 30-Day Trial
                         </a>
-                        <a href="#value" class="btn btn-outline-light btn-lg mb-3">
-                            Learn About Our Vision
+                        <a href="#tiers" class="btn btn-outline-light btn-lg mb-3">
+                            View Membership Tiers
                         </a>
                     </div>
                 </div>
@@ -1496,6 +1732,28 @@
                             <li>✅ Talking Head Avatars</li>
                             <li>✅ Text-to-Video Generation</li>
                             <li>✅ Professional Presentations</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- CaptionPro -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="app-card">
+                        <div class="app-header">
+                            <div class="app-icon-wrapper" style="background: linear-gradient(135deg, #8B5CF6, #EC4899);">
+                                <i class="fas fa-closed-captioning" style="color: white;"></i>
+                            </div>
+                            <h3 class="app-name">CaptionPro</h3>
+                            <span class="app-badge" style="background: linear-gradient(135deg, #FFD700, #FF6B35);">🎬 NEW</span>
+                        </div>
+                        <p class="app-description">
+                            AI Video Captions & Auto-Cut Platform. Transform your videos with AI-powered captions in 50+ languages including African languages. Auto-cut long videos into viral TikTok, Instagram Reels, and YouTube Shorts.
+                        </p>
+                        <ul class="app-features">
+                            <li>✅ 50+ Languages (Zulu, Xhosa, Sotho)</li>
+                            <li>✅ Auto-Cut to Reels/Shorts</li>
+                            <li>✅ Translation 130+ Languages</li>
+                            <li>✅ Video Editing Suite</li>
                         </ul>
                     </div>
                 </div>
@@ -1807,17 +2065,18 @@
                 <!-- Bronze Tier -->
                 <div class="col-lg-3 col-md-6">
                     <div class="tier-card">
+                        <div class="tier-badge" style="background: linear-gradient(135deg, #FFD700, #FFA500);">🎁 30-DAY FREE TRIAL</div>
                         <h3 class="tier-name">Bronze</h3>
                         <div class="tier-retail-price">Retail: R960</div>
                         <div class="tier-discount-label">50% Beta Discount</div>
                         <div class="tier-price">R480</div>
-                        <div class="tier-period">Pay as You Go Refuel</div>
+                        <div class="tier-period">Payment due after 30-day trial</div>
                         <ul class="tier-features">
                             <li><i class="fas fa-check"></i> <strong>PV:</strong> 24 Points</li>
                             <li><i class="fas fa-check"></i> 25 AI Fuel/Day + 3-Month Rollover</li>
-                            <li><i class="fas fa-check"></i> 25% ISP Commission</li>
-                            <li><i class="fas fa-check"></i> 3 Generation TSC</li>
-                            <li><i class="fas fa-check"></i> 3 Generation TPB</li>
+                            <li><i class="fas fa-check"></i> 18% ISP Commission</li>
+                            <li><i class="fas fa-check"></i> Up to 3 Generation TSC (starts G2)</li>
+                            <li><i class="fas fa-check"></i> QPB - First 90 days only</li>
                             <li><i class="fas fa-check"></i> Coach Manlaw - AI Coach</li>
                             <li><i class="fas fa-check"></i> Marketplace Access</li>
                             <li><i class="fas fa-check"></i> Basic Training</li>
@@ -1840,9 +2099,9 @@
                         <ul class="tier-features">
                             <li><i class="fas fa-check"></i> <strong>PV:</strong> 50 Points</li>
                             <li><i class="fas fa-check"></i> 60 AI Fuel/Day + 3-Month Rollover</li>
-                            <li><i class="fas fa-check"></i> 30% ISP Commission</li>
-                            <li><i class="fas fa-check"></i> 5 Generation TSC</li>
-                            <li><i class="fas fa-check"></i> 5 Generation TPB</li>
+                            <li><i class="fas fa-check"></i> 22% ISP Commission</li>
+                            <li><i class="fas fa-check"></i> Up to 5 Generation TSC (starts G2)</li>
+                            <li><i class="fas fa-check"></i> QPB - First 90 days only</li>
                             <li><i class="fas fa-check"></i> Coach Manlaw + Glowie</li>
                             <li><i class="fas fa-check"></i> Marketplace Access</li>
                             <li><i class="fas fa-check"></i> Advanced Training</li>
@@ -1865,10 +2124,10 @@
                         <ul class="tier-features">
                             <li><i class="fas fa-check"></i> <strong>PV:</strong> 74 Points</li>
                             <li><i class="fas fa-check"></i> 120 AI Fuel/Day + 3-Month Rollover</li>
-                            <li><i class="fas fa-check"></i> 35% ISP Commission</li>
-                            <li><i class="fas fa-check"></i> 7 Generation TSC</li>
-                            <li><i class="fas fa-check"></i> 7 Generation TPB</li>
-                            <li><i class="fas fa-check"></i> 7 TLI (Mama I Made It)</li>
+                            <li><i class="fas fa-check"></i> 25% ISP Commission</li>
+                            <li><i class="fas fa-check"></i> Up to 7 Generation TSC (starts G2)</li>
+                            <li><i class="fas fa-check"></i> QPB - First 90 days only</li>
+                            <li><i class="fas fa-check"></i> TLI Levels 1-3 (Up to 🌍 SOLID AS EARTH)</li>
                             <li><i class="fas fa-check"></i> All 8 AI Apps</li>
                             <li><i class="fas fa-check"></i> Marketplace Access</li>
                             <li><i class="fas fa-check"></i> Priority Support</li>
@@ -1894,10 +2153,10 @@
                         <ul class="tier-features">
                             <li><i class="fas fa-check"></i> <strong>PV:</strong> 149 Points</li>
                             <li><i class="fas fa-check"></i> 250 AI Fuel/Day + 3-Month Rollover</li>
-                            <li><i class="fas fa-check"></i> 40% ISP Commission</li>
-                            <li><i class="fas fa-check"></i> 9 Generation TSC</li>
-                            <li><i class="fas fa-check"></i> 9 Generation TPB</li>
-                            <li><i class="fas fa-check"></i> 8 TLI Levels</li>
+                            <li><i class="fas fa-check"></i> 28% ISP Commission</li>
+                            <li><i class="fas fa-check"></i> Up to 9 Generation TSC (starts G2)</li>
+                            <li><i class="fas fa-check"></i> QPB - First 90 days only</li>
+                            <li><i class="fas fa-check"></i> TLI Levels 1-5 (Up to 🪐 BIG AS JUPITER)</li>
                             <li><i class="fas fa-check"></i> Quarterly Profit Pool</li>
                             <li><i class="fas fa-check"></i> All 8 AI Apps</li>
                             <li><i class="fas fa-check"></i> Sales Funnel</li>
@@ -1920,10 +2179,10 @@
                         <ul class="tier-features">
                             <li><i class="fas fa-check"></i> <strong>PV:</strong> 249 Points</li>
                             <li><i class="fas fa-check"></i> 500 AI Fuel/Day + 3-Month Rollover</li>
-                            <li><i class="fas fa-check"></i> 45% ISP Commission</li>
-                            <li><i class="fas fa-check"></i> 10 Generation TSC</li>
-                            <li><i class="fas fa-check"></i> 10 Generation TPB</li>
-                            <li><i class="fas fa-check"></i> All 10 TLI Levels</li>
+                            <li><i class="fas fa-check"></i> 30% ISP Commission</li>
+                            <li><i class="fas fa-check"></i> 10 Generation TSC (starts G2)</li>
+                            <li><i class="fas fa-check"></i> QPB - First 90 days only</li>
+                            <li><i class="fas fa-check"></i> All 10 TLI Levels (♾️ ETERNAL AS THE COSMOS)</li>
                             <li><i class="fas fa-check"></i> Quarterly Profit Pool</li>
                             <li><i class="fas fa-check"></i> All 8 AI Apps</li>
                             <li><i class="fas fa-check"></i> Done-For-You Campaigns</li>
@@ -2127,6 +2386,78 @@
                 // Add transition for smooth animation
                 brandElement.style.transition = 'transform 0.1s ease';
             }
+        })();
+
+        // ===== FLOATING QUESTIONNAIRE CARD =====
+        function closeQuestionnaireFloat() {
+            const floatCard = document.getElementById('questionnaireFloat');
+            if (floatCard) {
+                floatCard.classList.add('hidden');
+                // Store in localStorage so it stays hidden for this session
+                localStorage.setItem('z2b_questionnaire_closed', 'true');
+            }
+        }
+
+        // Initialize questionnaire float behavior
+        (function() {
+            const floatCard = document.getElementById('questionnaireFloat');
+            if (!floatCard) {
+                console.error('❌ Questionnaire float card not found!');
+                return;
+            }
+
+            console.log('✅ Questionnaire card element found');
+
+            // Clear localStorage for testing (uncomment to reset)
+            // localStorage.removeItem('z2b_questionnaire_closed');
+
+            // Check if user previously closed the card
+            const wasClosed = localStorage.getItem('z2b_questionnaire_closed');
+            if (wasClosed === 'true') {
+                floatCard.classList.add('hidden');
+                console.log('⚠️ Card hidden - user closed it previously. Clear localStorage to see it again.');
+                return;
+            }
+
+            // Show card immediately on page load (for testing)
+            setTimeout(function() {
+                floatCard.style.display = 'block';
+                floatCard.style.opacity = '1';
+                console.log('🎯 Questionnaire card is now visible!');
+            }, 1000);
+
+            // Show/hide based on scroll position
+            let lastScrollTop = 0;
+            window.addEventListener('scroll', function() {
+                const wasClosed = localStorage.getItem('z2b_questionnaire_closed');
+
+                // Only control visibility if user hasn't closed it
+                if (wasClosed !== 'true') {
+                    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+                    // Show card after scrolling 400px down
+                    if (scrollTop > 400) {
+                        floatCard.style.display = 'block';
+                    } else if (scrollTop < 100) {
+                        floatCard.style.display = 'none';
+                    }
+
+                    // Hide when scrolling near bottom (footer area)
+                    const windowHeight = window.innerHeight;
+                    const documentHeight = document.documentElement.scrollHeight;
+                    const distanceFromBottom = documentHeight - (scrollTop + windowHeight);
+
+                    if (distanceFromBottom < 300) {
+                        floatCard.style.opacity = '0';
+                        floatCard.style.pointerEvents = 'none';
+                    } else if (scrollTop > 100) {
+                        floatCard.style.opacity = '1';
+                        floatCard.style.pointerEvents = 'auto';
+                    }
+
+                    lastScrollTop = scrollTop;
+                }
+            });
         })();
     </script>
 </body>

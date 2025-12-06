@@ -964,6 +964,18 @@
 </head>
 
 <body>
+    <!-- VERSION BANNER - Shows what code version is loaded -->
+    <div id="versionBanner" style="position: fixed; top: 0; left: 0; right: 0; z-index: 99999; background: linear-gradient(135deg, #4CECC4, #155799); color: #0A1F44; padding: 0.8rem 1.5rem; text-align: center; font-weight: 700; box-shadow: 0 4px 15px rgba(0,0,0,0.4); display: flex; justify-content: space-between; align-items: center; font-size: 1.1rem;">
+        <div>
+            <i class="fas fa-code-branch"></i>
+            <span id="versionText">VERSION 2.0 FINAL - Music & Lesson Audio FIXED ✅</span>
+            <small style="margin-left: 1rem; opacity: 0.8; font-size: 0.85rem;">(2025-01-10)</small>
+        </div>
+        <button onclick="document.getElementById('versionBanner').style.display='none'" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: #0A1F44; padding: 0.4rem 1rem; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">
+            <i class="fas fa-times"></i> Close
+        </button>
+    </div>
+
     <div class="coach-container">
         <!-- Sidebar -->
         <div class="sidebar">
@@ -2630,9 +2642,9 @@
             document.getElementById('modalLessonWeek').textContent =
                 `WEEK ${lesson.week} • DAY ${lesson.day}`;
             document.getElementById('modalLessonTitle').textContent = lesson.title;
-            document.getElementById('modalLessonContent').textContent = lesson.content;
-            document.getElementById('modalLessonActivity').textContent = lesson.activity;
-            document.getElementById('modalLessonAssignment').textContent = lesson.assignment;
+            document.getElementById('modalLessonContent').innerHTML = lesson.content;
+            document.getElementById('modalLessonActivity').innerHTML = lesson.activity;
+            document.getElementById('modalLessonAssignment').innerHTML = lesson.assignment;
 
             // Update stage info in modal
             const stageInfo = getCurrentStage(currentDay);
@@ -4880,6 +4892,16 @@ Respond as Coach Manlaw would - sharp, strategic, faith-filled, funny when appro
             }
         }
 
+        // Helper function to strip HTML tags from text
+        function stripHtmlTags(html) {
+            if (!html) return '';
+            // Create a temporary element to parse HTML
+            const temp = document.createElement('div');
+            temp.innerHTML = html;
+            // Get text content without HTML tags
+            return temp.textContent || temp.innerText || '';
+        }
+
         // Prepare audio for lesson
         function prepareAudio() {
             const lesson = getLessonByDay(currentDay);
@@ -4891,24 +4913,25 @@ Respond as Coach Manlaw would - sharp, strategic, faith-filled, funny when appro
             const stageInfo = getCurrentStage(currentDay);
             const overview = getStageOverview(stageInfo.stage);
 
-            // Build stage overview narration
+            // Build stage overview narration (clean text)
             const stageOverviewText = `
-                ${overview.legPhase}.
-                Stage ${stageInfo.stage}: ${stageInfo.name}. ${stageInfo.quote}
-                ${overview.description}
-                Focus: ${overview.focus}
+                ${stripHtmlTags(overview.legPhase)}.
+                Stage ${stageInfo.stage}: ${stripHtmlTags(stageInfo.name)}. ${stripHtmlTags(stageInfo.quote)}
+                ${stripHtmlTags(overview.description)}
+                Focus: ${stripHtmlTags(overview.focus)}
             `;
 
             // Combine lesson text with stage context and overview (EXCLUDING activity and assignment)
+            // Strip all HTML tags for clean audio
             const fullText = `
                 Welcome to Day ${currentDay} of your 90-day transformation journey.
 
                 Let me remind you where you are in your transformation:
                 ${stageOverviewText}
 
-                Today's lesson: ${lesson.title}.
+                Today's lesson: ${stripHtmlTags(lesson.title)}.
 
-                ${lesson.content}
+                ${stripHtmlTags(lesson.content)}
 
                 This is the end of today's lesson. Now, test your understanding with the comprehension check, then complete the activity and assignment below to progress to the next lesson in your transformation journey. Understanding comes before action, Legacy Builder!
             `;
@@ -5481,6 +5504,9 @@ Respond as Coach Manlaw would - sharp, strategic, faith-filled, funny when appro
             startAnimation();
         }
 
+        // Alias for backward compatibility
+        const playAnimatedLesson = startAnimation;
+
         // Stop animation
         function stopAnimation() {
             if (animationInterval) {
@@ -5854,6 +5880,7 @@ I am a Legacy Builder, You are a Legacy Builder, and Together we are Builders of
             initializeVoiceSelection();
 
             console.log('✅ Coach ManLaw: Ready!');
+            console.log('🔢 VERSION: 2.0 - Music & Lesson Audio FIXED (2025-01-10)');
             console.log('Current Day:', currentDay);
             console.log('Functions available:', {
                 viewLesson: typeof viewLesson,
@@ -5930,7 +5957,7 @@ I am a Legacy Builder, You are a Legacy Builder, and Together we are Builders of
 -->
 
 <!-- Floating Music Player -->
-<div id="musicPlayerFloat" class="music-player-float" style="display: flex;">
+<div id="musicPlayerFloat" class="music-player-float" style="display: none;">
     <!-- Player Header -->
     <div class="music-player-header">
         <div style="display: flex; align-items: center; gap: 0.5rem;">
@@ -5954,6 +5981,30 @@ I am a Legacy Builder, You are a Legacy Builder, and Together we are Builders of
         </button>
         <button class="mode-tab active" id="musicModeTab" onclick="switchAudioMode('music')">
             <i class="fas fa-headphones"></i> Background Music
+        </button>
+    </div>
+
+    <!-- Lesson Audio Info Panel (shows when in Lesson mode) -->
+    <div id="lessonAudioInfo" style="display: none; padding: 1rem; background: rgba(255, 215, 0, 0.1); border-left: 3px solid var(--royal-gold); margin: 1rem;">
+        <div style="font-size: 0.85rem; color: var(--royal-gold); margin-bottom: 0.5rem;">
+            <i class="fas fa-info-circle"></i> <strong>Lesson Audio Mode Active</strong>
+        </div>
+        <div style="font-size: 0.8rem; color: var(--white); opacity: 0.9; margin-bottom: 0.8rem;">
+            Opens any lesson (Introduction, Morning, or Evening) and I'll automatically read it to you! Or click below to read current page.
+        </div>
+        <button onclick="readCurrentPage()" style="width: 100%; padding: 0.7rem; background: linear-gradient(135deg, var(--royal-gold), var(--royal-gold-dark)); border: none; border-radius: 8px; color: var(--royal-blue-deep); font-weight: 600; cursor: pointer;">
+            <i class="fas fa-book-reader"></i> Read Current Page Now
+        </button>
+    </div>
+
+    <!-- Playlist Status Panel (always visible) -->
+    <div id="playlistStatus" style="padding: 0.8rem 1rem; background: rgba(0, 0, 0, 0.2); border-bottom: 1px solid rgba(255, 215, 0, 0.2); display: flex; justify-content: space-between; align-items: center;">
+        <div style="font-size: 0.85rem;">
+            <i class="fas fa-list"></i>
+            <span id="playlistCount">0 tracks</span> in playlist
+        </div>
+        <button onclick="forceInitPlaylist()" style="padding: 0.4rem 0.8rem; background: rgba(255, 215, 0, 0.15); border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 6px; color: var(--royal-gold); font-size: 0.75rem; cursor: pointer; font-weight: 600;" title="Click if playlist is empty">
+            <i class="fas fa-sync"></i> Re-init
         </button>
     </div>
 
@@ -6028,8 +6079,13 @@ I am a Legacy Builder, You are a Legacy Builder, and Together we are Builders of
     <div class="library-content">
         <!-- Internal Library -->
         <div id="internalLibrary" class="library-tab-content active">
-            <div class="library-search">
-                <input type="text" placeholder="Search tracks..." id="librarySearch" oninput="filterTracks(this.value)">
+            <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+                <div class="library-search" style="flex: 1; margin-bottom: 0;">
+                    <input type="text" placeholder="Search tracks..." id="librarySearch" oninput="filterTracks(this.value)">
+                </div>
+                <button onclick="addAllTracksToPlaylist()" style="padding: 0.7rem 1rem; background: linear-gradient(135deg, var(--royal-gold), var(--royal-gold-dark)); border: none; border-radius: 8px; color: var(--royal-blue-deep); font-weight: 600; cursor: pointer; white-space: nowrap;" title="Add all library tracks to playlist">
+                    <i class="fas fa-plus-circle"></i> Add All
+                </button>
             </div>
             <div id="trackList" class="track-list">
                 <!-- Tracks will be populated by JavaScript -->
@@ -6747,6 +6803,13 @@ function initializeMusicPlayer() {
     // Populate internal library
     populateInternalLibrary();
 
+    // Auto-populate playlist with all library tracks if playlist is empty
+    if (currentPlaylist.length === 0) {
+        currentPlaylist = [...musicLibrary];
+        console.log('🎵 Auto-loaded', currentPlaylist.length, 'tracks to playlist');
+        updatePlaylistDisplay();
+    }
+
     // Load uploaded tracks
     loadUploadedTracks();
 
@@ -6759,7 +6822,7 @@ function initializeMusicPlayer() {
     // Load YouTube API
     loadYouTubeAPI();
 
-    console.log('✅ Music Player initialized');
+    console.log('✅ Music Player initialized with', currentPlaylist.length, 'tracks ready to play');
 }
 
 // Populate Internal Library
@@ -6793,6 +6856,24 @@ function addTrackToPlaylist(trackId) {
     }
 }
 
+// Add all library tracks to playlist
+function addAllTracksToPlaylist() {
+    let addedCount = 0;
+    musicLibrary.forEach(track => {
+        if (!currentPlaylist.find(t => t.id === track.id)) {
+            currentPlaylist.push(track);
+            addedCount++;
+        }
+    });
+
+    if (addedCount > 0) {
+        updatePlaylistDisplay();
+        showNotification(`✅ Added ${addedCount} track${addedCount > 1 ? 's' : ''} to playlist`);
+    } else {
+        showNotification(`ℹ️ All tracks already in playlist`);
+    }
+}
+
 // Play track immediately
 function playTrackNow(trackId) {
     const track = musicLibrary.find(t => t.id === trackId);
@@ -6807,12 +6888,19 @@ function playTrackNow(trackId) {
 // Update Playlist Display
 function updatePlaylistDisplay() {
     const container = document.getElementById('currentPlaylist');
+
+    // Update playlist count display
+    const countDisplay = document.getElementById('playlistCount');
+    if (countDisplay) {
+        countDisplay.textContent = `${currentPlaylist.length} track${currentPlaylist.length !== 1 ? 's' : ''}`;
+    }
+
     if (currentPlaylist.length === 0) {
         container.innerHTML = `
             <div style="text-align: center; padding: 2rem; opacity: 0.5;">
                 <i class="fas fa-music" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
                 <p>No tracks in playlist</p>
-                <p style="font-size: 0.85rem;">Add tracks from the library</p>
+                <p style="font-size: 0.85rem;">Click "Re-init" button above to load tracks</p>
             </div>
         `;
         return;
@@ -6964,17 +7052,35 @@ function pauseMusic() {
 
 function resumeMusic() {
     if (currentPlaylist.length === 0) {
+        showNotification('⚠️ Playlist is empty');
+        return;
+    }
+
+    // If nothing has been played yet, start from the first track
+    if (!ytPlayer && (!audioPlayer || !audioPlayer.src)) {
+        console.log('🎵 Starting playback from beginning');
         playCurrentTrack();
         return;
     }
 
+    // Resume existing playback
     if (ytPlayer && ytPlayer.playVideo) {
         ytPlayer.playVideo();
-    } else if (audioPlayer) {
-        audioPlayer.play();
+        isPlaying = true;
+        updatePlayPauseButton();
+    } else if (audioPlayer && audioPlayer.src) {
+        audioPlayer.play().then(() => {
+            isPlaying = true;
+            updatePlayPauseButton();
+        }).catch(err => {
+            console.error('Audio play error:', err);
+            // If resume fails, start from beginning
+            playCurrentTrack();
+        });
+    } else {
+        // Nothing to resume, start fresh
+        playCurrentTrack();
     }
-    isPlaying = true;
-    updatePlayPauseButton();
 }
 
 function stopMusic() {
@@ -7375,26 +7481,200 @@ function filterTracks(query) {
     });
 }
 
+// Get current page content for audio reading
+function getCurrentPageContent() {
+    // Check if lesson modal is open
+    const lessonModal = document.getElementById('lessonModal');
+    const isModalOpen = lessonModal && lessonModal.style.display !== 'none' &&
+                        window.getComputedStyle(lessonModal).display !== 'none';
+
+    if (isModalOpen) {
+        // Read from modal
+        const modalTitle = document.getElementById('modalLessonTitle')?.textContent || '';
+        const modalContent = document.getElementById('modalLessonContent')?.innerHTML || '';
+        const modalActivity = document.getElementById('modalLessonActivity')?.innerHTML || '';
+        const modalAssignment = document.getElementById('modalLessonAssignment')?.innerHTML || '';
+
+        return {
+            type: 'lesson',
+            title: modalTitle,
+            content: `${modalContent}\n\nActivity: ${modalActivity}\n\nAssignment: ${modalAssignment}`,
+            session: typeof currentSession !== 'undefined' ? currentSession : 'morning'
+        };
+    }
+
+    // Get current session and lesson card content if visible
+    const session = typeof currentSession !== 'undefined' ? currentSession : 'morning';
+    const lessonTitle = document.getElementById('lessonTitle')?.textContent || 'Current Lesson';
+
+    // Try to get intro/welcome text if on main page
+    const chatMessages = document.querySelectorAll('.chat-message');
+    let welcomeContent = '';
+    chatMessages.forEach(msg => {
+        if (msg.classList.contains('coach') && msg.textContent.includes('Welcome')) {
+            welcomeContent += msg.textContent + '\n\n';
+        }
+    });
+
+    return {
+        type: 'introduction',
+        title: lessonTitle,
+        content: welcomeContent || `You are viewing ${session} session lessons. Please open a specific lesson to hear its audio content.`,
+        session: session
+    };
+}
+
+// Read current page content with Text-to-Speech
+function readCurrentPage() {
+    console.log('📖 readCurrentPage called');
+
+    const pageContent = getCurrentPageContent();
+    console.log('🎙️ Reading current page:', pageContent.type);
+    console.log('📄 Page content:', pageContent);
+
+    // Strip HTML tags from content
+    const cleanContent = stripHtmlTags(pageContent.content);
+    console.log('🧹 Cleaned content length:', cleanContent.length);
+
+    if (!cleanContent || cleanContent.trim().length === 0) {
+        console.warn('⚠️ No content to read');
+        showNotification('⚠️ No content available to read');
+        return;
+    }
+
+    // Build narration
+    const fullText = `
+        ${pageContent.title}.
+
+        ${cleanContent}
+    `.trim();
+
+    console.log('🎤 Full text to read:', fullText.substring(0, 200) + '...');
+
+    // Stop any currently playing music
+    stopMusic();
+
+    // Stop any existing TTS
+    if (typeof stopAudio === 'function') {
+        stopAudio();
+    }
+
+    // Wait for voices to load
+    const speakText = () => {
+        // Create new speech synthesis utterance
+        const utterance = new SpeechSynthesisUtterance(fullText);
+        utterance.rate = 0.9;
+        utterance.pitch = 1.0;
+        utterance.volume = 1.0;
+
+        // Get available voices
+        const voices = speechSynthesis.getVoices();
+        console.log('🎤 Available voices:', voices.length);
+
+        if (voices.length > 0) {
+            // Try to use a good English voice
+            const preferredVoice =
+                voices.find(v => v.name.includes('Luke') && v.lang.startsWith('en')) ||
+                voices.find(v => v.lang === 'en-ZA') ||
+                voices.find(v => v.lang.startsWith('en-GB')) ||
+                voices.find(v => v.lang.startsWith('en'));
+
+            if (preferredVoice) {
+                utterance.voice = preferredVoice;
+                console.log('🎤 Using voice:', preferredVoice.name);
+            }
+        }
+
+        // Play the audio
+        speechSynthesis.cancel(); // Clear any pending speech
+
+        utterance.onstart = () => {
+            console.log('🎙️ Speech started');
+            showNotification(`🎙️ Now reading: ${pageContent.title}`);
+        };
+
+        utterance.onend = () => {
+            console.log('✅ Speech finished');
+            showNotification('✅ Finished reading page content');
+        };
+
+        utterance.onerror = (event) => {
+            console.error('🔴 Speech synthesis error:', event);
+            showNotification('⚠️ Error reading page content');
+        };
+
+        console.log('▶️ Starting speech synthesis...');
+        speechSynthesis.speak(utterance);
+    };
+
+    // Ensure voices are loaded before speaking
+    if (speechSynthesis.getVoices().length === 0) {
+        console.log('⏳ Waiting for voices to load...');
+        speechSynthesis.addEventListener('voiceschanged', speakText, { once: true });
+    } else {
+        speakText();
+    }
+}
+
 // Switch Audio Mode
 function switchAudioMode(mode) {
+    console.log('🔄 Switching audio mode to:', mode);
     currentAudioMode = mode;
 
     document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
 
+    const lessonInfoPanel = document.getElementById('lessonAudioInfo');
+
     if (mode === 'lesson') {
         document.getElementById('lessonModeTab').classList.add('active');
         stopMusic();
-        // Resume lesson TTS if it was playing
-        if (typeof resumeAudio === 'function') {
-            showNotification('🎙️ Switched to Lesson Audio mode');
+
+        // Update Now Playing display
+        document.getElementById('currentTrackTitle').textContent = 'Lesson Audio Mode';
+        document.getElementById('currentTrackArtist').textContent = 'Preparing to read...';
+        document.getElementById('albumArt').innerHTML = '<i class="fas fa-book-reader"></i>';
+
+        // Show lesson audio info panel
+        if (lessonInfoPanel) {
+            lessonInfoPanel.style.display = 'block';
         }
+
+        console.log('🎙️ About to call readCurrentPage()');
+
+        // Automatically read current page content
+        setTimeout(() => {
+            readCurrentPage();
+        }, 500); // Small delay to ensure UI updates
+
+        showNotification('🎙️ Switched to Lesson Audio mode');
     } else {
         document.getElementById('musicModeTab').classList.add('active');
+
+        // Reset Now Playing display
+        if (currentPlaylist.length > 0 && currentTrackIndex < currentPlaylist.length) {
+            const track = currentPlaylist[currentTrackIndex];
+            document.getElementById('currentTrackTitle').textContent = track.title;
+            document.getElementById('currentTrackArtist').textContent = track.artist || track.category;
+        } else {
+            document.getElementById('currentTrackTitle').textContent = 'Select a track to play';
+            document.getElementById('currentTrackArtist').textContent = 'Coach Manlaw Library';
+        }
+        document.getElementById('albumArt').innerHTML = '<i class="fas fa-music"></i>';
+
+        // Hide lesson audio info panel
+        if (lessonInfoPanel) {
+            lessonInfoPanel.style.display = 'none';
+        }
+
         // Stop lesson TTS
+        console.log('🛑 Stopping lesson audio');
+        if (speechSynthesis.speaking || speechSynthesis.pending) {
+            speechSynthesis.cancel();
+        }
         if (typeof stopAudio === 'function') {
             stopAudio();
         }
-        resumeMusic();
+
         showNotification('🎵 Switched to Music mode');
     }
 }
@@ -7417,10 +7697,41 @@ function expandMusicPlayer() {
     document.getElementById('musicPlayerMinimized').style.display = 'none';
 }
 
+// Force initialize playlist (manual button)
+function forceInitPlaylist() {
+    console.log('🔄 Force initializing playlist...');
+
+    currentPlaylist = [...musicLibrary];
+    currentTrackIndex = 0;
+
+    console.log('✅ Force-loaded', currentPlaylist.length, 'tracks from library');
+
+    updatePlaylistDisplay();
+    showNotification(`✅ Loaded ${currentPlaylist.length} tracks to playlist!`);
+
+    // Also update count in header
+    const countDisplay = document.getElementById('playlistCount');
+    if (countDisplay) {
+        countDisplay.textContent = `${currentPlaylist.length} tracks`;
+    }
+}
+
 // Show Player (for button in main interface)
 function showMusicPlayer() {
+    console.log('🎵 showMusicPlayer called');
+
     document.getElementById('musicPlayerFloat').style.display = 'flex';
     document.getElementById('musicPlayerMinimized').style.display = 'none';
+
+    // Force re-check playlist on show
+    if (currentPlaylist.length === 0) {
+        console.log('⚠️ Playlist empty on show, forcing populate...');
+        forceInitPlaylist();
+    } else {
+        console.log('✅ Playlist already has', currentPlaylist.length, 'tracks');
+        // Still update display in case UI is out of sync
+        updatePlaylistDisplay();
+    }
 }
 
 // Utility Functions
@@ -7521,6 +7832,10 @@ window.filterTracks = filterTracks;
 window.handleMusicUpload = handleMusicUpload;
 window.addOnlineTrack = addOnlineTrack;
 window.clearPlaylist = clearPlaylist;
+window.addAllTracksToPlaylist = addAllTracksToPlaylist;
+window.getCurrentPageContent = getCurrentPageContent;
+window.readCurrentPage = readCurrentPage;
+window.forceInitPlaylist = forceInitPlaylist;
 
 console.log('✅ Music Player functions exported to global scope');
 </script>

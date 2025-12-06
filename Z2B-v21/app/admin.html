@@ -554,16 +554,45 @@
                     </div>
                 </div>
 
+
+                <!-- Company Overview (Always Visible) -->
+                <div id="companyOverview" style="display: none; background: linear-gradient(135deg, rgba(255,215,0,0.1), rgba(255,165,0,0.05)); padding: 1.5rem; border-radius: 10px; margin-bottom: 1.5rem; border: 2px solid rgba(255,215,0,0.3);">
+                    <h3 style="color: #FFD700; margin: 0 0 1rem 0; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-building"></i> Z2B Legacy Builders - Company Overview
+                    </h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem;">
+                        <div style="background: rgba(10,38,71,0.6); padding: 1rem; border-radius: 8px; border-left: 4px solid #FFD700;">
+                            <div style="font-size: 2rem; font-weight: 700; color: #FFD700;" id="companyTotalMembers">0</div>
+                            <div style="font-size: 0.85rem; opacity: 0.9;">Total Company Members</div>
+                        </div>
+                        <div style="background: rgba(10,38,71,0.6); padding: 1rem; border-radius: 8px; border-left: 4px solid #00FF88;">
+                            <div style="font-size: 2rem; font-weight: 700; color: #00FF88;" id="companyActiveMembers">0</div>
+                            <div style="font-size: 0.85rem; opacity: 0.9;">Active Members</div>
+                        </div>
+                        <div style="background: rgba(10,38,71,0.6); padding: 1rem; border-radius: 8px; border-left: 4px solid #FFA500;">
+                            <div style="font-size: 2rem; font-weight: 700; color: #FFA500;" id="companyPendingMembers">0</div>
+                            <div style="font-size: 0.85rem; opacity: 0.9;">Pending Members</div>
+                        </div>
+                        <div style="background: rgba(10,38,71,0.6); padding: 1rem; border-radius: 8px; border-left: 4px solid #FF6B6B;">
+                            <div style="font-size: 2rem; font-weight: 700; color: #FF6B6B;" id="companySuspendedMembers">0</div>
+                            <div style="font-size: 0.85rem; opacity: 0.9;">Suspended Members</div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Tree Stats -->
                 <div id="treeStats" style="display: none; background: linear-gradient(135deg, rgba(10,38,71,0.6), rgba(3,11,31,0.8)); padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem; border: 1px solid rgba(255,215,0,0.2);">
+                    <h3 id="treeStatsTitle" style="color: #60A5FA; margin: 0 0 1rem 0; display: flex; align-items: center; gap: 0.5rem; font-size: 1.1rem;">
+                        <i class="fas fa-chart-bar"></i> <span id="viewContextText">Network Statistics</span>
+                    </h3>
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
                         <div>
                             <div style="font-size: 2rem; font-weight: 700; color: #FFD700;" id="totalMembers">0</div>
-                            <div style="font-size: 0.9rem; opacity: 0.8;">Total Members</div>
+                            <div style="font-size: 0.9rem; opacity: 0.8;"><span id="totalMembersLabel">Members in View</span></div>
                         </div>
                         <div>
                             <div style="font-size: 2rem; font-weight: 700; color: #00FF88;" id="activeMembers">0</div>
-                            <div style="font-size: 0.9rem; opacity: 0.8;">Active Members</div>
+                            <div style="font-size: 0.9rem; opacity: 0.8;"><span id="activeMembersLabel">Active in View</span></div>
                         </div>
                         <div>
                             <div style="font-size: 2rem; font-weight: 700; color: #60A5FA;" id="totalLevels">0</div>
@@ -1044,19 +1073,41 @@
                     return;
                 }
 
-                // Open WhatsApp Web for each number
-                const encodedMessage = encodeURIComponent(message);
+                // Send via backend API (supports Twilio and Ultramsg)
+                if (confirm(`Send WhatsApp message to ${phoneNumbers.length} recipient(s)?
 
-                if (confirm(`Send WhatsApp message to ${phoneNumbers.length} recipient(s)?`)) {
-                    phoneNumbers.forEach((phone, index) => {
-                        setTimeout(() => {
-                            // Format phone number (remove leading 0, add country code)
-                            let formattedPhone = phone.replace(/^0/, '27'); // Assuming South Africa
-                            window.open(`https://wa.me/${formattedPhone}?text=${encodedMessage}`, '_blank');
-                        }, index * 2000); // 2 second delay between each
+This will use your configured WhatsApp provider (Twilio or Ultramsg).`)) {
+                    const response = await fetch(`${API_URL}/communications/whatsapp`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${authToken}`
+                        },
+                        body: JSON.stringify({
+                            recipients: phoneNumbers,
+                            message: message
+                        })
                     });
 
-                    alert(`Opening WhatsApp for ${phoneNumbers.length} recipient(s). Each will open in a new tab with 2-second delays.`);
+                    const result = await response.json();
+                    if (result.success) {
+                        alert(`✅ WhatsApp messages sent!
+
+Total: ${result.data.total}
+Successful: ${result.data.successful}
+Failed: ${result.data.failed}`);
+                        document.getElementById('whatsapp-message').value = '';
+
+                        // Show errors if any
+                        if (result.data.errors && result.data.errors.length > 0) {
+                            console.error('Failed messages:', result.data.errors);
+                            if (confirm('Some messages failed. View details in console?')) {
+                                console.table(result.data.errors);
+                            }
+                        }
+                    } else {
+                        alert('❌ WhatsApp sending failed: ' + (result.message || 'Unknown error') + '\n\nMake sure Twilio or Ultramsg is configured in your backend .env file.');
+                    }
                 }
             } catch (error) {
                 console.error('WhatsApp send error:', error);
@@ -1348,6 +1399,167 @@
             showMessageTemplateModal([user], channel);
         }
 
+        // Send by Tier - WhatsApp to all users in a specific tier
+        function sendByTier(channel) {
+            // Create tier selection modal
+            const modal = document.createElement('div');
+            modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 10000; padding: 2rem;';
+
+            modal.innerHTML = `
+                <div style="background: white; padding: 2.5rem; border-radius: 15px; max-width: 500px; width: 100%;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <h2 style="margin: 0; color: var(--navy-blue);">
+                            <i class="fas fa-layer-group"></i> Send ${channel === 'whatsapp' ? 'WhatsApp' : channel.toUpperCase()} by Tier
+                        </h2>
+                        <button onclick="this.closest('div').closest('div').remove()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #666;">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+
+                    <p style="color: #666; margin-bottom: 1.5rem;">Select a tier to send message to all members in that tier:</p>
+
+                    <div style="display: flex; flex-direction: column; gap: 0.8rem; margin-bottom: 1.5rem;">
+                        <label style="display: flex; align-items: center; padding: 1rem; border: 2px solid #e0e0e0; border-radius: 10px; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='#e0e0e0'">
+                            <input type="radio" name="tierSelect" value="FAM" style="margin-right: 0.8rem; width: 20px; height: 20px;">
+                            <div>
+                                <strong style="color: var(--navy-blue);">FAM - Free Affiliate Members</strong>
+                                <div style="font-size: 0.85rem; color: #666;">30-day trial members</div>
+                            </div>
+                        </label>
+                        <label style="display: flex; align-items: center; padding: 1rem; border: 2px solid #e0e0e0; border-radius: 10px; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='#e0e0e0'">
+                            <input type="radio" name="tierSelect" value="BRONZE" style="margin-right: 0.8rem; width: 20px; height: 20px;">
+                            <strong style="color: #CD7F32;">Bronze Legacy Builders</strong>
+                        </label>
+                        <label style="display: flex; align-items: center; padding: 1rem; border: 2px solid #e0e0e0; border-radius: 10px; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='#e0e0e0'">
+                            <input type="radio" name="tierSelect" value="COPPER" style="margin-right: 0.8rem; width: 20px; height: 20px;">
+                            <strong style="color: #B87333;">Copper Legacy Builders</strong>
+                        </label>
+                        <label style="display: flex; align-items: center; padding: 1rem; border: 2px solid #e0e0e0; border-radius: 10px; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='#e0e0e0'">
+                            <input type="radio" name="tierSelect" value="SILVER" style="margin-right: 0.8rem; width: 20px; height: 20px;">
+                            <strong style="color: #C0C0C0;">Silver Legacy Builders</strong>
+                        </label>
+                        <label style="display: flex; align-items: center; padding: 1rem; border: 2px solid #e0e0e0; border-radius: 10px; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='#e0e0e0'">
+                            <input type="radio" name="tierSelect" value="GOLD" style="margin-right: 0.8rem; width: 20px; height: 20px;">
+                            <strong style="color: #FFD700;">Gold Legacy Builders</strong>
+                        </label>
+                        <label style="display: flex; align-items: center; padding: 1rem; border: 2px solid #e0e0e0; border-radius: 10px; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='#e0e0e0'">
+                            <input type="radio" name="tierSelect" value="PLATINUM" style="margin-right: 0.8rem; width: 20px; height: 20px;">
+                            <strong style="color: #E5E4E2;">Platinum Legacy Builders</strong>
+                        </label>
+                        <label style="display: flex; align-items: center; padding: 1rem; border: 2px solid #e0e0e0; border-radius: 10px; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='#e0e0e0'">
+                            <input type="radio" name="tierSelect" value="LIFETIME" style="margin-right: 0.8rem; width: 20px; height: 20px;">
+                            <strong style="background: linear-gradient(135deg, var(--gold), var(--orange)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Lifetime Legacy Builders</strong>
+                        </label>
+                    </div>
+
+                    <button id="confirmTierSend" style="width: 100%; padding: 1rem; background: ${channel === 'whatsapp' ? '#25D366' : 'var(--navy-blue)'}; color: white; border: none; border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 1rem;">
+                        <i class="fab fa-${channel === 'whatsapp' ? 'whatsapp' : 'envelope'}"></i> Continue to Message
+                    </button>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+
+            // Handle tier selection
+            document.getElementById('confirmTierSend').addEventListener('click', function() {
+                const selectedTier = document.querySelector('input[name="tierSelect"]:checked');
+                if (!selectedTier) {
+                    alert('Please select a tier');
+                    return;
+                }
+
+                const tier = selectedTier.value;
+                const tierUsers = allUsers.filter(user => user.tier === tier);
+
+                if (tierUsers.length === 0) {
+                    alert(`No users found in ${tier} tier`);
+                    return;
+                }
+
+                modal.remove();
+                showMessageTemplateModal(tierUsers, channel);
+            });
+
+            // Close on outside click
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            });
+        }
+
+        // Send to New Registered Users (last 7 days)
+        function sendToNewRegistered(channel) {
+            // Calculate date 7 days ago
+            const sevenDaysAgo = new Date();
+            sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+            // Filter users registered in last 7 days
+            const newUsers = allUsers.filter(user => {
+                if (!user.createdAt) return false;
+                const userDate = new Date(user.createdAt);
+                return userDate >= sevenDaysAgo;
+            });
+
+            if (newUsers.length === 0) {
+                alert('No new users registered in the last 7 days');
+                return;
+            }
+
+            // Create confirmation modal
+            const modal = document.createElement('div');
+            modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 10000; padding: 2rem;';
+
+            modal.innerHTML = `
+                <div style="background: white; padding: 2.5rem; border-radius: 15px; max-width: 500px; width: 100%;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <h2 style="margin: 0; color: var(--navy-blue);">
+                            <i class="fas fa-user-plus"></i> Send to New Registered Users
+                        </h2>
+                        <button onclick="this.closest('div').closest('div').remove()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #666;">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+
+                    <div style="background: #e8f5e9; padding: 1.5rem; border-radius: 10px; margin-bottom: 1.5rem; border-left: 4px solid #28a745;">
+                        <p style="margin: 0; color: #155724;">
+                            <i class="fas fa-info-circle"></i> <strong>${newUsers.length} new user(s)</strong> registered in the last 7 days
+                        </p>
+                    </div>
+
+                    <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; max-height: 200px; overflow-y: auto;">
+                        <strong style="color: var(--navy-blue); display: block; margin-bottom: 0.8rem;">Preview:</strong>
+                        ${newUsers.slice(0, 10).map(u => `
+                            <div style="padding: 0.5rem; border-bottom: 1px solid #e0e0e0; font-size: 0.9rem;">
+                                <strong>${u.firstName} ${u.lastName}</strong> - ${u.tier || 'FAM'}
+                                <div style="font-size: 0.8rem; color: #666;">Registered: ${new Date(u.createdAt).toLocaleDateString('en-ZA')}</div>
+                            </div>
+                        `).join('')}
+                        ${newUsers.length > 10 ? `<div style="padding: 0.5rem; color: #666; font-style: italic;">...and ${newUsers.length - 10} more</div>` : ''}
+                    </div>
+
+                    <button id="confirmNewUsersSend" style="width: 100%; padding: 1rem; background: ${channel === 'whatsapp' ? '#25D366' : 'var(--navy-blue)'}; color: white; border: none; border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 1rem;">
+                        <i class="fab fa-${channel === 'whatsapp' ? 'whatsapp' : 'envelope'}"></i> Continue to Message (${newUsers.length} users)
+                    </button>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+
+            // Handle confirmation
+            document.getElementById('confirmNewUsersSend').addEventListener('click', function() {
+                modal.remove();
+                showMessageTemplateModal(newUsers, channel);
+            });
+
+            // Close on outside click
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            });
+        }
+
         // View user details modal
         function viewUserDetails(user) {
             const referralLink = `${window.location.origin}/register.html?ref=${user.referralCode}`;
@@ -1633,8 +1845,9 @@
                 // Close modal
                 editModal.remove();
 
-                // Send to each user
-                users.forEach((user, index) => {
+                // Prepare messages for each user
+                const messagesToSend = [];
+                users.forEach((user) => {
                     if (!user.phone) {
                         console.log('No phone for user:', user);
                         return;
@@ -1647,12 +1860,77 @@
                     }
 
                     const formattedPhone = user.phone.replace(/^0/, '27');
-                    setTimeout(() => {
-                        window.open(`https://wa.me/${formattedPhone}?text=${encodeURIComponent(personalizedMessage)}`, '_blank');
-                    }, index * 2000);
+                    messagesToSend.push({
+                        phone: formattedPhone,
+                        message: personalizedMessage,
+                        user: user
+                    });
                 });
 
-                alert(`Opening WhatsApp for ${users.length} builder(s). Each will open in a new tab with 2-second delays. Please click Send in each WhatsApp window.`);
+                if (messagesToSend.length === 0) {
+                    alert('No valid phone numbers found!');
+                    return;
+                }
+
+                // Send via backend API
+                (async function() {
+                    try {
+                        const results = {
+                            total: messagesToSend.length,
+                            successful: 0,
+                            failed: 0,
+                            errors: []
+                        };
+
+                        console.log(`Sending WhatsApp to ${messagesToSend.length} builder(s) via backend API...`);
+
+                        // Send each message individually to support personalization
+                        for (let i = 0; i < messagesToSend.length; i++) {
+                            const { phone, message, user } = messagesToSend[i];
+
+                            try {
+                                const response = await fetch(`${API_URL}/communications/whatsapp`, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'Authorization': `Bearer ${authToken}`
+                                    },
+                                    body: JSON.stringify({
+                                        recipients: [phone],
+                                        message: message
+                                    })
+                                });
+
+                                const result = await response.json();
+                                if (result.success && result.data.successful > 0) {
+                                    results.successful++;
+                                    console.log(`✓ Sent to ${user.fullname} (${phone})`);
+                                } else {
+                                    results.failed++;
+                                    results.errors.push(`${user.fullname}: ${result.message || 'Failed'}`);
+                                    console.error(`✗ Failed to ${user.fullname}: ${result.message}`);
+                                }
+                            } catch (error) {
+                                results.failed++;
+                                results.errors.push(`${user.fullname}: ${error.message}`);
+                                console.error(`✗ Error sending to ${user.fullname}:`, error);
+                            }
+                        }
+
+                        // Show final results
+                        let resultMessage = `✅ WhatsApp Sending Complete!\n\nTotal: ${results.total}\nSuccessful: ${results.successful}\nFailed: ${results.failed}`;
+
+                        if (results.errors.length > 0) {
+                            resultMessage += '\n\nFailed messages:\n' + results.errors.join('\n');
+                        }
+
+                        alert(resultMessage);
+
+                    } catch (error) {
+                        console.error('WhatsApp send error:', error);
+                        alert('❌ Error sending WhatsApp messages: ' + error.message + '\n\nMake sure backend is running and Twilio/Ultramsg is configured.');
+                    }
+                })();
             });
 
             // Close on outside click
@@ -2151,7 +2429,7 @@ Write your message here..." style="width: 100%; min-height: 300px; padding: 1rem
                 </div>
 
                 <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 1.5rem;">
-                    <h3 style="color: var(--navy-blue); margin-bottom: 1rem;">2. QPB (Quick Pathfinder Bonus) - Monthly</h3>
+                    <h3 style="color: var(--navy-blue); margin-bottom: 1rem;">2. QPB (Quick Pathfinder Bonus) - Monthly<br><small style="color: #FF6B35; font-size: 0.85em;">⚠️ Only paid during first 90 days (including free 30-day trial)</small></h3>
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
                         <div>
                             <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #555;">First 3 Builders (%)</label>
@@ -2165,26 +2443,26 @@ Write your message here..." style="width: 100%; min-height: 300px; padding: 1rem
                 </div>
 
                 <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 1.5rem;">
-                    <h3 style="color: var(--navy-blue); margin-bottom: 1rem;">3. TSC (Team Sales Commission) - Monthly</h3>
+                    <h3 style="color: var(--navy-blue); margin-bottom: 1rem;">3. TSC (Team Sales Commission) - Monthly<br><small style="color: #FF6B35; font-size: 0.85em;">⚠️ Starts from Generation 2 (G1 receives no TSC)</small></h3>
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
                         <div>
-                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #555;">Generation 1 (%)</label>
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #555;">Generation 2 (%)</label>
                             <input type="number" id="comp_tscG1" value="${comp.tscG1 || 10}" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 5px;">
                         </div>
                         <div>
-                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #555;">Generation 2 (%)</label>
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #555;">Generation 3 (%)</label>
                             <input type="number" id="comp_tscG2" value="${comp.tscG2 || 5}" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 5px;">
                         </div>
                         <div>
-                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #555;">Generation 3 (%)</label>
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #555;">Generation 4 (%)</label>
                             <input type="number" id="comp_tscG3" value="${comp.tscG3 || 3}" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 5px;">
                         </div>
                         <div>
-                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #555;">Generation 4 (%)</label>
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #555;">Generation 5 (%)</label>
                             <input type="number" id="comp_tscG4" value="${comp.tscG4 || 2}" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 5px;">
                         </div>
                         <div>
-                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #555;">Generations 5-10 (% each)</label>
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #555;">Generations 6-10 (% each)</label>
                             <input type="number" id="comp_tscG5to10" value="${comp.tscG5to10 || 1}" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 5px;">
                         </div>
                         <div>
@@ -2195,59 +2473,208 @@ Write your message here..." style="width: 100%; min-height: 300px; padding: 1rem
                 </div>
 
                 <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 1.5rem;">
-                    <h3 style="color: var(--navy-blue); margin-bottom: 1rem;">4. TPB (Team Performance Bonus) - Quarterly</h3>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
-                        <div>
-                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #555;">Max Percentage (% subject to tier)</label>
-                            <input type="number" id="comp_tpbMaxPercentage" value="${comp.tpbMaxPercentage || 10}" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 5px;">
+                    <h3 style="color: var(--navy-blue); margin-bottom: 1rem;">5. TLI (Team Leadership Incentive) - Quarterly
+                        <span style="color: var(--orange); font-size: 0.85rem; margin-left: 1rem;">⚠️ Hybrid Model: Minimum Guarantee + Pool Bonus</span>
+                    </h3>
+
+                    <!-- Global TLI Settings -->
+                    <div style="background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 107, 53, 0.1)); padding: 1.5rem; border-radius: 10px; margin-bottom: 1.5rem; border: 2px solid rgba(255, 215, 0, 0.3);">
+                        <h4 style="color: var(--navy-blue); margin-bottom: 1rem; font-size: 1.1rem;">Global Settings</h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                            <div>
+                                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #555;">Pool (% of Total TeamPV)</label>
+                                <input type="number" id="comp_tliPoolPercentage" value="${comp.tliPoolPercentage || 8}" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 5px;">
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #555;">Min PV Required</label>
+                                <input type="number" id="comp_tliMinPV" value="${comp.tliMinPV || 600}" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 5px;">
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #555;">Consecutive Months</label>
+                                <input type="number" id="comp_tliConsecutiveMonths" value="${comp.tliConsecutiveMonths || 3}" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 5px;">
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #555;">Base Minimum Tier</label>
+                                <select id="comp_tliMinimumTier" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 5px;">
+                                    <option value="SILVER" ${(comp.tliMinimumTier || 'SILVER') === 'SILVER' ? 'selected' : ''}>SILVER</option>
+                                    <option value="GOLD" ${(comp.tliMinimumTier || 'SILVER') === 'GOLD' ? 'selected' : ''}>GOLD</option>
+                                    <option value="PLATINUM" ${(comp.tliMinimumTier || 'SILVER') === 'PLATINUM' ? 'selected' : ''}>PLATINUM</option>
+                                </select>
+                            </div>
                         </div>
-                        <div>
-                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #555;">Min Active Builders Required</label>
-                            <input type="number" id="comp_tpbMinActiveBuilders" value="${comp.tpbMinActiveBuilders || 2}" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 5px;">
+                    </div>
+
+                    <!-- The 10 TLI Levels -->
+                    <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 10px;">
+                        <h4 style="color: var(--gold); margin-bottom: 1.5rem; text-align: center; font-size: 1.3rem;">🌟 THE 10 TLI LEVELS 🌟</h4>
+
+                        <!-- Level 1 -->
+                        <div style="background: white; padding: 1rem; margin-bottom: 1rem; border-radius: 8px; border-left: 5px solid #87CEEB;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
+                                <h5 style="margin: 0; color: var(--navy-blue);">Level 1: ☿️ SWIFT AS MERCURY</h5>
+                                <span style="color: var(--orange); font-weight: bold;">R2.5K - R10K</span>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.8rem; font-size: 0.85rem;">
+                                <div><strong>Monthly TeamPV:</strong> 1,800</div>
+                                <div><strong>Leaders:</strong> N/A (Entry)</div>
+                                <div><strong>Min Guarantee:</strong> R2,500</div>
+                                <div><strong>Tier:</strong> Silver+</div>
+                                <div><strong>Points:</strong> 1</div>
+                            </div>
+                        </div>
+
+                        <!-- Level 2 -->
+                        <div style="background: white; padding: 1rem; margin-bottom: 1rem; border-radius: 8px; border-left: 5px solid #FFC0CB;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
+                                <h5 style="margin: 0; color: var(--navy-blue);">Level 2: ♀️ BRIGHT AS VENUS</h5>
+                                <span style="color: var(--orange); font-weight: bold;">R5K - R20K</span>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.8rem; font-size: 0.85rem;">
+                                <div><strong>Monthly TeamPV:</strong> 3,000</div>
+                                <div><strong>Leaders:</strong> 2 at Level 1</div>
+                                <div><strong>Min Guarantee:</strong> R5,000</div>
+                                <div><strong>Tier:</strong> Silver+</div>
+                                <div><strong>Points:</strong> 2</div>
+                            </div>
+                        </div>
+
+                        <!-- Level 3 -->
+                        <div style="background: white; padding: 1rem; margin-bottom: 1rem; border-radius: 8px; border-left: 5px solid #228B22;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
+                                <h5 style="margin: 0; color: var(--navy-blue);">Level 3: 🌍 SOLID AS EARTH</h5>
+                                <span style="color: var(--orange); font-weight: bold;">R10K - R40K</span>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.8rem; font-size: 0.85rem;">
+                                <div><strong>Monthly TeamPV:</strong> 6,000</div>
+                                <div><strong>Leaders:</strong> 2 at Level 2</div>
+                                <div><strong>Min Guarantee:</strong> R10,000</div>
+                                <div><strong>Tier:</strong> Silver+</div>
+                                <div><strong>Points:</strong> 4</div>
+                            </div>
+                        </div>
+
+                        <!-- Level 4 -->
+                        <div style="background: white; padding: 1rem; margin-bottom: 1rem; border-radius: 8px; border-left: 5px solid #DC143C;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
+                                <h5 style="margin: 0; color: var(--navy-blue);">Level 4: ♂️ FIERCE AS MARS</h5>
+                                <span style="color: var(--orange); font-weight: bold;">R25K - R80K</span>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.8rem; font-size: 0.85rem;">
+                                <div><strong>Monthly TeamPV:</strong> 12,000</div>
+                                <div><strong>Leaders:</strong> 2 at Level 3</div>
+                                <div><strong>Min Guarantee:</strong> R25,000</div>
+                                <div><strong>Tier:</strong> Gold+</div>
+                                <div><strong>Points:</strong> 8</div>
+                            </div>
+                        </div>
+
+                        <!-- Level 5 -->
+                        <div style="background: white; padding: 1rem; margin-bottom: 1rem; border-radius: 8px; border-left: 5px solid #DAA520;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
+                                <h5 style="margin: 0; color: var(--navy-blue);">Level 5: 🪐 BIG AS JUPITER</h5>
+                                <span style="color: var(--orange); font-weight: bold;">R50K - R150K</span>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.8rem; font-size: 0.85rem;">
+                                <div><strong>Monthly TeamPV:</strong> 25,000</div>
+                                <div><strong>Leaders:</strong> 2 at Level 4</div>
+                                <div><strong>Min Guarantee:</strong> R50,000</div>
+                                <div><strong>Tier:</strong> Gold+</div>
+                                <div><strong>Points:</strong> 16</div>
+                            </div>
+                        </div>
+
+                        <!-- Level 6 -->
+                        <div style="background: linear-gradient(135deg, #FFD700, #FFA500); padding: 1rem; margin-bottom: 1rem; border-radius: 8px; box-shadow: 0 3px 10px rgba(255, 215, 0, 0.3);">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
+                                <h5 style="margin: 0; color: white; text-shadow: 1px 1px 3px rgba(0,0,0,0.3);">Level 6: 💫 MAMA I MADE IT</h5>
+                                <span style="color: white; font-weight: bold; font-size: 1.05rem;">R100K - R300K</span>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.8rem; font-size: 0.85rem; color: white;">
+                                <div><strong>Monthly TeamPV:</strong> 50,000</div>
+                                <div><strong>Leaders:</strong> 2 at Level 5</div>
+                                <div><strong>Min Guarantee:</strong> R100,000</div>
+                                <div><strong>Tier:</strong> Platinum</div>
+                                <div><strong>Points:</strong> 32</div>
+                            </div>
+                        </div>
+
+                        <!-- Level 7 -->
+                        <div style="background: linear-gradient(135deg, #4169E1, #1E90FF); padding: 1rem; margin-bottom: 1rem; border-radius: 8px; box-shadow: 0 3px 10px rgba(65, 105, 225, 0.3);">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
+                                <h5 style="margin: 0; color: white; text-shadow: 1px 1px 3px rgba(0,0,0,0.3);">Level 7: 🔵 DEEP AS NEPTUNE</h5>
+                                <span style="color: white; font-weight: bold; font-size: 1.05rem;">R250K - R600K</span>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.8rem; font-size: 0.85rem; color: white;">
+                                <div><strong>Monthly TeamPV:</strong> 75,000</div>
+                                <div><strong>Leaders:</strong> 7 at Level 5</div>
+                                <div><strong>Min Guarantee:</strong> R250,000</div>
+                                <div><strong>Tier:</strong> Platinum</div>
+                                <div><strong>Points:</strong> 64</div>
+                            </div>
+                        </div>
+
+                        <!-- Level 8 -->
+                        <div style="background: linear-gradient(135deg, #FFD700, #FF6B35); padding: 1rem; margin-bottom: 1rem; border-radius: 8px; box-shadow: 0 3px 12px rgba(255, 215, 0, 0.4);">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
+                                <h5 style="margin: 0; color: white; text-shadow: 1px 1px 3px rgba(0,0,0,0.3);">Level 8: ⭐ BRIGHT AS A STAR</h5>
+                                <span style="color: white; font-weight: bold; font-size: 1.1rem;">R500K - R1.2M</span>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.8rem; font-size: 0.85rem; color: white;">
+                                <div><strong>Monthly TeamPV:</strong> 100,000</div>
+                                <div><strong>Leaders:</strong> 7 at Level 6</div>
+                                <div><strong>Min Guarantee:</strong> R500,000</div>
+                                <div><strong>Tier:</strong> Platinum</div>
+                                <div><strong>Points:</strong> 128</div>
+                            </div>
+                        </div>
+
+                        <!-- Level 9 -->
+                        <div style="background: linear-gradient(135deg, #FF8C00, #FF6347); padding: 1rem; margin-bottom: 1rem; border-radius: 8px; box-shadow: 0 3px 15px rgba(255, 140, 0, 0.5);">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
+                                <h5 style="margin: 0; color: white; text-shadow: 1px 1px 3px rgba(0,0,0,0.3);">Level 9: ☀️ POWERFUL AS THE SUN</h5>
+                                <span style="color: white; font-weight: bold; font-size: 1.1rem;">R1M - R2.5M</span>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.8rem; font-size: 0.85rem; color: white;">
+                                <div><strong>Monthly TeamPV:</strong> 150,000</div>
+                                <div><strong>Leaders:</strong> 7 at Level 7</div>
+                                <div><strong>Min Guarantee:</strong> R1,000,000</div>
+                                <div><strong>Tier:</strong> Platinum</div>
+                                <div><strong>Points:</strong> 256</div>
+                            </div>
+                        </div>
+
+                        <!-- Level 10 -->
+                        <div style="background: linear-gradient(135deg, #8B00FF, #FF1493, #FFD700); padding: 1.2rem; border-radius: 8px; box-shadow: 0 4px 20px rgba(139, 0, 255, 0.6); border: 3px solid gold;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
+                                <h5 style="margin: 0; color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); font-size: 1.15rem;">Level 10: ♾️ ETERNAL AS THE COSMOS</h5>
+                                <span style="color: #FFD700; font-weight: bold; font-size: 1.2rem; text-shadow: 1px 1px 3px rgba(0,0,0,0.5);">R3M - R5M</span>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.8rem; font-size: 0.85rem; color: white;">
+                                <div><strong>Monthly TeamPV:</strong> 200,000</div>
+                                <div><strong>Leaders:</strong> 7 at Level 8</div>
+                                <div><strong>Min Guarantee:</strong> R2,500,000</div>
+                                <div><strong>Tier:</strong> Platinum</div>
+                                <div><strong>Points:</strong> 512</div>
+                            </div>
+                            <div style="margin-top: 0.8rem; padding: 0.5rem; background: rgba(255, 215, 0, 0.2); border-radius: 5px; font-size: 0.8rem; color: #FFD700; font-style: italic; text-align: center;">
+                                Legendary empire builder status. Your legacy is eternal.
+                            </div>
+                        </div>
+
+                        <!-- Important Note -->
+                        <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(255, 215, 0, 0.15); border-radius: 8px; border: 2px dashed var(--gold);">
+                            <p style="color: var(--navy-blue); font-weight: bold; margin: 0; text-align: center; font-size: 0.9rem;">
+                                <i class="fas fa-crown" style="color: var(--orange);"></i>
+                                Levels 7-10 require <strong style="color: var(--orange);">7 personally invited leaders at 2 ranks lower</strong>
+                                <br><span style="font-size: 0.85rem; opacity: 0.8;">Massive team building = Massive rewards!</span>
+                            </p>
                         </div>
                     </div>
                 </div>
 
                 <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 1.5rem;">
-                    <h3 style="color: var(--navy-blue); margin-bottom: 1rem;">5. TLI (Team Leadership Incentive) - Quarterly (CEO Approved)</h3>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
-                        <div>
-                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #555;">Pool (% of Total TeamPV)</label>
-                            <input type="number" id="comp_tliPoolPercentage" value="${comp.tliPoolPercentage || 10}" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 5px;">
-                        </div>
-                        <div>
-                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #555;">Min Range (R)</label>
-                            <input type="number" id="comp_tliMinRange" value="${comp.tliMinRange || 2500}" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 5px;">
-                        </div>
-                        <div>
-                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #555;">Max Range (R)</label>
-                            <input type="number" id="comp_tliMaxRange" value="${comp.tliMaxRange || 5000000}" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 5px;">
-                        </div>
-                        <div>
-                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #555;">Minimum Tier</label>
-                            <select id="comp_tliMinimumTier" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 5px;">
-                                <option value="FAM" ${(comp.tliMinimumTier || 'SILVER') === 'FAM' ? 'selected' : ''}>FAM</option>
-                                <option value="BRONZE" ${(comp.tliMinimumTier || 'SILVER') === 'BRONZE' ? 'selected' : ''}>BRONZE</option>
-                                <option value="COPPER" ${(comp.tliMinimumTier || 'SILVER') === 'COPPER' ? 'selected' : ''}>COPPER</option>
-                                <option value="SILVER" ${(comp.tliMinimumTier || 'SILVER') === 'SILVER' ? 'selected' : ''}>SILVER</option>
-                                <option value="GOLD" ${(comp.tliMinimumTier || 'SILVER') === 'GOLD' ? 'selected' : ''}>GOLD</option>
-                                <option value="PLATINUM" ${(comp.tliMinimumTier || 'SILVER') === 'PLATINUM' ? 'selected' : ''}>PLATINUM</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #555;">Min PV Required</label>
-                            <input type="number" id="comp_tliMinPV" value="${comp.tliMinPV || 600}" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 5px;">
-                        </div>
-                        <div>
-                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #555;">Consecutive Months</label>
-                            <input type="number" id="comp_tliConsecutiveMonths" value="${comp.tliConsecutiveMonths || 3}" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 5px;">
-                        </div>
-                    </div>
-                </div>
-
-                <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 1.5rem;">
-                    <h3 style="color: var(--navy-blue); margin-bottom: 1rem;">6. CEO (CEO Awards & Competitions) - Quarterly</h3>
-                    <p style="color: #666; font-size: 0.9rem; margin-bottom: 1rem;"><em>Variable rewards: luxury trips, cash bonuses, recognition</em></p>
+                    <h3 style="color: var(--navy-blue); margin-bottom: 1rem;">5. CEA (CEO Awards) - Quarterly</h3>
+                    <p style="color: #666; font-size: 0.9rem; margin-bottom: 1rem;"><em>Exclusive recognition: luxury trips, cash bonuses, special awards for top performers</em></p>
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
                         <div>
                             <label style="display: flex; align-items: center; font-weight: 600; color: #555; cursor: pointer;">
@@ -2255,10 +2682,17 @@ Write your message here..." style="width: 100%; min-height: 300px; padding: 1rem
                                 CEO Awards Enabled
                             </label>
                         </div>
+                    </div>
+                </div>
+
+                <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 1.5rem;">
+                    <h3 style="color: var(--navy-blue); margin-bottom: 1rem;">6. CEC (CEO Competitions) - Quarterly</h3>
+                    <p style="color: #666; font-size: 0.9rem; margin-bottom: 1rem;"><em>Performance competitions: cash prizes, bonuses, exclusive perks for winners</em></p>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
                         <div>
                             <label style="display: flex; align-items: center; font-weight: 600; color: #555; cursor: pointer;">
                                 <input type="checkbox" id="comp_ceoQuarterlyCompetitions" ${comp.ceoQuarterlyCompetitions ? 'checked' : ''} style="margin-right: 0.5rem; width: 20px; height: 20px; cursor: pointer;">
-                                Quarterly Competitions Enabled
+                                CEO Competitions Enabled
                             </label>
                         </div>
                     </div>
@@ -2825,6 +3259,12 @@ Write your message here..." style="width: 100%; min-height: 300px; padding: 1rem
                             <button onclick="sendToSelected('whatsapp')" style="padding: 0.7rem 1.5rem; background: #25D366; color: white; border: none; border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 0.9rem;">
                                 <i class="fab fa-whatsapp"></i> WhatsApp Selected
                             </button>
+                            <button onclick="sendByTier('whatsapp')" style="padding: 0.7rem 1.5rem; background: #128C7E; color: white; border: none; border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 0.9rem;">
+                                <i class="fas fa-layer-group"></i> WhatsApp by Tier
+                            </button>
+                            <button onclick="sendToNewRegistered('whatsapp')" style="padding: 0.7rem 1.5rem; background: #075E54; color: white; border: none; border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 0.9rem;">
+                                <i class="fas fa-user-plus"></i> WhatsApp New Users
+                            </button>
                             <button onclick="sendToSelected('sms')" style="padding: 0.7rem 1.5rem; background: linear-gradient(135deg, var(--gold), var(--orange)); color: var(--navy-blue); border: none; border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 0.9rem;">
                                 <i class="fas fa-sms"></i> SMS Selected
                             </button>
@@ -2849,11 +3289,39 @@ Write your message here..." style="width: 100%; min-height: 300px; padding: 1rem
                             <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #ddd;">Member #</th>
                             <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #ddd;">Phone</th>
                             <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #ddd;">Tier</th>
+                            <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #ddd;">Registered</th>
+                            <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #ddd;">Trial Expiry</th>
                             <th style="padding: 1rem; text-align: center; border-bottom: 2px solid #ddd;">Quick Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        ${users.map((user, index) => `
+                        ${users.map((user, index) => {
+                            // Format registration date
+                            const regDate = user.createdAt ? new Date(user.createdAt).toLocaleDateString('en-ZA', { year: 'numeric', month: 'short', day: 'numeric' }) : 'N/A';
+
+                            // Calculate trial expiry for FAM members
+                            let trialExpiry = 'N/A';
+                            let trialStatus = '';
+                            if (user.tier === 'FAM' && user.famExpiryDate) {
+                                const expiryDate = new Date(user.famExpiryDate);
+                                const today = new Date();
+                                const daysLeft = Math.ceil((expiryDate - today) / (1000 * 60 * 60 * 24));
+
+                                trialExpiry = expiryDate.toLocaleDateString('en-ZA', { year: 'numeric', month: 'short', day: 'numeric' });
+
+                                if (daysLeft < 0) {
+                                    trialStatus = '<span style="background: #dc3545; color: white; padding: 0.2rem 0.5rem; border-radius: 3px; font-size: 0.75rem;">EXPIRED</span>';
+                                } else if (daysLeft <= 7) {
+                                    trialStatus = '<span style="background: #ffc107; color: #000; padding: 0.2rem 0.5rem; border-radius: 3px; font-size: 0.75rem;">' + daysLeft + ' days left</span>';
+                                } else {
+                                    trialStatus = '<span style="background: #28a745; color: white; padding: 0.2rem 0.5rem; border-radius: 3px; font-size: 0.75rem;">Active</span>';
+                                }
+                            } else if (user.tier !== 'FAM') {
+                                trialExpiry = 'Paid Member';
+                                trialStatus = '<span style="background: #17a2b8; color: white; padding: 0.2rem 0.5rem; border-radius: 3px; font-size: 0.75rem;">No Expiry</span>';
+                            }
+
+                            return `
                             <tr style="background: ${index % 2 === 0 ? '#f8f9fa' : 'white'}; border-bottom: 1px solid #eee;" class="user-row">
                                 <td style="padding: 1rem; text-align: center;">
                                     <input type="checkbox" class="user-checkbox" data-user='${JSON.stringify(user).replace(/'/g, "&#39;")}' onchange="updateSelectedCount()" style="width: 18px; height: 18px; cursor: pointer;">
@@ -2878,6 +3346,11 @@ Write your message here..." style="width: 100%; min-height: 300px; padding: 1rem
                                         ${user.tier || 'FAM'}
                                     </span>
                                 </td>
+                                <td style="padding: 1rem; font-size: 0.85rem; color: #666;">${regDate}</td>
+                                <td style="padding: 1rem;">
+                                    <div style="font-size: 0.85rem; color: #666;">${trialExpiry}</div>
+                                    <div style="margin-top: 0.3rem;">${trialStatus}</div>
+                                </td>
                                 <td style="padding: 1rem; text-align: center;">
                                     <div style="display: flex; gap: 0.3rem; justify-content: center; flex-wrap: wrap;">
                                         <button onclick='sendToUser(${JSON.stringify(user).replace(/'/g, "&#39;")}, "whatsapp")' title="Send WhatsApp" style="padding: 0.4rem 0.7rem; background: #25D366; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 0.85rem;">
@@ -2898,7 +3371,7 @@ Write your message here..." style="width: 100%; min-height: 300px; padding: 1rem
                                     </div>
                                 </td>
                             </tr>
-                        `).join('')}
+                        `}).join('')}
                     </tbody>
                 </table>
                 <p style="margin-top: 1rem; color: #666; font-size: 0.9rem;">Total Users: ${users.length}</p>
@@ -3388,7 +3861,8 @@ Write your message here..." style="width: 100%; min-height: 300px; padding: 1rem
                 if (result.success) {
                     currentTreeData = result.data;
                     displayTree(result.data);
-                    updateTreeStats(result.data);
+                    updateTreeStats(result.data, result.viewType || 'full');
+                    updateCompanyOverview(result.totalCompanyMembers, result.activeCompanyMembers);
                     await populateUserSelect();
                 } else {
                     alert('❌ Error: ' + result.message);
@@ -3423,7 +3897,8 @@ Write your message here..." style="width: 100%; min-height: 300px; padding: 1rem
                 if (result.success) {
                     currentTreeData = result.data;
                     displayTree(result.data);
-                    updateTreeStats(result.data);
+                    updateTreeStats(result.data, result.viewType || 'full');
+                    updateCompanyOverview(result.totalCompanyMembers, result.activeCompanyMembers);
                 } else {
                     alert('❌ Error: ' + result.message);
                 }
@@ -3459,7 +3934,8 @@ Write your message here..." style="width: 100%; min-height: 300px; padding: 1rem
                 if (result.success) {
                     currentTreeData = result.data;
                     displayTree(result.data);
-                    updateTreeStats(result.data);
+                    updateTreeStats(result.data, result.viewType || 'full');
+                    updateCompanyOverview(result.totalCompanyMembers, result.activeCompanyMembers);
                     alert(`✅ Network loaded for ${result.data.name} (${memberId})`);
                 } else {
                     alert('❌ ' + result.message);
@@ -3546,7 +4022,7 @@ Write your message here..." style="width: 100%; min-height: 300px; padding: 1rem
             return html;
         }
 
-        function updateTreeStats(data) {
+        function updateTreeStats(data, viewType) {
             let totalCount = 0;
             let activeCount = 0;
             let maxDepth = 0;
@@ -3554,7 +4030,7 @@ Write your message here..." style="width: 100%; min-height: 300px; padding: 1rem
 
             function traverseTree(node, depth) {
                 totalCount++;
-                if (node.status === 'active') activeCount++;
+                if (node.status === 'active' || node.status === 'ACTIVE') activeCount++;
                 maxDepth = Math.max(maxDepth, depth);
 
                 if (node.children && node.children.length > 0) {
@@ -3574,7 +4050,57 @@ Write your message here..." style="width: 100%; min-height: 300px; padding: 1rem
             document.getElementById('activeMembers').textContent = activeCount;
             document.getElementById('totalLevels').textContent = maxDepth;
             document.getElementById('rootMembers').textContent = rootCount;
+            // Update view context
+            const contextText = viewType === 'individual' 
+                ? `Individual Network - ${data.name}` 
+                : 'Full Company Network';
+            if (document.getElementById('viewContextText')) {
+                document.getElementById('viewContextText').textContent = contextText;
+            }
+
+            // Update labels based on view type
+            if (viewType === 'individual') {
+                if (document.getElementById('totalMembersLabel')) {
+                    document.getElementById('totalMembersLabel').textContent = 'Team Members';
+                }
+                if (document.getElementById('activeMembersLabel')) {
+                    document.getElementById('activeMembersLabel').textContent = 'Active in Team';
+                }
+            } else {
+                if (document.getElementById('totalMembersLabel')) {
+                    document.getElementById('totalMembersLabel').textContent = 'Members in View';
+                }
+                if (document.getElementById('activeMembersLabel')) {
+                    document.getElementById('activeMembersLabel').textContent = 'Active in View';
+                }
+            }
+
             document.getElementById('treeStats').style.display = 'block';
+        }
+
+        function updateCompanyOverview(totalMembers, activeMembers) {
+            document.getElementById('companyTotalMembers').textContent = totalMembers || 0;
+            document.getElementById('companyActiveMembers').textContent = activeMembers || 0;
+
+            // Show the company overview section
+            document.getElementById('companyOverview').style.display = 'block';
+
+            // Fetch additional stats if available
+            fetch(`${API_URL}/users/company-stats`, {
+                headers: {
+                    'Authorization': `Bearer ${authToken}`
+                }
+            })
+            .then(res => res.json())
+            .then(result => {
+                if (result.success) {
+                    document.getElementById('companyTotalMembers').textContent = result.data.totalMembers;
+                    document.getElementById('companyActiveMembers').textContent = result.data.activeMembers;
+                    document.getElementById('companyPendingMembers').textContent = result.data.pendingMembers;
+                    document.getElementById('companySuspendedMembers').textContent = result.data.suspendedMembers;
+                }
+            })
+            .catch(err => console.error('Error fetching company stats:', err));
         }
 
         async function populateUserSelect() {
