@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAVULA - AI Prospecting Automation | Z2B Legacy Builders</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/mavula.css">
+
+    <style>
+        :root {
+            --primary-navy: #001f3f;
+            --primary-gold: #FFD700;
+            --primary-orange: #FF8C00;
+            --success-green: #28a745;
+            --danger-red: #dc3545;
+            --hot-red: #ff4444;
+            --warm-orange: #ff8800;
+            --cold-blue: #4488ff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #001f3f 0%, #003366 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .main-container {
+            max-width: 1400px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        .header-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .header-section h1 {
+            color: var(--primary-navy);
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .header-section .subtitle {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .nav-tabs {
+            border: none;
+            margin-bottom: 20px;
+        }
+
+        .nav-tabs .nav-link {
+            background: rgba(255,255,255,0.9);
+            border: none;
+            border-radius: 10px;
+            margin-right: 10px;
+            color: var(--primary-navy);
+            font-weight: 600;
+            padding: 12px 25px;
+            transition: all 0.3s;
+        }
+
+        .nav-tabs .nav-link:hover {
+            background: var(--primary-gold);
+            color: var(--primary-navy);
+            transform: translateY(-2px);
+        }
+
+        .nav-tabs .nav-link.active {
+            background: var(--primary-gold);
+            color: var(--primary-navy);
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .stat-card h3 {
+            font-size: 36px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .stat-card .label {
+            color: #666;
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+
+        .progress-ring {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto;
+        }
+
+        .btn-primary {
+            background: var(--primary-orange);
+            border: none;
+            font-weight: 600;
+            padding: 10px 25px;
+            border-radius: 8px;
+        }
+
+        .btn-primary:hover {
+            background: #ff7700;
+        }
+
+        .prospect-card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-left: 4px solid #ddd;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .prospect-card:hover {
+            box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+            transform: translateX(5px);
+        }
+
+        .prospect-card.hot {
+            border-left-color: var(--hot-red);
+        }
+
+        .prospect-card.warm {
+            border-left-color: var(--warm-orange);
+        }
+
+        .prospect-card.cold {
+            border-left-color: var(--cold-blue);
+        }
+
+        .chat-container {
+            background: white;
+            border-radius: 12px;
+            height: 600px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .message.ai {
+            justify-content: flex-start;
+        }
+
+        .message.prospect {
+            justify-content: flex-end;
+        }
+
+        .message-bubble {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            word-wrap: break-word;
+        }
+
+        .message.ai .message-bubble {
+            background: var(--primary-navy);
+            color: white;
+            border-bottom-left-radius: 4px;
+        }
+
+        .message.prospect .message-bubble {
+            background: var(--primary-gold);
+            color: var(--primary-navy);
+            border-bottom-right-radius: 4px;
+        }
+
+        .chat-input {
+            border-top: 2px solid #eee;
+            padding: 15px;
+            background: white;
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+        }
+
+        .badge-hot {
+            background: var(--hot-red);
+        }
+
+        .badge-warm {
+            background: var(--warm-orange);
+        }
+
+        .badge-cold {
+            background: var(--cold-blue);
+        }
+
+        .loading-spinner {
+            text-align: center;
+            padding: 50px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .social-connect-btn {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            font-weight: 600;
+            border: none;
+            transition: transform 0.2s;
+        }
+
+        .social-connect-btn:hover {
+            transform: scale(1.02);
+        }
+
+        .social-connect-btn.facebook {
+            background: #1877f2;
+            color: white;
+        }
+
+        .social-connect-btn.instagram {
+            background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
+            color: white;
+        }
+
+        .social-connect-btn.tiktok {
+            background: #000;
+            color: white;
+        }
+
+        .content-card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #eee;
+        }
+
+        .content-card:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Network Background -->
+    <div class="network-background" id="networkBg"></div>
+
+    <div class="main-container">
+        <!-- Header -->
+        <div class="header-section">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1><i class="fas fa-robot"></i> MAVULA</h1>
+                    <p class="subtitle">The AI Way Maker That Brings You Daily Prospects &mdash; And Builds Your Entire Recruiting System Automatically.</p>
+                </div>
+                <div>
+                    <button class="btn btn-outline-secondary me-2" onclick="window.location.href='dashboard.html'">
+                        <i class="fas fa-arrow-left"></i> Back to Dashboard
+                    </button>
+                    <button class="btn btn-primary" id="automationToggle">
+                        <i class="fas fa-play"></i> Start Automation
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <ul class="nav nav-tabs" id="mavulaTabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" data-bs-toggle="tab" href="#dashboard">
+                    <i class="fas fa-chart-line"></i> Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" href="#prospects">
+                    <i class="fas fa-users"></i> Prospects <span class="badge bg-primary" id="prospectCount">0</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" href="#conversations">
+                    <i class="fas fa-comments"></i> Conversations
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" href="#content">
+                    <i class="fas fa-file-alt"></i> Content Library
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" href="#social">
+                    <i class="fas fa-share-alt"></i> Social Import
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" href="#settings">
+                    <i class="fas fa-cog"></i> Settings
+                </a>
+            </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content">
+            <!-- Dashboard Tab -->
+            <div class="tab-pane fade show active" id="dashboard">
+                <div class="row">
+                    <!-- Daily Targets -->
+                    <div class="col-md-6">
+                        <div class="stat-card">
+                            <div class="label">Today's Prospect Target</div>
+                            <h3 id="prospectsToday">0/10</h3>
+                            <div class="progress" style="height: 10px;">
+                                <div class="progress-bar bg-success" id="prospectsProgress" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="stat-card">
+                            <div class="label">Today's Conversion Target</div>
+                            <h3 id="conversionsToday">0/1</h3>
+                            <div class="progress" style="height: 10px;">
+                                <div class="progress-bar bg-warning" id="conversionsProgress" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <!-- Weekly Projection -->
+                    <div class="col-md-12">
+                        <div class="stat-card">
+                            <div class="label">Weekly Income Projection</div>
+                            <h3 class="text-success">R<span id="weeklyProjection">0</span></h3>
+                            <p class="text-muted small">Based on current conversion rate</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <!-- Quick Stats -->
+                    <div class="col-md-3">
+                        <div class="stat-card text-center">
+                            <i class="fas fa-fire fa-2x text-danger mb-2"></i>
+                            <h3 id="hotProspects">0</h3>
+                            <div class="label">Hot Prospects</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card text-center">
+                            <i class="fas fa-thermometer-half fa-2x text-warning mb-2"></i>
+                            <h3 id="warmProspects">0</h3>
+                            <div class="label">Warm Prospects</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card text-center">
+                            <i class="fas fa-snowflake fa-2x text-info mb-2"></i>
+                            <h3 id="coldProspects">0</h3>
+                            <div class="label">Cold Prospects</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card text-center">
+                            <i class="fas fa-check-circle fa-2x text-success mb-2"></i>
+                            <h3 id="convertedProspects">0</h3>
+                            <div class="label">Converted</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Prospects Tab -->
+            <div class="tab-pane fade" id="prospects">
+                <div class="stat-card">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4><i class="fas fa-users"></i> My Prospects</h4>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProspectModal">
+                            <i class="fas fa-plus"></i> Add Prospect
+                        </button>
+                    </div>
+
+                    <!-- Filters -->
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <select class="form-select" id="filterTemperature">
+                                <option value="">All Temperatures</option>
+                                <option value="HOT">Hot</option>
+                                <option value="WARM">Warm</option>
+                                <option value="COLD">Cold</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-select" id="filterStage">
+                                <option value="">All Stages</option>
+                                <option value="INITIAL_CONTACT">Initial Contact</option>
+                                <option value="TRUST_BUILDING">Trust Building</option>
+                                <option value="NEEDS_DISCOVERY">Needs Discovery</option>
+                                <option value="VALUE_PRESENTATION">Value Presentation</option>
+                                <option value="CLOSING">Closing</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" class="form-control" id="searchProspects" placeholder="Search prospects...">
+                        </div>
+                    </div>
+
+                    <!-- Prospects List -->
+                    <div id="prospectsList">
+                        <div class="loading-spinner">
+                            <i class="fas fa-spinner fa-spin fa-3x"></i>
+                            <p>Loading prospects...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Conversations Tab -->
+            <div class="tab-pane fade" id="conversations">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="stat-card">
+                            <h5>Select a Prospect</h5>
+                            <div id="conversationProspects">
+                                <div class="empty-state">
+                                    <i class="fas fa-comments"></i>
+                                    <p>No conversations yet</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="chat-container">
+                            <div class="chat-header p-3 border-bottom">
+                                <h5 id="chatProspectName">Select a prospect to view conversation</h5>
+                            </div>
+                            <div class="chat-messages" id="chatMessages">
+                                <div class="empty-state">
+                                    <i class="fas fa-comment-dots"></i>
+                                    <p>No messages yet</p>
+                                </div>
+                            </div>
+                            <div class="chat-input">
+                                <div class="input-group">
+                                    <button class="btn btn-outline-secondary" id="generateAIBtn" title="Generate AI Response">
+                                        <i class="fas fa-magic"></i> AI Generate
+                                    </button>
+                                    <input type="text" class="form-control" id="messageInput" placeholder="Type a message...">
+                                    <button class="btn btn-primary" id="sendMessageBtn">
+                                        <i class="fas fa-paper-plane"></i> Send
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Tab -->
+            <div class="tab-pane fade" id="content">
+                <div class="stat-card">
+                    <h4><i class="fas fa-file-alt"></i> Content Library</h4>
+                    <p class="text-muted">Upload PDFs, URLs, or text to train MAVULA's AI</p>
+
+                    <!-- Upload Section -->
+                    <div class="row mb-4">
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-file-pdf fa-3x text-danger mb-3"></i>
+                                    <h6>Upload PDF</h6>
+                                    <input type="file" id="pdfUpload" accept=".pdf" class="d-none">
+                                    <button class="btn btn-primary btn-sm mt-2" onclick="document.getElementById('pdfUpload').click()">
+                                        Choose File
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-link fa-3x text-primary mb-3"></i>
+                                    <h6>Process URL</h6>
+                                    <button class="btn btn-primary btn-sm mt-2" data-bs-toggle="modal" data-bs-target="#urlModal">
+                                        Enter URL
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-text-height fa-3x text-success mb-3"></i>
+                                    <h6>Add Text</h6>
+                                    <button class="btn btn-primary btn-sm mt-2" data-bs-toggle="modal" data-bs-target="#textModal">
+                                        Enter Text
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Content List -->
+                    <div id="contentList">
+                        <div class="loading-spinner">
+                            <i class="fas fa-spinner fa-spin fa-3x"></i>
+                            <p>Loading content...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Social Import Tab -->
+            <div class="tab-pane fade" id="social">
+                <div class="stat-card">
+                    <h4><i class="fas fa-share-alt"></i> Social Media Import</h4>
+                    <p class="text-muted">Connect your social accounts to import prospects</p>
+
+                    <div class="row mt-4">
+                        <div class="col-md-4">
+                            <button class="social-connect-btn facebook" id="facebookConnectBtn">
+                                <i class="fab fa-facebook fa-2x"></i>
+                                <div class="mt-2">Connect Facebook</div>
+                                <small id="facebookStatus">Not connected</small>
+                            </button>
+                        </div>
+                        <div class="col-md-4">
+                            <button class="social-connect-btn instagram" id="instagramConnectBtn">
+                                <i class="fab fa-instagram fa-2x"></i>
+                                <div class="mt-2">Connect Instagram</div>
+                                <small id="instagramStatus">Not connected</small>
+                            </button>
+                        </div>
+                        <div class="col-md-4">
+                            <button class="social-connect-btn tiktok" id="tiktokConnectBtn">
+                                <i class="fab fa-tiktok fa-2x"></i>
+                                <div class="mt-2">Connect TikTok</div>
+                                <small id="tiktokStatus">Not connected</small>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Enhanced Settings Tab -->
+            <div class="tab-pane fade" id="settings">
+                <div class="stat-card">
+                    <h4><i class="fas fa-cog"></i> MAVULA Settings</h4>
+                    <p class="text-muted">Configure your AI prospecting automation preferences</p>
+
+                    <form id="settingsForm">
+                        <!-- Target Settings -->
+                        <div class="card mb-3" style="border-left: 4px solid var(--neon-blue);">
+                            <div class="card-body">
+                                <h6 class="card-title"><i class="fas fa-bullseye"></i> Daily Targets</h6>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Daily Prospect Target</label>
+                                            <input type="number" class="form-control" id="dailyProspectTarget" value="10" min="1" max="100">
+                                            <small class="text-muted">Number of new prospects to contact daily (1-100)</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Daily Conversion Target</label>
+                                            <input type="number" class="form-control" id="dailyConversionTarget" value="1" min="0" max="50">
+                                            <small class="text-muted">Goal for conversions per day (0-50)</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Communication Settings -->
+                        <div class="card mb-3" style="border-left: 4px solid var(--neon-purple);">
+                            <div class="card-body">
+                                <h6 class="card-title"><i class="fas fa-comments"></i> Communication Preferences</h6>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Communication Style</label>
+                                    <select class="form-select" id="communicationStyle">
+                                        <option value="PROFESSIONAL">Professional - Formal and business-like tone</option>
+                                        <option value="CASUAL">Casual - Relaxed and conversational</option>
+                                        <option value="FRIENDLY">Friendly - Warm and approachable</option>
+                                        <option value="ASSERTIVE">Assertive - Direct and confident</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Message Language</label>
+                                    <select class="form-select" id="messageLanguage">
+                                        <option value="EN">English</option>
+                                        <option value="EN_ZA">South African English</option>
+                                        <option value="AF">Afrikaans</option>
+                                        <option value="ZU">Zulu</option>
+                                        <option value="XH">Xhosa</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Automation Settings -->
+                        <div class="card mb-3" style="border-left: 4px solid var(--neon-gold);">
+                            <div class="card-body">
+                                <h6 class="card-title"><i class="fas fa-robot"></i> Automation Settings</h6>
+
+                                <div class="mb-3">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="autoResponseEnabled" checked>
+                                        <label class="form-check-label" for="autoResponseEnabled">
+                                            <strong>Enable Auto-Response</strong>
+                                            <br><small class="text-muted">AI replies to prospects automatically when they message you</small>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="autoFollowUpEnabled" checked>
+                                        <label class="form-check-label" for="autoFollowUpEnabled">
+                                            <strong>Enable Auto-Follow-Up</strong>
+                                            <br><small class="text-muted">AI sends follow-up messages to prospects who haven't responded</small>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="smartScheduling" checked>
+                                        <label class="form-check-label" for="smartScheduling">
+                                            <strong>Smart Scheduling</strong>
+                                            <br><small class="text-muted">AI determines best times to contact each prospect</small>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Follow-Up Frequency</label>
+                                    <select class="form-select" id="followUpFrequency">
+                                        <option value="AGGRESSIVE">Aggressive - Follow up every 24 hours</option>
+                                        <option value="MODERATE" selected>Moderate - Follow up every 3 days</option>
+                                        <option value="GENTLE">Gentle - Follow up every 7 days</option>
+                                        <option value="CUSTOM">Custom - Set your own schedule</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Active Hours -->
+                        <div class="card mb-3" style="border-left: 4px solid var(--neon-orange);">
+                            <div class="card-body">
+                                <h6 class="card-title"><i class="fas fa-clock"></i> Active Hours & Timezone</h6>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Timezone</label>
+                                    <select class="form-select" id="timezone">
+                                        <option value="Africa/Johannesburg" selected>South Africa (SAST - GMT+2)</option>
+                                        <option value="Africa/Cairo">Egypt (GMT+2)</option>
+                                        <option value="Africa/Lagos">Nigeria (GMT+1)</option>
+                                        <option value="Africa/Nairobi">Kenya (GMT+3)</option>
+                                        <option value="America/New_York">USA East Coast (GMT-5)</option>
+                                        <option value="America/Chicago">USA Central (GMT-6)</option>
+                                        <option value="America/Los_Angeles">USA West Coast (GMT-8)</option>
+                                        <option value="Europe/London">UK (GMT)</option>
+                                    </select>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Start Time</label>
+                                            <input type="time" class="form-control" id="activeHoursStart" value="09:00">
+                                            <small class="text-muted">When to start contacting prospects</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">End Time</label>
+                                            <input type="time" class="form-control" id="activeHoursEnd" value="18:00">
+                                            <small class="text-muted">When to stop contacting prospects</small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Active Days</label>
+                                    <div class="btn-group d-flex" role="group">
+                                        <input type="checkbox" class="btn-check" id="dayMon" checked>
+                                        <label class="btn btn-outline-primary" for="dayMon">Mon</label>
+
+                                        <input type="checkbox" class="btn-check" id="dayTue" checked>
+                                        <label class="btn btn-outline-primary" for="dayTue">Tue</label>
+
+                                        <input type="checkbox" class="btn-check" id="dayWed" checked>
+                                        <label class="btn btn-outline-primary" for="dayWed">Wed</label>
+
+                                        <input type="checkbox" class="btn-check" id="dayThu" checked>
+                                        <label class="btn btn-outline-primary" for="dayThu">Thu</label>
+
+                                        <input type="checkbox" class="btn-check" id="dayFri" checked>
+                                        <label class="btn btn-outline-primary" for="dayFri">Fri</label>
+
+                                        <input type="checkbox" class="btn-check" id="daySat">
+                                        <label class="btn btn-outline-primary" for="daySat">Sat</label>
+
+                                        <input type="checkbox" class="btn-check" id="daySun">
+                                        <label class="btn btn-outline-primary" for="daySun">Sun</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Notification Preferences -->
+                        <div class="card mb-3" style="border-left: 4px solid #28a745;">
+                            <div class="card-body">
+                                <h6 class="card-title"><i class="fas fa-bell"></i> Notifications & Alerts</h6>
+
+                                <div class="mb-3">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="whatsappEnabled" checked>
+                                        <label class="form-check-label" for="whatsappEnabled">
+                                            <strong>WhatsApp Messaging</strong>
+                                            <br><small class="text-muted">Send/receive messages via WhatsApp</small>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="emailNotifications" checked>
+                                        <label class="form-check-label" for="emailNotifications">
+                                            <strong>Email Notifications</strong>
+                                            <br><small class="text-muted">Get notified via email for important events</small>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="smsNotifications">
+                                        <label class="form-check-label" for="smsNotifications">
+                                            <strong>SMS Notifications</strong>
+                                            <br><small class="text-muted">Receive SMS for urgent alerts</small>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="weeklyReports" checked>
+                                        <label class="form-check-label" for="weeklyReports">
+                                            <strong>Weekly Performance Reports</strong>
+                                            <br><small class="text-muted">Receive weekly summary of your MAVULA performance</small>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Notify me when:</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="notifyHotLead" checked>
+                                        <label class="form-check-label" for="notifyHotLead">
+                                            A prospect becomes HOT 🔥
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="notifyConversion" checked>
+                                        <label class="form-check-label" for="notifyConversion">
+                                            A prospect converts to customer 🎉
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="notifyTargetReached" checked>
+                                        <label class="form-check-label" for="notifyTargetReached">
+                                            Daily target is reached ✅
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Data & Privacy -->
+                        <div class="card mb-3" style="border-left: 4px solid #6c757d;">
+                            <div class="card-body">
+                                <h6 class="card-title"><i class="fas fa-shield-alt"></i> Data & Privacy</h6>
+
+                                <div class="mb-3">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="dataRetention" checked>
+                                        <label class="form-check-label" for="dataRetention">
+                                            <strong>Auto-delete old conversations</strong>
+                                            <br><small class="text-muted">Delete conversations older than 6 months</small>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="respectOptOut" checked>
+                                        <label class="form-check-label" for="respectOptOut">
+                                            <strong>Auto-respect opt-outs</strong>
+                                            <br><small class="text-muted">Automatically stop contacting prospects who say "STOP" or "UNSUBSCRIBE"</small>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="alert alert-info">
+                                    <small>
+                                        <i class="fas fa-info-circle"></i> MAVULA is POPIA compliant.
+                                        Your prospects' data is encrypted and stored securely.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Save Settings
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary" onclick="mavulaApp.loadSettings()">
+                                <i class="fas fa-undo"></i> Reset to Saved
+                            </button>
+                            <button type="button" class="btn btn-outline-danger" onclick="mavulaApp.resetToDefaults()">
+                                <i class="fas fa-exclamation-triangle"></i> Reset to Defaults
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+    </div>
+
+    <!-- Add Prospect Modal -->
+    <div class="modal fade" id="addProspectModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Prospect</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addProspectForm">
+                        <div class="mb-3">
+                            <label class="form-label">Name *</label>
+                            <input type="text" class="form-control" id="prospectName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Phone Number *</label>
+                            <input type="tel" class="form-control" id="prospectPhone" placeholder="+27..." required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" id="prospectEmail">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Tags (comma-separated)</label>
+                            <input type="text" class="form-control" id="prospectTags" placeholder="friend, colleague, family">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Notes</label>
+                            <textarea class="form-control" id="prospectNotes" rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="saveProspectBtn">Add Prospect</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- URL Modal -->
+    <div class="modal fade" id="urlModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Process URL</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">URL *</label>
+                        <input type="url" class="form-control" id="contentUrl" placeholder="https://...">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Title</label>
+                        <input type="text" class="form-control" id="contentUrlTitle">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Category</label>
+                        <select class="form-select" id="contentUrlCategory">
+                            <option value="GENERAL">General</option>
+                            <option value="COMPANY_INFO">Company Info</option>
+                            <option value="PRODUCT_INFO">Product Info</option>
+                            <option value="TRAINING">Training</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="processUrlBtn">Process URL</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Text Modal -->
+    <div class="modal fade" id="textModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Text Content</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Title *</label>
+                        <input type="text" class="form-control" id="contentTextTitle">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Content *</label>
+                        <textarea class="form-control" id="contentText" rows="6"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Category</label>
+                        <select class="form-select" id="contentTextCategory">
+                            <option value="GENERAL">General</option>
+                            <option value="COMPANY_INFO">Company Info</option>
+                            <option value="PRODUCT_INFO">Product Info</option>
+                            <option value="TRAINING">Training</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="saveTextBtn">Save Content</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- MAVULA JS -->
+    <script src="js/mavula.js"></script>
+    <!-- Network Background Animation -->
+    <script src="network-animation.js"></script>
+    <!-- Footer -->
+    <footer style="text-align: center; padding: 30px 20px; margin-top: 50px; background: rgba(255,255,255,0.05); border-top: 1px solid rgba(255,255,255,0.1);">
+        <p style="margin: 0; color: rgba(255,255,255,0.7); font-size: 14px;">
+            Built with <i class="fas fa-heart" style="color: #ff6b6b; animation: heartbeat 1.5s infinite;"></i> by <strong style="color: #FFD700;">Z2B Legacy Builders</strong>
+        </p>
+    </footer>
+    <style>
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.1); }
+            50% { transform: scale(1); }
+        }
+    </style>
+</body>
+</html>
