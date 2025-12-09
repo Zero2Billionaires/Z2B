@@ -61,6 +61,9 @@ const coachRoutes = require('./routes/coach');
 const referralsRoutes = require('./routes/referrals');
 const communicationsRoutes = require('./routes/communications');
 const questionnaireRoutes = require('./routes/questionnaire');
+const mavulaRoutes = require('./routes/mavula');
+const mavulaAIRoutes = require('./routes/mavulaAI');
+const mavulaWebhooksRoutes = require('./routes/mavulaWebhooks');
 
 // Use Routes
 app.use('/api/auth', authRoutes);
@@ -73,6 +76,9 @@ app.use('/api/coach', coachRoutes);
 app.use('/api/referrals', referralsRoutes);
 app.use('/api/communications', communicationsRoutes);
 app.use('/api/questionnaire', questionnaireRoutes);
+app.use('/api/mavula', mavulaRoutes);
+app.use('/api/mavula/webhooks', mavulaWebhooksRoutes);
+app.use('/api/mavula/ai', mavulaAIRoutes);
 
 // Health Check Endpoint
 app.get('/api/health', (req, res) => {
@@ -105,4 +111,7 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`🚀 Z2B Admin Backend Server running on port ${PORT}`);
     console.log(`📍 Environment: ${process.env.NODE_ENV}`);
+
+// Initialize MAVULA Cron Scheduler
+require('./jobs/mavulaScheduler');
 });
