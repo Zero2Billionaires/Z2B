@@ -86,7 +86,7 @@ app.get('/api/health', (req, res) => {
         status: 'OK',
         message: 'Z2B Admin Backend is running',
         timestamp: new Date().toISOString(),
-        version: '1.0.5-MANUAL-DEPLOY',  // Force Railway redeploy - password reset active
+        version: '1.0.6-MAVULA-FIX',  // Force Railway redeploy - password reset active
         endpoints: {
             auth: '/api/auth/forgot-password',
             reset: '/api/auth/reset-password',
