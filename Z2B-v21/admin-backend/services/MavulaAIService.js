@@ -6,15 +6,25 @@ const MavulaUserSettings = require('../models/MavulaUserSettings');
 
 class MavulaAIService {
     constructor() {
-        // Initialize Claude API (Anthropic)
-        this.claude = new Anthropic({
-            apiKey: process.env.ANTHROPIC_API_KEY
-        });
+        // Initialize Claude API (Anthropic) - only if real API key provided
+        if (process.env.ANTHROPIC_API_KEY && !process.env.ANTHROPIC_API_KEY.includes('YOUR_')) {
+            this.claude = new Anthropic({
+                apiKey: process.env.ANTHROPIC_API_KEY
+            });
+        } else {
+            console.warn('⚠️ ANTHROPIC_API_KEY not configured - Claude AI features will not work');
+            this.claude = null;
+        }
 
-        // Initialize OpenAI API
-        this.openai = new OpenAI({
-            apiKey: process.env.OPENAI_API_KEY
-        });
+        // Initialize OpenAI API - only if real API key provided
+        if (process.env.OPENAI_API_KEY && !process.env.OPENAI_API_KEY.includes('YOUR_')) {
+            this.openai = new OpenAI({
+                apiKey: process.env.OPENAI_API_KEY
+            });
+        } else {
+            console.warn('⚠️ OPENAI_API_KEY not configured - OpenAI features will not work');
+            this.openai = null;
+        }
 
         // Model configurations
         this.claudeModel = 'claude-3-5-sonnet-20241022';

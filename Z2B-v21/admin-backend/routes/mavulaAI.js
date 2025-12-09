@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const verifyToken = require('../middleware/auth');
+const { verifyToken } = require('../middleware/auth');
 const MavulaAIService = require('../services/MavulaAIService');
 const MavulaProspect = require('../models/MavulaProspect');
 const MavulaConversation = require('../models/MavulaConversation');
