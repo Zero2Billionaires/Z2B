@@ -70,6 +70,44 @@ const userSchema = new mongoose.Schema({
         coachManlaw: { type: Boolean, default: false }
     },
 
+    // MAVULA Access Management
+    mavulaAccess: { type: Boolean, default: false },
+    mavulaAccessType: {
+        type: String,
+        enum: ['PAID', 'GIFT', 'BETA', 'ADMIN'],
+        default: null
+    },
+    mavulaSubscriptionPlan: {
+        type: String,
+        enum: ['MONTHLY', 'LIFETIME'],
+        default: null
+    },
+    mavulaGrantedDate: { type: Date },
+    mavulaExpiryDate: { type: Date },
+    mavulaGrantedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    mavulaAccessNotes: { type: String },
+    mavulaRevokedDate: { type: Date },
+    mavulaRevokedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    mavulaRevocationReason: { type: String },
+
+    // Marketplace Product Access Management (DYNAMIC - supports ANY product)
+    marketplaceAccess: {
+        type: Map,
+        of: {
+            hasAccess: { type: Boolean, default: false },
+            accessType: { type: String, enum: ['PAID', 'GIFT', 'BETA', 'ADMIN', 'FREE'] },
+            subscriptionPlan: { type: String, enum: ['MONTHLY', 'LIFETIME', 'PAY_AS_GO'] },
+            grantedDate: { type: Date },
+            expiryDate: { type: Date },
+            grantedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+            notes: { type: String },
+            revokedDate: { type: Date },
+            revokedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+            revocationReason: { type: String }
+        },
+        default: {}
+    },
+
     // Earnings
     totalEarnings: { type: Number, default: 0 },
     withdrawableBalance: { type: Number, default: 0 },

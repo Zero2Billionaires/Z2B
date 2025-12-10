@@ -424,6 +424,13 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        /* Marketplace Section - Improved Readability */        #marketplace h2 {            color: var(--white) !important;            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);            font-size: 1.8rem;            margin-bottom: 0.5rem;        }
+        #marketplace > p {            color: var(--gold) !important;            font-size: 1.1rem;            font-weight: 500;            margin-bottom: 2rem;            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);        }
+        /* Tab buttons - better visibility */        .user-tab {            color: rgba(255, 255, 255, 0.7) !important;            transition: all 0.3s;        }
+        .user-tab:hover {            color: var(--gold) !important;        }
+        .user-tab.active {            color: var(--white) !important;            background: rgba(255, 215, 0, 0.1) !important;        }
+        /* Labels in marketplace section */        #marketplace label {            color: var(--white) !important;            font-weight: 600;        }
+        /* Table headers in marketplace */        #marketplace th {            background: var(--gold) !important;            color: var(--navy-blue) !important;        }
     </style>
 </head>
 <body>
@@ -467,6 +474,7 @@
                 <li><a href="#" class="menu-link active" data-section="overview"><i class="fas fa-tachometer-alt"></i> Overview</a></li>
                 <li><a href="#" class="menu-link" data-section="tiers"><i class="fas fa-layer-group"></i> Tiers & Pricing</a></li>
                 <li><a href="#" class="menu-link" data-section="users"><i class="fas fa-users"></i> User Management</a></li>
+                <li><a href="#" class="menu-link" data-section="marketplace"><i class="fas fa-store"></i> Marketplace Products</a></li>
                 <li><a href="#" class="menu-link" data-section="team-network"><i class="fas fa-sitemap"></i> Team Network</a></li>
                 <li><a href="#" class="menu-link" data-section="communications"><i class="fas fa-comments"></i> Communications</a></li>
                 <li><a href="#" class="menu-link" data-section="content"><i class="fas fa-book"></i> Content Management</a></li>
@@ -519,7 +527,210 @@
 
             <!-- Other sections will be added via JavaScript -->
             <div id="tiers" class="content-section"></div>
-            <div id="users" class="content-section"></div>
+<!-- Marketplace Product Access Management -->
+<div id="marketplace" class="content-section">
+    <h2><i class="fas fa-store"></i> Marketplace Product Access Management</h2>
+    <p>Manage user access to all marketplace products (MAVULA, ZYRO, ZYRA, BENOWN, GLOWIE, VIDZIE, ZYNTH, ZYNECT)</p>
+
+    <!-- Action Tabs -->
+    <div style="display: flex; gap: 1rem; margin: 2rem 0; border-bottom: 2px solid rgba(255,215,0,0.3); flex-wrap: wrap;">
+        <button class="user-tab active" data-tab="all-users" style="padding: 1rem 2rem; border: none; background: none; cursor: pointer; border-bottom: 3px solid var(--gold); font-weight: bold; color: var(--navy-blue);">
+            <i class="fas fa-users"></i> All Users
+        </button>
+        <button class="user-tab" data-tab="product-users" style="padding: 1rem 2rem; border: none; background: none; cursor: pointer; border-bottom: 3px solid transparent; color: rgba(255, 255, 255, 0.6);">
+            <i class="fas fa-box-open"></i> Product Access
+        </button>
+        <button class="user-tab" data-tab="pending-payments" style="padding: 1rem 2rem; border: none; background: none; cursor: pointer; border-bottom: 3px solid transparent; color: rgba(255, 255, 255, 0.6);">
+            <i class="fas fa-clock"></i> Pending Payments <span id="pendingCount" style="background: var(--danger); color: white; padding: 0.2rem 0.5rem; border-radius: 50%; font-size: 0.8rem; margin-left: 0.5rem;">0</span>
+        </button>
+        <button class="user-tab" data-tab="grant-access" style="padding: 1rem 2rem; border: none; background: none; cursor: pointer; border-bottom: 3px solid transparent; color: rgba(255, 255, 255, 0.6);">
+            <i class="fas fa-gift"></i> Grant Access
+        </button>
+    </div>
+
+    <!-- Tab Content -->
+
+    <!-- All Users Tab -->
+    <div id="all-users-content" class="user-tab-content">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+            <input type="text" id="userSearchInput" placeholder="Search by name, email, or Z2B ID..." style="flex: 1; min-width: 300px; padding: 0.8rem 1rem; border: 2px solid #e0e0e0; border-radius: 10px;">
+            <button onclick="refreshUserList()" style="padding: 0.8rem 1.5rem; background: var(--gold); border: none; border-radius: 10px; color: var(--navy-blue); font-weight: 600; cursor: pointer;">
+                <i class="fas fa-sync-alt"></i> Refresh
+            </button>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Z2B ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Tier</th>
+                        <th>Product Access</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="allUsersTableBody">
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 2rem;">
+                            <i class="fas fa-spinner fa-spin"></i> Loading users...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Product Access Tab -->
+    <div id="product-users-content" class="user-tab-content" style="display: none;">
+<!-- Enhanced Product Selector with Search & Categories -->        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">            <!-- Category Filter -->            <div>                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--white);">Filter by Category</label>                <select id="productAccessCategoryFilter" onchange="filterProductAccess(this.value)" style="width: 100%; padding: 0.8rem 1rem; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 1rem;">                    <option value="ALL">🌟 All Products</option>                    <optgroup label="📦 Product Owner">                        <option value="Z2B">🏢 Z2B Products</option>                        <option value="MEMBER">👤 Member Products</option>                    </optgroup>                    <optgroup label="📱 Product Type">                        <option value="APP">📱 Apps</option>                        <option value="TEMPLATE">📄 Templates & Tools</option>                        <option value="SERVICE">🛠️ Services</option>                        <option value="PHYSICAL">📦 Physical Products</option>                        <option value="DIGITAL">💿 Digital Downloads</option>                    </optgroup>                </select>            </div>            <!-- Searchable Product Selector -->            <div>                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--white);">Select Product <span style="color: var(--gold); font-size: 0.9rem;">(Type to search)</span></label>                <input list="productAccessList" id="productSelectorInput" placeholder="Start typing product name..." oninput="selectProductForAccess(this.value)" style="width: 100%; padding: 0.8rem 1rem; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 1rem;">                <datalist id="productAccessList">                    <!-- Products loaded dynamically -->                </datalist>                <small style="color: rgba(255, 255, 255, 0.6); display: block; margin-top: 0.5rem;">                    <i class="fas fa-search"></i> Searchable - type to filter                </small>            </div>        </div>        <!-- Search Users in Results -->        <div style="margin-bottom: 1.5rem;">            <input type="text" id="productUserSearch" placeholder="Search users by name, email, or Z2B ID..." oninput="filterProductUsers(this.value)" style="width: 100%; padding: 0.8rem 1rem; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 1rem;">        </div>
+
+        <!-- Stats for Selected Product -->
+        <div id="productStats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+            <!-- Stats will be loaded dynamically -->
+        </div>
+
+        <!-- Users Table -->
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Z2B ID</th>
+                        <th>Name</th>
+                        <th>Access Type</th>
+                        <th>Granted Date</th>
+                        <th>Expiry Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="productUsersTableBody">
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 2rem;">
+                            <i class="fas fa-spinner fa-spin"></i> Loading users...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Pending Payments Tab -->
+    <div id="pending-payments-content" class="user-tab-content" style="display: none;">
+        <div style="background: rgba(255,215,0,0.1); padding: 1.5rem; border-radius: 10px; margin-bottom: 1.5rem; border-left: 4px solid var(--gold);">
+            <h3 style="margin: 0 0 0.5rem 0; color: var(--gold);"><i class="fas fa-info-circle"></i> Payment Approval Process</h3>
+            <p style="margin: 0; color: rgba(255, 255, 255, 0.6);">Review payment proof submitted by users. Approve to grant product access, or reject with a reason.</p>
+        </div>
+
+        <div id="pendingPaymentsList">
+            <div style="text-align: center; padding: 3rem; color: #999;">
+                <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;"></i>
+                <p>No pending payments at the moment.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grant Access Tab -->
+    <div id="grant-access-content" class="user-tab-content" style="display: none;">
+        <div style="background: linear-gradient(135deg, rgba(255,215,0,0.1), rgba(255,165,0,0.05)); padding: 2rem; border-radius: 15px; border: 2px solid rgba(255,215,0,0.3);">
+            <h3 style="margin: 0 0 1.5rem 0; color: var(--gold);"><i class="fas fa-gift"></i> Grant Marketplace Product Access</h3>
+
+            <form id="grantAccessForm" onsubmit="grantProductAccess(event)">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                    <!-- User Selection with Smart Autocomplete -->
+                    <div class="form-group" style="position: relative;">
+                        <label>Select User * <span style="color: var(--gold); font-size: 0.9rem;">(Start typing to see suggestions)</span></label>
+                        <input type="text" id="grantUserIdInput" autocomplete="off" required
+                               placeholder="Type name, email, or Z2B ID..."
+                               oninput="handleUserAutocomplete(this.value)"
+                               onfocus="handleUserAutocomplete(this.value)"
+                               style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 1rem;">
+
+                        <!-- Autocomplete Dropdown -->
+                        <div id="userAutocompleteDropdown" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: white; border: 2px solid #FFD700; border-top: none; border-radius: 0 0 10px 10px; max-height: 300px; overflow-y: auto; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>
+
+                        <!-- Hidden field to store selected user ID -->
+                        <input type="hidden" id="selectedUserId" name="selectedUserId">
+                    </div>
+                        <small style="color: rgba(255, 255, 255, 0.6);">Search by typing name or Z2B ID</small>
+                    </div>
+
+                    <\!-- Product Category Filter -->\                    <div class="form-group">\                        <label>Filter Products by Category</label>\                        <select id="productCategoryFilter" onchange="filterProductsByCategory(this.value)" style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 1rem;">\                            <option value="ALL">🌟 All Products</option>\                            <optgroup label="📦 Product Owner">\                                <option value="Z2B">🏢 Z2B Products</option>\                                <option value="MEMBER">👤 Member Products</option>\                            </optgroup>\                            <optgroup label="📱 Product Type">\                                <option value="APP">📱 Apps</option>\                                <option value="TEMPLATE">📄 Templates & Tools</option>\                                <option value="SERVICE">🛠️ Services</option>\                                <option value="PHYSICAL">📦 Physical Products</option>\                                <option value="DIGITAL">💿 Digital Downloads</option>\                            </optgroup>\                        </select>\                    </div>
+                    <!-- Product Selection -->
+                    <div class="form-group">
+                        <label>Select Product *</label>
+                        <input list="productsList" id="grantProductIdInput" autocomplete="off" required placeholder="Start typing product name..." oninput="showProductPreview(this.value)" style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 1rem;">
+                            <option value="">-- Select Product --</option>
+                            <!-- Products loaded dynamically from /api/products -->
+                        <datalist id="productsList"></datalist>
+                        </select>
+                    </div>
+
+                    <!-- Access Type -->
+                    <div class="form-group">
+                        <label>Access Type *</label>
+                        <select id="grantAccessType" required style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 1rem;">
+                            <option value="">-- Select Type --</option>
+                            <option value="PAID">💳 Paid Subscription</option>
+                            <option value="GIFT">🎁 Gift / Promotional</option>
+                            <option value="BETA">🧪 Beta Tester</option>
+                            <option value="ADMIN">👑 Admin Access</option>
+                            <option value="FREE">🆓 Free Trial</option>
+                        </select>
+                    </div>
+
+                    <!-- Subscription Plan -->
+                    <div class="form-group" id="subscriptionPlanGroup" style="display: none;">
+                        <label>Subscription Plan</label>
+                        <select id="grantSubscriptionPlan" style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 1rem;">
+                            <option value="MONTHLY">Monthly (R497/month)</option>
+                            <option value="LIFETIME">Lifetime (R2,997 once-off)</option>
+                            <option value="PAY_AS_GO">Pay as You Go</option>
+                        </select>
+                    </div>
+
+                    <!-- Expiry Date -->
+                    <div class="form-group">
+                        <label>Expiry Date (Optional)</label>
+                        <input type="date" id="grantExpiryDate" style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 1rem;">
+                        <small style="color: rgba(255, 255, 255, 0.6);">Leave blank for no expiry</small>
+                    </div>
+
+                    <!-- Notes -->
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label>Notes / Reason</label>
+                        <textarea id="grantNotes" rows="3" placeholder="e.g., Beta tester program, Gift for referrals, Payment confirmed..." style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 1rem; font-family: inherit;"></textarea>
+                    </div>
+
+                    <!-- Send Credentials -->
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                            <input type="checkbox" id="grantSendCredentials" checked style="width: auto;">
+                            <span>Send login credentials via Email & WhatsApp</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                    <button type="submit" style="flex: 1; padding: 1rem; background: linear-gradient(135deg, var(--gold), var(--orange)); border: none; border-radius: 10px; color: white; font-size: 1.1rem; font-weight: 600; cursor: pointer;">
+                        <i class="fas fa-check"></i> Grant Product Access
+                    </button>
+                    <button type="button" onclick="resetGrantForm()" style="padding: 1rem 2rem; background: #e0e0e0; border: none; border-radius: 10px; color: rgba(255, 255, 255, 0.6); font-weight: 600; cursor: pointer;">
+                        <i class="fas fa-times"></i> Clear
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Recent Grants -->
+        <div style="margin-top: 2rem;">
+            <h3 style="margin-bottom: 1rem;"><i class="fas fa-history"></i> Recent Access Grants</h3>
+            <div id="recentGrantsList" style="background: white; border-radius: 10px; padding: 1rem;">
+                <p style="text-align: center; color: #999; padding: 2rem;">No recent grants to display.</p>
+            </div>
+        </div>
+    </div>
+</div>
 
             <!-- Team Network Section -->
             <div id="team-network" class="content-section">
@@ -630,10 +841,10 @@
                     <button class="comm-tab active" data-tab="whatsapp" style="padding: 1rem 2rem; border: none; background: none; cursor: pointer; border-bottom: 3px solid var(--gold); font-weight: bold; color: var(--navy-blue);">
                         <i class="fab fa-whatsapp"></i> WhatsApp
                     </button>
-                    <button class="comm-tab" data-tab="sms" style="padding: 1rem 2rem; border: none; background: none; cursor: pointer; border-bottom: 3px solid transparent; color: #666;">
+                    <button class="comm-tab" data-tab="sms" style="padding: 1rem 2rem; border: none; background: none; cursor: pointer; border-bottom: 3px solid transparent; color: rgba(255, 255, 255, 0.6);">
                         <i class="fas fa-sms"></i> SMS
                     </button>
-                    <button class="comm-tab" data-tab="email" style="padding: 1rem 2rem; border: none; background: none; cursor: pointer; border-bottom: 3px solid transparent; color: #666;">
+                    <button class="comm-tab" data-tab="email" style="padding: 1rem 2rem; border: none; background: none; cursor: pointer; border-bottom: 3px solid transparent; color: rgba(255, 255, 255, 0.6);">
                         <i class="fas fa-envelope"></i> Email
                     </button>
                 </div>
@@ -685,7 +896,7 @@
                         <div style="margin-bottom: 1.5rem;">
                             <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--navy-blue);">Message:</label>
                             <textarea id="whatsapp-message" rows="6" placeholder="Type your message here..." style="width: 100%; padding: 1rem; border: 2px solid #e0e0e0; border-radius: 8px; font-family: inherit; resize: vertical;"></textarea>
-                            <small style="color: #666;">Message will be sent via WhatsApp Web or WhatsApp Business API</small>
+                            <small style="color: rgba(255, 255, 255, 0.6);">Message will be sent via WhatsApp Web or WhatsApp Business API</small>
                         </div>
 
                         <!-- Send Button -->
@@ -742,7 +953,7 @@
                         <div style="margin-bottom: 1.5rem;">
                             <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--navy-blue);">Message:</label>
                             <textarea id="sms-message" rows="4" placeholder="Type your SMS message here... (Max 160 characters recommended)" maxlength="160" style="width: 100%; padding: 1rem; border: 2px solid #e0e0e0; border-radius: 8px; font-family: inherit; resize: vertical;"></textarea>
-                            <small style="color: #666;"><span id="sms-char-count">0</span>/160 characters</small>
+                            <small style="color: rgba(255, 255, 255, 0.6);"><span id="sms-char-count">0</span>/160 characters</small>
                         </div>
 
                         <!-- Send Button -->
@@ -907,7 +1118,7 @@
         }
 
         // API Configuration
-        const API_URL = 'https://z2b-production-3cd3.up.railway.app/api'; // Production backend
+        const API_URL = 'https://z2b-production-3cd3.up.railway.app/api'; // Production backend (Railway)
         let authToken = localStorage.getItem('admin_token');
 
         // Login Form Handler
@@ -955,6 +1166,8 @@
 
         // Tab Switching
         document.addEventListener('DOMContentLoaded', function() {
+            // Load marketplace products dynamically
+            loadMarketplaceProducts();
             const commTabs = document.querySelectorAll('.comm-tab');
             commTabs.forEach(tab => {
                 tab.addEventListener('click', function() {
@@ -1411,19 +1624,19 @@ Failed: ${result.data.failed}`);
                         <h2 style="margin: 0; color: var(--navy-blue);">
                             <i class="fas fa-layer-group"></i> Send ${channel === 'whatsapp' ? 'WhatsApp' : channel.toUpperCase()} by Tier
                         </h2>
-                        <button onclick="this.closest('div').closest('div').remove()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #666;">
+                        <button onclick="this.closest('div').closest('div').remove()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: rgba(255, 255, 255, 0.6);">
                             <i class="fas fa-times"></i>
                         </button>
                     </div>
 
-                    <p style="color: #666; margin-bottom: 1.5rem;">Select a tier to send message to all members in that tier:</p>
+                    <p style="color: rgba(255, 255, 255, 0.6); margin-bottom: 1.5rem;">Select a tier to send message to all members in that tier:</p>
 
                     <div style="display: flex; flex-direction: column; gap: 0.8rem; margin-bottom: 1.5rem;">
                         <label style="display: flex; align-items: center; padding: 1rem; border: 2px solid #e0e0e0; border-radius: 10px; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='#e0e0e0'">
                             <input type="radio" name="tierSelect" value="FAM" style="margin-right: 0.8rem; width: 20px; height: 20px;">
                             <div>
                                 <strong style="color: var(--navy-blue);">FAM - Free Affiliate Members</strong>
-                                <div style="font-size: 0.85rem; color: #666;">30-day trial members</div>
+                                <div style="font-size: 0.85rem; color: rgba(255, 255, 255, 0.6);">30-day trial members</div>
                             </div>
                         </label>
                         <label style="display: flex; align-items: center; padding: 1rem; border: 2px solid #e0e0e0; border-radius: 10px; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='#e0e0e0'">
@@ -1516,7 +1729,7 @@ Failed: ${result.data.failed}`);
                         <h2 style="margin: 0; color: var(--navy-blue);">
                             <i class="fas fa-user-plus"></i> Send to New Registered Users
                         </h2>
-                        <button onclick="this.closest('div').closest('div').remove()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #666;">
+                        <button onclick="this.closest('div').closest('div').remove()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: rgba(255, 255, 255, 0.6);">
                             <i class="fas fa-times"></i>
                         </button>
                     </div>
@@ -1532,10 +1745,10 @@ Failed: ${result.data.failed}`);
                         ${newUsers.slice(0, 10).map(u => `
                             <div style="padding: 0.5rem; border-bottom: 1px solid #e0e0e0; font-size: 0.9rem;">
                                 <strong>${u.firstName} ${u.lastName}</strong> - ${u.tier || 'FAM'}
-                                <div style="font-size: 0.8rem; color: #666;">Registered: ${new Date(u.createdAt).toLocaleDateString('en-ZA')}</div>
+                                <div style="font-size: 0.8rem; color: rgba(255, 255, 255, 0.6);">Registered: ${new Date(u.createdAt).toLocaleDateString('en-ZA')}</div>
                             </div>
                         `).join('')}
-                        ${newUsers.length > 10 ? `<div style="padding: 0.5rem; color: #666; font-style: italic;">...and ${newUsers.length - 10} more</div>` : ''}
+                        ${newUsers.length > 10 ? `<div style="padding: 0.5rem; color: rgba(255, 255, 255, 0.6); font-style: italic;">...and ${newUsers.length - 10} more</div>` : ''}
                     </div>
 
                     <button id="confirmNewUsersSend" style="width: 100%; padding: 1rem; background: ${channel === 'whatsapp' ? '#25D366' : 'var(--navy-blue)'}; color: white; border: none; border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 1rem;">
@@ -1573,7 +1786,7 @@ Failed: ${result.data.failed}`);
                         <h2 style="margin: 0; color: var(--navy-blue);">
                             <i class="fas fa-user-circle"></i> Builder Details
                         </h2>
-                        <button onclick="this.closest('div').closest('div').remove()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #666;">
+                        <button onclick="this.closest('div').closest('div').remove()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: rgba(255, 255, 255, 0.6);">
                             <i class="fas fa-times"></i>
                         </button>
                     </div>
@@ -1675,13 +1888,13 @@ Failed: ${result.data.failed}`);
                     <h2 style="margin: 0 0 1rem 0; color: var(--navy-blue);">
                         <i class="fas fa-envelope-open-text"></i> Choose Message Template
                     </h2>
-                    <p style="color: #666; margin-bottom: 1.5rem;">Sending to ${users.length} builder(s) via ${channel}</p>
+                    <p style="color: rgba(255, 255, 255, 0.6); margin-bottom: 1.5rem;">Sending to ${users.length} builder(s) via ${channel}</p>
 
                     <div style="display: grid; gap: 1rem; margin-bottom: 1.5rem;">
                         ${Object.keys(templates).map(key => `
                             <button onclick="selectTemplate('${key}', '${channel}', this)" style="text-align: left; padding: 1rem; background: #f8f9fa; border: 2px solid #e0e0e0; border-radius: 10px; cursor: pointer; transition: all 0.3s;">
                                 <strong style="color: var(--navy-blue); display: block; margin-bottom: 0.5rem; text-transform: capitalize;">${key} Message</strong>
-                                <small style="color: #666; white-space: pre-wrap;">${templates[key].substring(0, 100)}...</small>
+                                <small style="color: rgba(255, 255, 255, 0.6); white-space: pre-wrap;">${templates[key].substring(0, 100)}...</small>
                             </button>
                         `).join('')}
 
@@ -1784,7 +1997,7 @@ Failed: ${result.data.failed}`);
                         <h2 style="margin: 0; color: var(--navy-blue);">
                             <i class="fab fa-whatsapp" style="color: #25D366;"></i> Edit WhatsApp Message
                         </h2>
-                        <button onclick="this.closest('div').closest('div').remove()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #666;">
+                        <button onclick="this.closest('div').closest('div').remove()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: rgba(255, 255, 255, 0.6);">
                             <i class="fas fa-times"></i>
                         </button>
                     </div>
@@ -1802,7 +2015,7 @@ Failed: ${result.data.failed}`);
                     ${users.length === 1 ? `
                         <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
                             <strong style="color: var(--navy-blue); display: block; margin-bottom: 0.5rem;">Member Details:</strong>
-                            <div style="font-size: 0.9rem; color: #666; display: grid; gap: 0.3rem;">
+                            <div style="font-size: 0.9rem; color: rgba(255, 255, 255, 0.6); display: grid; gap: 0.3rem;">
                                 <div>👤 Name: <strong>${users[0].firstName} ${users[0].lastName}</strong></div>
                                 <div>🆔 Z2B ID: <strong>${users[0].referralCode || 'N/A'}</strong></div>
                                 <div>🏆 Tier: <strong>${users[0].tier || 'FAM'}</strong></div>
@@ -1816,7 +2029,7 @@ Failed: ${result.data.failed}`);
                     </label>
                     <textarea id="whatsappMessageEditor" style="width: 100%; min-height: 300px; padding: 1rem; border: 2px solid #e0e0e0; border-radius: 10px; font-family: inherit; font-size: 0.95rem; resize: vertical; margin-bottom: 1rem;">${prefilledMessage}</textarea>
 
-                    <div style="font-size: 0.85rem; color: #666; margin-bottom: 1.5rem;">
+                    <div style="font-size: 0.85rem; color: rgba(255, 255, 255, 0.6); margin-bottom: 1.5rem;">
                         <i class="fas fa-lightbulb"></i> You can edit the message above before sending. ${users.length > 1 ? 'Each builder will receive a personalized version.' : ''}
                     </div>
 
@@ -1960,7 +2173,7 @@ Failed: ${result.data.failed}`);
                         <h2 style="margin: 0; color: var(--navy-blue);">
                             <i class="fas fa-edit"></i> Draft New Message
                         </h2>
-                        <button onclick="this.closest('div').closest('div').remove()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #666;">
+                        <button onclick="this.closest('div').closest('div').remove()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: rgba(255, 255, 255, 0.6);">
                             <i class="fas fa-times"></i>
                         </button>
                     </div>
@@ -1975,7 +2188,7 @@ Failed: ${result.data.failed}`);
                     ${users.length === 1 ? `
                         <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
                             <strong style="color: var(--navy-blue); display: block; margin-bottom: 0.5rem;">Member Details (for reference):</strong>
-                            <div style="font-size: 0.9rem; color: #666; display: grid; gap: 0.3rem;">
+                            <div style="font-size: 0.9rem; color: rgba(255, 255, 255, 0.6); display: grid; gap: 0.3rem;">
                                 <div>👤 Name: <strong>${users[0].firstName} ${users[0].lastName}</strong></div>
                                 <div>🆔 Z2B ID: <strong>${users[0].referralCode || 'N/A'}</strong></div>
                                 <div>🏆 Tier: <strong>${users[0].tier || 'FAM'}</strong></div>
@@ -2121,25 +2334,10 @@ Write your message here..." style="width: 100%; min-height: 300px; padding: 1rem
 
         // Check if already logged in
         if (authToken) {
-            verifyToken();
-        }
-
-        async function verifyToken() {
-            try {
-                const response = await fetch(`${API_URL}/auth/verify`, {
-                    headers: { 'Authorization': `Bearer ${authToken}` }
-                });
-
-                if (response.ok) {
-                    document.getElementById('loginScreen').style.display = 'none';
-                    document.getElementById('adminDashboard').style.display = 'flex';
-                    loadDashboard();
-                } else {
-                    localStorage.removeItem('admin_token');
-                }
-            } catch (error) {
-                console.error('Token verification failed:', error);
-            }
+            // Token exists, show dashboard (if token is invalid, API calls will fail with 401)
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('adminDashboard').style.display = 'flex';
+            loadDashboard();
         }
 
         // Menu Navigation
@@ -2157,7 +2355,15 @@ Write your message here..." style="width: 100%; min-height: 300px; padding: 1rem
 
         function showSection(section) {
             document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
-            document.getElementById(section).classList.add('active');
+
+            // Safety check: only add active if element exists
+            const sectionElement = document.getElementById(section);
+            if (sectionElement) {
+                sectionElement.classList.add('active');
+            } else {
+                console.warn(`Section element not found: ${section}`);
+                return; // Exit early if section doesn't exist
+            }
 
             // Update title
             const titles = {
@@ -2169,9 +2375,14 @@ Write your message here..." style="width: 100%; min-height: 300px; padding: 1rem
                 'branding': 'Branding Settings',
                 'payment': 'Payment Gateway Configuration',
                 'fam': 'FAM Tier Management',
-                'statistics': 'Platform Statistics'
+                'statistics': 'Platform Statistics',
+                'marketplace': 'Marketplace Product Access Management'
             };
-            document.getElementById('sectionTitle').textContent = titles[section];
+
+            const titleElement = document.getElementById('sectionTitle');
+            if (titleElement && titles[section]) {
+                titleElement.textContent = titles[section];
+            }
 
             // Load section data
             loadSectionData(section);
@@ -2286,7 +2497,7 @@ Write your message here..." style="width: 100%; min-height: 300px; padding: 1rem
             const contentDiv = document.getElementById('tiers');
             contentDiv.innerHTML = `
                 <h2>Tiers & Pricing Management</h2>
-                <p style="margin-bottom: 2rem; color: #666;">Edit pricing, PV points, and commission rates for each membership tier.</p>
+                <p style="margin-bottom: 2rem; color: rgba(255, 255, 255, 0.6);">Edit pricing, PV points, and commission rates for each membership tier.</p>
                 <div style="display: grid; gap: 1.5rem;">
                     ${Object.entries(tiers).map(([key, tier]) => `
                         <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
@@ -2421,11 +2632,11 @@ Write your message here..." style="width: 100%; min-height: 300px; padding: 1rem
             const contentDiv = document.getElementById('compensation');
             contentDiv.innerHTML = `
                 <h2>Compensation Plan - 7 Income Streams</h2>
-                <p style="margin-bottom: 2rem; color: #666;">Configure all commission percentages, bonuses, and payment rules for the 7 income streams.</p>
+                <p style="margin-bottom: 2rem; color: rgba(255, 255, 255, 0.6);">Configure all commission percentages, bonuses, and payment rules for the 7 income streams.</p>
 
                 <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 1.5rem;">
                     <h3 style="color: var(--navy-blue); margin-bottom: 1rem;">1. ISP (Individual Sales Profit) - Monthly</h3>
-                    <p style="color: #666; font-size: 0.9rem; margin-bottom: 0.5rem;"><em>Defined in tier percentages (Tiers section): 20%-45% based on membership tier</em></p>
+                    <p style="color: rgba(255, 255, 255, 0.6); font-size: 0.9rem; margin-bottom: 0.5rem;"><em>Defined in tier percentages (Tiers section): 20%-45% based on membership tier</em></p>
                 </div>
 
                 <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 1.5rem;">
@@ -2674,7 +2885,7 @@ Write your message here..." style="width: 100%; min-height: 300px; padding: 1rem
 
                 <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 1.5rem;">
                     <h3 style="color: var(--navy-blue); margin-bottom: 1rem;">5. CEA (CEO Awards) - Quarterly</h3>
-                    <p style="color: #666; font-size: 0.9rem; margin-bottom: 1rem;"><em>Exclusive recognition: luxury trips, cash bonuses, special awards for top performers</em></p>
+                    <p style="color: rgba(255, 255, 255, 0.6); font-size: 0.9rem; margin-bottom: 1rem;"><em>Exclusive recognition: luxury trips, cash bonuses, special awards for top performers</em></p>
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
                         <div>
                             <label style="display: flex; align-items: center; font-weight: 600; color: #555; cursor: pointer;">
@@ -2687,7 +2898,7 @@ Write your message here..." style="width: 100%; min-height: 300px; padding: 1rem
 
                 <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 1.5rem;">
                     <h3 style="color: var(--navy-blue); margin-bottom: 1rem;">6. CEC (CEO Competitions) - Quarterly</h3>
-                    <p style="color: #666; font-size: 0.9rem; margin-bottom: 1rem;"><em>Performance competitions: cash prizes, bonuses, exclusive perks for winners</em></p>
+                    <p style="color: rgba(255, 255, 255, 0.6); font-size: 0.9rem; margin-bottom: 1rem;"><em>Performance competitions: cash prizes, bonuses, exclusive perks for winners</em></p>
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
                         <div>
                             <label style="display: flex; align-items: center; font-weight: 600; color: #555; cursor: pointer;">
@@ -2736,7 +2947,7 @@ Write your message here..." style="width: 100%; min-height: 300px; padding: 1rem
             const contentDiv = document.getElementById('branding');
             contentDiv.innerHTML = `
                 <h2>Branding Settings</h2>
-                <p style="margin-bottom: 2rem; color: #666;">Configure your platform's visual identity including colors, fonts, and company information.</p>
+                <p style="margin-bottom: 2rem; color: rgba(255, 255, 255, 0.6);">Configure your platform's visual identity including colors, fonts, and company information.</p>
 
                 <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
                     <h3 style="color: var(--navy-blue); margin-bottom: 1.5rem;">Company Information</h3>
@@ -2861,7 +3072,7 @@ Write your message here..." style="width: 100%; min-height: 300px; padding: 1rem
             const contentDiv = document.getElementById('users');
             contentDiv.innerHTML = `
                 <h2>User Management</h2>
-                <p style="margin-bottom: 2rem; color: #666;">Create users, manage tiers, grant manual access (cash/in-kind payments), and view all member details.</p>
+                <p style="margin-bottom: 2rem; color: rgba(255, 255, 255, 0.6);">Create users, manage tiers, grant manual access (cash/in-kind payments), and view all member details.</p>
 
                 <!-- Action Buttons -->
                 <div style="display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap;">
@@ -2909,7 +3120,7 @@ Write your message here..." style="width: 100%; min-height: 300px; padding: 1rem
                 <!-- Users Table -->
                 <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); overflow-x: auto;">
                     <div id="usersTableContainer">
-                        <p style="text-align: center; color: #666;">Loading users...</p>
+                        <p style="text-align: center; color: rgba(255, 255, 255, 0.6);">Loading users...</p>
                     </div>
                 </div>
 
@@ -2972,7 +3183,7 @@ Write your message here..." style="width: 100%; min-height: 300px; padding: 1rem
                 <div id="grantManualAccessModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; overflow-y: auto;">
                     <div style="background: white; padding: 2rem; border-radius: 15px; max-width: 700px; width: 90%; margin: 2rem auto; max-height: 90vh; overflow-y: auto;">
                         <h3 style="color: var(--navy-blue); margin-bottom: 0.5rem;">Register New Member - Manual Access</h3>
-                        <p style="color: #666; font-size: 0.9rem; margin-bottom: 1.5rem;">For members who paid via cash, in-kind, or alternative payment methods.</p>
+                        <p style="color: rgba(255, 255, 255, 0.6); font-size: 0.9rem; margin-bottom: 1.5rem;">For members who paid via cash, in-kind, or alternative payment methods.</p>
 
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
                             <div>
@@ -3235,7 +3446,7 @@ Write your message here..." style="width: 100%; min-height: 300px; padding: 1rem
 
             if (!users || users.length === 0) {
                 container.innerHTML = `
-                    <p style="text-align: center; color: #666; padding: 2rem;">No users found. Create your first user to get started!</p>
+                    <p style="text-align: center; color: rgba(255, 255, 255, 0.6); padding: 2rem;">No users found. Create your first user to get started!</p>
                 `;
                 return;
             }
@@ -3346,9 +3557,9 @@ Write your message here..." style="width: 100%; min-height: 300px; padding: 1rem
                                         ${user.tier || 'FAM'}
                                     </span>
                                 </td>
-                                <td style="padding: 1rem; font-size: 0.85rem; color: #666;">${regDate}</td>
+                                <td style="padding: 1rem; font-size: 0.85rem; color: rgba(255, 255, 255, 0.6);">${regDate}</td>
                                 <td style="padding: 1rem;">
-                                    <div style="font-size: 0.85rem; color: #666;">${trialExpiry}</div>
+                                    <div style="font-size: 0.85rem; color: rgba(255, 255, 255, 0.6);">${trialExpiry}</div>
                                     <div style="margin-top: 0.3rem;">${trialStatus}</div>
                                 </td>
                                 <td style="padding: 1rem; text-align: center;">
@@ -3374,7 +3585,7 @@ Write your message here..." style="width: 100%; min-height: 300px; padding: 1rem
                         `}).join('')}
                     </tbody>
                 </table>
-                <p style="margin-top: 1rem; color: #666; font-size: 0.9rem;">Total Users: ${users.length}</p>
+                <p style="margin-top: 1rem; color: rgba(255, 255, 255, 0.6); font-size: 0.9rem;">Total Users: ${users.length}</p>
             `;
 
             container.innerHTML = tableHTML;
@@ -3606,7 +3817,7 @@ Write your message here..." style="width: 100%; min-height: 300px; padding: 1rem
                 <div style="margin-bottom: 1rem;">
                     <strong style="color: var(--navy-blue);">Referral Link:</strong><br>
                     <input type="text" value="https://z2blegacybuilders.co.za/tiers.html?ref=${userData.referralCode}" readonly style="width: 100%; padding: 0.5rem; border: 2px solid #28a745; border-radius: 5px; font-family: monospace; font-size: 0.9rem;" onclick="this.select(); document.execCommand('copy'); alert('Referral link copied to clipboard!');">
-                    <small style="color: #666; display: block; margin-top: 0.3rem;">Click to copy and share with prospects</small>
+                    <small style="color: rgba(255, 255, 255, 0.6); display: block; margin-top: 0.3rem;">Click to copy and share with prospects</small>
                 </div>
                 <div style="margin-bottom: 1rem;">
                     <strong style="color: var(--navy-blue);">User ID:</strong><br>
@@ -4258,6 +4469,980 @@ Write your message here..." style="width: 100%; min-height: 300px; padding: 1rem
                 printWindow.print();
             }, 500);
         }
+// ============================================================================
+// MARKETPLACE PRODUCT ACCESS MANAGEMENT JAVASCRIPT
+// Handles ALL marketplace products: MAVULA, ZYRO, ZYRA, BENOWN, GLOWIE, VIDZIE, ZYNTH, ZYNECT
+// ============================================================================
+
+const PRODUCTS = {}; // Will be populated from API
+
+// Load products dynamically from database
+async function loadMarketplaceProducts() {
+    try {
+        const response = await fetch(`${API_URL}/products`);
+        const data = await response.json();
+        
+        if (data.success && data.products) {
+            // Populate PRODUCTS object
+            data.products.forEach(product => {
+                PRODUCTS[product.productId] = {
+                    name: product.productName,
+                    icon: product.icon,
+                    color: product.color,
+                    description: product.description
+                };
+            });
+            
+            // Populate product dropdowns
+            populateProductDropdowns(data.products);
+            
+            console.log(`✅ Loaded ${data.products.length} marketplace products`);
+        }
+    } catch (error) {
+        console.error('Error loading marketplace products:', error);
+        // Use fallback products if API fails
+        console.warn('Using fallback product list - API unavailable');
+        useFallbackProducts();
+}}// Fallback products if API is unavailablefunction useFallbackProducts() {    const fallbackProducts = [        { productId: 'coach-manlaw', productName: 'Coach Manlaw', icon: '🎓', color: '#9333EA', description: 'AI Billionaire Coach', sortOrder: 1 },        { productId: 'glowie', productName: 'GLOWIE', icon: '✨', color: '#EC4899', description: 'AI App Builder', sortOrder: 2 },        { productId: 'benown', productName: 'BENOWN', icon: '📊', color: '#F59E0B', description: 'AI Content Creator', sortOrder: 3 },        { productId: 'zyra', productName: 'ZYRA', icon: '💼', color: '#10B981', description: 'AI Sales Agent', sortOrder: 4 },        { productId: 'zynth', productName: 'ZYNTH', icon: '🎵', color: '#8B5CF6', description: 'AI Voice Cloning', sortOrder: 5 },        { productId: 'vidzie', productName: 'VIDZIE', icon: '🎬', color: '#EF4444', description: 'AI Video Creator', sortOrder: 6 },        { productId: 'captionpro', productName: 'CaptionPro', icon: '💬', color: '#3B82F6', description: 'AI Video Captions', sortOrder: 7 },        { productId: 'zyro', productName: 'ZYRO', icon: '🎯', color: '#06B6D4', description: 'Gamification Hub', sortOrder: 8 },        { productId: 'zynect', productName: 'ZYNECT', icon: '🔗', color: '#14B8A6', description: 'Complete CRM', sortOrder: 9 },        { productId: 'mavula', productName: 'MAVULA', icon: '🤖', color: '#7C3AED', description: 'AI Automation', sortOrder: 10 }    ];    fallbackProducts.forEach(product => {        PRODUCTS[product.productId] = {            name: product.productName,            icon: product.icon,            color: product.color,            description: product.description        };    });    populateProductDropdowns(fallbackProducts);    console.log('✅ Loaded', fallbackProducts.length, 'fallback products');}
+
+// ============================================================================
+// ENHANCED GRANT ACCESS FUNCTIONS WITH SEARCH & CATEGORIES
+// ============================================================================
+
+// Global product database
+let allMarketplaceProducts = [];
+let filteredMarketplaceProducts = [];
+
+// Comprehensive product list with categories
+function getEnhancedProductList() {
+    return [
+        // === Z2B APPS ===
+        { productId: 'coach-manlaw', productName: 'Coach Manlaw', icon: '🎓', category: 'APP', owner: 'Z2B', type: 'DIGITAL', description: 'AI Billionaire Coach - 7 Stage Transformation', sortOrder: 1 },
+        { productId: 'glowie', productName: 'GLOWIE', icon: '✨', category: 'APP', owner: 'Z2B', type: 'DIGITAL', description: 'AI App Builder - No-code app creation', sortOrder: 2 },
+        { productId: 'benown', productName: 'BENOWN', icon: '📊', category: 'APP', owner: 'Z2B', type: 'DIGITAL', description: 'AI Content Creator - Business content', sortOrder: 3 },
+        { productId: 'zyra', productName: 'ZYRA', icon: '💼', category: 'APP', owner: 'Z2B', type: 'DIGITAL', description: 'AI Sales Agent - Automated sales', sortOrder: 4 },
+        { productId: 'zynth', productName: 'ZYNTH', icon: '🎵', category: 'APP', owner: 'Z2B', type: 'DIGITAL', description: 'AI Voice Cloning - Voice synthesis', sortOrder: 5 },
+        { productId: 'vidzie', productName: 'VIDZIE', icon: '🎬', category: 'APP', owner: 'Z2B', type: 'DIGITAL', description: 'AI Video Creator - Video production', sortOrder: 6 },
+        { productId: 'zyro', productName: 'ZYRO', icon: '🎯', category: 'APP', owner: 'Z2B', type: 'DIGITAL', description: 'Gamification Hub - Engagement tools', sortOrder: 7 },
+        { productId: 'zynect', productName: 'ZYNECT', icon: '🔗', category: 'APP', owner: 'Z2B', type: 'DIGITAL', description: 'Complete CRM - Customer management', sortOrder: 8 },
+        { productId: 'mavula', productName: 'MAVULA', icon: '🤖', category: 'APP', owner: 'Z2B', type: 'DIGITAL', description: 'AI Prospecting - Lead generation', sortOrder: 9 },
+
+        // === Z2B TEMPLATES & TOOLS ===
+        { productId: 'video-creator-tools', productName: 'Video Creator Tools', icon: '🎥', category: 'TEMPLATE', owner: 'Z2B', type: 'DIGITAL', description: 'Professional video templates', sortOrder: 10 },
+        { productId: 'captionpro', productName: 'CaptionPro', icon: '💬', category: 'TEMPLATE', owner: 'Z2B', type: 'DIGITAL', description: 'AI Captions & Auto-Cut', sortOrder: 11 },
+
+        // === Z2B SUITES ===
+        { productId: 'zyronic-suite', productName: 'Zyronic Suite Enterprise', icon: '🏢', category: 'APP', owner: 'Z2B', type: 'DIGITAL', description: '8 AI Apps with white-label rights', sortOrder: 12 },
+
+        // === MEMBER PRODUCTS (Examples - will be loaded dynamically) ===
+        // These are placeholders - real member products loaded from marketplace API
+    ];
+}
+
+// Enhanced fallback products function
+function useFallbackProducts() {
+    const fallbackProducts = getEnhancedProductList();
+
+    // Populate PRODUCTS object
+    fallbackProducts.forEach(product => {
+        PRODUCTS[product.productId] = {
+            name: product.productName,
+            icon: product.icon,
+            color: product.color || '#6B7280',
+            description: product.description,
+            category: product.category,
+            owner: product.owner
+        };
+    });
+
+    // Store in global array
+    allMarketplaceProducts = fallbackProducts;
+    filteredMarketplaceProducts = fallbackProducts;
+
+    // Populate dropdowns
+    populateProductDatalist(fallbackProducts);
+
+    console.log('✅ Loaded', fallbackProducts.length, 'fallback products with categories');
+}
+
+// Populate product datalist (for searchable input)
+function populateProductDatalist(products) {
+    const datalist = document.getElementById('productsList');
+    if (!datalist) return;
+
+    datalist.innerHTML = products
+        .sort((a, b) => a.sortOrder - b.sortOrder)
+        .map(product => {
+            const ownerLabel = product.owner === 'Z2B' ? '🏢 Z2B' : '👤 Member';
+            const categoryLabel = getCategoryLabel(product.category);
+            return `<option value="${product.productId}">${product.icon} ${product.productName} - ${ownerLabel} | ${categoryLabel}</option>`;
+        }).join('');
+}
+
+// Get category label
+function getCategoryLabel(category) {
+    const labels = {
+        'APP': '📱 App',
+        'TEMPLATE': '📄 Template',
+        'SERVICE': '🛠️ Service',
+        'PHYSICAL': '📦 Physical',
+        'DIGITAL': '💿 Digital'
+    };
+    return labels[category] || category;
+}
+
+// Filter products by category
+function filterProductsByCategory(category) {
+    if (category === 'ALL') {
+        filteredMarketplaceProducts = allMarketplaceProducts;
+    } else if (['Z2B', 'MEMBER'].includes(category)) {
+        filteredMarketplaceProducts = allMarketplaceProducts.filter(p => p.owner === category);
+    } else {
+        filteredMarketplaceProducts = allMarketplaceProducts.filter(p =>
+            p.category === category || p.type === category
+        );
+    }
+    populateProductDatalist(filteredMarketplaceProducts);
+    console.log(`Filtered to ${filteredMarketplaceProducts.length} products (${category})`);
+}
+
+// Show product preview
+function showProductPreview(productId) {
+    const product = allMarketplaceProducts.find(p => p.productId === productId);
+    if (product) {
+        console.log(`Selected: ${product.icon} ${product.productName} (${product.owner} ${product.category})`);
+    }
+}
+
+// ========================================
+// SMART USER AUTOCOMPLETE SYSTEM
+// ========================================
+
+let allUsersCache = [];
+let autocompleteSelectedIndex = -1;
+
+// Load all users for autocomplete (called once)
+async function loadUsersForAutocomplete() {
+    try {
+        const response = await fetch(`${API_URL}/users`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('admin_token')}`
+            }
+        });
+
+        const data = await response.json();
+        if (data.success && data.data) {
+            allUsersCache = data.data;
+            console.log(`✅ Loaded ${allUsersCache.length} users for autocomplete`);
+        }
+    } catch (error) {
+        console.error('Error loading users for autocomplete:', error);
+    }
+}
+
+// Handle user autocomplete input
+function handleUserAutocomplete(searchTerm) {
+    const dropdown = document.getElementById('userAutocompleteDropdown');
+    const input = document.getElementById('grantUserIdInput');
+
+    // Reset selected index
+    autocompleteSelectedIndex = -1;
+
+    // If empty, hide dropdown
+    if (!searchTerm || searchTerm.trim().length < 2) {
+        dropdown.style.display = 'none';
+        return;
+    }
+
+    // Filter users based on search term
+    const term = searchTerm.toLowerCase().trim();
+    const matches = allUsersCache.filter(user => {
+        const fullName = (user.fullName || `${user.firstName} ${user.lastName}`).toLowerCase();
+        const email = (user.email || '').toLowerCase();
+        const z2bId = (user.z2bId || user.memberId || '').toLowerCase();
+
+        return fullName.includes(term) || email.includes(term) || z2bId.includes(term);
+    }).slice(0, 10); // Limit to top 10 results
+
+    // If no matches, show "no results"
+    if (matches.length === 0) {
+        dropdown.innerHTML = `
+            <div style="padding: 1rem; text-align: center; color: #999;">
+                <i class="fas fa-search"></i> No users found matching "${searchTerm}"
+            </div>
+        `;
+        dropdown.style.display = 'block';
+        return;
+    }
+
+    // Build dropdown HTML
+    dropdown.innerHTML = matches.map((user, index) => {
+        const fullName = user.fullName || `${user.firstName} ${user.lastName}`;
+        const email = user.email || 'No email';
+        const z2bId = user.z2bId || user.memberId || 'No ID';
+        const tier = user.tier || 'No Tier';
+
+        // Highlight matching text
+        const highlightText = (text, term) => {
+            const regex = new RegExp(`(${term})`, 'gi');
+            return text.replace(regex, '<strong style="background: #FFD700; color: #0A2647; padding: 0 2px;">$1</strong>');
+        };
+
+        return `
+            <div class="autocomplete-item" data-user-id="${user._id}" data-index="${index}"
+                 onclick="selectUserFromAutocomplete('${user._id}', '${fullName.replace(/'/g, "\\'")}', '${email}', '${z2bId}')"
+                 style="padding: 0.8rem 1rem; border-bottom: 1px solid #f0f0f0; cursor: pointer; transition: background 0.2s;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="flex: 1;">
+                        <div style="font-weight: 600; color: #0A2647; margin-bottom: 4px;">
+                            ${highlightText(fullName, term)}
+                        </div>
+                        <div style="font-size: 0.85rem; color: #666;">
+                            <i class="fas fa-envelope"></i> ${highlightText(email, term)}
+                        </div>
+                        <div style="font-size: 0.85rem; color: #666; margin-top: 2px;">
+                            <i class="fas fa-id-badge"></i> ${highlightText(z2bId, term)}
+                        </div>
+                    </div>
+                    <div>
+                        <span style="padding: 0.3rem 0.6rem; background: ${getTierColor(tier)}; color: white; border-radius: 5px; font-size: 0.75rem; font-weight: 600;">
+                            ${tier}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    // Show dropdown
+    dropdown.style.display = 'block';
+
+    // Add hover effects via CSS
+    addAutocompleteHoverStyles();
+}
+
+// Add hover styles for autocomplete items
+function addAutocompleteHoverStyles() {
+    const style = document.createElement('style');
+    style.id = 'autocomplete-hover-styles';
+    if (!document.getElementById('autocomplete-hover-styles')) {
+        style.innerHTML = `
+            .autocomplete-item:hover {
+                background: #F3F4F6 !important;
+            }
+            .autocomplete-item.selected {
+                background: #E0F2FE !important;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+}
+
+// Select user from autocomplete
+function selectUserFromAutocomplete(userId, fullName, email, z2bId) {
+    const input = document.getElementById('grantUserIdInput');
+    const hiddenInput = document.getElementById('selectedUserId');
+    const dropdown = document.getElementById('userAutocompleteDropdown');
+
+    // Set display value
+    input.value = `${fullName} (${email})`;
+
+    // Store user ID in hidden field
+    hiddenInput.value = userId;
+
+    // Hide dropdown
+    dropdown.style.display = 'none';
+
+    console.log(`✅ Selected user: ${fullName} (${z2bId}) - ID: ${userId}`);
+}
+
+// Handle keyboard navigation in autocomplete
+document.addEventListener('keydown', function(e) {
+    const input = document.getElementById('grantUserIdInput');
+    const dropdown = document.getElementById('userAutocompleteDropdown');
+
+    // Only handle if input is focused and dropdown is visible
+    if (document.activeElement !== input || dropdown.style.display === 'none') {
+        return;
+    }
+
+    const items = dropdown.querySelectorAll('.autocomplete-item');
+    if (items.length === 0) return;
+
+    // Arrow Down
+    if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        autocompleteSelectedIndex = Math.min(autocompleteSelectedIndex + 1, items.length - 1);
+        updateAutocompleteSelection(items);
+    }
+    // Arrow Up
+    else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        autocompleteSelectedIndex = Math.max(autocompleteSelectedIndex - 1, 0);
+        updateAutocompleteSelection(items);
+    }
+    // Enter
+    else if (e.key === 'Enter') {
+        e.preventDefault();
+        if (autocompleteSelectedIndex >= 0 && items[autocompleteSelectedIndex]) {
+            items[autocompleteSelectedIndex].click();
+        }
+    }
+    // Escape
+    else if (e.key === 'Escape') {
+        dropdown.style.display = 'none';
+        autocompleteSelectedIndex = -1;
+    }
+});
+
+// Update autocomplete selection highlight
+function updateAutocompleteSelection(items) {
+    items.forEach((item, index) => {
+        if (index === autocompleteSelectedIndex) {
+            item.classList.add('selected');
+            item.scrollIntoView({ block: 'nearest' });
+        } else {
+            item.classList.remove('selected');
+        }
+    });
+}
+
+// Close autocomplete when clicking outside
+document.addEventListener('click', function(e) {
+    const input = document.getElementById('grantUserIdInput');
+    const dropdown = document.getElementById('userAutocompleteDropdown');
+
+    if (e.target !== input && dropdown) {
+        dropdown.style.display = 'none';
+    }
+});
+
+// Enhanced load user dropdown (datalist)
+// Enhanced version above
+
+// ========================================
+// GRANT PRODUCT ACCESS FUNCTION
+// ========================================
+
+async function grantProductAccess(event) {
+    event.preventDefault();
+
+    // Get values from form
+    const userId = document.getElementById('selectedUserId').value; // From hidden field
+    const productId = document.getElementById('grantProductIdInput').value;
+    const accessType = document.getElementById('grantAccessType').value;
+    const subscriptionPlan = document.getElementById('grantSubscriptionPlan')?.value || '';
+    const expiryDate = document.getElementById('grantExpiryDate')?.value || '';
+    const notes = document.getElementById('grantNotes')?.value || '';
+    const sendCredentials = document.getElementById('sendCredentialsCheckbox')?.checked || false;
+
+    // Validate user selection
+    if (!userId) {
+        alert('❌ Please select a user from the autocomplete dropdown');
+        return;
+    }
+
+    // Validate product selection
+    if (!productId) {
+        alert('❌ Please select a product');
+        return;
+    }
+
+    // Validate access type
+    if (!accessType) {
+        alert('❌ Please select an access type');
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_URL}/users/grant-product-access`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('admin_token')}`
+            },
+            body: JSON.stringify({
+                userId,
+                productId,
+                accessType,
+                subscriptionPlan,
+                expiryDate,
+                notes,
+                sendCredentials
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            alert(`✅ Product access granted successfully!`);
+            resetGrantForm();
+            // Reload user lists
+            loadAllUsers();
+        } else {
+            alert(`❌ Error: ${data.message}`);
+        }
+    } catch (error) {
+        console.error('Error granting access:', error);
+        alert('❌ Error granting access. Please try again.');
+    }
+}
+
+// Reset grant form
+function resetGrantForm() {
+    document.getElementById('grantAccessForm').reset();
+    const userInput = document.getElementById('grantUserIdInput');
+    const productInput = document.getElementById('grantProductIdInput');
+    const hiddenInput = document.getElementById('selectedUserId');
+
+    if (userInput) userInput.value = '';
+    if (productInput) productInput.value = '';
+    if (hiddenInput) hiddenInput.value = '';
+}
+
+// Tab switching logic
+const userTabs = document.querySelectorAll('.user-tab');
+if (userTabs.length > 0) {
+    userTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            const tabName = this.getAttribute('data-tab');
+
+            // Update tab buttons
+            userTabs.forEach(t => {
+                t.style.borderBottom = '3px solid transparent';
+                t.style.color = '#666';
+                t.style.fontWeight = 'normal';
+            });
+            this.style.borderBottom = '3px solid var(--gold)';
+            this.style.color = 'var(--navy-blue)';
+            this.style.fontWeight = 'bold';
+
+            // Update tab content
+            document.querySelectorAll('.user-tab-content').forEach(content => {
+                content.style.display = 'none';
+            });
+            document.getElementById(tabName + '-content').style.display = 'block';
+
+            // Load tab-specific data
+            if (tabName === 'all-users') {
+                loadAllUsers();
+            } else if (tabName === 'product-users') {
+                const productId = document.getElementById('productSelector').value;
+                loadProductUsers(productId);
+            } else if (tabName === 'pending-payments') {
+                loadPendingPayments();
+            } else if (tabName === 'grant-access') {
+                loadUserDropdown();
+            }
+        });
+    });
+}
+
+
+// Initialize marketplace product access event handlers
+document.addEventListener('DOMContentLoaded', function() {
+    // Product selector change handler (OLD - for backwards compatibility)
+    const productSelector = document.getElementById('productSelector');
+    if (productSelector) {
+        productSelector.addEventListener('change', function() {
+            loadProductUsers(this.value);
+        });
+    }
+
+    // Access Type change handler
+    const accessTypeSelect = document.getElementById('grantAccessType');
+    if (accessTypeSelect) {
+        accessTypeSelect.addEventListener('change', function() {
+            const planGroup = document.getElementById('subscriptionPlanGroup');
+            if (this.value === 'PAID') {
+                planGroup.style.display = 'block';
+            } else {
+                planGroup.style.display = 'none';
+            }
+        });
+    }
+
+    // Initialize Product Access List (searchable datalist)
+    setTimeout(() => {
+        if (allMarketplaceProducts && allMarketplaceProducts.length > 0) {
+            populateProductAccessList();
+            console.log('✅ Product Access list initialized with', allMarketplaceProducts.length, 'products');
+        }
+    }, 1500); // Wait for products to load from API or fallback
+
+    // Initialize - load all users by default
+    setTimeout(() => {
+        loadAllUsers();
+        loadUsersForAutocomplete(); // Load users for smart autocomplete
+    }, 1000);
+});
+
+// Load All Users
+async function loadAllUsers() {
+    try {
+        const response = await fetch(`${API_URL}/users`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('admin_token')}`
+            }
+        });
+
+        const data = await response.json();
+        const tbody = document.getElementById('allUsersTableBody');
+
+        if (data.success && data.data) {
+            if (data.data.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 2rem; color: #999;">
+                            No users found
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = data.data.map(user => {
+                // Count how many products user has access to
+                let productAccess = [];
+                if (user.marketplaceAccess) {
+                    for (const [productId, access] of Object.entries(user.marketplaceAccess)) {
+                        if (access && access.hasAccess) {
+                            const product = PRODUCTS[productId];
+                            if (product) {
+                                productAccess.push(`
+                                    <span style="display: inline-block; padding: 0.3rem 0.6rem; background: ${product.color}; color: white; border-radius: 5px; font-size: 0.85rem; margin: 0.2rem;">
+                                        ${product.icon} ${product.name}
+                                    </span>
+                                `);
+                            }
+                        }
+                    }
+                }
+
+                const accessDisplay = productAccess.length > 0
+                    ? productAccess.join(' ')
+                    : '<span style="color: #999; font-style: italic;">No Access</span>';
+
+                return `
+                    <tr>
+                        <td><strong>${user.z2bId || user.memberId || 'N/A'}</strong></td>
+                        <td>${user.fullName || `${user.firstName} ${user.lastName}`}</td>
+                        <td>${user.email}</td>
+                        <td><span style="padding: 0.3rem 0.8rem; background: ${getTierColor(user.tier)}; color: white; border-radius: 5px; font-weight: 600;">${user.tier}</span></td>
+                        <td>${accessDisplay}</td>
+                        <td>
+                            <button onclick="viewUserDetails('${user._id}')" style="padding: 0.5rem 1rem; background: var(--light-blue); border: none; border-radius: 5px; color: white; font-weight: 600; cursor: pointer; font-size: 0.85rem;">
+                                <i class="fas fa-eye"></i> View
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+    } catch (error) {
+        console.error('Error loading users:', error);
+        const tbody = document.getElementById('allUsersTableBody');
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="6" style="text-align: center; padding: 2rem; color: var(--danger);">
+                    Error loading users. Please try again.
+                </td>
+            </tr>
+        `;
+    }
+}
+
+// Load Product Users
+async function loadProductUsers(productId) {
+    try {
+        // Load stats
+        const statsResponse = await fetch(`${API_URL}/users/marketplace-stats`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('admin_token')}`
+            }
+        });
+        const statsData = await statsResponse.json();
+
+        if (statsData.success && statsData.stats[productId]) {
+            const stats = statsData.stats[productId];
+            const product = PRODUCTS[productId];
+
+            document.getElementById('productStats').innerHTML = `
+                <div class="stat-card" style="background: linear-gradient(135deg, ${product.color}, ${product.color}DD); padding: 1.5rem; border-radius: 10px; color: white;">
+                    <div style="font-size: 2.5rem; font-weight: bold;">${stats.total}</div>
+                    <div style="opacity: 0.9;">Total ${product.name} Users</div>
+                </div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #4CAF50, #45a049); padding: 1.5rem; border-radius: 10px; color: white;">
+                    <div style="font-size: 2.5rem; font-weight: bold;">${stats.paid}</div>
+                    <div style="opacity: 0.9;">Paid Subscriptions</div>
+                </div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #FFD700, #FFA500); padding: 1.5rem; border-radius: 10px; color: white;">
+                    <div style="font-size: 2.5rem; font-weight: bold;">${stats.free}</div>
+                    <div style="opacity: 0.9;">Free/Gift/Beta</div>
+                </div>
+            `;
+        }
+
+        // Load users
+        const usersResponse = await fetch(`${API_URL}/users/product-access/${productId}`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('admin_token')}`
+            }
+        });
+        const usersData = await usersResponse.json();
+        const tbody = document.getElementById('productUsersTableBody');
+
+        if (usersData.success && usersData.users) {
+            if (usersData.users.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 2rem; color: #999;">
+                            No users with ${PRODUCTS[productId].name} access yet
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = usersData.users.map(user => {
+                const access = user.marketplaceAccess[productId];
+                return `
+                    <tr>
+                        <td><strong>${user.z2bId || user.memberId || 'N/A'}</strong></td>
+                        <td>${user.fullName || `${user.firstName} ${user.lastName}`}</td>
+                        <td><span style="padding: 0.3rem 0.8rem; background: ${getAccessTypeColor(access.accessType)}; color: white; border-radius: 5px; font-weight: 600;">${getAccessTypeIcon(access.accessType)} ${access.accessType}</span></td>
+                        <td>${formatDate(access.grantedDate)}</td>
+                        <td>${access.expiryDate ? formatDate(access.expiryDate) : '<span style="color: #999;">No Expiry</span>'}</td>
+                        <td>
+                            <button onclick="revokeProductAccess('${user._id}', '${productId}')" style="padding: 0.5rem 1rem; background: var(--danger); border: none; border-radius: 5px; color: white; font-weight: 600; cursor: pointer; font-size: 0.85rem;">
+                                <i class="fas fa-times"></i> Revoke
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+    } catch (error) {
+        console.error('Error loading product users:', error);
+    }
+}
+
+// Load Pending Payments
+async function loadPendingPayments() {
+    try {
+        const response = await fetch(`${API_URL}/payments/pending-marketplace`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('admin_token')}`
+            }
+        });
+
+        const data = await response.json();
+        // TODO: Display pending payments when payment model is implemented
+        console.log('Pending payments:', data);
+    } catch (error) {
+        console.error('Error loading pending payments:', error);
+    }
+}
+
+// Load User Dropdown
+// Enhanced version above
+
+// Grant Product Access
+// Enhanced version above
+
+// Revoke Product Access
+async function revokeProductAccess(userId, productId) {
+    const reason = prompt(`Enter reason for revoking ${PRODUCTS[productId].name} access:`);
+    if (!reason) return;
+
+    try {
+        const response = await fetch(`${API_URL}/users/revoke-product-access`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('admin_token')}`
+            },
+            body: JSON.stringify({
+                userId,
+                productId,
+                reason
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            alert(`✅ ${PRODUCTS[productId].name} access revoked successfully.`);
+            loadProductUsers(productId);
+            loadAllUsers();
+        } else {
+            alert(`❌ Error: ${data.message}`);
+        }
+    } catch (error) {
+        console.error('Error revoking access:', error);
+        alert('❌ Error revoking access. Please try again.');
+    }
+}
+
+// ========================================
+// PRODUCT ACCESS TAB - Enhanced Functions
+// ========================================
+
+// Store all users for filtering
+let allProductUsers = [];
+let currentSelectedProduct = null;
+
+// Populate Product Access List (searchable datalist)
+function populateProductAccessList() {
+    const datalist = document.getElementById('productAccessList');
+    if (!datalist) return;
+
+    datalist.innerHTML = allMarketplaceProducts
+        .sort((a, b) => a.sortOrder - b.sortOrder)
+        .map(product => {
+            const ownerLabel = product.owner === 'Z2B' ? '🏢 Z2B' : '👤 Member';
+            const categoryLabel = getCategoryLabel(product.category);
+            return `<option value="${product.productId}">${product.icon} ${product.productName} - ${ownerLabel} | ${categoryLabel}</option>`;
+        }).join('');
+}
+
+// Filter products by category in Product Access tab
+function filterProductAccess(category) {
+    let filtered = [];
+
+    if (category === 'ALL') {
+        filtered = allMarketplaceProducts;
+    } else if (['Z2B', 'MEMBER'].includes(category)) {
+        filtered = allMarketplaceProducts.filter(p => p.owner === category);
+    } else {
+        filtered = allMarketplaceProducts.filter(p =>
+            p.category === category || p.type === category
+        );
+    }
+
+    // Update the datalist with filtered products
+    const datalist = document.getElementById('productAccessList');
+    if (!datalist) return;
+
+    datalist.innerHTML = filtered
+        .sort((a, b) => a.sortOrder - b.sortOrder)
+        .map(product => {
+            const ownerLabel = product.owner === 'Z2B' ? '🏢 Z2B' : '👤 Member';
+            const categoryLabel = getCategoryLabel(product.category);
+            return `<option value="${product.productId}">${product.icon} ${product.productName} - ${ownerLabel} | ${categoryLabel}</option>`;
+        }).join('');
+}
+
+// Select product and load users
+async function selectProductForAccess(productId) {
+    if (!productId) return;
+
+    // Find the product
+    const product = allMarketplaceProducts.find(p => p.productId === productId);
+    if (!product) {
+        // Fallback to legacy PRODUCTS object
+        if (PRODUCTS[productId]) {
+            currentSelectedProduct = productId;
+            await loadProductUsersEnhanced(productId);
+        }
+        return;
+    }
+
+    currentSelectedProduct = productId;
+    await loadProductUsersEnhanced(productId);
+}
+
+// Enhanced load product users with stats
+async function loadProductUsersEnhanced(productId) {
+    try {
+        // Find product info
+        const product = allMarketplaceProducts.find(p => p.productId === productId) || PRODUCTS[productId];
+        if (!product) return;
+
+        // Load users
+        const usersResponse = await fetch(`${API_URL}/users/product-access/${productId}`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('admin_token')}`
+            }
+        });
+        const usersData = await usersResponse.json();
+
+        if (usersData.success && usersData.users) {
+            allProductUsers = usersData.users;
+            displayProductUsers(usersData.users, productId);
+
+            // Update stats
+            updateProductAccessStats(usersData.users, product);
+        }
+    } catch (error) {
+        console.error('Error loading product users:', error);
+        const tbody = document.getElementById('productUsersTableBody');
+        if (tbody) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="6" style="text-align: center; padding: 2rem; color: var(--danger);">
+                        Error loading users. Please try again.
+                    </td>
+                </tr>
+            `;
+        }
+    }
+}
+
+// Display product users in table
+function displayProductUsers(users, productId) {
+    const tbody = document.getElementById('productUsersTableBody');
+    if (!tbody) return;
+
+    if (users.length === 0) {
+        const product = allMarketplaceProducts.find(p => p.productId === productId) || PRODUCTS[productId];
+        const productName = product ? (product.productName || product.name) : 'this product';
+
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="6" style="text-align: center; padding: 2rem; color: #999;">
+                    No users with ${productName} access yet
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    tbody.innerHTML = users.map(user => {
+        const access = user.marketplaceAccess[productId];
+        return `
+            <tr>
+                <td><strong>${user.z2bId || user.memberId || 'N/A'}</strong></td>
+                <td>${user.fullName || `${user.firstName} ${user.lastName}`}</td>
+                <td><span style="padding: 0.3rem 0.8rem; background: ${getAccessTypeColor(access.accessType)}; color: white; border-radius: 5px; font-weight: 600;">${getAccessTypeIcon(access.accessType)} ${access.accessType}</span></td>
+                <td>${formatDate(access.grantedDate)}</td>
+                <td>${access.expiryDate ? formatDate(access.expiryDate) : '<span style="color: #999;">No Expiry</span>'}</td>
+                <td>
+                    <button onclick="revokeProductAccess('${user._id}', '${productId}')" style="padding: 0.5rem 1rem; background: var(--danger); border: none; border-radius: 5px; color: white; font-weight: 600; cursor: pointer; font-size: 0.85rem;">
+                        <i class="fas fa-times"></i> Revoke
+                    </button>
+                </td>
+            </tr>
+        `;
+    }).join('');
+}
+
+// Update product access statistics
+function updateProductAccessStats(users, product) {
+    const statsContainer = document.getElementById('productStats');
+    if (!statsContainer) return;
+
+    // Calculate stats
+    const total = users.length;
+    const paid = users.filter(u => {
+        const access = u.marketplaceAccess[currentSelectedProduct];
+        return access && access.accessType === 'Paid';
+    }).length;
+    const free = total - paid;
+
+    const productColor = product.color || '#3B82F6';
+    const productName = product.productName || product.name || 'Product';
+    const productIcon = product.icon || '📦';
+
+    statsContainer.innerHTML = `
+        <div class="stat-card" style="background: linear-gradient(135deg, ${productColor}, ${productColor}DD); padding: 1.5rem; border-radius: 10px; color: white;">
+            <div style="font-size: 2.5rem; font-weight: bold;">${productIcon} ${total}</div>
+            <div style="opacity: 0.9;">Total ${productName} Users</div>
+        </div>
+        <div class="stat-card" style="background: linear-gradient(135deg, #4CAF50, #45a049); padding: 1.5rem; border-radius: 10px; color: white;">
+            <div style="font-size: 2.5rem; font-weight: bold;">💳 ${paid}</div>
+            <div style="opacity: 0.9;">Paid Subscriptions</div>
+        </div>
+        <div class="stat-card" style="background: linear-gradient(135deg, #FFD700, #FFA500); padding: 1.5rem; border-radius: 10px; color: white;">
+            <div style="font-size: 2.5rem; font-weight: bold;">🎁 ${free}</div>
+            <div style="opacity: 0.9;">Free/Gift/Beta</div>
+        </div>
+    `;
+}
+
+// Filter product users by search term
+function filterProductUsers(searchTerm) {
+    if (!currentSelectedProduct || !allProductUsers) return;
+
+    const term = searchTerm.toLowerCase().trim();
+
+    if (!term) {
+        // Show all users
+        displayProductUsers(allProductUsers, currentSelectedProduct);
+        return;
+    }
+
+    // Filter users
+    const filtered = allProductUsers.filter(user => {
+        const fullName = (user.fullName || `${user.firstName} ${user.lastName}`).toLowerCase();
+        const email = (user.email || '').toLowerCase();
+        const z2bId = (user.z2bId || user.memberId || '').toLowerCase();
+
+        return fullName.includes(term) || email.includes(term) || z2bId.includes(term);
+    });
+
+    displayProductUsers(filtered, currentSelectedProduct);
+}
+
+// View User Details
+function viewUserDetails(userId) {
+    // TODO: Implement user details modal
+    console.log('View user details:', userId);
+    alert('User details view coming soon!');
+}
+
+// Refresh User List
+function refreshUserList() {
+    loadAllUsers();
+}
+
+// Reset Grant Form
+function resetGrantForm() {
+    document.getElementById('grantAccessForm').reset();
+    document.getElementById('subscriptionPlanGroup').style.display = 'none';
+}
+
+// Helper Functions
+function getTierColor(tier) {
+    const colors = {
+        'FAM': '#94A3B8',
+        'BRONZE': '#CD7F32',
+        'COPPER': '#B87333',
+        'SILVER': '#C0C0C0',
+        'GOLD': '#FFD700',
+        'PLATINUM': '#E5E4E2',
+        'LIFETIME': '#9333EA'
+    };
+    return colors[tier] || '#6B7280';
+}
+
+function getAccessTypeColor(type) {
+    const colors = {
+        'PAID': '#10B981',
+        'GIFT': '#F59E0B',
+        'BETA': '#3B82F6',
+        'ADMIN': '#9333EA',
+        'FREE': '#6B7280'
+    };
+    return colors[type] || '#6B7280';
+}
+
+function getAccessTypeIcon(type) {
+    const icons = {
+        'PAID': '💳',
+        'GIFT': '🎁',
+        'BETA': '🧪',
+        'ADMIN': '👑',
+        'FREE': '🆓'
+    };
+    return icons[type] || '📦';
+}
+
+function formatDate(dateString) {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-ZA', { year: 'numeric', month: 'short', day: 'numeric' });
+}
     </script>
     <!-- Footer -->
     <footer style="text-align: center; padding: 30px 20px; margin-top: 50px; background: rgba(255,255,255,0.05); border-top: 1px solid rgba(255,255,255,0.1);">
