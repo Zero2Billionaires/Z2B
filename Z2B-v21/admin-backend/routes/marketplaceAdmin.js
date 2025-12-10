@@ -302,14 +302,13 @@ router.post('/approve-marketplace', verifyToken, async (req, res) => {
                 success: false,
                 message: 'Payment ID, User ID, and Product ID are required'
             });
+        }
         // Validate product exists in database
         const product = await MarketplaceProduct.findOne({ productId, isActive: true });
         if (!product) {
             return res.status(400).json({
                 success: false,
                 message: 'Invalid or inactive product ID'
-            });
-        }
             });
         }
 
