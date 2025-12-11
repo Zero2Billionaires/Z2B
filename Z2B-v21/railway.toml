@@ -1,6 +1,7 @@
 [build]
-builder = "NIXPACKS"
-buildCommand = "cd admin-backend && npm install"
+builder = "DOCKERFILE"
+dockerfilePath = "admin-backend/Dockerfile"
+watchPatterns = ["admin-backend/**"]
 
 [deploy]
 startCommand = "cd admin-backend && npm start"
