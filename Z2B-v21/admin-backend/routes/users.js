@@ -374,6 +374,59 @@ router.post('/:id/reset-password', verifyToken, async (req, res) => {
 });
 
 // Delete User
+// Grant Marketplace Product Access
+router.post('/grant-product-access', verifyToken, async (req, res) => {
+    try {
+        const { userId, productId, accessType, subscriptionPlan, expiryDate, notes } = req.body;
+
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found'
+            });
+        }
+
+        // Initialize marketplaceAccess if it doesn't exist
+        if (!user.marketplaceAccess) {
+            user.marketplaceAccess = {};
+        }
+
+        // Grant access to the product
+        user.marketplaceAccess[productId] = {
+            accessType: accessType || 'PAID',
+            subscriptionPlan: subscriptionPlan || 'MONTHLY',
+            grantedDate: new Date(),
+            expiryDate: expiryDate ? new Date(expiryDate) : null,
+            notes: notes || '',
+            grantedBy: req.admin._id || req.admin.userId
+        };
+
+        // Add to account notes
+        user.accountNotes = (user.accountNotes || '') +
+            `\n[${new Date().toISOString()}] Admin granted ${productId} access (${accessType})`;
+
+        await user.save();
+
+        res.json({
+            success: true,
+            message: `Access granted to ${productId} successfully`,
+            data: {
+                userId: user._id,
+                productId,
+                accessType,
+                subscriptionPlan
+            }
+        });
+    } catch (error) {
+        console.error('Error granting product access:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error granting product access'
+        });
+    }
+});
+
 router.delete('/:id', verifyToken, async (req, res) => {
     try {
         const user = await User.findByIdAndDelete(req.params.id);
