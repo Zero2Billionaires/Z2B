@@ -1,3 +1,4 @@
+# Force rebuild - December 12, 2025
 FROM node:18-alpine
 
 WORKDIR /app
