@@ -91,7 +91,7 @@ app.get('/api/health', (req, res) => {
         status: 'OK',
         message: 'Z2B Admin Backend is running',
         timestamp: new Date().toISOString(),
-        version: '1.0.7-PRODUCTS-FIX',  // Force Railway redeploy - password reset active
+        version: '1.0.8-SCHEDULER-DISABLED',  // Force Railway redeploy - password reset active
         endpoints: {
             auth: '/api/auth/forgot-password',
             reset: '/api/auth/reset-password',
@@ -118,5 +118,5 @@ app.listen(PORT, () => {
     console.log(`📍 Environment: ${process.env.NODE_ENV}`);
 
 // Initialize MAVULA Cron Scheduler
-require('./jobs/mavulaScheduler');
+// TEMPORARILY DISABLED - require('./jobs/mavulaScheduler');
 });
