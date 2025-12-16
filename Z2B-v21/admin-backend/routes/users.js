@@ -50,6 +50,57 @@ router.get('/', verifyToken, async (req, res) => {
         });
     }
 });
+router.get('/search', verifyToken, async (req, res) => {
+    try {
+        const searchTerm = req.query.term;
+
+        if (!searchTerm) {
+            return res.status(400).json({
+                success: false,
+                message: 'Search term is required'
+            });
+        }
+
+        // Search by email, phone, name, or member ID
+        const user = await User.findOne({
+            $or: [
+                { email: new RegExp(searchTerm, 'i') },
+                { phone: searchTerm },
+                { firstName: new RegExp(searchTerm, 'i') },
+                { lastName: new RegExp(searchTerm, 'i') },
+                { memberId: searchTerm },
+                { referralCode: new RegExp(searchTerm, 'i') }
+            ]
+        }).select('-password');
+
+        if (!user) {
+            return res.json({
+                success: false,
+                message: 'User not found'
+            });
+        }
+
+        res.json({
+            success: true,
+            data: {
+                _id: user._id,
+                fullName: `${user.firstName} ${user.lastName}`,
+                email: user.email,
+                phone: user.phone,
+                tier: user.tier,
+                memberId: user.memberId,
+                referralCode: user.referralCode
+            }
+        });
+    } catch (error) {
+        console.error('Error searching user:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error searching user'
+        });
+    }
+});
+
 
 // Get User by Referral Code (PUBLIC - No auth required)
 router.get('/by-referral/:referralCode', async (req, res) => {
