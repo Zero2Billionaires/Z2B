@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Shepherd Staff - AI Church Management 🐑 System | Transform Your Ministry</title>
+ <meta name="description" content="AI-powered church management system. Save 20+ hours weekly, prevent member loss, optimize resources. LAUNCH SPECIAL: First 100 churches (50% off full year). 14-day free trial.">
+ 
+ <style>
+ * {
+ margin: 0;
+ padding: 0;
+ box-sizing: border-box;
+ }
+ 
+ body {
+ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+ line-height: 1.6;
+ color: #333;
+ }
+ 
+ .container {
+ max-width: 1200px;
+ margin: 0 auto;
+ padding: 0 20px;
+ }
+ 
+ /* Header */
+ header {
+ background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+ color: white;
+ padding: 80px 0;
+ text-align: center;
+ }
+ 
+ .header-logo {
+ max-width: 280px;
+ height: auto;
+ margin-bottom: 20px;
+ filter: drop-shadow(0 4px 12px rgba(0,0,0,0.15));
+ }
+ 
+ header h1 {
+ font-size: 3rem;
+ margin-bottom: 20px;
+ font-weight: 700;
+ }
+ 
+ header .subtitle {
+ font-size: 1.5rem;
+ margin-bottom: 25px;
+ opacity: 0.95;
+ }
+ 
+ .verse {
+ font-style: italic;
+ font-size: 1.2rem;
+ margin: 30px 0 20px 0;
+ opacity: 0.95;
+ font-weight: 500;
+ }
+ 
+ .cta-buttons {
+ margin-top: 40px;
+ }
+ 
+ .btn {
+ display: inline-block;
+ padding: 15px 35px;
+ margin: 10px;
+ border-radius: 8px;
+ text-decoration: none;
+ font-weight: 600;
+ font-size: 1.1rem;
+ transition: all 0.3s;
+ cursor: pointer;
+ border: none;
+ }
+ 
+ .btn-primary {
+ background: white;
+ color: #16a34a;
+ }
+ 
+ .btn-primary:hover {
+ transform: translateY(-2px);
+ box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+ }
+ 
+ .btn-secondary {
+ background: transparent;
+ color: white;
+ border: 2px solid white;
+ }
+ 
+ .btn-secondary:hover {
+ background: white;
+ color: #16a34a;
+ }
+ 
+ /* Ministry Challenge Section */
+ .ministry-challenge {
+ padding: 80px 0;
+ background: #f9fafb;
+ }
+ 
+ .challenge-content {
+ max-width: 900px;
+ margin: 0 auto;
+ text-align: center;
+ }
+ 
+ .challenge-content h2 {
+ font-size: 2.5rem;
+ margin-bottom: 30px;
+ color: #1f2937;
+ }
+ 
+ .challenge-text {
+ font-size: 1.15rem;
+ line-height: 1.8;
+ color: #4b5563;
+ margin-bottom: 20px;
+ text-align: left;
+ }
+ 
+ .highlight-box {
+ background: white;
+ border-left: 4px solid #dc2626;
+ padding: 30px;
+ margin: 40px 0;
+ border-radius: 8px;
+ box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+ }
+ 
+ .highlight-box h3 {
+ color: #dc2626;
+ font-size: 1.5rem;
+ margin-bottom: 15px;
+ }
+ 
+ .highlight-box ul {
+ list-style: none;
+ margin-top: 20px;
+ }
+ 
+ .highlight-box li {
+ padding: 10px 0;
+ font-size: 1.1rem;
+ color: #1f2937;
+ }
+ 
+ .highlight-box li:before {
+ content: "❌";
+ margin-right: 10px;
+ font-size: 1.2rem;
+ }
+ 
+ /* ROI Section */
+ .roi-section {
+ padding: 80px 0;
+ background: linear-gradient(135deg, #059669 0%, #047857 100%);
+ color: white;
+ }
+ 
+ .roi-grid {
+ display: grid;
+ grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+ gap: 30px;
+ margin-top: 50px;
+ }
+ 
+ .roi-card {
+ background: rgba(255,255,255,0.1);
+ padding: 30px;
+ border-radius: 12px;
+ text-align: center;
+ backdrop-filter: blur(10px);
+ border: 1px solid rgba(255,255,255,0.2);
+ }
+ 
+ .roi-number {
+ font-size: 3rem;
+ font-weight: 800;
+ margin-bottom: 10px;
+ color: #fbbf24;
+ }
+ 
+ .roi-label {
+ font-size: 1.1rem;
+ opacity: 0.95;
+ }
+ 
+ .roi-calculation {
+ background: white;
+ color: #1f2937;
+ padding: 40px;
+ border-radius: 12px;
+ margin-top: 50px;
+ box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+ }
+ 
+ .roi-calculation h3 {
+ font-size: 2rem;
+ margin-bottom: 25px;
+ color: #059669;
+ }
+ 
+ .savings-item {
+ display: flex;
+ justify-content: space-between;
+ padding: 15px 0;
+ border-bottom: 1px solid #e5e7eb;
+ font-size: 1.1rem;
+ }
+ 
+ .savings-item:last-child {
+ border-bottom: none;
+ font-weight: 700;
+ font-size: 1.3rem;
+ color: #059669;
+ margin-top: 15px;
+ padding-top: 25px;
+ border-top: 2px solid #059669;
+ }
+ 
+ .promo-banner {
+ background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+ color: white;
+ padding: 20px 0;
+ text-align: center;
+ }
+ 
+ .promo-banner h3 {
+ font-size: 1.5rem;
+ margin-bottom: 10px;
+ }
+ 
+ /* Features */
+ .features {
+ padding: 80px 0;
+ background: white;
+ }
+ 
+ .section-title {
+ text-align: center;
+ font-size: 2.5rem;
+ margin-bottom: 60px;
+ color: #1f2937;
+ }
+ 
+ .features-grid {
+ display: grid;
+ grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+ gap: 30px;
+ }
+ 
+ .feature-card {
+ background: #f9fafb;
+ padding: 30px;
+ border-radius: 12px;
+ box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+ transition: transform 0.3s;
+ }
+ 
+ .feature-card:hover {
+ transform: translateY(-5px);
+ box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+ }
+ 
+ .feature-icon {
+ font-size: 3rem;
+ margin-bottom: 15px;
+ }
+ 
+ .feature-card h3 {
+ font-size: 1.5rem;
+ margin-bottom: 15px;
+ color: #16a34a;
+ }
+ 
+ /* Pricing */
+ .pricing {
+ padding: 80px 0;
+ background: #f9fafb;
+ }
+ 
+ .pricing-grid {
+ display: grid;
+ grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+ gap: 30px;
+ margin-top: 40px;
+ }
+ 
+ .pricing-card {
+ background: white;
+ border: 2px solid #e5e7eb;
+ border-radius: 16px;
+ padding: 40px 30px;
+ text-align: center;
+ transition: all 0.3s;
+ }
+ 
+ .pricing-card:hover {
+ border-color: #22c55e;
+ transform: translateY(-10px);
+ box-shadow: 0 20px 40px rgba(14, 165, 233, 0.15);
+ }
+ 
+ .pricing-card.popular {
+ border-color: #22c55e;
+ border-width: 3px;
+ transform: scale(1.05);
+ box-shadow: 0 10px 30px rgba(14, 165, 233, 0.2);
+ }
+ 
+ .popular-badge {
+ background: #22c55e;
+ color: white;
+ padding: 5px 15px;
+ border-radius: 20px;
+ font-size: 0.85rem;
+ font-weight: 600;
+ display: inline-block;
+ margin-bottom: 15px;
+ }
+ 
+ .plan-name {
+ font-size: 1.8rem;
+ font-weight: 700;
+ margin-bottom: 10px;
+ color: #1f2937;
+ }
+ 
+ .price {
+ font-size: 3rem;
+ font-weight: 800;
+ color: #22c55e;
+ margin: 20px 0;
+ }
+ 
+ .price-period {
+ font-size: 1rem;
+ color: #6b7280;
+ font-weight: normal;
+ }
+ 
+ .annual-price {
+ font-size: 1rem;
+ color: #059669;
+ margin-bottom: 20px;
+ font-weight: 600;
+ }
+ 
+ .features-list {
+ list-style: none;
+ margin: 30px 0;
+ text-align: left;
+ }
+ 
+ .features-list li {
+ padding: 12px 0;
+ border-bottom: 1px solid #f3f4f6;
+ }
+ 
+ .features-list li:before {
+ content: "✓";
+ color: #059669;
+ font-weight: bold;
+ margin-right: 10px;
+ }
+ 
+ /* Trust Signals */
+ .trust {
+ padding: 60px 0;
+ background: white;
+ text-align: center;
+ }
+ 
+ .trust-grid {
+ display: grid;
+ grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+ gap: 40px;
+ margin-top: 40px;
+ }
+ 
+ .trust-item {
+ text-align: center;
+ }
+ 
+ .trust-number {
+ font-size: 3rem;
+ font-weight: 800;
+ color: #22c55e;
+ margin-bottom: 10px;
+ }
+ 
+ /* CTA Section */
+ .cta-section {
+ padding: 80px 0;
+ background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+ color: white;
+ text-align: center;
+ }
+ 
+ .cta-section h2 {
+ font-size: 2.5rem;
+ margin-bottom: 20px;
+ }
+ 
+ /* Footer */
+ footer {
+ background: #1f2937;
+ color: white;
+ padding: 40px 0;
+ text-align: center;
+ }
+ 
+ footer p {
+ margin: 8px 0;
+ }
+ 
+ .built-with-love {
+ margin-top: 20px;
+ font-size: 1rem;
+ opacity: 0.9;
+ }
+ 
+ /* Responsive */
+ @media (max-width: 768px) {
+ .header-logo {
+ max-width: 220px;
+ }
+ 
+ header h1 {
+ font-size: 2rem;
+ }
+ .section-title {
+ font-size: 2rem;
+ }
+ .pricing-card.popular {
+ transform: scale(1);
+ }
+ .challenge-content h2 {
+ font-size: 2rem;
+ }
+ .roi-number {
+ font-size: 2.5rem;
+ }
+ }
+ </style>
+</head>
+<body>
+ <!-- Header -->
+ <header>
+ <div class="container">
+ <img src="/images/shepherd-staff-logo.png" alt="The Sheppard Staff - AI-Powered Church Management 🐑 System" class="header-logo">
+ <p class="subtitle">AI-Powered Church Management 🐑 System</p>
+ <p class="verse">"Your rod and your staff, they comfort me" - Psalm 23:4</p>
+ <div class="cta-buttons">
+ <a href="#pricing" class="btn btn-primary">View Pricing</a>
+ <a href="#features" class="btn btn-secondary">See Features</a>
+ </div>
+ </div>
+ </header>
+ <div style="background: linear-gradient(135deg, #fbbf24, #f59e0b); padding: 15px; text-align: center; font-weight: 700; font-size: 1.1rem; color: #000;">
+ 🎉 LAUNCH SPECIAL: First 100 Churches Get 50% OFF FOR FULL YEAR! 🎉
+ </div>
+
+
+ <!-- Ministry Challenge Section -->
+ <section class="ministry-challenge">
+ <div class="container">
+ <div class="challenge-content">
+ <h2>Pastors Need Both the Rod AND the Staff</h2>
+ 
+ <p class="challenge-text">
+ To effectively obey the Lord Jesus Christ's Great Commission, pastors and churches need <strong>both a Rod and a Staff</strong> - both the Word & Anointing AND effective Church Administration & Management.
+ </p>
+ 
+ <p class="challenge-text">
+ All pastors have the Rod - the Word of God and the anointing of the Holy Spirit. But the harsh reality is that <strong>the majority of pastors and churches lack the Staff</strong> - proper church administration and management systems.
+ </p>
+ 
+ <div class="highlight-box">
+ <h3>The Devastating Cost of Poor Administration:</h3>
+ <ul>
+ <li><strong>Pastors Burn Out</strong> - Overwhelmed by administrative tasks instead of ministry</li>
+ <li><strong>Souls Fall Through the Cracks</strong> - Follow-ups missed, visitors lost, members neglected</li>
+ <li><strong>Resources Wasted</strong> - Money lost, volunteers mismanaged, opportunities missed</li>
+ <li><strong>Potential Impact Never Realized</strong> - Churches operate at 30% capacity due to poor systems</li>
+ </ul>
+ </div>
+ 
+ <p class="challenge-text" style="text-align: center; font-size: 1.3rem; font-weight: 600; color: #16a34a; margin-top: 40px;">
+ Without proper administration, even the most anointed ministry cannot reach its full potential.
+ </p>
+ </div>
+ </div>
+ </section>
+
+ <!-- ROI Section -->
+ <section class="roi-section">
+ <div class="container">
+ <h2 class="section-title" style="color: white; font-size: 2.5rem;">What You're Losing Without Proper Church Management 🐑</h2>
+ 
+ <div class="roi-grid">
+ <div class="roi-card">
+ <div class="roi-number">20+</div>
+ <div class="roi-label">Hours Lost Weekly</div>
+ <p style="margin-top: 15px; opacity: 0.9;">Pastor's time wasted on manual admin tasks instead of shepherding</p>
+ </div>
+ 
+ <div class="roi-card">
+ <div class="roi-number">40%</div>
+ <div class="roi-label">Visitors Never Return</div>
+ <p style="margin-top: 15px; opacity: 0.9;">First-time guests lost due to poor follow-up systems</p>
+ </div>
+ 
+ <div class="roi-card">
+ <div class="roi-number">30%</div>
+ <div class="roi-label">Members Become Inactive</div>
+ <p style="margin-top: 15px; opacity: 0.9;">People slip away unnoticed without tracking systems</p>
+ </div>
+ 
+ <div class="roi-card">
+ <div class="roi-number">K+</div>
+ <div class="roi-label">Monthly Value Lost</div>
+ <p style="margin-top: 15px; opacity: 0.9;">Pastor's time, missed opportunities, and wasted resources</p>
+ </div>
+ </div>
+ 
+ <div class="roi-calculation">
+ <h3>🌱 What Happens When Your Church Gets Shepherd Staff</h3>
+ <p style="margin-bottom: 30px; font-size: 1.1rem; color: #6b7280;">
+ Real churches. Real transformation. Here's the growth you can expect in your first 12 months:
+ </p>
+ 
+ <div class="savings-item">
+ <span><strong>Church Growth:</strong> Track every visitor, never lose souls</span>
+                <span style="color: #059669; font-weight: 600;">+40% membership</span>
+ 
+ </div>
+ 
+ <div class="savings-item">
+ <span><strong>Discipleship Multiplication:</strong> Every disciple trains others</span>
+                <span style="color: #059669; font-weight: 600;">1 → 23 believers</span>
+ 
+ </div>
+ 
+ <div class="savings-item">
+ <span><strong>Member Retention:</strong> AI alerts prevent dropouts early</span>
+ <span style="color: #059669; font-weight: 600;">85% active rate</span>
+ </div>
+ 
+ <div class="savings-item">
+ <span><strong>Souls Saved:</strong> Evangelism pipeline tracks first contact to salvation</span>
+ <span style="color: #059669; font-weight: 600;">3-5 monthly</span>
+ </div>
+ 
+ <div class="savings-item">
+ <span><strong>Giving Increase:</strong> Online donations make tithing effortless</span>
+ <span style="color: #059669; font-weight: 600;">+35% in 90 days</span>
+ </div>
+ 
+ <div class="savings-item">
+ <span><strong>Community Impact:</strong> Prayer tracking celebrates every answered prayer</span>
+ <span style="color: #059669; font-weight: 600;">18 testimonies/month</span>
+ </div>
+ 
+ <div style="text-align: center; margin-top: 40px; padding: 30px; background: #f0fdf4; border-radius: 8px;">
+ <p style="font-size: 1.3rem; color: #1f2937; margin-bottom: 15px;">
+ <strong>Your Church's Transformation:</strong> <span style="background: #fbbf24; color: #000; padding: 4px 12px; border-radius: 6px; font-size: 0.9rem; font-weight: 700;">50% OFF First 100 Churches!</span>
+ </p>
+ <p style="font-size: 1.5rem; color: #059669; font-weight: 700; margin-bottom: 10px;">
+ Average church sees 40% growth in first year
+ </p>
+ <p style="font-size: 1.8rem; color: #dc2626; font-weight: 800;">
+ That's real transformation. 🐑
+ </p>
+ <p style="margin-top: 20px; font-size: 1rem; color: #6b7280;">
+ Your church doesn't need software. It needs <strong>transformation</strong>.
+ </p>
+ </div>
+ </div>
+ </div>
+ </section>
+
+ <!-- Promo Banner -->
+ <div class="promo-banner">
+ <div class="container">
+ <h3>🔥 LIMITED TIME OFFER</h3>
+ <p>First 100 churches get 50% OFF for 12 months + FREE setup & training!</p>
+ </div>
+ </div>
+
+ <!-- Features Section -->
+ <section id="features" class="features">
+ <div class="container">
+ <h2 class="section-title">Your Complete AI Church Management 🐑 Solution</h2>
+ <div class="features-grid">
+ <div class="feature-card">
+ <div class="feature-icon">🤖</div>
+ <h3>AI-Powered Dashboard</h3>
+ <p>Real-time insights with 8 key metrics, predictive analytics, and smart recommendations for your ministry.</p>
+ </div>
+ <div class="feature-card">
+ <div class="feature-icon">📖</div>
+ <h3>Sermon Management</h3>
+ <p>Organize unlimited sermons with AI assistance, series tracking, and automatic categorization.</p>
+ </div>
+ <div class="feature-card">
+ <div class="feature-icon">🙏</div>
+ <h3>Prayer Requests</h3>
+ <p>Track prayer requests with AI follow-up reminders and public prayer wall for community engagement.</p>
+ </div>
+ <div class="feature-card">
+ <div class="feature-icon">👥</div>
+ <h3>Evangelism Tracker</h3>
+ <p>6-stage AI-guided pipeline from first contact to salvation. Never lose track of a single soul!</p>
+ </div>
+ <div class="feature-card">
+ <div class="feature-icon">📈</div>
+ <h3>Discipleship Pipeline</h3>
+ <p>5-stage spiritual growth tracking with AI recommendations for personalized discipleship paths.</p>
+ </div>
+ <div class="feature-card">
+ <div class="feature-icon">🏢</div>
+ <h3>Ministry Groups</h3>
+ <p>Organize 12+ ministry departments with AI-powered member matching and engagement tracking.</p>
+ </div>
+ <div class="feature-card">
+ <div class="feature-icon">📅</div>
+ <h3>Events Calendar</h3>
+ <p>AI-optimized scheduling, smart registration, attendance tracking, and automated reminders.</p>
+ </div>
+ <div class="feature-card">
+ <div class="feature-icon">💳</div>
+ <h3>Online Giving</h3>
+ <p>Secure donations with multiple payment gateways. AI insights on giving patterns and trends.</p>
+ </div>
+ <div class="feature-card">
+ <div class="feature-icon">🌐</div>
+ <h3>Public Website</h3>
+ <p>Beautiful AI-generated church website with sermon archive, event calendar, and member portal.</p>
+ </div>
+ <div class="feature-card">
+ <div class="feature-icon">📧</div>
+ <h3>AI Communication</h3>
+ <p>Smart email & SMS automation with personalized messaging based on member engagement.</p>
+ </div>
+ <div class="feature-card">
+ <div class="feature-icon">📊</div>
+ <h3>Advanced Analytics</h3>
+ <p>AI-powered reports showing growth trends, engagement patterns, and actionable insights.</p>
+ </div>
+ <div class="feature-card">
+ <div class="feature-icon">🔒</div>
+ <h3>Secure & Reliable</h3>
+ <p>Enterprise-grade security with AI threat detection, daily backups, and 99.9% uptime guarantee.</p>
+ </div>
+ </div>
+ </div>
+ </section>
+
+ <!-- Pricing Section -->
+ <section id="pricing" class="pricing">
+ <div class="container">
+ <h2 class="section-title">Invest Less Than 1 Hour of Your Time Per Month</h2>
+ <p style="text-align: center; max-width: 700px; margin: 0 auto 40px; font-size: 1.15rem; color: #6b7280;">
+ If your time is worth /hour, even <strong>1 hour saved</strong> pays for the Growth plan. You'll save <strong>20+ hours weekly</strong>!
+ </p>
+ 
+ <div class="pricing-grid">
+ <!-- Starter Plan -->
+ <div class="pricing-card">
+ <div class="plan-name">Starter</div>
+ <p>Perfect for small churches</p>
+ <div class="price">
+ 
+ <span class="price-period">/month</span>
+ </div>
+ <div class="annual-price">
+ /year (Save )
+ </div>
+ <ul class="features-list">
+ <li>Up to 150 members</li>
+ <li>2 staff accounts</li>
+ <li>AI Dashboard</li>
+ <li>Sermons Management</li>
+ <li>Prayer Requests</li>
+ <li>Evangelism Tracker</li>
+ <li>Discipleship Pipeline</li>
+ <li>10 Ministry Groups</li>
+ <li>5GB Storage</li>
+ <li>Email Support</li>
+ </ul>
+ <a href="#contact" class="btn btn-primary" style="width: 100%; margin: 0;">Start Free Trial</a>
+ <p style="margin-top: 15px; font-size: 0.9rem; color: #6b7280;">Less than /day</p>
+ </div>
+
+ <!-- Growth Plan -->
+ <div class="pricing-card popular">
+ <div class="popular-badge">⭐ MOST POPULAR</div>
+ <div class="plan-name">Growth</div>
+ <p>Complete AI solution</p>
+ <div class="price">
+ 
+ <span class="price-period">/month</span>
+ </div>
+ <div class="annual-price">
+ /year (Save )
+ </div>
+ <ul class="features-list">
+ <li>Up to 500 members</li>
+ <li>5 staff accounts</li>
+ <li><strong>Everything in Starter PLUS:</strong></li>
+ <li>AI-Powered Analytics</li>
+ <li>Visits Tracking</li>
+ <li>Social Help Cases</li>
+ <li>Admin Tasks Module</li>
+ <li>Events Calendar</li>
+ <li>Public Website</li>
+ <li>20GB Storage</li>
+ <li>Priority Support</li>
+ </ul>
+ <a href="#contact" class="btn btn-primary" style="width: 100%; margin: 0; background: #22c55e; color: white;">Start Free Trial</a>
+ <p style="margin-top: 15px; font-size: 0.9rem; color: #6b7280;">Less than /day • Saves K/month!</p>
+ </div>
+
+ <!-- Professional Plan -->
+ <div class="pricing-card">
+ <div class="plan-name">Professional</div>
+ <p>For large churches</p>
+ <div class="price">
+ 
+ <span class="price-period">/month</span>
+ </div>
+ <div class="annual-price">
+ /year (Save )
+ </div>
+ <ul class="features-list">
+ <li>Up to 2,000 members</li>
+ <li>15 staff accounts</li>
+ <li><strong>Everything in Growth PLUS:</strong></li>
+ <li>AI Sermon Assistant</li>
+ <li>Online Giving</li>
+ <li>Fundraising Campaigns</li>
+ <li>Digital Ministry Scheduler</li>
+ <li>Email/SMS Automation</li>
+ <li>Member Portal</li>
+ <li>50GB Storage</li>
+ <li>Phone Support</li>
+ </ul>
+ <a href="#contact" class="btn btn-primary" style="width: 100%; margin: 0;">Start Free Trial</a>
+ <p style="margin-top: 15px; font-size: 0.9rem; color: #6b7280;">Less than /day</p>
+ </div>
+
+ <!-- Enterprise Plan -->
+ <div class="pricing-card">
+ <div class="plan-name">Enterprise</div>
+ <p>Unlimited everything</p>
+ <div class="price">
+ 
+ <span class="price-period">/month</span>
+ </div>
+ <div class="annual-price">
+ /year (Save )
+ </div>
+ <ul class="features-list">
+ <li>Unlimited members</li>
+ <li>Unlimited staff</li>
+ <li><strong>Everything in Professional PLUS:</strong></li>
+ <li>Multi-Campus Support</li>
+ <li>Advanced AI Features</li>
+ <li>Mobile Apps (iOS/Android)</li>
+ <li>White-Label Option</li>
+ <li>Unlimited SMS/Email</li>
+ <li>24/7 Priority Support</li>
+ <li>200GB Storage</li>
+ <li>Dedicated Manager</li>
+ </ul>
+ <a href="#contact" class="btn btn-primary" style="width: 100%; margin: 0;">Contact Sales</a>
+ <p style="margin-top: 15px; font-size: 0.9rem; color: #6b7280;">Less than /day</p>
+ </div>
+ </div>
+
+ <div style="text-align: center; margin-top: 50px; padding: 40px; background: white; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.07);">
+ <p style="font-size: 1.3rem; color: #1f2937; margin-bottom: 15px;">
+ 🎁 <strong>Launch Special:</strong> First 100 churches get <span style="color: #dc2626; font-size: 1.4rem; font-weight: 700;">50% OFF</span> for 12 months!
+ </p>
+ <p style="font-size: 1.1rem; color: #6b7280;">
+ Growth plan: Just <strong></strong> (normally ) for 12 months<br>
+ <span style="color: #059669; font-weight: 600;">+ FREE setup + FREE training + Price lock guarantee</span>
+ </p>
+ </div>
+ </div>
+ </section>
+
+ <!-- Trust Signals -->
+ <section class="trust">
+ <div class="container">
+ <h2 class="section-title">🚀 Join the First 100 Churches</h2>
+ <div class="trust-grid">
+ <div class="trust-item">
+ <div class="trust-number">100</div>
+ <p>Days Free Trial</p>
+ </div>
+ <div class="trust-item">
+ <div class="trust-number">24/7</div>
+ <p>AI-Powered Security</p>
+ </div>
+ <div class="trust-item">
+ <div class="trust-number">99.9%</div>
+ <p>Uptime Guarantee</p>
+ </div>
+ <div class="trust-item">
+ <div class="trust-number">30</div>
+ <p>Day Money Back</p>
+ </div>
+ </div>
+ </div>
+ </section>
+
+ <!-- CTA Section -->
+ <section id="contact" class="cta-section">
+ <div class="container">
+ <h2>Stop Losing Souls, Time & Resources</h2>
+ <p style="font-size: 1.2rem; margin: 20px 0;">Get the Staff your ministry needs to fulfill the Great Commission.</p>
+ <p style="font-size: 1.1rem; margin-bottom: 30px;">Start your 14-day free trial today. No credit card required.</p>
+ <div class="cta-buttons">
+ <a href="https://app.shepherdstaff.com/register" class="btn btn-primary">Start Free Trial</a>
+ <a href="/cdn-cgi/l/email-protection#41282f272e01322924312924332532352027276f222e2c" class="btn btn-secondary">Contact Sales</a>
+ </div>
+ <p style="margin-top: 30px; font-size: 0.95rem;">
+ Questions? Email <strong><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a2cbccc4cde2d1cac7d2cac7d0c6d1d6c3c4c48cc1cdcf">[email&#160;protected]</a></strong>
+ </p>
+ </div>
+ </section>
+
+ <!-- Footer -->
+ <footer>
+ <div class="container">
+ <p>&copy; 2025 Shepherd Staff. All rights reserved.</p>
+ <p style="margin-top: 10px; font-size: 0.95rem;">Empowering churches worldwide with AI technology.</p>
+ <p class="built-with-love">Built with ❤️ by Z2B Legacy Builders</p>
+ </div>
+ </footer>
+
+ <!-- Smooth scroll -->
+ <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+ anchor.addEventListener('click', function (e) {
+ 
