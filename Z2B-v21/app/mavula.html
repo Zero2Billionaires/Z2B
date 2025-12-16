@@ -1002,5 +1002,65 @@
             50% { transform: scale(1); }
         }
     </style>
-</body>
+<script src="js/cart-manager.js"></script>\n
+<!-- Floating Cart Icon -->
+<style>
+.floating-cart-icon {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, #00D9FF, #0088cc);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 25px rgba(0, 217, 255, 0.5);
+    cursor: pointer;
+    z-index: 9998;
+    animation: pulse-cart 2s infinite;
+    transition: transform 0.3s;
+}
+.floating-cart-icon:hover {
+    transform: scale(1.1);
+}
+@keyframes pulse-cart {
+    0%, 100% { box-shadow: 0 8px 25px rgba(0, 217, 255, 0.5); }
+    50% { box-shadow: 0 8px 40px rgba(0, 217, 255, 0.8); }
+}
+.floating-cart-icon i {
+    font-size: 2rem;
+    color: #fff;
+}
+.cart-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: linear-gradient(135deg, #FFD700, #FF8C00);
+    color: #000;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: bold;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+</style>
+
+<div class="floating-cart-icon" onclick="window.location.href='cart.html'" title="View Cart">
+    <i class="fas fa-shopping-cart"></i>
+    <span class="cart-badge" style="display: none;">0</span>
+</div>
+
+<script>
+// Update cart badge when cart changes
+if (typeof z2bCart !== 'undefined') {
+    z2bCart.updateCartBadge();
+}
+</script>
+\n</body>
 </html>
