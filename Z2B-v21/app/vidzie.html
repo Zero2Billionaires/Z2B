@@ -929,5 +929,189 @@
             50% { transform: scale(1); }
         }
     </style>
+
+<!-- Universal App Pricing Button & Modal - Insert before </body> -->
+<style>
+.app-buy-fab {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, #FFD700, #FF8C00);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 25px rgba(255, 215, 0, 0.5);
+    cursor: pointer;
+    z-index: 9999;
+    animation: pulse 2s infinite;
+    transition: transform 0.3s;
+}
+.app-buy-fab:hover {
+    transform: scale(1.1);
+}
+@keyframes pulse {
+    0%, 100% { box-shadow: 0 8px 25px rgba(255, 215, 0, 0.5); }
+    50% { box-shadow: 0 8px 40px rgba(255, 215, 0, 0.8); }
+}
+.app-buy-fab i {
+    font-size: 2rem;
+    color: #0A2647;
+}
+</style>
+
+<!-- Floating Buy Button -->
+<div class="app-buy-fab" onclick="showAppPricing()" title="Buy This App">
+    <i class="fas fa-shopping-cart"></i>
+</div>
+
+<!-- Pricing Modal -->
+<div id="appPricingModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); z-index: 10000; padding: 2rem; overflow-y: auto;">
+    <div style="max-width: 800px; margin: 2rem auto; background: linear-gradient(135deg, #0A2647 0%, #051428 100%); border-radius: 20px; border: 3px solid #FFD700; box-shadow: 0 0 50px rgba(255, 215, 0, 0.3); padding: 3rem; position: relative;">
+
+        <!-- Close Button -->
+        <button onclick="closePricingModal()" style="position: absolute; top: 1.5rem; right: 1.5rem; background: none; border: none; color: #999; font-size: 2.5rem; cursor: pointer; width: 50px; height: 50px; line-height: 1; transition: color 0.3s;">&times;</button>
+
+        <!-- Header -->
+        <div style="text-align: center; margin-bottom: 2.5rem;">
+            <h2 style="font-size: 2.5rem; background: linear-gradient(135deg, #FFD700, #FF8C00); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; font-weight: bold;">Get <span class="app-name-display"></span></h2>
+            <p style="font-size: 1.2rem; color: #FFD700;">Choose the best option for you</p>
+        </div>
+
+        <!-- Pricing Options -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+
+            <!-- Standalone Option -->
+            <div style="background: rgba(255, 255, 255, 0.05); border: 2px solid #666; border-radius: 15px; padding: 2rem; text-align: center; transition: all 0.3s;" onmouseover="this.style.borderColor='#FFD700'" onmouseout="this.style.borderColor='#666'">
+                <div style="font-size: 1rem; color: #00D9FF; margin-bottom: 1rem; font-weight: 600;">STANDALONE</div>
+                <div style="font-size: 3rem; font-weight: bold; color: #FFD700; margin-bottom: 0.5rem;">R<span class="app-price-display"></span></div>
+                <div style="font-size: 1rem; color: #ccc; margin-bottom: 1.5rem;">/month</div>
+                <div style="color: #999; font-size: 0.9rem; line-height: 1.6; margin-bottom: 1.5rem;">
+                    <div style="margin-bottom: 0.5rem;">✓ Full access to <span class="app-name-display"></span></div>
+                    <div style="margin-bottom: 0.5rem;">✓ AI Fuel included</div>
+                    <div style="margin-bottom: 0.5rem;">✓ Updates & support</div>
+                    <div style="margin-bottom: 0.5rem;">✓ Cancel anytime</div>
+                </div>
+                <button onclick="buyStandalone()" style="width: 100%; padding: 1rem; background: linear-gradient(135deg, #666, #444); border: 2px solid #FFD700; border-radius: 10px; color: #fff; font-weight: bold; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.background='linear-gradient(135deg, #FFD700, #FF8C00)'; this.style.color='#000'" onmouseout="this.style.background='linear-gradient(135deg, #666, #444)'; this.style.color='#fff'">
+                    Buy Now
+                </button>
+            </div>
+
+            <!-- Z2B Membership Option -->
+            <div style="background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 140, 0, 0.15)); border: 3px solid #FFD700; border-radius: 15px; padding: 2rem; text-align: center; position: relative;">
+                <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #FFD700, #FF8C00); padding: 0.4rem 1.5rem; border-radius: 25px; font-size: 0.85rem; font-weight: bold; color: #000;">⭐ RECOMMENDED</div>
+                <div style="font-size: 1rem; color: #FFD700; margin-bottom: 1rem; font-weight: 600; margin-top: 0.5rem;">Z2B MEMBERSHIP</div>
+                <div style="font-size: 3rem; font-weight: bold; color: #FFD700; margin-bottom: 0.5rem;">R480+</div>
+                <div style="font-size: 1rem; color: #ccc; margin-bottom: 1.5rem;">/month</div>
+                <div style="color: #fff; font-size: 0.9rem; line-height: 1.8; margin-bottom: 1.5rem; text-align: left;">
+                    <div style="margin-bottom: 0.5rem;">✅ <span class="app-name-display"></span> + 10+ Other Apps</div>
+                    <div style="margin-bottom: 0.5rem;">✅ Coach ManLaw (AI Coach)</div>
+                    <div style="margin-bottom: 0.5rem;">✅ Choose Your Apps</div>
+                    <div style="margin-bottom: 0.5rem;">✅ 7 Income Streams</div>
+                    <div style="margin-bottom: 0.5rem;">✅ Up to 30% Commissions</div>
+                    <div style="margin-bottom: 0.5rem;">✅ Daily AI Fuel Credits</div>
+                </div>
+                <button onclick="joinZ2B()" style="width: 100%; padding: 1rem; background: linear-gradient(135deg, #FFD700, #FF8C00); border: none; border-radius: 10px; color: #000; font-weight: bold; cursor: pointer; box-shadow: 0 5px 20px rgba(255, 215, 0, 0.5); transition: all 0.3s;" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 30px rgba(255, 215, 0, 0.7)'" onmouseout="this.style.transform=''; this.style.boxShadow='0 5px 20px rgba(255, 215, 0, 0.5)'">
+                    Join Z2B Membership
+                </button>
+            </div>
+        </div>
+
+        <!-- Tier Breakdown -->
+        <div style="background: rgba(255, 215, 0, 0.05); border: 2px solid #FFD700; border-radius: 15px; padding: 1.5rem; margin-top: 2rem;">
+            <h4 style="color: #FFD700; margin-bottom: 1rem; text-align: center;">Z2B Membership Tiers</h4>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; font-size: 0.85rem; color: #fff;">
+                <div style="text-align: center; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 10px;">
+                    <div style="font-weight: bold; color: #FFD700; margin-bottom: 0.5rem;">Bronze</div>
+                    <div style="color: #ccc;">R480/month</div>
+                    <div style="color: #999; font-size: 0.8rem;">2 Apps</div>
+                </div>
+                <div style="text-align: center; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 10px;">
+                    <div style="font-weight: bold; color: #FFD700; margin-bottom: 0.5rem;">Copper</div>
+                    <div style="color: #ccc;">R980/month</div>
+                    <div style="color: #999; font-size: 0.8rem;">4 Apps</div>
+                </div>
+                <div style="text-align: center; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 10px;">
+                    <div style="font-weight: bold; color: #FFD700; margin-bottom: 0.5rem;">Silver</div>
+                    <div style="color: #ccc;">R1,480/month</div>
+                    <div style="color: #999; font-size: 0.8rem;">7 Apps</div>
+                </div>
+                <div style="text-align: center; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 10px;">
+                    <div style="font-weight: bold; color: #FFD700; margin-bottom: 0.5rem;">Gold</div>
+                    <div style="color: #ccc;">R2,980/month</div>
+                    <div style="color: #999; font-size: 0.8rem;">11 Apps</div>
+                </div>
+                <div style="text-align: center; padding: 1rem; background: rgba(255,255,255,0.1); border-radius: 10px; border: 1px solid #FFD700;">
+                    <div style="font-weight: bold; color: #FFD700; margin-bottom: 0.5rem;">Platinum</div>
+                    <div style="color: #ccc;">R4,980/month</div>
+                    <div style="color: #00ff88; font-size: 0.8rem; font-weight: bold;">ALL Apps</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Configuration - SET THESE FOR EACH APP
+const APP_CONFIG = {
+    name: 'Vidzie',  // Replace with: Glowie, Vidzie, etc.
+    price: '397',            // Replace with: 397, 297, 197, etc.
+    paymentUrl: 'vidzie-payment.html'  // Replace with payment page URL
+};
+
+// Show pricing modal
+function showAppPricing() {
+    // Update modal with app details
+    document.querySelectorAll('.app-name-display').forEach(el => {
+        el.textContent = APP_CONFIG.name;
+    });
+    document.querySelectorAll('.app-price-display').forEach(el => {
+        el.textContent = APP_CONFIG.price;
+    });
+
+    document.getElementById('appPricingModal').style.display = 'block';
+    document.body.style.overflow = 'hidden';
+}
+
+// Close modal
+function closePricingModal() {
+    document.getElementById('appPricingModal').style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+// Buy standalone
+function buyStandalone() {
+    // Get referral code if available
+    const urlParams = new URLSearchParams(window.location.search);
+    let ref = urlParams.get('ref') || urlParams.get('sponsor') || localStorage.getItem('referralCode') || '';
+
+    // Build payment URL
+    let paymentUrl = APP_CONFIG.paymentUrl + '?amount=' + APP_CONFIG.price;
+    if (ref) paymentUrl += '&ref=' + encodeURIComponent(ref);
+
+    window.location.href = paymentUrl;
+}
+
+// Join Z2B
+function joinZ2B() {
+    // Get referral code if available
+    const urlParams = new URLSearchParams(window.location.search);
+    let ref = urlParams.get('ref') || urlParams.get('sponsor') || localStorage.getItem('referralCode') || '';
+
+    // Build registration URL
+    let regUrl = 'https://z2blegacybuilders.co.za/register.html?tier=SILVER';
+    if (ref) regUrl += '&ref=' + encodeURIComponent(ref);
+
+    window.location.href = regUrl;
+}
+
+// Close on ESC key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closePricingModal();
+});
+</script>
+
 </body>
 </html>
