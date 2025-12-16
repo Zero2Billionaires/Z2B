@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyDigitalTwin - Clone Yourself. Go Viral.</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --black: #000000;
+            --dark: #0a0a0a;
+            --gray: #1a1a1a;
+            --gold: #FFD700;
+            --gold-dark: #F4C430;
+            --purple: #9D4EDD;
+            --pink: #FF006E;
+            --blue: #00D9FF;
+            --white: #FFFFFF;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--black);
+            color: var(--white);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        .nav {
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--gray);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 1rem 0;
+        }
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--blue) 50%, var(--purple) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            animation: rotate 10s linear infinite;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .logo-text {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 1.2rem;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero {
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            padding: 4rem 0;
+            text-align: center;
+        }
+        .hero-logo {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 2rem;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--blue) 25%, var(--purple) 50%, var(--pink) 75%, var(--gold) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            animation: rotate 10s linear infinite;
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.6);
+        }
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4rem;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 2rem;
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: block;
+        }
+        .neon-text {
+            color: var(--purple);
+            text-shadow: 0 0 20px var(--purple);
+            animation: neonFlicker 3s infinite alternate;
+            display: block;
+        }
+        @keyframes neonFlicker {
+            0%, 100% { text-shadow: 0 0 20px var(--purple), 0 0 40px var(--purple); }
+            50% { text-shadow: 0 0 10px var(--purple); }
+        }
+        .subtitle {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 3rem;
+            line-height: 1.8;
+        }
+        .btn {
+            padding: 1rem 2.5rem;
+            border-radius: 16px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-decoration: none;
+        }
+        .btn-glow {
+            background: linear-gradient(135deg, var(--purple) 0%, var(--pink) 50%, var(--blue) 100%);
+            color: var(--white);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(157, 78, 221, 0.5); }
+            50% { box-shadow: 0 0 40px rgba(157, 78, 221, 0.8); }
+        }
+        .trial-note {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 1rem;
+        }
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+        .stat {
+            text-align: center;
+        }
+        .stat-number {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--gold);
+        }
+        .stat-label {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            font-weight: 900;
+            text-align: center;
+            margin: 4rem 0;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+        .feature-card {
+            background: var(--gray);
+            padding: 3rem;
+            border-radius: 16px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        .feature-card:hover {
+            border-color: var(--purple);
+            transform: translateY(-5px);
+            box-shadow: 0 0 20px rgba(157, 78, 221, 0.5);
+        }
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        .feature-card h3 {
+            color: var(--gold);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        .feature-card p {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        .section-dark {
+            background: var(--dark);
+            padding: 4rem 0;
+        }
+        .pricing-card {
+            max-width: 500px;
+            margin: 0 auto;
+            background: var(--gray);
+            border: 2px solid var(--gold);
+            border-radius: 24px;
+            padding: 4rem;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+        .pricing-badge {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: var(--black);
+            padding: 0.5rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 700;
+        }
+        .price {
+            font-family: 'Orbitron', sans-serif;
+            margin: 2rem 0;
+        }
+        .amount {
+            font-size: 5rem;
+            font-weight: 900;
+            color: var(--gold);
+        }
+        .currency {
+            font-size: 2rem;
+            vertical-align: super;
+        }
+        .period {
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        .pricing-features {
+            list-style: none;
+            text-align: left;
+            margin: 3rem 0;
+        }
+        .pricing-features li {
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .btn-gold {
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: var(--black);
+        }
+        .z2b-badge {
+            margin-top: 3rem;
+            padding: 2rem;
+            background: rgba(255, 215, 0, 0.1);
+            border-radius: 16px;
+        }
+        .z2b-badge strong {
+            color: var(--gold);
+        }
+        .footer {
+            background: var(--dark);
+            border-top: 1px solid var(--gray);
+            padding: 4rem 0 2rem;
+            text-align: center;
+        }
+        .footer-bottom {
+            padding-top: 2rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            .section-title { font-size: 2rem; }
+            .stats { flex-direction: column; gap: 1rem; }
+            .features-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="container">
+            <div class="nav-content">
+                <div class="logo">
+                    <div class="logo-icon">🎬</div>
+                    <div class="logo-text">MyDigitalTwin</div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-logo">🎬</div>
+            <h1>
+                <span class="gradient-text">Clone Yourself.</span>
+                <span class="neon-text">Go Viral.</span>
+            </h1>
+            <p class="subtitle">
+                Create AI-powered videos with your face and voice in minutes.<br>
+                No filming. No editing. Just pure viral content.
+            </p>
+
+            <a href="#pricing" class="btn btn-glow">
+                🎬 Create Your Clone Now
+            </a>
+            <p class="trial-note">R299/month • Cancel anytime</p>
+
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-number">R299</div>
+                    <div class="stat-label">per month</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">60 sec</div>
+                    <div class="stat-label">video length</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">∞</div>
+                    <div class="stat-label">unlimited</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-light">
+        <div class="container">
+            <h2 class="section-title">What You Get</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">😈</div>
+                    <h3>Roast Videos</h3>
+                    <p>Savage, playful, or brutal. Your AI twin roasts anyone.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💪</div>
+                    <h3>Hype Videos</h3>
+                    <p>Motivate yourself or others. Your clone pumps everyone up.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎂</div>
+                    <h3>Birthday Messages</h3>
+                    <p>Personalized shoutouts without filming anything.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">😂</div>
+                    <h3>Comedy Skits</h3>
+                    <p>Your digital twin tells jokes in your voice.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔥</div>
+                    <h3>Motivational Speeches</h3>
+                    <p>Inspire thousands with your message.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📖</div>
+                    <h3>Bible Preaching</h3>
+                    <p>Preach and teach the Word with customizable Bible themes.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">✨</div>
+                    <h3>Custom Scripts</h3>
+                    <p>Type anything. Your clone says it on video.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="pricing" class="section-dark">
+        <div class="container">
+            <h2 class="section-title">Simple Pricing</h2>
+            <div class="pricing-card">
+                <div class="pricing-badge">Most Popular</div>
+                <h3>MyDigitalTwin V1</h3>
+                <div class="price">
+                    <span class="currency">R</span>
+                    <span class="amount">299</span>
+                    <span class="period">/month</span>
+                </div>
+                <ul class="pricing-features">
+                    <li>✓ AI Face & Voice Cloning</li>
+                    <li>✓ Unlimited 60-second Videos</li>
+                    <li>✓ 7 Video Templates (Roast, Hype, Birthday, Comedy, Motivational, Bible, Custom)</li>
+                    <li>✓ Custom Scripts</li>
+                    <li>✓ High-Quality HD Output</li>
+                    <li>✓ Start Immediately</li>
+                    <li>✓ Cancel anytime</li>
+                </ul>
+                <a href="#" onclick="showMembershipModal()" class="btn btn-gold">
+                    Buy Now - R299/month
+                </a>
+                <p class="trial-note">First payment R299 • Cancel anytime</p>
+            </div>
+            <div class="z2b-badge">
+                <p style="margin-bottom: 1.5rem; line-height: 1.8;">🏆 <strong>Z2B Legacy Builders Member?</strong><br>
+                Buy Z2B Membership, gain access to more APPs and also be able to <strong>Earn 7 Z2B Income Streams</strong> by selling this APP and many other Apps, Tools and Services.</p>
+                <a href="http://z2blegacybuilders.co.za/register.html" class="btn btn-gold" style="display: inline-block; padding: 1rem 2rem; text-decoration: none; border-radius: 12px; font-weight: bold; margin-top: 0.5rem;">
+                    Join Z2B Legacy Builders Now
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>Clone Yourself. Go Viral.</p>
+                <p style="margin-top: 1rem;">Built with ❤️ By Z2B Legacy Builders</p>
+                <p>&copy; 2025 MyDigitalTwin. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Redirect to registration with referral tracking
+        function redirectToRegistration() {
+            // Get sponsor code from URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            let sponsorCode = urlParams.get('ref') || urlParams.get('sponsor') || urlParams.get('referral');
+
+            // If no sponsor code in URL, check localStorage
+            if (!sponsorCode) {
+                sponsorCode = localStorage.getItem('sponsorCode') || localStorage.getItem('referralCode');
+            }
+
+            // Build registration URL with product parameter
+            let registrationUrl = 'http://z2blegacybuilders.co.za/register.html?product=mydigitaltwin';
+
+            // Add sponsor code if available
+            if (sponsorCode) {
+                registrationUrl += '&ref=' + encodeURIComponent(sponsorCode);
+            }
+
+            // Redirect to registration
+            window.location.href = registrationUrl;
+        }
+
+        // Save sponsor code to localStorage when page loads
+        (function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const sponsorCode = urlParams.get('ref') || urlParams.get('sponsor') || urlParams.get('referral');
+
+            if (sponsorCode) {
+                localStorage.setItem('sponsorCode', sponsorCode);
+                localStorage.setItem('referralCode', sponsorCode);
+            }
+        })();
+    </script>
+
+    <!-- Membership Recommendation Modal -->
+    <div id="membershipModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.9); z-index: 10000; padding: 2rem;">
+        <div style="max-width: 700px; margin: 2rem auto; background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%); border-radius: 20px; border: 2px solid #FFD700; box-shadow: 0 0 40px rgba(255, 215, 0, 0.3); padding: 2.5rem;">
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <h2 style="font-family: 'Orbitron', sans-serif; font-size: 2rem; background: linear-gradient(135deg, #FFD700, #FF8C00); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem;">🏆 Better Option Available!</h2>
+                <p style="font-size: 1.1rem; color: #FFD700; line-height: 1.8;">
+                    Instead of buying <strong>MyDigitalTwin alone</strong> for <strong>R299/month</strong>,<br>
+                    consider joining <strong>Z2B Legacy Builders</strong> for more value!
+                </p>
+            </div>
+
+            <div style="background: rgba(255, 215, 0, 0.1); border: 2px solid #FFD700; border-radius: 15px; padding: 1.5rem; margin-bottom: 2rem;">
+                <h3 style="color: #FFD700; margin-bottom: 1rem; font-size: 1.3rem;">✨ Z2B Membership Benefits:</h3>
+                <ul style="list-style: none; padding: 0; font-size: 1rem; line-height: 2;">
+                    <li>✅ <strong>MyDigitalTwin</strong> + 10+ Other AI Apps</li>
+                    <li>✅ <strong>Coach ManLaw</strong> - 24/7 AI Billionaire Coach</li>
+                    <li>✅ <strong>Glowie, Vidzie, CaptionPro</strong> - AI Content Tools</li>
+                    <li>✅ <strong>MAVULA</strong> - AI Prospecting Automation</li>
+                    <li>✅ <strong>7 Income Streams</strong> - Earn by sharing apps</li>
+                    <li>✅ <strong>Up to 30% Commissions</strong> on sales</li>
+                    <li>✅ <strong>Team Building</strong> - 10 Generations Deep</li>
+                    <li>✅ <strong>AI Fuel Credits</strong> - Daily allocation</li>
+                </ul>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                <div style="background: rgba(0, 217, 255, 0.1); border: 2px solid #00D9FF; border-radius: 12px; padding: 1.2rem; text-align: center;">
+                    <div style="font-size: 0.9rem; color: #00D9FF; margin-bottom: 0.5rem;">MyDigitalTwin Only</div>
+                    <div style="font-size: 2rem; font-weight: bold; color: #FFD700;">R299</div>
+                    <div style="font-size: 0.85rem; color: #ccc;">/month</div>
+                    <div style="font-size: 0.85rem; color: #999; margin-top: 0.5rem;">1 App Only</div>
+                </div>
+                <div style="background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 140, 0, 0.2)); border: 3px solid #FFD700; border-radius: 12px; padding: 1.2rem; text-align: center; position: relative;">
+                    <div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #FFD700, #FF8C00); padding: 0.3rem 1rem; border-radius: 20px; font-size: 0.75rem; font-weight: bold; color: #000;">RECOMMENDED</div>
+                    <div style="font-size: 0.9rem; color: #FFD700; margin-bottom: 0.5rem;">Z2B Bronze Tier</div>
+                    <div style="font-size: 2rem; font-weight: bold; color: #FFD700;">R480</div>
+                    <div style="font-size: 0.85rem; color: #ccc;">/month</div>
+                    <div style="font-size: 0.85rem; color: #00ff88; margin-top: 0.5rem; font-weight: bold;">11 Apps + Income</div>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <a href="#" onclick="proceedWithMyDigitalTwin()" style="display: block; text-align: center; padding: 1rem; background: rgba(255,255,255,0.1); border: 2px solid #666; border-radius: 12px; color: #fff; text-decoration: none; font-weight: bold; transition: all 0.3s;">
+                    Continue with MyDigitalTwin<br>
+                    <span style="font-size: 0.85rem; color: #999;">R299/month</span>
+                </a>
+                <a href="http://z2blegacybuilders.co.za/register.html?tier=BRONZE" style="display: block; text-align: center; padding: 1rem; background: linear-gradient(135deg, #FFD700, #FF8C00); border: none; border-radius: 12px; color: #000; text-decoration: none; font-weight: bold; box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); transition: all 0.3s;">
+                    🏆 Join Z2B Bronze<br>
+                    <span style="font-size: 0.85rem;">R480/month - BEST VALUE</span>
+                </a>
+            </div>
+
+            <button onclick="closeModal()" style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: #999; font-size: 2rem; cursor: pointer; width: 40px; height: 40px; line-height: 1; transition: color 0.3s;">&times;</button>
+        </div>
+    </div>
+
+    <script>
+        // Show membership modal
+        function showMembershipModal() {
+            document.getElementById('membershipModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('membershipModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Proceed with MyDigitalTwin only
+        function proceedWithMyDigitalTwin() {
+            // Get sponsor code from URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            let sponsorCode = urlParams.get('ref') || urlParams.get('sponsor') || urlParams.get('referral');
+
+            // If no sponsor code in URL, check localStorage
+            if (!sponsorCode) {
+                sponsorCode = localStorage.getItem('sponsorCode') || localStorage.getItem('referralCode');
+            }
+
+            // Build payment URL for MyDigitalTwin (R299/month)
+            let paymentUrl = 'http://z2blegacybuilders.co.za/mydigitaltwin-payment.html?amount=299';
+
+            // Add sponsor code if available
+            if (sponsorCode) {
+                paymentUrl += '&ref=' + encodeURIComponent(sponsorCode);
+            }
+
+            // Redirect to payment
+            window.location.href = paymentUrl;
+        }
+
+</body>
+</html>
