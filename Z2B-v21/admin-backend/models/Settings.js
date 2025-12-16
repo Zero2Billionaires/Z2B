@@ -18,7 +18,7 @@ const settingsSchema = new mongoose.Schema({
             betaPrice: { type: Number, default: 480 },
             pvPoints: { type: Number, default: 24 },
             ispCommission: { type: Number, default: 25 },
-            description: { type: String, default: 'Starter tier with essential features' }
+            description: { type: String, default: 'Coach Manlaw + 1 App (the app that introduced you)' }
         },
         COPPER: {
             name: { type: String, default: 'Copper Legacy Builder' },
@@ -26,7 +26,7 @@ const settingsSchema = new mongoose.Schema({
             betaPrice: { type: Number, default: 990 },
             pvPoints: { type: Number, default: 50 },
             ispCommission: { type: Number, default: 30 },
-            description: { type: String, default: 'Advanced tier with more features' }
+            description: { type: String, default: 'Coach Manlaw + 2 Apps (intro app + 1 of your choice)' }
         },
         SILVER: {
             name: { type: String, default: 'Silver Legacy Builder' },
@@ -34,7 +34,7 @@ const settingsSchema = new mongoose.Schema({
             betaPrice: { type: Number, default: 1490 },
             pvPoints: { type: Number, default: 74 },
             ispCommission: { type: Number, default: 35 },
-            description: { type: String, default: 'Elite tier with premium features' }
+            description: { type: String, default: 'Coach Manlaw + 3 Apps (intro app + 2 of your choice)' }
         },
         GOLD: {
             name: { type: String, default: 'Gold Legacy Builder' },
@@ -42,7 +42,7 @@ const settingsSchema = new mongoose.Schema({
             betaPrice: { type: Number, default: 2490 },
             pvPoints: { type: Number, default: 149 },
             ispCommission: { type: Number, default: 40 },
-            description: { type: String, default: 'Master tier with advanced features' }
+            description: { type: String, default: 'Coach Manlaw + 6 Apps (intro app + 5 of your choice)' }
         },
         PLATINUM: {
             name: { type: String, default: 'Platinum Legacy Builder' },
@@ -50,7 +50,7 @@ const settingsSchema = new mongoose.Schema({
             betaPrice: { type: Number, default: 3490 },
             pvPoints: { type: Number, default: 249 },
             ispCommission: { type: Number, default: 45 },
-            description: { type: String, default: 'Ultimate tier with all features' }
+            description: { type: String, default: 'Coach Manlaw + 8 Apps' }
         }
     },
 
