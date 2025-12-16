@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Test - Z2B</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-box {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        button {
+            background: #0A2647;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #144272;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .log {
+            background: #000;
+            color: #0f0;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+        .log-entry {
+            margin: 5px 0;
+        }
+        .error { color: #ff6b6b; }
+        .success { color: #51cf66; }
+        .info { color: #339af0; }
+    </style>
+</head>
+<body>
+    <div class="test-box">
+        <h1>🧪 Z2B Payment System Test</h1>
+        <p><strong>Current URL:</strong> <span id="currentUrl"></span></p>
+        <p><strong>Backend API:</strong> <span id="apiUrl"></span></p>
+        <p><strong>Status:</strong> <span id="status">Checking...</span></p>
+
+        <hr>
+
+        <h2>Test Tier Buttons</h2>
+        <button onclick="testTier('BLB', 'Bronze', 480)">Test Bronze (R480)</button>
+        <button onclick="testTier('GLB', 'Gold', 2490)">Test Gold (R2490)</button>
+        <button onclick="testTier('PLB', 'Platinum', 3490)">Test Platinum (R3490)</button>
+
+        <div class="log" id="log"></div>
+    </div>
+
+    <script>
+        // Display current environment
+        document.getElementById('currentUrl').textContent = window.location.href;
+        document.getElementById('apiUrl').textContent = window.location.origin + '/api/payment/create-tier-checkout';
+
+        // Logger function
+        function log(message, type = 'info') {
+            const logDiv = document.getElementById('log');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            const timestamp = new Date().toLocaleTimeString();
+            entry.textContent = `[${timestamp}] ${message}`;
+            logDiv.appendChild(entry);
+            logDiv.scrollTop = logDiv.scrollHeight;
+            console.log(`[${type.toUpperCase()}]`, message);
+        }
+
+        // Check backend health on load
+        async function checkBackend() {
+            try {
+                log('Checking backend health...', 'info');
+                const response = await fetch('/api/health');
+                const data = await response.json();
+
+                if (data.status === 'OK') {
+                    document.getElementById('status').innerHTML = '<span style="color: green;">✅ Backend Online</span>';
+                    log('Backend is online and ready!', 'success');
+                    return true;
+                } else {
+                    throw new Error('Backend returned unexpected status');
+                }
+            } catch (error) {
+                document.getElementById('status').innerHTML = '<span style="color: red;">❌ Backend Offline</span>';
+                log('ERROR: Backend not responding - ' + error.message, 'error');
+                return false;
+            }
+        }
+
+        // Test tier purchase
+        async function testTier(tierCode, tierName, price) {
+            log(`========================================`, 'info');
+            log(`Testing ${tierName} tier (${tierCode}) - R${price}`, 'info');
+            log(`========================================`, 'info');
+
+            try {
+                // Step 1: Prepare request
+                const apiUrl = '/api/payment/create-tier-checkout';
+                const payload = {
+                    tier_code: tierCode,
+                    referral_code: 'TEST123'
+                };
+
+                log('Step 1: Preparing request...', 'info');
+                log('API URL: ' + apiUrl, 'info');
+                log('Payload: ' + JSON.stringify(payload), 'info');
+
+                // Step 2: Send request
+                log('Step 2: Sending request to backend...', 'info');
+                const startTime = Date.now();
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const duration = Date.now() - startTime;
+                log(`Step 3: Response received in ${duration}ms`, 'info');
+                log(`HTTP Status: ${response.status} ${response.statusText}`, 'info');
+
+                // Step 3: Parse response
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const result = await response.json();
+                log('Step 4: Response parsed successfully', 'success');
+                log('Response: ' + JSON.stringify(result, null, 2), 'info');
+
+                // Step 4: Check result
+                if (result.success && result.redirectUrl) {
+                    log('✅ SUCCESS! Payment session created', 'success');
+                    log('Checkout ID: ' + result.checkoutId, 'success');
+                    log('Reference: ' + result.reference, 'success');
+                    log('Redirect URL: ' + result.redirectUrl, 'success');
+
+                    // Ask user if they want to proceed
+                    if (confirm(`Payment session created successfully!\n\nDo you want to proceed to Yoco payment page?`)) {
+                        log('Redirecting to Yoco...', 'info');
+                        window.location.href = result.redirectUrl;
+                    } else {
+                        log('User cancelled redirect', 'info');
+                    }
+                } else {
+                    throw new Error('Invalid response: ' + (result.error || 'No redirect URL'));
+                }
+
+            } catch (error) {
+                log('❌ ERROR: ' + error.message, 'error');
+                log('Error details: ' + error.stack, 'error');
+                alert('Payment test failed! Check the log for details.\n\nError: ' + error.message);
+            }
+        }
+
+        // Run health check on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            log('=== Z2B Payment System Diagnostic Tool ===', 'info');
+            log('Initializing...', 'info');
+            checkBackend();
+        });
+    </script>
+</body>
+</html>
