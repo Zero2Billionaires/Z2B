@@ -17,40 +17,52 @@ const settingsSchema = new mongoose.Schema({
             price: { type: Number, default: 960 },
             betaPrice: { type: Number, default: 480 },
             pvPoints: { type: Number, default: 24 },
-            ispCommission: { type: Number, default: 25 },
-            description: { type: String, default: 'Coach Manlaw + 1 App (the app that introduced you)' }
+            ispCommission: { type: Number, default: 18 },
+            tscGenerations: { type: Number, default: 3 },
+            appCount: { type: Number, default: 2 },
+            description: { type: String, default: 'Coach Manlaw + intro app (2 apps total). Earn up to 3 generations.' }
         },
         COPPER: {
             name: { type: String, default: 'Copper Legacy Builder' },
-            price: { type: Number, default: 1980 },
-            betaPrice: { type: Number, default: 990 },
+            price: { type: Number, default: 1960 },
+            betaPrice: { type: Number, default: 980 },
             pvPoints: { type: Number, default: 50 },
-            ispCommission: { type: Number, default: 30 },
-            description: { type: String, default: 'Coach Manlaw + 2 Apps (intro app + 1 of your choice)' }
+            ispCommission: { type: Number, default: 22 },
+            tscGenerations: { type: Number, default: 5 },
+            appCount: { type: Number, default: 4 },
+            description: { type: String, default: 'Bronze apps + 2 more of your choice (4 apps total). Earn up to 5 generations.' }
         },
         SILVER: {
             name: { type: String, default: 'Silver Legacy Builder' },
-            price: { type: Number, default: 2980 },
-            betaPrice: { type: Number, default: 1490 },
+            price: { type: Number, default: 2960 },
+            betaPrice: { type: Number, default: 1480 },
             pvPoints: { type: Number, default: 74 },
-            ispCommission: { type: Number, default: 35 },
-            description: { type: String, default: 'Coach Manlaw + 3 Apps (intro app + 2 of your choice)' }
+            ispCommission: { type: Number, default: 25 },
+            tscGenerations: { type: Number, default: 7 },
+            appCount: { type: Number, default: 7 },
+            description: { type: String, default: 'Bronze apps + 5 more of your choice (7 apps total). Earn up to 7 generations.' }
         },
         GOLD: {
             name: { type: String, default: 'Gold Legacy Builder' },
-            price: { type: Number, default: 4980 },
-            betaPrice: { type: Number, default: 2490 },
+            price: { type: Number, default: 5960 },
+            betaPrice: { type: Number, default: 2980 },
             pvPoints: { type: Number, default: 149 },
-            ispCommission: { type: Number, default: 40 },
-            description: { type: String, default: 'Coach Manlaw + 6 Apps (intro app + 5 of your choice)' }
+            ispCommission: { type: Number, default: 28 },
+            tscGenerations: { type: Number, default: 9 },
+            appCount: { type: Number, default: 11 },
+            profitPool: { type: String, default: 'Gold Quarterly Profit Sharing Pool' },
+            description: { type: String, default: 'Bronze apps + 9 more (11 apps total) + Quarterly Gold Profit Sharing Pool. Earn up to 9 generations.' }
         },
         PLATINUM: {
             name: { type: String, default: 'Platinum Legacy Builder' },
-            price: { type: Number, default: 6980 },
-            betaPrice: { type: Number, default: 3490 },
+            price: { type: Number, default: 9960 },
+            betaPrice: { type: Number, default: 4980 },
             pvPoints: { type: Number, default: 249 },
-            ispCommission: { type: Number, default: 45 },
-            description: { type: String, default: 'Coach Manlaw + 8 Apps' }
+            ispCommission: { type: Number, default: 30 },
+            tscGenerations: { type: Number, default: 10 },
+            appCount: { type: String, default: 'All Apps' },
+            profitPool: { type: String, default: 'Platinum Quarterly Profit Sharing Pool' },
+            description: { type: String, default: 'All apps in Z2B ecosystem + Quarterly Platinum Profit Sharing Pool. Earn up to 10 generations.' }
         }
     },
 

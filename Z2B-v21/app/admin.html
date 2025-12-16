@@ -474,6 +474,7 @@
                 <li><a href="#" class="menu-link active" data-section="overview"><i class="fas fa-tachometer-alt"></i> Overview</a></li>
                 <li><a href="#" class="menu-link" data-section="tiers"><i class="fas fa-layer-group"></i> Tiers & Pricing</a></li>
                 <li><a href="#" class="menu-link" data-section="users"><i class="fas fa-users"></i> User Management</a></li>
+                <li><a href="#" class="menu-link" data-section="app-access"><i class="fas fa-gift"></i> Grant App Access</a></li>
                 <li><a href="#" class="menu-link" data-section="marketplace"><i class="fas fa-store"></i> Marketplace Products</a></li>
                 <li><a href="#" class="menu-link" data-section="team-network"><i class="fas fa-sitemap"></i> Team Network</a></li>
                 <li><a href="#" class="menu-link" data-section="communications"><i class="fas fa-comments"></i> Communications</a></li>
@@ -527,10 +528,15 @@
 
             <!-- Other sections will be added via JavaScript -->
             <div id="tiers" class="content-section"></div>
+            <!-- User Management Section -->
+            <div id="users" class="content-section"></div>
+            <!-- App Access Management Section -->
+            <div id="app-access" class="content-section"></div>
+
 <!-- Marketplace Product Access Management -->
 <div id="marketplace" class="content-section">
     <h2><i class="fas fa-store"></i> Marketplace Product Access Management</h2>
-    <p>Manage user access to all marketplace products (MAVULA, ZYRO, ZYRA, BENOWN, GLOWIE, VIDZIE, ZYNTH, ZYNECT)</p>
+    <p>Manage user access to all marketplace products (MAVULA, MyDigitalTwin, ZYRO, ZYRA, BENOWN, GLOWIE, VIDZIE, ZYNTH, ZYNECT)</p>
 
     <!-- Action Tabs -->
     <div style="display: flex; gap: 1rem; margin: 2rem 0; border-bottom: 2px solid rgba(255,215,0,0.3); flex-wrap: wrap;">
@@ -2470,6 +2476,9 @@ Write your message here..." style="width: 100%; min-height: 300px; padding: 1rem
                     case 'users':
                         displayUsersSection();
                         break;
+                    case 'app-access':
+                        displayAppAccessSection();
+                        break;
                     case 'content':
                         displayContentSection();
                         break;
@@ -2497,7 +2506,7 @@ Write your message here..." style="width: 100%; min-height: 300px; padding: 1rem
             const contentDiv = document.getElementById('tiers');
             contentDiv.innerHTML = `
                 <h2>Tiers & Pricing Management</h2>
-                <p style="margin-bottom: 2rem; color: rgba(255, 255, 255, 0.6);">Edit pricing, PV points, and commission rates for each membership tier.</p>
+                <p style="margin-bottom: 2rem; color: rgba(255, 255, 255, 0.6);">Edit pricing, PV points, commission rates, app allocations, and TSC generation limits for each membership tier.</p>
                 <div style="display: grid; gap: 1.5rem;">
                     ${Object.entries(tiers).map(([key, tier]) => `
                         <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
@@ -2519,11 +2528,25 @@ Write your message here..." style="width: 100%; min-height: 300px; padding: 1rem
                                     <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #555;">ISP Commission (%)</label>
                                     <input type="number" id="tier_${key}_ispCommission" value="${tier.ispCommission}" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 5px;">
                                 </div>
+                                <div>
+                                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #555;">TSC Generations</label>
+                                    <input type="number" id="tier_${key}_tscGenerations" value="${tier.tscGenerations || 0}" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 5px;">
+                                </div>
+                                <div>
+                                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #555;">App Count</label>
+                                    <input type="text" id="tier_${key}_appCount" value="${tier.appCount || 0}" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 5px;">
+                                </div>
                             </div>
                             <div style="margin-top: 1rem;">
                                 <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #555;">Description</label>
                                 <input type="text" id="tier_${key}_description" value="${tier.description}" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 5px;">
                             </div>
+                            ${tier.profitPool ? `
+                            <div style="margin-top: 1rem;">
+                                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #555;">Profit Pool</label>
+                                <input type="text" id="tier_${key}_profitPool" value="${tier.profitPool}" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 5px;">
+                            </div>
+                            ` : ''}
                         </div>
                     `).join('')}
                 </div>
@@ -2536,13 +2559,23 @@ Write your message here..." style="width: 100%; min-height: 300px; padding: 1rem
         async function saveTiers() {
             const tiers = {};
             ['FAM', 'BRONZE', 'COPPER', 'SILVER', 'GOLD', 'PLATINUM'].forEach(key => {
-                tiers[key] = {
+                const tierData = {
                     price: parseInt(document.getElementById(`tier_${key}_price`).value),
                     betaPrice: parseInt(document.getElementById(`tier_${key}_betaPrice`).value),
                     pvPoints: parseInt(document.getElementById(`tier_${key}_pvPoints`).value),
                     ispCommission: parseInt(document.getElementById(`tier_${key}_ispCommission`).value),
+                    tscGenerations: parseInt(document.getElementById(`tier_${key}_tscGenerations`).value),
+                    appCount: document.getElementById(`tier_${key}_appCount`).value,
                     description: document.getElementById(`tier_${key}_description`).value
                 };
+
+                // Add profitPool if it exists (for Gold and Platinum)
+                const profitPoolElement = document.getElementById(`tier_${key}_profitPool`);
+                if (profitPoolElement) {
+                    tierData.profitPool = profitPoolElement.value;
+                }
+
+                tiers[key] = tierData;
             });
 
             try {
@@ -3065,6 +3098,313 @@ Write your message here..." style="width: 100%; min-height: 300px; padding: 1rem
             } catch (error) {
                 alert('❌ Error saving settings. Please try again.');
                 console.error(error);
+            }
+        }
+
+        // App Access Management Section
+        async function displayAppAccessSection() {
+            const contentDiv = document.getElementById('app-access');
+
+            // List of all Z2B apps
+            const apps = [
+                { id: 'coach-manlaw', name: 'Coach Manlaw', icon: 'fa-robot' },
+                { id: 'glowie', name: 'Glowie', icon: 'fa-lightbulb' },
+                { id: 'vidzie', name: 'Vidzie', icon: 'fa-video' },
+                { id: 'zynth', name: 'Zynth', icon: 'fa-microphone' },
+                { id: 'mavula', name: 'MAVULA', icon: 'fa-calendar-check' },
+                { id: 'mydigitaltwin', name: 'MyDigitalTwin', icon: 'fa-clone' },
+                { id: 'zyro', name: 'ZYRO', icon: 'fa-sitemap' },
+                { id: 'zyra', name: 'ZYRA', icon: 'fa-brain' },
+                { id: 'benown', name: 'BENOWN', icon: 'fa-crown' },
+                { id: 'zynect', name: 'ZYNECT', icon: 'fa-network-wired' }
+            ];
+
+            contentDiv.innerHTML = `
+                <h2><i class="fas fa-gift"></i> Grant Free App Access</h2>
+                <p style="margin-bottom: 2rem; color: rgba(255, 255, 255, 0.6);">Grant free access to apps for any member (including yourself or other admins), either for a limited time or permanently.</p>
+
+                <!-- Grant Access Form -->
+                <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 2rem;">
+                    <h3 style="color: var(--navy-blue); margin-bottom: 1.5rem;"><i class="fas fa-user-plus"></i> Grant App Access</h3>
+
+                    <!-- User Search -->
+                    <div style="margin-bottom: 1.5rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #555;">Search User (Email, Name, or Phone)</label>
+                        <div style="display: flex; gap: 1rem;">
+                            <input type="text" id="appAccessUserSearch" placeholder="Enter email, name, or phone..." style="flex: 1; padding: 0.8rem; border: 1px solid #ddd; border-radius: 5px;">
+                            <button onclick="searchUserForAppAccess()" style="padding: 0.8rem 1.5rem; background: var(--navy-blue); color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                                <i class="fas fa-search"></i> Search
+                            </button>
+                        </div>
+                        <div id="appAccessUserResult" style="margin-top: 1rem;"></div>
+                    </div>
+
+                    <!-- App Selection -->
+                    <div style="margin-bottom: 1.5rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #555;">Select Apps to Grant Access</label>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem;">
+                            ${apps.map(app => `
+                                <label style="display: flex; align-items: center; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 8px; cursor: pointer; transition: all 0.3s;">
+                                    <input type="checkbox" name="appAccess" value="${app.id}" style="margin-right: 0.8rem; width: 18px; height: 18px; cursor: pointer;">
+                                    <i class="fas ${app.icon}" style="margin-right: 0.5rem; color: var(--gold);"></i>
+                                    <span style="font-weight: 500;">${app.name}</span>
+                                </label>
+                            `).join('')}
+                        </div>
+                        <button onclick="toggleAllApps()" style="margin-top: 1rem; padding: 0.5rem 1rem; background: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                            <i class="fas fa-check-double"></i> Select All / Deselect All
+                        </button>
+                    </div>
+
+                    <!-- Duration Selection -->
+                    <div style="margin-bottom: 1.5rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #555;">Access Duration</label>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div>
+                                <label style="display: flex; align-items: center; padding: 1rem; border: 2px solid #e0e0e0; border-radius: 8px; cursor: pointer;">
+                                    <input type="radio" name="accessDuration" value="limited" checked onclick="toggleDurationInput(true)" style="margin-right: 0.8rem; width: 18px; height: 18px; cursor: pointer;">
+                                    <span style="font-weight: 500;"><i class="fas fa-clock"></i> Limited Time</span>
+                                </label>
+                            </div>
+                            <div>
+                                <label style="display: flex; align-items: center; padding: 1rem; border: 2px solid #e0e0e0; border-radius: 8px; cursor: pointer;">
+                                    <input type="radio" name="accessDuration" value="permanent" onclick="toggleDurationInput(false)" style="margin-right: 0.8rem; width: 18px; height: 18px; cursor: pointer;">
+                                    <span style="font-weight: 500;"><i class="fas fa-infinity"></i> Permanent</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div id="durationInputSection" style="margin-top: 1rem;">
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #555;">Number of Days</label>
+                            <input type="number" id="accessDays" value="30" min="1" style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 5px;">
+                            <small style="color: #666;">Enter the number of days for access</small>
+                        </div>
+                    </div>
+
+                    <!-- Grant Button -->
+                    <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                        <button onclick="grantAppAccess()" style="padding: 1rem 2rem; background: var(--gold); color: var(--navy-blue); border: none; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);">
+                            <i class="fas fa-gift"></i> Grant Access
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Current Grants List -->
+                <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <h3 style="color: var(--navy-blue); margin: 0;"><i class="fas fa-list"></i> Current Access Grants</h3>
+                        <button onclick="loadAppAccessGrants()" style="padding: 0.5rem 1rem; background: var(--navy-blue); color: white; border: none; border-radius: 5px; cursor: pointer;">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                    </div>
+                    <div id="appAccessGrantsList">
+                        <p style="text-align: center; color: #999; padding: 2rem;">Loading grants...</p>
+                    </div>
+                </div>
+            `;
+
+            // Load existing grants
+            await loadAppAccessGrants();
+        }
+
+        // Toggle all apps selection
+        function toggleAllApps() {
+            const checkboxes = document.querySelectorAll('input[name="appAccess"]');
+            const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+            checkboxes.forEach(cb => cb.checked = !allChecked);
+        }
+
+        // Toggle duration input
+        function toggleDurationInput(show) {
+            document.getElementById('durationInputSection').style.display = show ? 'block' : 'none';
+        }
+
+        // Search user for app access
+        async function searchUserForAppAccess() {
+            const searchTerm = document.getElementById('appAccessUserSearch').value.trim();
+            const resultDiv = document.getElementById('appAccessUserResult');
+
+            if (!searchTerm) {
+                resultDiv.innerHTML = '<p style="color: #dc3545;">Please enter a search term</p>';
+                return;
+            }
+
+            resultDiv.innerHTML = '<p style="color: #666;"><i class="fas fa-spinner fa-spin"></i> Searching...</p>';
+
+            try {
+                const response = await fetch(`${API_URL}/users/search?term=${encodeURIComponent(searchTerm)}`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+
+                const result = await response.json();
+
+                if (result.success && result.data) {
+                    const user = result.data;
+                    resultDiv.innerHTML = `
+                        <div style="padding: 1rem; background: #f8f9fa; border-left: 4px solid var(--gold); border-radius: 5px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong style="color: var(--navy-blue); font-size: 1.1rem;">${user.fullName}</strong>
+                                    <p style="margin: 0.3rem 0 0 0; color: #666;">
+                                        <i class="fas fa-envelope"></i> ${user.email} |
+                                        <i class="fas fa-phone"></i> ${user.phone} |
+                                        <span style="background: var(--gold); color: var(--navy-blue); padding: 0.2rem 0.5rem; border-radius: 3px; font-weight: bold;">${user.tier}</span>
+                                    </p>
+                                </div>
+                                <input type="hidden" id="selectedUserId" value="${user._id}">
+                                <i class="fas fa-check-circle" style="color: #28a745; font-size: 2rem;"></i>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = '<p style="color: #dc3545;"><i class="fas fa-exclamation-circle"></i> User not found</p>';
+                }
+            } catch (error) {
+                console.error(error);
+                resultDiv.innerHTML = '<p style="color: #dc3545;"><i class="fas fa-exclamation-triangle"></i> Error searching user</p>';
+            }
+        }
+
+        // Grant app access
+        async function grantAppAccess() {
+            const userId = document.getElementById('selectedUserId')?.value;
+            if (!userId) {
+                alert('⚠️ Please search and select a user first');
+                return;
+            }
+
+            const selectedApps = Array.from(document.querySelectorAll('input[name="appAccess"]:checked')).map(cb => cb.value);
+            if (selectedApps.length === 0) {
+                alert('⚠️ Please select at least one app');
+                return;
+            }
+
+            const durationType = document.querySelector('input[name="accessDuration"]:checked').value;
+            const days = durationType === 'limited' ? parseInt(document.getElementById('accessDays').value) : null;
+
+            try {
+                const response = await fetch(`${API_URL}/users/grant-app-access`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        userId,
+                        apps: selectedApps,
+                        duration: durationType,
+                        days
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert(`✅ Successfully granted access to ${selectedApps.length} app(s)!`);
+                    // Reset form
+                    document.getElementById('appAccessUserSearch').value = '';
+                    document.getElementById('appAccessUserResult').innerHTML = '';
+                    document.querySelectorAll('input[name="appAccess"]').forEach(cb => cb.checked = false);
+                    // Reload grants list
+                    await loadAppAccessGrants();
+                } else {
+                    alert('❌ Error: ' + result.message);
+                }
+            } catch (error) {
+                console.error(error);
+                alert('❌ Error granting access. Please try again.');
+            }
+        }
+
+        // Load app access grants
+        async function loadAppAccessGrants() {
+            const listDiv = document.getElementById('appAccessGrantsList');
+            listDiv.innerHTML = '<p style="text-align: center; color: #999; padding: 2rem;"><i class="fas fa-spinner fa-spin"></i> Loading...</p>';
+
+            try {
+                const response = await fetch(`${API_URL}/users/app-access-grants`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+
+                const result = await response.json();
+
+                if (result.success && result.data && result.data.length > 0) {
+                    listDiv.innerHTML = `
+                        <div style="overflow-x: auto;">
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <thead>
+                                    <tr style="background: var(--navy-blue); color: white;">
+                                        <th style="padding: 1rem; text-align: left;">User</th>
+                                        <th style="padding: 1rem; text-align: left;">Apps</th>
+                                        <th style="padding: 1rem; text-align: left;">Duration</th>
+                                        <th style="padding: 1rem; text-align: left;">Expires</th>
+                                        <th style="padding: 1rem; text-align: center;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${result.data.map(grant => `
+                                        <tr style="border-bottom: 1px solid #ddd;">
+                                            <td style="padding: 1rem;">
+                                                <strong>${grant.userName}</strong><br>
+                                                <small style="color: #666;">${grant.userEmail}</small>
+                                            </td>
+                                            <td style="padding: 1rem;">
+                                                ${grant.apps.join(', ')}
+                                            </td>
+                                            <td style="padding: 1rem;">
+                                                ${grant.duration === 'permanent' ? '<span style="color: var(--gold); font-weight: bold;"><i class="fas fa-infinity"></i> Permanent</span>' : `<span style="color: var(--navy-blue);"><i class="fas fa-clock"></i> ${grant.days} days</span>`}
+                                            </td>
+                                            <td style="padding: 1rem;">
+                                                ${grant.expiresAt ? new Date(grant.expiresAt).toLocaleDateString() : 'Never'}
+                                            </td>
+                                            <td style="padding: 1rem; text-align: center;">
+                                                <button onclick="revokeAppAccess('${grant._id}')" style="padding: 0.5rem 1rem; background: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                                                    <i class="fas fa-times"></i> Revoke
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+                } else {
+                    listDiv.innerHTML = '<p style="text-align: center; color: #999; padding: 2rem;">No access grants found</p>';
+                }
+            } catch (error) {
+                console.error(error);
+                listDiv.innerHTML = '<p style="text-align: center; color: #dc3545; padding: 2rem;"><i class="fas fa-exclamation-triangle"></i> Error loading grants</p>';
+            }
+        }
+
+        // Revoke app access
+        async function revokeAppAccess(grantId) {
+            if (!confirm('Are you sure you want to revoke this access grant?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/users/revoke-app-access/${grantId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert('✅ Access revoked successfully!');
+                    await loadAppAccessGrants();
+                } else {
+                    alert('❌ Error: ' + result.message);
+                }
+            } catch (error) {
+                console.error(error);
+                alert('❌ Error revoking access. Please try again.');
             }
         }
 
@@ -4659,7 +4999,7 @@ function handleUserAutocomplete(searchTerm) {
     const matches = allUsersCache.filter(user => {
         const fullName = (user.fullName || `${user.firstName} ${user.lastName}`).toLowerCase();
         const email = (user.email || '').toLowerCase();
-        const z2bId = (user.z2bId || user.memberId || '').toLowerCase();
+        const z2bId = (user.referralCode || '').toLowerCase();
 
         return fullName.includes(term) || email.includes(term) || z2bId.includes(term);
     }).slice(0, 10); // Limit to top 10 results
@@ -5025,7 +5365,7 @@ async function loadAllUsers() {
 
                 return `
                     <tr>
-                        <td><strong>${user.z2bId || user.memberId || 'N/A'}</strong></td>
+                        <td><strong>${user.referralCode || 'N/A'}</strong></td>
                         <td>${user.fullName || `${user.firstName} ${user.lastName}`}</td>
                         <td>${user.email}</td>
                         <td><span style="padding: 0.3rem 0.8rem; background: ${getTierColor(user.tier)}; color: white; border-radius: 5px; font-weight: 600;">${user.tier}</span></td>
@@ -5108,7 +5448,7 @@ async function loadProductUsers(productId) {
                 const access = user.marketplaceAccess[productId];
                 return `
                     <tr>
-                        <td><strong>${user.z2bId || user.memberId || 'N/A'}</strong></td>
+                        <td><strong>${user.referralCode || 'N/A'}</strong></td>
                         <td>${user.fullName || `${user.firstName} ${user.lastName}`}</td>
                         <td><span style="padding: 0.3rem 0.8rem; background: ${getAccessTypeColor(access.accessType)}; color: white; border-radius: 5px; font-weight: 600;">${getAccessTypeIcon(access.accessType)} ${access.accessType}</span></td>
                         <td>${formatDate(access.grantedDate)}</td>
@@ -5312,7 +5652,7 @@ function displayProductUsers(users, productId) {
         const access = user.marketplaceAccess[productId];
         return `
             <tr>
-                <td><strong>${user.z2bId || user.memberId || 'N/A'}</strong></td>
+                <td><strong>${user.referralCode || 'N/A'}</strong></td>
                 <td>${user.fullName || `${user.firstName} ${user.lastName}`}</td>
                 <td><span style="padding: 0.3rem 0.8rem; background: ${getAccessTypeColor(access.accessType)}; color: white; border-radius: 5px; font-weight: 600;">${getAccessTypeIcon(access.accessType)} ${access.accessType}</span></td>
                 <td>${formatDate(access.grantedDate)}</td>
@@ -5376,7 +5716,7 @@ function filterProductUsers(searchTerm) {
     const filtered = allProductUsers.filter(user => {
         const fullName = (user.fullName || `${user.firstName} ${user.lastName}`).toLowerCase();
         const email = (user.email || '').toLowerCase();
-        const z2bId = (user.z2bId || user.memberId || '').toLowerCase();
+        const z2bId = (user.referralCode || '').toLowerCase();
 
         return fullName.includes(term) || email.includes(term) || z2bId.includes(term);
     });
