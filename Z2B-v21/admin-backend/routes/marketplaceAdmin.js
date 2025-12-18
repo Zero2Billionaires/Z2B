@@ -379,4 +379,123 @@ router.post('/reject-marketplace', verifyToken, async (req, res) => {
     }
 });
 
+// ============================================================================
+// ALIAS ENDPOINTS FOR FRONTEND COMPATIBILITY
+// Frontend calls these endpoints, so we create aliases to existing routes
+// ============================================================================
+
+// GET /api/users/app-access-grants - Get all app access grants (all products)
+router.get('/app-access-grants', verifyToken, async (req, res) => {
+    try {
+        // Get all users with any marketplace access
+        const users = await User.find({})
+            .select('z2bId fullName email tier marketplaceAccess createdAt')
+            .sort({ createdAt: -1 });
+
+        // Transform into grants array
+        const grants = [];
+        users.forEach(user => {
+            if (user.marketplaceAccess) {
+                Object.keys(user.marketplaceAccess).forEach(productId => {
+                    const access = user.marketplaceAccess[productId];
+                    if (access.hasAccess) {
+                        grants.push({
+                            _id: `${user._id}_${productId}`,
+                            userId: user._id,
+                            z2bId: user.z2bId,
+                            fullName: user.fullName,
+                            email: user.email,
+                            productId: productId,
+                            grantedAt: access.grantedAt,
+                            expiresAt: access.expiresAt,
+                            grantedBy: access.grantedBy
+                        });
+                    }
+                });
+            }
+        });
+
+        res.json({
+            success: true,
+            grants
+        });
+    } catch (error) {
+        console.error('Error fetching app access grants:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error fetching app access grants',
+            error: error.message
+        });
+    }
+});
+
+// POST /api/users/grant-app-access - Alias for grant-product-access
+router.post('/grant-app-access', verifyToken, async (req, res) => {
+    try {
+        const { userId, productId, expiresAt } = req.body;
+
+        if (!userId || !productId) {
+            return res.status(400).json({
+                success: false,
+                message: 'User ID and Product ID are required'
+            });
+        }
+
+        // Find user
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found'
+            });
+        }
+
+        // Validate product exists
+        const product = await MarketplaceProduct.findOne({ productId, isActive: true });
+        if (!product) {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid or inactive product ID'
+            });
+        }
+
+        // Initialize marketplaceAccess if it doesn't exist
+        if (!user.marketplaceAccess) {
+            user.marketplaceAccess = {};
+        }
+
+        // Grant access
+        user.marketplaceAccess[productId] = {
+            hasAccess: true,
+            grantedAt: new Date(),
+            expiresAt: expiresAt ? new Date(expiresAt) : null,
+            grantedBy: req.admin.userId || req.admin._id,
+            grantedVia: 'admin_panel'
+        };
+
+        // Mark as modified (important for nested objects)
+        user.markModified('marketplaceAccess');
+        await user.save();
+
+        res.json({
+            success: true,
+            message: `Access granted to ${product.name}`,
+            user: {
+                z2bId: user.z2bId,
+                fullName: user.fullName,
+                email: user.email,
+                marketplaceAccess: user.marketplaceAccess
+            }
+        });
+
+    } catch (error) {
+        console.error('Error granting app access:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error granting app access',
+            error: error.message
+        });
+    }
+});
+
 module.exports = router;
