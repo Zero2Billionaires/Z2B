@@ -42,9 +42,16 @@ app.use(cors(corsOptions));
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
-// Serve static files from the app directory
-app.use(express.static(path.join(__dirname, '../app')));
-// Also serve from public folder (for Railway deployment)
+// Serve static files only from public folder (for Railway deployment)
+// Note: ../app directory doesn't exist on Railway, only on local dev
+if (process.env.NODE_ENV !== 'production') {
+    // Only serve app directory in development
+    try {
+        app.use(express.static(path.join(__dirname, '../app')));
+    } catch (err) {
+        console.log('⚠️ App directory not found (expected on Railway)');
+    }
+}
 app.use(express.static(path.join(__dirname, 'public')));
 
 // MongoDB Connection
