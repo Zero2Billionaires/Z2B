@@ -83,6 +83,9 @@ const productRoutes = require('./routes/products');
 // Use Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/settings', settingsRoutes);
+// IMPORTANT: Register marketplaceAdminRoutes BEFORE userRoutes
+// This ensures /api/users/app-access-grants hits the right handler
+app.use('/api/users', marketplaceAdminRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/content', contentRoutes);
 app.use('/api/stats', statsRoutes);
@@ -95,7 +98,6 @@ app.use('/api/questionnaire', questionnaireRoutes);
 // app.use('/api/mavula', mavulaRoutes);
 // app.use('/api/mavula/webhooks', mavulaWebhooksRoutes);
 // app.use('/api/mavula/ai', mavulaAIRoutes);
-app.use('/api/users', marketplaceAdminRoutes);
 app.use('/api/payments', marketplaceAdminRoutes);
 app.use('/api/products', productRoutes);
 
