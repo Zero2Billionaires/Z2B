@@ -387,24 +387,22 @@ router.post('/reject-marketplace', verifyToken, async (req, res) => {
 // GET /api/users/app-access-grants - Get all app access grants (all products)
 router.get('/app-access-grants', verifyToken, async (req, res) => {
     try {
-        // Get all users with any marketplace access (don't use .lean() because of Map type)
+        // Get all users - use lean() to convert to plain objects
         const users = await User.find({})
             .select('z2bId fullName email tier marketplaceAccess createdAt')
-            .sort({ createdAt: -1 });
+            .sort({ createdAt: -1 })
+            .lean();
 
         // Transform into grants array
         const grants = [];
-        users.forEach(user => {
-            if (user.marketplaceAccess) {
-                try {
-                    // Convert Map to plain object if needed
-                    const accessMap = user.marketplaceAccess instanceof Map
-                        ? user.marketplaceAccess
-                        : new Map(Object.entries(user.marketplaceAccess || {}));
 
-                    // Iterate through the Map
-                    accessMap.forEach((access, productId) => {
-                        if (access && access.hasAccess) {
+        users.forEach(user => {
+            // marketplaceAccess is a Map, which lean() converts to a plain object
+            if (user.marketplaceAccess && typeof user.marketplaceAccess === 'object') {
+                try {
+                    // Iterate through marketplaceAccess object keys
+                    for (const [productId, access] of Object.entries(user.marketplaceAccess)) {
+                        if (access && access.hasAccess === true) {
                             grants.push({
                                 _id: `${user._id}_${productId}`,
                                 userId: user._id,
@@ -414,13 +412,13 @@ router.get('/app-access-grants', verifyToken, async (req, res) => {
                                 productId: productId,
                                 grantedAt: access.grantedAt || access.grantedDate || new Date(),
                                 expiresAt: access.expiresAt || access.expiryDate || null,
-                                grantedBy: access.grantedBy || 'admin'
+                                grantedBy: access.grantedBy || 'admin',
+                                accessType: access.accessType || access.grantedVia || 'admin_panel'
                             });
                         }
-                    });
+                    }
                 } catch (innerError) {
-                    console.error(`Error processing user ${user._id} marketplace access:`, innerError.message);
-                    // Continue processing other users
+                    console.error(`Error processing user ${user._id}:`, innerError.message);
                 }
             }
         });
@@ -431,12 +429,12 @@ router.get('/app-access-grants', verifyToken, async (req, res) => {
             count: grants.length
         });
     } catch (error) {
-        console.error('Error fetching app access grants:', error);
+        console.error('❌ Error fetching app access grants:', error);
         res.status(500).json({
             success: false,
             message: 'Error fetching app access grants',
             error: error.message,
-            stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+            stack: error.stack
         });
     }
 });
