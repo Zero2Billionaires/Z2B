@@ -390,41 +390,49 @@ router.get('/app-access-grants', verifyToken, async (req, res) => {
         // Get all users with any marketplace access
         const users = await User.find({})
             .select('z2bId fullName email tier marketplaceAccess createdAt')
-            .sort({ createdAt: -1 });
+            .sort({ createdAt: -1 })
+            .lean(); // Convert to plain JavaScript objects
 
         // Transform into grants array
         const grants = [];
         users.forEach(user => {
-            if (user.marketplaceAccess) {
-                Object.keys(user.marketplaceAccess).forEach(productId => {
-                    const access = user.marketplaceAccess[productId];
-                    if (access.hasAccess) {
-                        grants.push({
-                            _id: `${user._id}_${productId}`,
-                            userId: user._id,
-                            z2bId: user.z2bId,
-                            fullName: user.fullName,
-                            email: user.email,
-                            productId: productId,
-                            grantedAt: access.grantedAt,
-                            expiresAt: access.expiresAt,
-                            grantedBy: access.grantedBy
-                        });
-                    }
-                });
+            if (user.marketplaceAccess && typeof user.marketplaceAccess === 'object') {
+                try {
+                    Object.keys(user.marketplaceAccess).forEach(productId => {
+                        const access = user.marketplaceAccess[productId];
+                        if (access && access.hasAccess) {
+                            grants.push({
+                                _id: `${user._id}_${productId}`,
+                                userId: user._id,
+                                z2bId: user.z2bId || 'N/A',
+                                fullName: user.fullName || user.email || 'Unknown',
+                                email: user.email || 'N/A',
+                                productId: productId,
+                                grantedAt: access.grantedAt || new Date(),
+                                expiresAt: access.expiresAt || null,
+                                grantedBy: access.grantedBy || 'admin'
+                            });
+                        }
+                    });
+                } catch (innerError) {
+                    console.error(`Error processing user ${user._id} marketplace access:`, innerError);
+                    // Continue processing other users
+                }
             }
         });
 
         res.json({
             success: true,
-            grants
+            grants,
+            count: grants.length
         });
     } catch (error) {
         console.error('Error fetching app access grants:', error);
         res.status(500).json({
             success: false,
             message: 'Error fetching app access grants',
-            error: error.message
+            error: error.message,
+            stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
         });
     }
 });
