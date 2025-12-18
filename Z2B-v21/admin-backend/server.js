@@ -24,14 +24,19 @@ const corsOptions = {
         // Allow requests with no origin (like mobile apps, Postman, curl)
         if (!origin) return callback(null, true);
 
-        // Return the actual origin to reflect it in the response header
-        // This allows credentials to work properly with specific origins
-        callback(null, origin);
+        // Check if origin is in allowedOrigins
+        if (allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            console.log('⚠️ CORS blocked origin:', origin);
+            callback(new Error('Not allowed by CORS'));
+        }
     },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
-    exposedHeaders: ['Content-Type', 'Authorization']
+    exposedHeaders: ['Content-Type', 'Authorization'],
+    optionsSuccessStatus: 200
 };
 app.use(cors(corsOptions));
 app.use(express.json({ limit: '50mb' }));
