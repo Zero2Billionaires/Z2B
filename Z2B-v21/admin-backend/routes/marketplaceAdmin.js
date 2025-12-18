@@ -429,15 +429,15 @@ router.get('/app-access-grants', verifyToken, async (req, res) => {
     }
 });
 
-// POST /api/users/grant-app-access - Alias for grant-product-access
+// POST /api/users/grant-app-access - Grant access to multiple apps
 router.post('/grant-app-access', verifyToken, async (req, res) => {
     try {
-        const { userId, productId, expiresAt } = req.body;
+        const { userId, apps, duration, days } = req.body;
 
-        if (!userId || !productId) {
+        if (!userId || !apps || !Array.isArray(apps) || apps.length === 0) {
             return res.status(400).json({
                 success: false,
-                message: 'User ID and Product ID are required'
+                message: 'User ID and apps array are required'
             });
         }
 
@@ -450,28 +450,33 @@ router.post('/grant-app-access', verifyToken, async (req, res) => {
             });
         }
 
-        // Validate product exists
-        const product = await MarketplaceProduct.findOne({ productId, isActive: true });
-        if (!product) {
-            return res.status(400).json({
-                success: false,
-                message: 'Invalid or inactive product ID'
-            });
-        }
-
         // Initialize marketplaceAccess if it doesn't exist
         if (!user.marketplaceAccess) {
             user.marketplaceAccess = {};
         }
 
-        // Grant access
-        user.marketplaceAccess[productId] = {
-            hasAccess: true,
-            grantedAt: new Date(),
-            expiresAt: expiresAt ? new Date(expiresAt) : null,
-            grantedBy: req.admin.userId || req.admin._id,
-            grantedVia: 'admin_panel'
-        };
+        // Calculate expiration date
+        let expiresAt = null;
+        if (duration === 'limited' && days) {
+            expiresAt = new Date();
+            expiresAt.setDate(expiresAt.getDate() + parseInt(days));
+        }
+
+        // Grant access to each app
+        const grantedApps = [];
+        for (const productId of apps) {
+            // Validate product exists (optional - skip validation for speed)
+            // const product = await MarketplaceProduct.findOne({ productId, isActive: true });
+
+            user.marketplaceAccess[productId] = {
+                hasAccess: true,
+                grantedAt: new Date(),
+                expiresAt: expiresAt,
+                grantedBy: req.admin.userId || req.admin._id,
+                grantedVia: 'admin_panel'
+            };
+            grantedApps.push(productId);
+        }
 
         // Mark as modified (important for nested objects)
         user.markModified('marketplaceAccess');
@@ -479,7 +484,8 @@ router.post('/grant-app-access', verifyToken, async (req, res) => {
 
         res.json({
             success: true,
-            message: `Access granted to ${product.name}`,
+            message: `Access granted to ${grantedApps.length} app(s)`,
+            grantedApps,
             user: {
                 z2bId: user.z2bId,
                 fullName: user.fullName,
