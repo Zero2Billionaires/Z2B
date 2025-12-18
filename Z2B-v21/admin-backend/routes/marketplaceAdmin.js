@@ -387,19 +387,23 @@ router.post('/reject-marketplace', verifyToken, async (req, res) => {
 // GET /api/users/app-access-grants - Get all app access grants (all products)
 router.get('/app-access-grants', verifyToken, async (req, res) => {
     try {
-        // Get all users with any marketplace access
+        // Get all users with any marketplace access (don't use .lean() because of Map type)
         const users = await User.find({})
             .select('z2bId fullName email tier marketplaceAccess createdAt')
-            .sort({ createdAt: -1 })
-            .lean(); // Convert to plain JavaScript objects
+            .sort({ createdAt: -1 });
 
         // Transform into grants array
         const grants = [];
         users.forEach(user => {
-            if (user.marketplaceAccess && typeof user.marketplaceAccess === 'object') {
+            if (user.marketplaceAccess) {
                 try {
-                    Object.keys(user.marketplaceAccess).forEach(productId => {
-                        const access = user.marketplaceAccess[productId];
+                    // Convert Map to plain object if needed
+                    const accessMap = user.marketplaceAccess instanceof Map
+                        ? user.marketplaceAccess
+                        : new Map(Object.entries(user.marketplaceAccess || {}));
+
+                    // Iterate through the Map
+                    accessMap.forEach((access, productId) => {
                         if (access && access.hasAccess) {
                             grants.push({
                                 _id: `${user._id}_${productId}`,
@@ -408,14 +412,14 @@ router.get('/app-access-grants', verifyToken, async (req, res) => {
                                 fullName: user.fullName || user.email || 'Unknown',
                                 email: user.email || 'N/A',
                                 productId: productId,
-                                grantedAt: access.grantedAt || new Date(),
-                                expiresAt: access.expiresAt || null,
+                                grantedAt: access.grantedAt || access.grantedDate || new Date(),
+                                expiresAt: access.expiresAt || access.expiryDate || null,
                                 grantedBy: access.grantedBy || 'admin'
                             });
                         }
                     });
                 } catch (innerError) {
-                    console.error(`Error processing user ${user._id} marketplace access:`, innerError);
+                    console.error(`Error processing user ${user._id} marketplace access:`, innerError.message);
                     // Continue processing other users
                 }
             }
