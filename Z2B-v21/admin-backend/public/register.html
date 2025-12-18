@@ -195,7 +195,7 @@
                         <select class="form-select" id="tier" name="tier" required>
                             <option value="">Select a tier...</option>
                             <option value="FAM">FAM - Free Access Member (R0)</option>
-                            <option value="BRONZE">BRONZE - R960/month (or R480 Beta Price)</option>
+                            <option value="BRONZE">BRONZE - R480 Beta Price 🎁 + Bless a Pastor Bonus (R2,700 Gift)</option>
                             <option value="COPPER">COPPER - R1,980/month (or R990 Beta Price)</option>
                             <option value="SILVER">SILVER - R2,980/month (or R1,490 Beta Price)</option>
                             <option value="GOLD">GOLD - R4,980/month (or R2,490 Beta Price)</option>
@@ -395,17 +395,17 @@
                     paymentMethod: document.querySelector('input[name="paymentMethod"]:checked')?.value
                 };
 
-                // Validate payment method
-                if (!formData.paymentMethod) {
-                    alert('Please select a payment method');
+                // Validate tier selection first
+                if (!formData.tier) {
+                    alert('Please select a membership tier');
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = originalText;
                     return;
                 }
 
-                // Validate tier selection
-                if (!formData.tier || formData.tier === 'FAM') {
-                    alert('Please select a paid membership tier');
+                // For paid tiers, validate payment method
+                if (formData.tier !== 'FAM' && !formData.paymentMethod) {
+                    alert('Please select a payment method');
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = originalText;
                     return;
@@ -425,8 +425,13 @@
                     // Show success message
                     alert(`🎉 Registration Successful!\n\nWelcome ${formData.firstName}!\n\nYour Member ID: ${result.data.referralCode}\n\nA welcome email with your login credentials and referral link has been sent to ${formData.email}`);
 
-                    // Handle payment redirection
-                    if (formData.paymentMethod === 'cash') {
+                    // Handle FAM tier (Free Access Member - no payment required)
+                    if (formData.tier === 'FAM') {
+                        alert('🎉 Welcome to your FREE 3-Month Coach Manlaw Trial!\n\nYou get 5 AI credits per month to experience Coach Manlaw.\n\nLogin to your dashboard to start your transformation journey!');
+                        window.location.href = 'dashboard.html';
+                    }
+                    // Handle payment redirection for paid tiers
+                    else if (formData.paymentMethod === 'cash') {
                         alert('You now have FREE ACCESS to your selected tier!\n\nPlease make your deposit and send proof of payment to WhatsApp: 077 490 1639');
                         window.location.href = 'dashboard.html';
                     } else if (formData.paymentMethod === 'online') {
