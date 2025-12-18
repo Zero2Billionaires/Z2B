@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- CACHE BUSTER: REFRESHED VERSION 2025-12-18 13:45 - FIXED API PATH -->
+<!-- CACHE BUSTER: VERSION 2025-12-18 16:46 - FIXED: payment-api folder (api blocked by server) -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -2735,7 +2735,7 @@
 
                         try {
                             // Call Yoco payment API
-                            const response = await fetch('/api/create-app-checkout.php', {
+                            const response = await fetch('/payment-api/create-app-checkout.php', {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json'
