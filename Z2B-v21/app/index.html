@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- CACHE BUSTER: VERSION 2025-12-18 16:46 - FIXED: payment-api folder (api blocked by server) -->
+<!-- CACHE BUSTER: VERSION 2025-12-18 17:10 - Added Direct Deposit option to upsell modal -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -2695,11 +2695,14 @@
                         </p>
                     </div>
 
-                    <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-                        <button id="buyOnlyBtn" style="flex: 1; background: #9ca3af; color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: all 0.3s; font-size: 0.9rem;">
-                            <i class="fas fa-shopping-cart"></i> Buy Only
+                    <div style="display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap;">
+                        <button id="buyOnlyBtn" style="flex: 1; min-width: 140px; background: #9ca3af; color: white; border: none; padding: 12px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: all 0.3s; font-size: 0.85rem;">
+                            <i class="fas fa-credit-card"></i> Card/Yoco
                         </button>
-                        <button onclick="window.location.href='register.html'" style="flex: 1; background: linear-gradient(135deg, #FFD700, #FF6B35); color: #0A2647; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: all 0.3s; box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3); font-size: 0.9rem;">
+                        <button id="directDepositBtn" style="flex: 1; min-width: 140px; background: #22c55e; color: white; border: none; padding: 12px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: all 0.3s; font-size: 0.85rem;">
+                            <i class="fas fa-university"></i> Direct Deposit
+                        </button>
+                        <button onclick="window.location.href='register.html'" style="flex: 1; min-width: 140px; background: linear-gradient(135deg, #FFD700, #FF6B35); color: #0A2647; border: none; padding: 12px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: all 0.3s; box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3); font-size: 0.85rem;">
                             <i class="fas fa-rocket"></i> Join Z2B
                         </button>
                     </div>
@@ -2763,7 +2766,98 @@
                         }
                     });
                 }
+
+                // Add click handler for "Direct Deposit" button
+                const directDepositBtn = document.getElementById('directDepositBtn');
+                if (directDepositBtn) {
+                    directDepositBtn.addEventListener('click', function() {
+                        // Show bank details modal
+                        showBankDetailsModal(appName, appPrice);
+                    });
+                }
             }, 100);
+        }
+
+        // Function to show bank details for direct deposit
+        function showBankDetailsModal(appName, appPrice) {
+            const bankModal = `
+                <div style="background: white; border-radius: 15px; padding: 30px; max-width: 600px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <div style="width: 70px; height: 70px; background: linear-gradient(135deg, #22c55e, #16a34a); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px auto;">
+                            <i class="fas fa-university" style="font-size: 2rem; color: white;"></i>
+                        </div>
+                        <h2 style="color: #0A2647; font-size: 1.8rem; margin-bottom: 10px;">Direct Bank Deposit</h2>
+                        <p style="color: #6b7280; font-size: 1rem;">Pay via bank transfer for ${appName}</p>
+                    </div>
+
+                    <div style="background: linear-gradient(135deg, #fef3c7, #fde68a); padding: 20px; border-radius: 12px; margin-bottom: 20px; border-left: 4px solid #f59e0b;">
+                        <h3 style="color: #92400e; margin-bottom: 10px; font-size: 1.2rem;">Amount to Pay:</h3>
+                        <div style="text-align: center;">
+                            <span style="color: #FF6B35; font-size: 2.5rem; font-weight: bold;">R${appPrice}</span>
+                        </div>
+                        <p style="color: #92400e; margin: 10px 0 0 0; font-size: 0.9rem; text-align: center;">for ${appName}</p>
+                    </div>
+
+                    <div style="background: #f0fdf4; padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 2px solid #22c55e;">
+                        <h3 style="color: #15803d; margin-bottom: 15px; font-size: 1.2rem;"><i class="fas fa-building"></i> Bank Details:</h3>
+
+                        <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 10px;">
+                            <p style="color: #6b7280; font-size: 0.85rem; margin: 0 0 5px 0;">Account Name</p>
+                            <p style="color: #0A2647; font-size: 1.1rem; font-weight: bold; margin: 0;">Zero2billionaires Amavulandlela</p>
+                        </div>
+
+                        <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 10px;">
+                            <p style="color: #6b7280; font-size: 0.85rem; margin: 0 0 5px 0;">Account Number</p>
+                            <p style="color: #0A2647; font-size: 1.3rem; font-weight: bold; margin: 0; letter-spacing: 2px;">1318257727</p>
+                        </div>
+
+                        <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 10px;">
+                            <p style="color: #6b7280; font-size: 0.85rem; margin: 0 0 5px 0;">Bank</p>
+                            <p style="color: #0A2647; font-size: 1.1rem; font-weight: bold; margin: 0;">FNB</p>
+                        </div>
+
+                        <div style="background: white; padding: 15px; border-radius: 8px;">
+                            <p style="color: #6b7280; font-size: 0.85rem; margin: 0 0 5px 0;">Payment Reference</p>
+                            <p style="color: #FF6B35; font-size: 1.1rem; font-weight: bold; margin: 0;">Your WhatsApp Number</p>
+                        </div>
+                    </div>
+
+                    <div style="background: #fef3c7; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #f59e0b;">
+                        <p style="color: #92400e; margin: 0; font-size: 0.9rem;">
+                            <i class="fas fa-exclamation-triangle"></i> <strong>Important:</strong> Please use your <strong>WhatsApp number</strong> as the payment reference so we can identify your payment and activate your app access immediately.
+                        </p>
+                    </div>
+
+                    <div style="background: #e0f2fe; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                        <h4 style="color: #0369a1; margin: 0 0 10px 0; font-size: 1rem;"><i class="fas fa-info-circle"></i> After Payment:</h4>
+                        <ol style="color: #0c4a6e; margin: 0; padding-left: 20px; font-size: 0.9rem;">
+                            <li>Keep your payment proof/receipt</li>
+                            <li>We'll verify your payment within 24 hours</li>
+                            <li>You'll receive WhatsApp confirmation</li>
+                            <li>Access to ${appName} will be activated</li>
+                        </ol>
+                    </div>
+
+                    <button onclick="this.closest('.bank-modal-overlay').remove()" style="width: 100%; background: linear-gradient(135deg, #22c55e, #16a34a); color: white; border: none; padding: 15px; border-radius: 10px; font-weight: bold; font-size: 1rem; cursor: pointer;">
+                        <i class="fas fa-check"></i> Got It! I'll Make the Payment
+                    </button>
+                </div>
+            `;
+
+            // Create modal overlay for bank details
+            const overlay = document.createElement('div');
+            overlay.className = 'bank-modal-overlay';
+            overlay.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; z-index: 10001; padding: 20px; overflow-y: auto;';
+            overlay.innerHTML = bankModal;
+
+            // Close on click outside
+            overlay.addEventListener('click', function(e) {
+                if (e.target === overlay) {
+                    document.body.removeChild(overlay);
+                }
+            });
+
+            document.body.appendChild(overlay);
         }
     </script>
     <!-- Footer -->
