@@ -1,4 +1,4 @@
-# Force rebuild - December 12, 2025
+# Force complete rebuild - December 18, 2025 16:50 - No PM2
 FROM node:18-alpine
 
 WORKDIR /app
