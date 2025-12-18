@@ -73,9 +73,10 @@ const coachRoutes = require('./routes/coach');
 const referralsRoutes = require('./routes/referrals');
 const communicationsRoutes = require('./routes/communications');
 const questionnaireRoutes = require('./routes/questionnaire');
-const mavulaRoutes = require('./routes/mavula');
-const mavulaAIRoutes = require('./routes/mavulaAI');
-const mavulaWebhooksRoutes = require('./routes/mavulaWebhooks');
+// TEMPORARILY DISABLED - Mavula routes causing Railway crash (pdf-parse/multer upload dir issue)
+// const mavulaRoutes = require('./routes/mavula');
+// const mavulaAIRoutes = require('./routes/mavulaAI');
+// const mavulaWebhooksRoutes = require('./routes/mavulaWebhooks');
 
 const marketplaceAdminRoutes = require('./routes/marketplaceAdmin');
 const productRoutes = require('./routes/products');
@@ -90,9 +91,10 @@ app.use('/api/coach', coachRoutes);
 app.use('/api/referrals', referralsRoutes);
 app.use('/api/communications', communicationsRoutes);
 app.use('/api/questionnaire', questionnaireRoutes);
-app.use('/api/mavula', mavulaRoutes);
-app.use('/api/mavula/webhooks', mavulaWebhooksRoutes);
-app.use('/api/mavula/ai', mavulaAIRoutes);
+// TEMPORARILY DISABLED - Mavula routes causing Railway crash
+// app.use('/api/mavula', mavulaRoutes);
+// app.use('/api/mavula/webhooks', mavulaWebhooksRoutes);
+// app.use('/api/mavula/ai', mavulaAIRoutes);
 app.use('/api/users', marketplaceAdminRoutes);
 app.use('/api/payments', marketplaceAdminRoutes);
 app.use('/api/products', productRoutes);
@@ -103,7 +105,7 @@ app.get('/api/health', (req, res) => {
         status: 'OK',
         message: 'Z2B Admin Backend is running',
         timestamp: new Date().toISOString(),
-        version: '1.0.8-SCHEDULER-DISABLED',  // Force Railway redeploy - password reset active
+        version: '1.0.9-MAVULA-DISABLED',  // Force Railway redeploy - Mavula routes disabled to fix crash
         endpoints: {
             auth: '/api/auth/forgot-password',
             reset: '/api/auth/reset-password',
