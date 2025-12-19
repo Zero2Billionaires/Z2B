@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Z2B - Grant App Access</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            padding: 2rem;
+            color: #fff;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2.5rem;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+        h1 {
+            text-align: center;
+            color: #FFD700;
+            margin-bottom: 0.5rem;
+            font-size: 2rem;
+        }
+        .subtitle {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        label {
+            display: block;
+            color: #FFD700;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        input[type="text"], input[type="email"], input[type="tel"], select {
+            width: 100%;
+            padding: 0.9rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #FFD700;
+            background: rgba(0, 0, 0, 0.5);
+        }
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .app-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border: 2px solid rgba(255, 215, 0, 0.2);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .app-checkbox:hover {
+            border-color: #FFD700;
+            background: rgba(255, 215, 0, 0.1);
+        }
+        .app-checkbox input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        .app-checkbox label {
+            margin: 0;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .btn {
+            width: 100%;
+            padding: 1.2rem;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            border: none;
+            border-radius: 12px;
+            color: #000;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .alert {
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .alert.show { display: block; }
+        .alert-success {
+            background: rgba(0, 255, 136, 0.2);
+            border: 1px solid #00ff88;
+            color: #00ff88;
+        }
+        .alert-error {
+            background: rgba(255, 0, 110, 0.2);
+            border: 1px solid #ff006e;
+            color: #ff006e;
+        }
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 215, 0, 0.2);
+        }
+        .quick-btn {
+            padding: 0.8rem;
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 8px;
+            color: #FFD700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .quick-btn:hover {
+            background: rgba(255, 215, 0, 0.2);
+            border-color: #FFD700;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Grant App Access</h1>
+        <p class="subtitle">Simple tool to grant buyers access to apps</p>
+
+        <div id="alertBox" class="alert"></div>
+
+        <form id="grantAccessForm">
+            <div class="form-group">
+                <label for="userIdentifier">User Email or Phone Number</label>
+                <input type="text" id="userIdentifier" placeholder="user@example.com or +27123456789" required>
+                <small style="color: rgba(255,255,255,0.5); font-size: 0.85rem;">Enter the buyer's email or phone number</small>
+            </div>
+
+            <div class="form-group">
+                <label>Select Apps to Grant Access:</label>
+                <div class="apps-grid">
+                    <div class="app-checkbox">
+                        <input type="checkbox" id="app-mydigitaltwin" value="mydigitaltwin">
+                        <label for="app-mydigitaltwin">🎬 MyDigitalTwin</label>
+                    </div>
+                    <div class="app-checkbox">
+                        <input type="checkbox" id="app-coachmanlaw" value="coachmanlaw">
+                        <label for="app-coachmanlaw">🧠 Coach ManLaw</label>
+                    </div>
+                    <div class="app-checkbox">
+                        <input type="checkbox" id="app-glowie" value="glowie">
+                        <label for="app-glowie">✨ Glowie</label>
+                    </div>
+                    <div class="app-checkbox">
+                        <input type="checkbox" id="app-vidzie" value="vidzie">
+                        <label for="app-vidzie">🎥 Vidzie</label>
+                    </div>
+                    <div class="app-checkbox">
+                        <input type="checkbox" id="app-captionpro" value="captionpro">
+                        <label for="app-captionpro">📝 CaptionPro</label>
+                    </div>
+                    <div class="app-checkbox">
+                        <input type="checkbox" id="app-zyro" value="zyro">
+                        <label for="app-zyro">🎨 Zyro</label>
+                    </div>
+                    <div class="app-checkbox">
+                        <input type="checkbox" id="app-zyra" value="zyra">
+                        <label for="app-zyra">🎭 Zyra</label>
+                    </div>
+                    <div class="app-checkbox">
+                        <input type="checkbox" id="app-benown" value="benown">
+                        <label for="app-benown">💼 Benown</label>
+                    </div>
+                    <div class="app-checkbox">
+                        <input type="checkbox" id="app-zynect" value="zynect">
+                        <label for="app-zynect">🔗 Zynect</label>
+                    </div>
+                    <div class="app-checkbox">
+                        <input type="checkbox" id="app-zynth" value="zynth">
+                        <label for="app-zynth">🎤 Zynth</label>
+                    </div>
+                    <div class="app-checkbox">
+                        <input type="checkbox" id="app-mavula" value="mavula">
+                        <label for="app-mavula">🤖 MAVULA</label>
+                    </div>
+                    <div class="app-checkbox">
+                        <input type="checkbox" id="app-shepherdstaff" value="shepherdstaff">
+                        <label for="app-shepherdstaff">🐑 Shepherd Staff</label>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn">✅ Grant Access Now</button>
+        </form>
+
+        <div class="quick-actions">
+            <button class="quick-btn" onclick="selectAllApps()">✓ Select All Apps</button>
+            <button class="quick-btn" onclick="clearSelection()">✗ Clear Selection</button>
+            <button class="quick-btn" onclick="selectPopularApps()">⭐ Popular Apps Only</button>
+            <button class="quick-btn" onclick="viewGrantedAccess()">👁 View Granted Access</button>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = window.location.hostname === 'localhost'
+            ? 'http://localhost:5000'
+            : 'https://z2b-backend.up.railway.app';
+
+        // Form submission
+        document.getElementById('grantAccessForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const userIdentifier = document.getElementById('userIdentifier').value.trim();
+            const selectedApps = [];
+
+            // Get all checked apps
+            document.querySelectorAll('.app-checkbox input[type="checkbox"]:checked').forEach(checkbox => {
+                selectedApps.push(checkbox.value);
+            });
+
+            if (selectedApps.length === 0) {
+                showAlert('Please select at least one app to grant access', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/api/grant-app-access`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        userIdentifier: userIdentifier,
+                        apps: selectedApps
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showAlert(`✅ Success! Granted access to ${selectedApps.length} app(s) for ${userIdentifier}`, 'success');
+                    document.getElementById('grantAccessForm').reset();
+                } else {
+                    showAlert(`❌ Error: ${data.error || 'Failed to grant access'}`, 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert('❌ Connection error. Make sure the backend is running.', 'error');
+            }
+        });
+
+        // Show alert
+        function showAlert(message, type) {
+            const alertBox = document.getElementById('alertBox');
+            alertBox.textContent = message;
+            alertBox.className = `alert alert-${type} show`;
+
+            setTimeout(() => {
+                alertBox.classList.remove('show');
+            }, 5000);
+        }
+
+        // Select all apps
+        function selectAllApps() {
+            document.querySelectorAll('.app-checkbox input[type="checkbox"]').forEach(checkbox => {
+                checkbox.checked = true;
+            });
+        }
+
+        // Clear selection
+        function clearSelection() {
+            document.querySelectorAll('.app-checkbox input[type="checkbox"]').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+        }
+
+        // Select popular apps
+        function selectPopularApps() {
+            clearSelection();
+            const popularApps = ['mydigitaltwin', 'coachmanlaw', 'glowie', 'mavula'];
+            popularApps.forEach(app => {
+                const checkbox = document.getElementById(`app-${app}`);
+                if (checkbox) checkbox.checked = true;
+            });
+        }
+
+        // View granted access
+        async function viewGrantedAccess() {
+            const userIdentifier = document.getElementById('userIdentifier').value.trim();
+            if (!userIdentifier) {
+                showAlert('Enter user email/phone first', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/api/check-app-access?user=${encodeURIComponent(userIdentifier)}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    const apps = data.grantedApps || [];
+                    if (apps.length > 0) {
+                        showAlert(`User has access to: ${apps.join(', ')}`, 'success');
+                    } else {
+                        showAlert('User has no app access yet', 'error');
+                    }
+                } else {
+                    showAlert('User not found', 'error');
+                }
+            } catch (error) {
+                showAlert('Error checking access', 'error');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -108,6 +108,40 @@ const userSchema = new mongoose.Schema({
         default: {}
     },
 
+    // Tier-Based App Access System (NEW)
+    introApp: {
+        type: String,
+        default: null
+        // App that brought user to Z2B (e.g., 'mydigitaltwin', 'mavula')
+    },
+    selectedApps: {
+        type: [String],
+        default: []
+        // User-selected apps beyond mandatory ones
+    },
+    appSelectionDate: {
+        type: Date,
+        default: null
+    },
+    appSelectionCompleted: {
+        type: Boolean,
+        default: false
+    },
+    appAccess: {
+        type: Map,
+        of: {
+            unlocked: { type: Boolean, default: false },
+            unlockedAt: { type: Date },
+            source: {
+                type: String,
+                enum: ['TIER_DEFAULT', 'INTRO_APP', 'USER_SELECTED', 'ADMIN_GRANT', 'PURCHASE'],
+                default: 'TIER_DEFAULT'
+            },
+            isPermanent: { type: Boolean, default: true }
+        },
+        default: {}
+    },
+
     // Earnings
     totalEarnings: { type: Number, default: 0 },
     withdrawableBalance: { type: Number, default: 0 },

@@ -3,6 +3,7 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const TierConfig = require('../models/TierConfig');
 const { sendWelcomeEmail } = require('../utils/emailService');
 const { sendRegistrationConfirmation, sendPasswordResetNotification, sendPaymentConfirmation, sendReferralAlert } = require('../utils/whatsappService');
 
@@ -316,10 +317,59 @@ router.post('/register', async (req, res) => {
         userData.lastCreditRefresh = now;
         userData.famWeeksRemaining = 4;  // 30 days = ~4 weeks
 
-        // All tiers get Coach Manlaw access during trial
+        // All tiers get Coach Manlaw access during trial (legacy)
         userData.freeAppAccess = {
             coachManlaw: true
         };
+
+        // NEW: Tier-based app access system
+        if (selectedTier !== 'FAM') {
+            // Initialize appAccess Map with Coach Manlaw (always unlocked)
+            userData.appAccess = new Map();
+            userData.appAccess.set('coach-manlaw', {
+                unlocked: true,
+                unlockedAt: now,
+                source: 'TIER_DEFAULT',
+                isPermanent: true
+            });
+
+            // If user came from standalone app purchase, set introApp and unlock it
+            if (req.body.introApp) {
+                userData.introApp = req.body.introApp;
+                userData.appAccess.set(req.body.introApp, {
+                    unlocked: true,
+                    unlockedAt: now,
+                    source: 'INTRO_APP',
+                    isPermanent: true
+                });
+            }
+
+            // Get tier config to check if PLATINUM (gets all apps)
+            const tierConfig = await TierConfig.findOne({ tier: selectedTier });
+
+            if (tierConfig && tierConfig.getsAllApps && selectedTier === 'PLATINUM') {
+                // Platinum: unlock all 12 apps automatically
+                const ALL_APPS = [
+                    'coach-manlaw', 'mydigitaltwin', 'glowie', 'vidzie',
+                    'captionpro', 'zyro', 'zyra', 'benown', 'zynect',
+                    'zynth', 'mavula', 'shepherdstaff'
+                ];
+
+                for (const appId of ALL_APPS) {
+                    userData.appAccess.set(appId, {
+                        unlocked: true,
+                        unlockedAt: now,
+                        source: 'TIER_DEFAULT',
+                        isPermanent: true
+                    });
+                }
+                userData.appSelectionCompleted = true;
+                userData.appSelectionDate = now;
+            } else {
+                // Other tiers: need to complete app selection
+                userData.appSelectionCompleted = false;
+            }
+        }
 
         // Create new user
         const user = new User(userData);

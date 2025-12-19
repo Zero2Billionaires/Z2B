@@ -405,6 +405,10 @@
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
 
             try {
+                // Get introApp from URL parameter (if user came from standalone app purchase)
+                const urlParams = new URLSearchParams(window.location.search);
+                const introApp = urlParams.get('introApp'); // e.g., ?introApp=mydigitaltwin
+
                 const formData = {
                     firstName: document.getElementById('firstName').value.trim(),
                     lastName: document.getElementById('lastName').value.trim(),
@@ -414,7 +418,8 @@
                     password: document.getElementById('password').value,
                     tier: document.getElementById('tier').value,
                     sponsorCode: document.getElementById('sponsorCode').value || null,
-                    paymentMethod: document.querySelector('input[name="paymentMethod"]:checked')?.value
+                    paymentMethod: document.querySelector('input[name="paymentMethod"]:checked')?.value,
+                    introApp: introApp || null // NEW: Track which app introduced the user
                 };
 
                 // Validate tier selection first

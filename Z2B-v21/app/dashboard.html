@@ -860,6 +860,135 @@
                 transform: translateY(-3px);
             }
         }
+
+        /* App Cards Styles */
+        .app-card {
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .app-card.locked {
+            opacity: 0.7;
+            border-color: rgba(0, 0, 0, 0.1);
+            cursor: not-allowed;
+        }
+
+        .app-card.unlocked {
+            border-color: var(--royal-gold);
+            cursor: pointer;
+        }
+
+        .app-card.unlocked:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(212, 175, 55, 0.3);
+            border-color: var(--royal-gold-dark);
+        }
+
+        .app-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .app-icon-wrapper {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            background: linear-gradient(135deg, var(--royal-gold-light), var(--royal-gold));
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .app-status-badge {
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .app-status-badge.locked {
+            background: rgba(255, 107, 53, 0.2);
+            color: var(--accent-orange);
+        }
+
+        .app-status-badge.unlocked {
+            background: rgba(40, 167, 69, 0.2);
+            color: #28a745;
+        }
+
+        .app-card-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--navy-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .app-card-description {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+            min-height: 60px;
+        }
+
+        .app-card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: auto;
+        }
+
+        .app-card-action {
+            padding: 0.7rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+        }
+
+        .app-card-action.locked-btn {
+            background: linear-gradient(135deg, #e9ecef, #dee2e6);
+            color: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .app-card-action.unlocked-btn {
+            background: linear-gradient(135deg, var(--royal-gold), var(--royal-gold-dark));
+            color: var(--navy-blue);
+        }
+
+        .app-card-action.unlocked-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+        }
+
+        .lock-overlay {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.9), rgba(255, 107, 53, 0.7));
+            color: white;
+            padding: 0.5rem 1rem;
+            border-bottom-left-radius: 16px;
+            font-size: 1.5rem;
+            box-shadow: -2px 2px 10px rgba(0, 0, 0, 0.2);
+        }
     </style>
 </head>
 
@@ -1079,6 +1208,22 @@
                 </div>
                 <div class="stat-value" id="currentDepth">Level 0</div>
                 <div class="stat-label">Current Depth</div>
+            </div>
+        </div>
+
+        <!-- My Apps Section -->
+        <div class="card-section" style="margin-bottom: 2rem;">
+            <h4 style="color: var(--navy-blue); font-weight: bold; font-size: 1.8rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fas fa-th-large"></i> My Apps
+                <span style="font-size: 0.9rem; font-weight: normal; color: var(--orange);">(12 AI-Powered Tools)</span>
+            </h4>
+
+            <div id="appsGrid" class="apps-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem;">
+                <!-- Apps will be loaded here by JavaScript -->
+                <div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--navy-blue);">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: var(--gold); margin-bottom: 1rem;"></i>
+                    <p style="font-size: 1.1rem;">Loading your apps...</p>
+                </div>
             </div>
         </div>
 
@@ -2893,6 +3038,207 @@
             © 2025 <span id="secretAdminTrigger" style="cursor: pointer; user-select: none;">Z2B Legacy Builders</span>. All Rights Reserved. Built with ❤️ for Future Billionaires.
         </p>
     </footer>
+
+    <!-- My Apps Loading Script -->
+    <script>
+        // All 12 Apps in Z2B Ecosystem
+        const Z2B_APPS = [
+            {
+                id: 'mydigitaltwin',
+                name: 'MyDigitalTwin',
+                icon: '🎬',
+                description: 'AI Video Cloning - Clone yourself and create AI videos with your face and voice',
+                url: 'mydigitaltwin.html'
+            },
+            {
+                id: 'coachmanlaw',
+                name: 'Coach ManLaw',
+                icon: '🧠',
+                description: '24/7 AI Billionaire Coach - Your personal success mentor powered by AI',
+                url: 'coach-manlaw.html'
+            },
+            {
+                id: 'glowie',
+                name: 'Glowie',
+                icon: '✨',
+                description: 'Instant App Builder - Create professional mobile and web apps without coding',
+                url: 'glowie.html'
+            },
+            {
+                id: 'vidzie',
+                name: 'Vidzie',
+                icon: '🎥',
+                description: 'Video Content Creator - Generate stunning videos with AI in minutes',
+                url: 'vidzie.html'
+            },
+            {
+                id: 'captionpro',
+                name: 'CaptionPro',
+                icon: '📝',
+                description: 'AI Caption Generator - Create viral captions and hashtags automatically',
+                url: 'captionpro.html'
+            },
+            {
+                id: 'zyro',
+                name: 'Zyro',
+                icon: '🎨',
+                description: 'AI Design Studio - Create professional graphics and designs instantly',
+                url: 'zyro.html'
+            },
+            {
+                id: 'zyra',
+                name: 'Zyra',
+                icon: '🎭',
+                description: 'AI Content Assistant - Write blogs, emails, and content that converts',
+                url: 'zyra.html'
+            },
+            {
+                id: 'benown',
+                name: 'Benown',
+                icon: '💼',
+                description: 'Business AI Tool - Automate business tasks and boost productivity',
+                url: 'benown.html'
+            },
+            {
+                id: 'zynect',
+                name: 'Zynect',
+                icon: '🔗',
+                description: 'Complete CRM - Manage contacts with SMS, WhatsApp & Email automation',
+                url: 'zynect.html'
+            },
+            {
+                id: 'zynth',
+                name: 'Zynth',
+                icon: '🎤',
+                description: 'AI Voice Cloning - Clone any voice and generate speech in minutes',
+                url: 'zynth.html'
+            },
+            {
+                id: 'mavula',
+                name: 'MAVULA',
+                icon: '🤖',
+                description: 'AI Prospecting Automation - Automate your sales outreach with AI',
+                url: 'mavula.html'
+            },
+            {
+                id: 'shepherd',
+                name: 'Shepherd Staff',
+                icon: '📖',
+                description: 'Church Management System - Complete church administration and member management',
+                url: 'shepherd-staff.html'
+            }
+        ];
+
+        // Load and display apps
+        async function loadMyApps() {
+            try {
+                const token = localStorage.getItem('z2b_token');
+                if (!token) {
+                    console.error('No auth token found');
+                    renderApps(new Set()); // Show all locked
+                    return;
+                }
+
+                // Fetch user's app access
+                const response = await fetch(`${API_BASE_URL}/api/users/profile`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch profile');
+                }
+
+                const data = await response.json();
+                const user = data.user;
+
+                // NEW: Check if user needs to complete app selection
+                if (!user.appSelectionCompleted && user.tier !== 'FAM') {
+                    console.log('⚠️ User needs to complete app selection. Redirecting...');
+                    window.location.href = 'app-selection.html';
+                    return;
+                }
+
+                // Get unlocked apps from new appAccess field
+                const grantedApps = new Set();
+
+                // NEW: Use appAccess Map (primary)
+                if (user.appAccess) {
+                    Object.keys(user.appAccess).forEach(appId => {
+                        const access = user.appAccess[appId];
+                        if (access && access.unlocked) {
+                            grantedApps.add(appId);
+                        }
+                    });
+                }
+
+                // LEGACY: Fallback to appAccessGrants for backward compatibility
+                if (grantedApps.size === 0 && user.appAccessGrants) {
+                    if (typeof user.appAccessGrants === 'object') {
+                        Object.keys(user.appAccessGrants).forEach(appId => {
+                            const access = user.appAccessGrants[appId];
+                            if (access && access.granted) {
+                                grantedApps.add(appId);
+                            }
+                        });
+                    }
+                }
+
+                console.log('✅ User has access to:', Array.from(grantedApps));
+
+                // Render apps
+                renderApps(grantedApps);
+
+            } catch (error) {
+                console.error('Error loading apps:', error);
+                renderApps(new Set()); // Show all locked
+            }
+        }
+
+        // Render apps grid
+        function renderApps(grantedApps) {
+            const appsGrid = document.getElementById('appsGrid');
+            if (!appsGrid) return;
+
+            appsGrid.innerHTML = Z2B_APPS.map(app => {
+                const hasAccess = grantedApps.has(app.id);
+                const statusClass = hasAccess ? 'unlocked' : 'locked';
+                const statusText = hasAccess ? '✅ Unlocked' : '🔒 Locked';
+                const buttonText = hasAccess ? 'Open App' : 'Contact Admin';
+                const buttonClass = hasAccess ? 'unlocked-btn' : 'locked-btn';
+                const clickHandler = hasAccess ? `onclick="event.stopPropagation(); window.location.href='${app.url}'"` : `onclick="event.stopPropagation(); alert('This app is locked.\\n\\nPlease contact admin to grant access or upgrade your membership to unlock this app.')"`;
+
+                return `
+                    <div class="app-card ${statusClass}" ${hasAccess ? `onclick="window.location.href='${app.url}'"` : ''} style="display: flex; flex-direction: column;">
+                        ${!hasAccess ? '<div class="lock-overlay">🔒</div>' : ''}
+                        <div class="app-card-header">
+                            <div class="app-icon-wrapper">
+                                ${app.icon}
+                            </div>
+                            <div class="app-status-badge ${statusClass}">
+                                ${statusText}
+                            </div>
+                        </div>
+                        <div class="app-card-title">${app.name}</div>
+                        <div class="app-card-description">${app.description}</div>
+                        <div class="app-card-footer">
+                            <button class="app-card-action ${buttonClass}" ${clickHandler}>
+                                ${buttonText}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Load apps when page loads
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadMyApps);
+        } else {
+            loadMyApps();
+        }
+    </script>
 
     <!-- Secret Admin Trigger Script -->
     <script>

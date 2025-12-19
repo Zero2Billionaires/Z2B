@@ -5,6 +5,40 @@ const bcrypt = require('bcryptjs');
 const { verifyToken } = require('../middleware/auth');
 const { sendWelcomeEmail } = require('../utils/emailService');
 
+// Get Current User Profile
+router.get('/profile', verifyToken, async (req, res) => {
+    try {
+        const user = await User.findById(req.userId).select('-password');
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found'
+            });
+        }
+
+        // Convert appAccess Map to object for JSON response
+        const userObject = user.toObject();
+        if (userObject.appAccess) {
+            userObject.appAccess = Object.fromEntries(userObject.appAccess);
+        }
+        if (userObject.marketplaceAccess) {
+            userObject.marketplaceAccess = Object.fromEntries(userObject.marketplaceAccess);
+        }
+
+        res.json({
+            success: true,
+            user: userObject
+        });
+    } catch (error) {
+        console.error('Error fetching profile:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error fetching profile'
+        });
+    }
+});
+
 // Get All Users (with pagination and filtering)
 router.get('/', verifyToken, async (req, res) => {
     try {

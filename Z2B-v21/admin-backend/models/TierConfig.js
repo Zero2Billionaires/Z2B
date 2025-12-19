@@ -78,43 +78,43 @@ tierConfigSchema.statics.getDefaultConfigs = function() {
             additionalAppsCount: 0,
             getsAllApps: false,
             monthlyPrice: 960,
-            description: 'Coach Manlaw + 1 App (the app that introduced you)'
+            description: 'Coach Manlaw + 1 App (the app that introduced you or your choice)'
         },
         {
             tier: 'COPPER',
-            totalAppsAllowed: 3,
-            mandatoryApps: ['coach-manlaw'], // + intro app
-            additionalAppsCount: 1,
-            getsAllApps: false,
-            monthlyPrice: 1980,
-            description: 'Coach Manlaw + 2 Apps (intro app + 1 of your choice)'
-        },
-        {
-            tier: 'SILVER',
             totalAppsAllowed: 4,
             mandatoryApps: ['coach-manlaw'], // + intro app
             additionalAppsCount: 2,
             getsAllApps: false,
-            monthlyPrice: 2980,
+            monthlyPrice: 1960,
             description: 'Coach Manlaw + 3 Apps (intro app + 2 of your choice)'
         },
         {
-            tier: 'GOLD',
+            tier: 'SILVER',
             totalAppsAllowed: 7,
             mandatoryApps: ['coach-manlaw'], // + intro app
             additionalAppsCount: 5,
             getsAllApps: false,
-            monthlyPrice: 4980,
+            monthlyPrice: 2960,
             description: 'Coach Manlaw + 6 Apps (intro app + 5 of your choice)'
         },
         {
+            tier: 'GOLD',
+            totalAppsAllowed: 11,
+            mandatoryApps: ['coach-manlaw'], // + intro app
+            additionalAppsCount: 9,
+            getsAllApps: false,
+            monthlyPrice: 5960,
+            description: 'Coach Manlaw + 10 Apps (intro app + 9 of your choice)'
+        },
+        {
             tier: 'PLATINUM',
-            totalAppsAllowed: 9,
+            totalAppsAllowed: 12,
             mandatoryApps: ['coach-manlaw'],
             additionalAppsCount: 0,
             getsAllApps: true,
-            monthlyPrice: 6980,
-            description: 'Coach Manlaw + 8 Apps'
+            monthlyPrice: 9960,
+            description: 'All 12 Apps - Complete Z2B Suite'
         }
     ];
 };
