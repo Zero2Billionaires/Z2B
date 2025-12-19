@@ -15,6 +15,8 @@ const app = express();
 const allowedOrigins = [
     'https://z2blegacybuilders.co.za',
     'https://www.z2blegacybuilders.co.za',
+    'http://z2blegacybuilders.co.za',
+    'http://www.z2blegacybuilders.co.za',
     'http://localhost:3000',
     'http://localhost:5000'
 ];

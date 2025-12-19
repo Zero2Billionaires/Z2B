@@ -284,8 +284,10 @@
     </div>
 
     <script>
-        // API Configuration
-        const API_BASE_URL = 'https://z2b-production-3cd3.up.railway.app';
+        // API Configuration - Auto-detect environment
+        const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? 'http://localhost:5000'
+            : 'https://z2b-production-3cd3.up.railway.app';
 
         // Toggle password visibility
         function togglePassword() {
