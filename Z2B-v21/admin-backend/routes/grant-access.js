@@ -64,6 +64,7 @@ router.post('/grant-app-access', async (req, res) => {
             user: {
                 email: user.email,
                 phoneNumber: user.phoneNumber,
+                tier: user.tier,
                 grantedApps: grantedApps
             }
         });
