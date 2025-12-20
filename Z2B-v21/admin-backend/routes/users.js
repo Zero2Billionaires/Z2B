@@ -17,9 +17,9 @@ router.get('/profile', verifyToken, async (req, res) => {
             });
         }
 
-        // FIX: Auto-populate appAccess for existing Platinum users
-        if (user.tier === 'PLATINUM' && (!user.appAccess || user.appAccess.size === 0)) {
-            console.log('🔧 Auto-populating apps for existing Platinum user:', user.email);
+        // FIX: Auto-populate appAccess for existing users (ALL TIERS)
+        if (!user.appAccess || user.appAccess.size === 0) {
+            console.log('🔧 Migrating/populating apps for existing user:', user.email, 'Tier:', user.tier);
 
             const ALL_APPS = [
                 'coach-manlaw', 'mydigitaltwin', 'glowie', 'vidzie',
@@ -29,21 +29,55 @@ router.get('/profile', verifyToken, async (req, res) => {
 
             user.appAccess = new Map();
             const now = new Date();
+            let migratedCount = 0;
 
-            for (const appId of ALL_APPS) {
-                user.appAccess.set(appId, {
-                    unlocked: true,
-                    unlockedAt: now,
-                    source: 'TIER_DEFAULT',
-                    isPermanent: true
-                });
+            // Step 1: Try to migrate from old freeAppAccess field
+            if (user.freeAppAccess && typeof user.freeAppAccess === 'object') {
+                for (const [appId, hasAccess] of Object.entries(user.freeAppAccess)) {
+                    if (hasAccess === true) {
+                        user.appAccess.set(appId, {
+                            unlocked: true,
+                            unlockedAt: now,
+                            source: 'MIGRATED',
+                            isPermanent: true
+                        });
+                        migratedCount++;
+                    }
+                }
+                console.log(`✅ Migrated ${migratedCount} apps from freeAppAccess`);
             }
 
+            // Step 2: If no migration happened, apply tier-based defaults
+            if (migratedCount === 0) {
+                const tierDefaults = {
+                    'BRONZE': ['coach-manlaw', 'mydigitaltwin'],
+                    'COPPER': ['coach-manlaw', 'mydigitaltwin', 'glowie', 'vidzie'],
+                    'SILVER': ['coach-manlaw', 'mydigitaltwin', 'glowie', 'vidzie', 'captionpro', 'zyro', 'zyra'],
+                    'GOLD': ['coach-manlaw', 'mydigitaltwin', 'glowie', 'vidzie', 'captionpro', 'zyro', 'zyra', 'benown', 'zynect', 'zynth', 'mavula'],
+                    'PLATINUM': ALL_APPS,
+                    'FAM': [] // FAM gets no apps by default
+                };
+
+                const defaultApps = tierDefaults[user.tier] || [];
+
+                for (const appId of defaultApps) {
+                    user.appAccess.set(appId, {
+                        unlocked: true,
+                        unlockedAt: now,
+                        source: 'TIER_DEFAULT',
+                        isPermanent: true
+                    });
+                }
+
+                console.log(`✅ Applied tier defaults: ${user.tier} gets ${defaultApps.length} apps`);
+            }
+
+            // Mark as completed to avoid app selection redirect
             user.appSelectionCompleted = true;
             user.appSelectionDate = now;
 
             await user.save();
-            console.log('✅ Platinum user apps auto-populated');
+            console.log('✅ User app access migrated/populated successfully');
         }
 
         // Convert appAccess Map to object for JSON response
