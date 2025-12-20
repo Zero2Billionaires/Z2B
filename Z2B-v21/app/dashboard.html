@@ -1957,24 +1957,7 @@
             }
 
             // Show tier-appropriate message
-            if (tier === 'BRONZE') {
-                // Show only Coach Manlaw access message
-                const welcomeMsg = document.createElement('div');
-                welcomeMsg.style.cssText = 'background: #fff3cd; border: 2px solid #ffc107; padding: 1rem; margin: 1rem; border-radius: 10px;';
-                welcomeMsg.innerHTML = `
-                    <h5 style="color: #856404; margin-bottom: 0.5rem;">
-                        <i class="fas fa-info-circle"></i> Bronze Tier Access
-                    </h5>
-                    <p style="color: #856404; margin: 0;">
-                        You currently have access to <strong>Coach Manlaw</strong> training only.<br>
-                        Upgrade your tier to unlock AI Fuel, Vidzie, Zynth, Glowie, and more!
-                    </p>
-                `;
-                const mainContent = document.querySelector('.main-content');
-                if (mainContent) {
-                    mainContent.insertBefore(welcomeMsg, mainContent.firstChild);
-                }
-            }
+            // REMOVED: Hardcoded Bronze tier message - now using dynamic appAccess
         }
 
         // Apply restrictions for FAM tier users (30-day free trial)
@@ -2067,9 +2050,8 @@
                 </div>
                 <div style="background: rgba(255,255,255,0.15); padding: 1rem; border-radius: 10px; backdrop-filter: blur(10px);">
                     <p style="color: white; margin: 0 0 1rem 0; font-size: 1.05rem; line-height: 1.6;">
-                        <strong>📚 Current Access:</strong> Coach Manlaw training only<br>
                         <strong>⏳ Grace Period Expires In:</strong> ${daysRemaining} day${daysRemaining > 1 ? 's' : ''}<br>
-                        <strong>💳 Action Required:</strong> Complete payment to unlock full features
+                        <strong>💳 Action Required:</strong> Complete payment to unlock full tier access
                     </p>
                     <div style="background: white; padding: 1rem; border-radius: 8px; margin-top: 1rem;">
                         <p style="color: #c92a2a; margin: 0; font-weight: 600;">
