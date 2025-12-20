@@ -117,7 +117,7 @@ app.get('/api/health', (req, res) => {
         status: 'OK',
         message: 'Z2B Admin Backend is running',
         timestamp: new Date().toISOString(),
-        version: '1.0.9-MAVULA-DISABLED',  // Force Railway redeploy - Mavula routes disabled to fix crash
+        version: '2.0.0-APP-ACCESS-SYSTEM',  // NEW: Tier-based app access + admin grant + CORS fixes
         endpoints: {
             auth: '/api/auth/forgot-password',
             reset: '/api/auth/reset-password',
