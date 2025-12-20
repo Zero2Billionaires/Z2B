@@ -3114,60 +3114,50 @@
         // Load and display apps
         async function loadMyApps() {
             try {
-                const token = localStorage.getItem('z2b_token');
-                if (!token) {
-                    console.error('No auth token found');
-                    renderApps(new Set()); // Show all locked
+                // Get user email from localStorage
+                const storedUser = localStorage.getItem('z2b_current_user');
+                if (!storedUser) {
+                    console.error('No user data found');
+                    renderApps(new Set());
                     return;
                 }
 
-                // Fetch user's app access
-                const response = await fetch(`${API_BASE_URL}/api/users/profile`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
+                const currentUser = JSON.parse(storedUser);
+                const userEmail = currentUser.email;
+
+                if (!userEmail) {
+                    console.error('No email found in user data');
+                    renderApps(new Set());
+                    return;
+                }
+
+                // WORKAROUND: Use working check-app-access endpoint instead of broken profile endpoint
+                const response = await fetch(`${API_BASE_URL}/api/check-app-access?user=${encodeURIComponent(userEmail)}`);
 
                 if (!response.ok) {
-                    throw new Error('Failed to fetch profile');
+                    throw new Error('Failed to fetch app access');
                 }
 
                 const data = await response.json();
-                const user = data.user;
 
-                // NEW: Check if user needs to complete app selection
-                if (!user.appSelectionCompleted && user.tier !== 'FAM') {
-                    console.log('⚠️ User needs to complete app selection. Redirecting...');
-                    window.location.href = 'app-selection.html';
-                    return;
+                if (!data.success) {
+                    throw new Error(data.error || 'Failed to load apps');
                 }
 
-                // Get unlocked apps from new appAccess field
+                // Get unlocked apps from grantedApps array
                 const grantedApps = new Set();
 
-                // NEW: Use appAccess Map (primary)
-                if (user.appAccess) {
-                    Object.keys(user.appAccess).forEach(appId => {
-                        const access = user.appAccess[appId];
-                        if (access && access.unlocked) {
+                if (data.grantedApps && Array.isArray(data.grantedApps)) {
+                    data.grantedApps.forEach(app => {
+                        const appId = typeof app === 'string' ? app : app.appId;
+                        if (appId) {
                             grantedApps.add(appId);
                         }
                     });
                 }
 
-                // LEGACY: Fallback to appAccessGrants for backward compatibility
-                if (grantedApps.size === 0 && user.appAccessGrants) {
-                    if (typeof user.appAccessGrants === 'object') {
-                        Object.keys(user.appAccessGrants).forEach(appId => {
-                            const access = user.appAccessGrants[appId];
-                            if (access && access.granted) {
-                                grantedApps.add(appId);
-                            }
-                        });
-                    }
-                }
-
                 console.log('✅ User has access to:', Array.from(grantedApps));
+                console.log('✅ Total apps unlocked:', data.totalUnlocked);
 
                 // Render apps
                 renderApps(grantedApps);
