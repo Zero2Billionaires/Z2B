@@ -397,7 +397,7 @@
             // Check authentication
             if (!authToken) {
                 alert('Please log in to purchase AI Fuel');
-                window.location.href = '/quick-login.html?return=' + encodeURIComponent('Z2B-v21/app/ai-refuel.html');
+                window.location.href = '/quick-login.html?return=' + encodeURIComponent('app/ai-refuel.html');
                 return;
             }
 
@@ -456,7 +456,7 @@
         if (!authToken) {
             alert('Please log in to access AI Fuel top-up');
             setTimeout(() => {
-                window.location.href = '/quick-login.html?return=' + encodeURIComponent('Z2B-v21/app/ai-refuel.html');
+                window.location.href = '/quick-login.html?return=' + encodeURIComponent('app/ai-refuel.html');
             }, 2000);
         }
     </script>
