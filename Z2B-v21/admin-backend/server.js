@@ -26,11 +26,14 @@ const corsOptions = {
         // Allow requests with no origin (like mobile apps, Postman, curl)
         if (!origin) return callback(null, true);
 
-        // Check if origin is in allowedOrigins
-        if (allowedOrigins.includes(origin)) {
+        // Clean origin (remove trailing dots/slashes)
+        const cleanOrigin = origin.replace(/\.$/, '').replace(/\/$/, '');
+
+        // Check if origin or cleanOrigin is in allowedOrigins
+        if (allowedOrigins.includes(origin) || allowedOrigins.includes(cleanOrigin)) {
             callback(null, true);
         } else {
-            console.log('⚠️ CORS blocked origin:', origin);
+            console.log('⚠️ CORS blocked origin:', origin, '(cleaned:', cleanOrigin + ')');
             callback(new Error('Not allowed by CORS'));
         }
     },
