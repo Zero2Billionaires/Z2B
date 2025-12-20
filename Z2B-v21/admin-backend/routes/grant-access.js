@@ -48,6 +48,9 @@ router.post('/grant-app-access', async (req, res) => {
             grantedApps.push(appId);
         }
 
+        // CRITICAL: Mark Map as modified so Mongoose saves it
+        user.markModified('appAccess');
+
         // Mark app selection as completed (avoid redirect loop)
         user.appSelectionCompleted = true;
         if (!user.appSelectionDate) {
@@ -174,6 +177,8 @@ router.post('/revoke-app-access', async (req, res) => {
                     revokedApps.push(appId);
                 }
             }
+            // CRITICAL: Mark Map as modified so Mongoose saves it
+            user.markModified('appAccess');
         }
 
         await user.save();
