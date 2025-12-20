@@ -29,24 +29,34 @@ router.post('/grant-app-access', async (req, res) => {
             });
         }
 
-        // Initialize appAccessGrants if it doesn't exist
-        if (!user.appAccessGrants) {
-            user.appAccessGrants = new Map();
+        // Initialize appAccess if it doesn't exist (NEW SYSTEM)
+        if (!user.appAccess) {
+            user.appAccess = new Map();
         }
 
-        // Grant access to each app
+        // Grant access to each app using NEW appAccess Map
         const grantedApps = [];
+        const now = new Date();
+
         for (const appId of apps) {
-            user.appAccessGrants.set(appId, {
-                granted: true,
-                grantedAt: new Date(),
-                grantedBy: 'manual-grant',
-                expiresAt: null // No expiration for manual grants
+            user.appAccess.set(appId, {
+                unlocked: true,
+                unlockedAt: now,
+                source: 'ADMIN_GRANT',
+                isPermanent: true
             });
             grantedApps.push(appId);
         }
 
+        // Mark app selection as completed (avoid redirect loop)
+        user.appSelectionCompleted = true;
+        if (!user.appSelectionDate) {
+            user.appSelectionDate = now;
+        }
+
         await user.save();
+
+        console.log(`✅ Admin granted ${grantedApps.length} apps to ${user.email}`);
 
         res.json({
             success: true,
@@ -93,12 +103,16 @@ router.get('/check-app-access', async (req, res) => {
             });
         }
 
-        // Get all granted apps
+        // Get all unlocked apps from NEW appAccess Map
         const grantedApps = [];
-        if (user.appAccessGrants) {
-            for (const [appId, access] of user.appAccessGrants.entries()) {
-                if (access.granted) {
-                    grantedApps.push(appId);
+        if (user.appAccess) {
+            for (const [appId, access] of user.appAccess.entries()) {
+                if (access && access.unlocked) {
+                    grantedApps.push({
+                        appId,
+                        source: access.source,
+                        unlockedAt: access.unlockedAt
+                    });
                 }
             }
         }
@@ -107,9 +121,12 @@ router.get('/check-app-access', async (req, res) => {
             success: true,
             user: {
                 email: user.email,
-                phoneNumber: user.phoneNumber
+                phoneNumber: user.phoneNumber,
+                tier: user.tier,
+                appSelectionCompleted: user.appSelectionCompleted
             },
-            grantedApps: grantedApps
+            grantedApps: grantedApps,
+            totalUnlocked: grantedApps.length
         });
 
     } catch (error) {
@@ -147,18 +164,20 @@ router.post('/revoke-app-access', async (req, res) => {
             });
         }
 
-        // Revoke access to each app
+        // Revoke access to each app from NEW appAccess Map
         const revokedApps = [];
-        if (user.appAccessGrants) {
+        if (user.appAccess) {
             for (const appId of apps) {
-                if (user.appAccessGrants.has(appId)) {
-                    user.appAccessGrants.delete(appId);
+                if (user.appAccess.has(appId)) {
+                    user.appAccess.delete(appId);
                     revokedApps.push(appId);
                 }
             }
         }
 
         await user.save();
+
+        console.log(`✅ Admin revoked ${revokedApps.length} apps from ${user.email}`);
 
         res.json({
             success: true,
