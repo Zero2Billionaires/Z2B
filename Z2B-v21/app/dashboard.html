@@ -3190,10 +3190,79 @@
                 // Render apps
                 renderApps(grantedApps);
 
+                // Update sidebar menu to respect app locks
+                updateSidebarMenu(grantedApps);
+
             } catch (error) {
                 console.error('Error loading apps:', error);
                 renderApps(new Set()); // Show all locked
+                updateSidebarMenu(new Set()); // Lock all menu items
             }
+        }
+
+        // Update sidebar menu based on app access
+        function updateSidebarMenu(grantedApps) {
+            // Map of app IDs to their page URLs
+            const appMenuMap = {
+                'coach-manlaw': 'coach-manlaw.html',
+                'glowie': 'glowie.html',
+                'vidzie': 'vidzie.html',
+                'zyro': 'zyro.html',
+                'zyra': 'zyra.html',
+                'benown': 'benown.html',
+                'zynth': 'zynth.html',
+                'zynect': 'zynect.html',
+                'mydigitaltwin': 'mydigitaltwin.html',
+                'mavula': 'mavula.html',
+                'captionpro': 'captionpro.html',
+                'shepherdstaff': 'shepherdstaff.html'
+            };
+
+            // Update each menu item
+            document.querySelectorAll('.nav-item').forEach(navItem => {
+                const onclickAttr = navItem.getAttribute('onclick');
+                if (!onclickAttr) return;
+
+                // Check which app this menu item links to
+                for (const [appId, pageUrl] of Object.entries(appMenuMap)) {
+                    if (onclickAttr.includes(pageUrl)) {
+                        const hasAccess = grantedApps.has(appId);
+
+                        if (!hasAccess) {
+                            // Lock the menu item
+                            navItem.style.opacity = '0.5';
+                            navItem.style.cursor = 'not-allowed';
+                            navItem.setAttribute('data-locked', 'true');
+
+                            // Replace onclick with lock message
+                            navItem.onclick = function(e) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                alert('🔒 This app is locked.\n\nUpgrade your membership or contact admin to unlock this app.');
+                                return false;
+                            };
+
+                            // Add lock icon
+                            const span = navItem.querySelector('span');
+                            if (span && !span.innerHTML.includes('🔒')) {
+                                span.innerHTML = '🔒 ' + span.innerHTML;
+                            }
+                        } else {
+                            // Unlock the menu item
+                            navItem.style.opacity = '1';
+                            navItem.style.cursor = 'pointer';
+                            navItem.removeAttribute('data-locked');
+
+                            // Remove lock icon if present
+                            const span = navItem.querySelector('span');
+                            if (span) {
+                                span.innerHTML = span.innerHTML.replace('🔒 ', '');
+                            }
+                        }
+                        break;
+                    }
+                }
+            });
         }
 
         // Render apps grid

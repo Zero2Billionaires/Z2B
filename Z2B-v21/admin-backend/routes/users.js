@@ -17,6 +17,35 @@ router.get('/profile', verifyToken, async (req, res) => {
             });
         }
 
+        // FIX: Auto-populate appAccess for existing Platinum users
+        if (user.tier === 'PLATINUM' && (!user.appAccess || user.appAccess.size === 0)) {
+            console.log('🔧 Auto-populating apps for existing Platinum user:', user.email);
+
+            const ALL_APPS = [
+                'coach-manlaw', 'mydigitaltwin', 'glowie', 'vidzie',
+                'captionpro', 'zyro', 'zyra', 'benown', 'zynect',
+                'zynth', 'mavula', 'shepherdstaff'
+            ];
+
+            user.appAccess = new Map();
+            const now = new Date();
+
+            for (const appId of ALL_APPS) {
+                user.appAccess.set(appId, {
+                    unlocked: true,
+                    unlockedAt: now,
+                    source: 'TIER_DEFAULT',
+                    isPermanent: true
+                });
+            }
+
+            user.appSelectionCompleted = true;
+            user.appSelectionDate = now;
+
+            await user.save();
+            console.log('✅ Platinum user apps auto-populated');
+        }
+
         // Convert appAccess Map to object for JSON response
         const userObject = user.toObject();
         if (userObject.appAccess) {
