@@ -233,6 +233,21 @@
             <button class="quick-btn" onclick="selectPopularApps()">⭐ Popular Apps Only</button>
             <button class="quick-btn" onclick="viewGrantedAccess()">👁 View Granted Access</button>
         </div>
+
+        <!-- Granted Apps Display -->
+        <div id="grantedAppsSection" style="display: none; margin-top: 2rem; padding: 1.5rem; background: rgba(76, 175, 80, 0.1); border: 2px solid #4CAF50; border-radius: 15px;">
+            <h3 style="color: #4CAF50; margin-bottom: 1rem;">✅ Currently Granted Apps</h3>
+            <div style="color: rgba(255,255,255,0.9); margin-bottom: 0.5rem;">
+                <strong>User:</strong> <span id="grantedUser"></span>
+            </div>
+            <div style="color: rgba(255,255,255,0.9); margin-bottom: 0.5rem;">
+                <strong>Tier:</strong> <span id="grantedUserTier"></span>
+            </div>
+            <div style="color: rgba(255,255,255,0.9); margin-bottom: 0.5rem;">
+                <strong>Total Apps Unlocked:</strong> <span id="grantedCount"></span>
+            </div>
+            <div id="grantedAppsList" style="margin-top: 1rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.5rem;"></div>
+        </div>
     </div>
 
     <script>
@@ -273,6 +288,13 @@
 
                 if (data.success) {
                     showAlert(`✅ Success! Granted access to ${selectedApps.length} app(s) for ${userIdentifier}`, 'success');
+
+                    // Show granted apps details
+                    if (data.user && data.user.grantedApps) {
+                        const appNames = data.user.grantedApps.join(', ');
+                        showGrantedApps(userIdentifier, data.user.grantedApps);
+                    }
+
                     document.getElementById('grantAccessForm').reset();
                 } else {
                     showAlert(`❌ Error: ${data.error || 'Failed to grant access'}`, 'error');
@@ -333,16 +355,57 @@
                 if (data.success) {
                     const apps = data.grantedApps || [];
                     if (apps.length > 0) {
-                        showAlert(`User has access to: ${apps.join(', ')}`, 'success');
+                        showGrantedApps(userIdentifier, data.user, apps);
+                        showAlert(`✅ User has ${apps.length} app(s) unlocked`, 'success');
                     } else {
-                        showAlert('User has no app access yet', 'error');
+                        document.getElementById('grantedAppsSection').style.display = 'none';
+                        showAlert('❌ User has no app access yet', 'error');
                     }
                 } else {
-                    showAlert('User not found', 'error');
+                    document.getElementById('grantedAppsSection').style.display = 'none';
+                    showAlert('❌ User not found', 'error');
                 }
             } catch (error) {
-                showAlert('Error checking access', 'error');
+                showAlert('❌ Error checking access', 'error');
             }
+        }
+
+        // Display granted apps in the new section
+        function showGrantedApps(userIdentifier, userData, apps) {
+            const section = document.getElementById('grantedAppsSection');
+            const appsList = document.getElementById('grantedAppsList');
+
+            // Show section
+            section.style.display = 'block';
+
+            // Update user info
+            document.getElementById('grantedUser').textContent = userIdentifier;
+            document.getElementById('grantedUserTier').textContent = userData?.tier || 'Unknown';
+            document.getElementById('grantedCount').textContent = apps.length;
+
+            // Map app IDs to names with icons
+            const appMap = {
+                'mydigitaltwin': '🎬 MyDigitalTwin',
+                'coach-manlaw': '🧠 Coach Manlaw',
+                'coachmanlaw': '🧠 Coach Manlaw',
+                'glowie': '✨ Glowie',
+                'vidzie': '🎥 Vidzie',
+                'captionpro': '📝 CaptionPro',
+                'zyro': '🎨 Zyro',
+                'zyra': '🎭 Zyra',
+                'benown': '💼 Benown',
+                'zynect': '🔗 Zynect',
+                'zynth': '🎤 Zynth',
+                'mavula': '🤖 Mavula',
+                'shepherdstaff': '🐑 Shepherd Staff'
+            };
+
+            // Display apps
+            appsList.innerHTML = apps.map(app => {
+                const appId = typeof app === 'string' ? app : app.appId;
+                const appName = appMap[appId] || appId;
+                return `<div style="padding: 0.5rem; background: rgba(76, 175, 80, 0.2); border-radius: 8px; text-align: center; font-size: 0.9rem;">${appName}</div>`;
+            }).join('');
         }
     </script>
 </body>
