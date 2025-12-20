@@ -117,7 +117,7 @@ app.get('/api/health', (req, res) => {
         status: 'OK',
         message: 'Z2B Admin Backend is running',
         timestamp: new Date().toISOString(),
-        version: '2.0.0-APP-ACCESS-SYSTEM',  // NEW: Tier-based app access + admin grant + CORS fixes
+        version: '2.0.1-PROFILE-ENDPOINT-FIX',  // FIX: Profile endpoint with appAccess Map
         endpoints: {
             auth: '/api/auth/forgot-password',
             reset: '/api/auth/reset-password',
