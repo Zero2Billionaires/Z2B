@@ -3,1642 +3,597 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shepherd Staff - AI Church Management 🐑 System | Transform Your Ministry</title>
-    <meta name="description" content="AI-powered church management system. Save 20+ hours weekly, prevent member loss, optimize resources. LAUNCH SPECIAL: First 100 churches R900/month (50% off full year). 14-day free trial.">
-    
+    <title>Shepherd Staff - Church Management System | Z2B Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --royal-gold: #FFD700;
+            --royal-gold-light: #FFED4E;
+            --royal-gold-dark: #D4AF37;
+            --royal-blue: #0A1F44;
+            --royal-blue-light: #1E3A8A;
+            --royal-blue-deep: #030B1F;
+            --church-green: #22c55e;
+            --church-green-light: #4ade80;
+            --white: #FFFFFF;
+            --success: #00FF88;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--royal-blue-deep) 0%, var(--royal-blue) 50%, var(--royal-blue-deep) 100%);
+            color: var(--white);
+            min-height: 100vh;
+            overflow-x: hidden;
         }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        
-        /* Header */
-        header {
-            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-            color: white;
-            padding: 80px 0;
-            text-align: center;
-        }
-        
-        .header-logo {
-            max-width: 280px;
-            height: auto;
-            margin-bottom: 20px;
-            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.15));
-        }
-        
-        header h1 {
-            font-size: 3rem;
-            margin-bottom: 20px;
-            font-weight: 700;
-        }
-        
-        header .subtitle {
-            font-size: 1.5rem;
-            margin-bottom: 25px;
-            opacity: 0.95;
-        }
-        
-        .verse {
-            font-style: italic;
-            font-size: 1.2rem;
-            margin: 30px 0 20px 0;
-            opacity: 0.95;
-            font-weight: 500;
-        }
-        
-        .cta-buttons {
-            margin-top: 40px;
-        }
-        
-        .btn {
-            display: inline-block;
-            padding: 15px 35px;
-            margin: 10px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1.1rem;
-            transition: all 0.3s;
-            cursor: pointer;
-            border: none;
-        }
-        
-        .btn-primary {
-            background: white;
-            color: #16a34a;
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-        }
-        
-        .btn-secondary {
-            background: transparent;
-            color: white;
-            border: 2px solid white;
-        }
-        
-        .btn-secondary:hover {
-            background: white;
-            color: #16a34a;
-        }
-        
-        /* Ministry Challenge Section */
-        .ministry-challenge {
-            padding: 80px 0;
-            background: #f9fafb;
-        }
-        
-        .challenge-content {
-            max-width: 900px;
-            margin: 0 auto;
-            text-align: center;
-        }
-        
-        .challenge-content h2 {
-            font-size: 2.5rem;
-            margin-bottom: 30px;
-            color: #1f2937;
-        }
-        
-        .challenge-text {
-            font-size: 1.15rem;
-            line-height: 1.8;
-            color: #4b5563;
-            margin-bottom: 20px;
-            text-align: left;
-        }
-        
-        .highlight-box {
-            background: white;
-            border-left: 4px solid #dc2626;
-            padding: 30px;
-            margin: 40px 0;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.07);
-        }
-        
-        .highlight-box h3 {
-            color: #dc2626;
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-        }
-        
-        .highlight-box ul {
-            list-style: none;
-            margin-top: 20px;
-        }
-        
-        .highlight-box li {
-            padding: 10px 0;
-            font-size: 1.1rem;
-            color: #1f2937;
-        }
-        
-        .highlight-box li:before {
-            content: "❌";
-            margin-right: 10px;
-            font-size: 1.2rem;
-        }
-        
-        /* ROI Section */
-        .roi-section {
-            padding: 80px 0;
-            background: linear-gradient(135deg, #059669 0%, #047857 100%);
-            color: white;
-        }
-        
-        .roi-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-            margin-top: 50px;
-        }
-        
-        .roi-card {
-            background: rgba(255,255,255,0.1);
-            padding: 30px;
-            border-radius: 12px;
-            text-align: center;
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            width: 280px;
+            background: rgba(10, 31, 68, 0.95);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.2);
+            padding: 2rem 0;
+            border-right: 2px solid var(--church-green);
+            overflow-y: auto;
+            z-index: 1000;
         }
-        
-        .roi-number {
-            font-size: 3rem;
+
+        .sidebar-brand {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 0 1.5rem 2rem;
+            border-bottom: 3px solid var(--church-green);
+        }
+
+        .sidebar-brand h2 {
+            color: var(--church-green-light);
+            font-size: 1.8rem;
             font-weight: 800;
-            margin-bottom: 10px;
-            color: #fbbf24;
+            margin-bottom: 0.5rem;
         }
-        
-        .roi-label {
-            font-size: 1.1rem;
-            opacity: 0.95;
-        }
-        
-        .roi-calculation {
-            background: white;
-            color: #1f2937;
-            padding: 40px;
-            border-radius: 12px;
-            margin-top: 50px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-        
-        .roi-calculation h3 {
-            font-size: 2rem;
-            margin-bottom: 25px;
-            color: #059669;
-        }
-        
-        .savings-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 15px 0;
-            border-bottom: 1px solid #e5e7eb;
-            font-size: 1.1rem;
-        }
-        
-        .savings-item:last-child {
-            border-bottom: none;
-            font-weight: 700;
-            font-size: 1.3rem;
-            color: #059669;
-            margin-top: 15px;
-            padding-top: 25px;
-            border-top: 2px solid #059669;
-        }
-        
-        .promo-banner {
-            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
-            color: white;
-            padding: 20px 0;
-            text-align: center;
-        }
-        
-        .promo-banner h3 {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-        }
-        
-        /* Features */
-        .features {
-            padding: 80px 0;
-            background: white;
-        }
-        
-        .section-title {
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 60px;
-            color: #1f2937;
-        }
-        
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-        }
-        
-        .feature-card {
-            background: #f9fafb;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.07);
-            transition: transform 0.3s;
-        }
-        
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        }
-        
-        .feature-icon {
-            font-size: 3rem;
-            margin-bottom: 15px;
-        }
-        
-        .feature-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-            color: #16a34a;
-        }
-        
-        /* Pricing */
-        .pricing {
-            padding: 80px 0;
-            background: #f9fafb;
-        }
-        
-        .pricing-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-            margin-top: 40px;
-        }
-        
-        .pricing-card {
-            background: white;
-            border: 2px solid #e5e7eb;
-            border-radius: 16px;
-            padding: 40px 30px;
-            text-align: center;
-            transition: all 0.3s;
-        }
-        
-        .pricing-card:hover {
-            border-color: #22c55e;
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(14, 165, 233, 0.15);
-        }
-        
-        .pricing-card.popular {
-            border-color: #22c55e;
-            border-width: 3px;
-            transform: scale(1.05);
-            box-shadow: 0 10px 30px rgba(14, 165, 233, 0.2);
-        }
-        
-        .popular-badge {
-            background: #22c55e;
-            color: white;
-            padding: 5px 15px;
-            border-radius: 20px;
+
+        .sidebar-brand p {
+            color: var(--royal-gold-light);
             font-size: 0.85rem;
             font-weight: 600;
-            display: inline-block;
-            margin-bottom: 15px;
         }
-        
-        .plan-name {
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin-bottom: 10px;
-            color: #1f2937;
+
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
         }
-        
-        .price {
-            font-size: 3rem;
+
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            color: var(--white);
+            text-decoration: none;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+        }
+
+        .sidebar-nav a:hover,
+        .sidebar-nav a.active {
+            background: rgba(34, 197, 94, 0.1);
+            border-left-color: var(--church-green);
+        }
+
+        .sidebar-nav a i {
+            margin-right: 1rem;
+            color: var(--church-green-light);
+            font-size: 1.2rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(10, 31, 68, 0.8));
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 2px solid var(--church-green);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: var(--church-green-light);
+            margin-bottom: 0.5rem;
             font-weight: 800;
-            color: #22c55e;
-            margin: 20px 0;
         }
-        
-        .price-period {
+
+        .header p {
+            color: var(--royal-gold-light);
             font-size: 1rem;
-            color: #6b7280;
-            font-weight: normal;
         }
-        
-        .annual-price {
-            font-size: 1rem;
-            color: #059669;
-            margin-bottom: 20px;
+
+        /* Cards */
+        .card-custom {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(34, 197, 94, 0.2);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: all 0.3s;
+        }
+
+        .card-custom:hover {
+            border-color: var(--church-green);
+            box-shadow: 0 8px 32px rgba(34, 197, 94, 0.2);
+        }
+
+        .card-custom h3 {
+            color: var(--church-green-light);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            color: var(--royal-gold-light);
+            margin-bottom: 0.5rem;
             font-weight: 600;
         }
-        
-        .features-list {
-            list-style: none;
-            margin: 30px 0;
-            text-align: left;
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="date"],
+        input[type="number"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(34, 197, 94, 0.3);
+            border-radius: 10px;
+            color: var(--white);
+            font-size: 1rem;
+            transition: all 0.3s;
         }
-        
-        .features-list li {
-            padding: 12px 0;
-            border-bottom: 1px solid #f3f4f6;
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--church-green);
+            background: rgba(0, 0, 0, 0.5);
         }
-        
-        .features-list li:before {
-            content: "✓";
-            color: #059669;
-            font-weight: bold;
-            margin-right: 10px;
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
         }
-        
-        /* Trust Signals */
-        .trust {
-            padding: 60px 0;
-            background: white;
-            text-align: center;
+
+        /* Buttons */
+        .btn-primary-custom {
+            background: linear-gradient(135deg, var(--church-green), var(--church-green-light));
+            color: var(--white);
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
         }
-        
-        .trust-grid {
+
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(34, 197, 94, 0.4);
+        }
+
+        .btn-secondary-custom {
+            background: rgba(34, 197, 94, 0.1);
+            color: var(--church-green-light);
+            padding: 0.75rem 2rem;
+            border: 2px solid var(--church-green);
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-secondary-custom:hover {
+            background: rgba(34, 197, 94, 0.2);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 40px;
-            margin-top: 40px;
+            gap: 1rem;
+            margin-bottom: 2rem;
         }
-        
-        .trust-item {
+
+        .stat-card {
+            background: rgba(34, 197, 94, 0.1);
+            border: 2px solid rgba(34, 197, 94, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
             text-align: center;
         }
-        
-        .trust-number {
-            font-size: 3rem;
+
+        .stat-number {
+            font-size: 2rem;
             font-weight: 800;
-            color: #22c55e;
-            margin-bottom: 10px;
+            color: var(--church-green-light);
+            margin-bottom: 0.5rem;
         }
-        
-        /* CTA Section */
-        .cta-section {
-            padding: 80px 0;
-            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-            color: white;
-            text-align: center;
+
+        .stat-label {
+            color: var(--royal-gold-light);
+            font-size: 0.9rem;
         }
-        
-        .cta-section h2 {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
+
+        /* Table */
+        .table-custom {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
         }
-        
-        /* Footer */
-        footer {
-            background: #1f2937;
-            color: white;
-            padding: 40px 0;
-            text-align: center;
+
+        .table-custom thead {
+            background: rgba(34, 197, 94, 0.2);
         }
-        
-        footer p {
-            margin: 8px 0;
+
+        .table-custom th {
+            padding: 1rem;
+            color: var(--church-green-light);
+            font-weight: 700;
+            text-align: left;
+            border-bottom: 2px solid var(--church-green);
         }
-        
-        .built-with-love {
-            margin-top: 20px;
-            font-size: 1rem;
-            opacity: 0.9;
+
+        .table-custom td {
+            padding: 1rem;
+            color: var(--white);
+            border-bottom: 1px solid rgba(34, 197, 94, 0.1);
         }
-        
+
+        .table-custom tr:hover {
+            background: rgba(34, 197, 94, 0.05);
+        }
+
+        /* Features List */
+        .features-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .features-list li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(34, 197, 94, 0.1);
+            display: flex;
+            align-items: center;
+        }
+
+        .features-list li i {
+            color: var(--church-green-light);
+            margin-right: 1rem;
+            font-size: 1.2rem;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
-            .header-logo {
-                max-width: 220px;
+            .sidebar {
+                transform: translateX(-100%);
             }
-            
-            header h1 {
-                font-size: 2rem;
-            }
-            .section-title {
-                font-size: 2rem;
-            }
-            .pricing-card.popular {
-                transform: scale(1);
-            }
-            .challenge-content h2 {
-                font-size: 2rem;
-            }
-            .roi-number {
-                font-size: 2.5rem;
+
+            .main-content {
+                margin-left: 0;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header>
-        <div class="container">
-            <img src="/images/shepherd-staff-logo.png" alt="The Sheppard Staff - AI-Powered Church Management 🐑 System" class="header-logo">
-            <p class="subtitle">AI-Powered Church Management 🐑 System</p>
-            <p class="verse">"Your rod and your staff, they comfort me" - Psalm 23:4</p>
-            <div class="cta-buttons">
-                <a href="#pricing" class="btn btn-primary">View Pricing</a>
-                <a href="#features" class="btn btn-secondary">See Features</a>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            <h2><i class="fas fa-church"></i> Shepherd Staff</h2>
+            <p>Church Management System</p>
+        </div>
+
+        <ul class="sidebar-nav">
+            <li><a href="#" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="#"><i class="fas fa-users"></i> Members</a></li>
+            <li><a href="#"><i class="fas fa-calendar-check"></i> Attendance</a></li>
+            <li><a href="#"><i class="fas fa-hand-holding-heart"></i> Donations</a></li>
+            <li><a href="#"><i class="fas fa-calendar-alt"></i> Events</a></li>
+            <li><a href="#"><i class="fas fa-comments"></i> Communications</a></li>
+            <li><a href="#"><i class="fas fa-chart-bar"></i> Reports</a></li>
+            <li><a href="#"><i class="fas fa-users-cog"></i> Groups</a></li>
+            <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+            <li><a href="dashboard.html"><i class="fas fa-arrow-left"></i> Back to Dashboard</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="header">
+            <h1><i class="fas fa-dove"></i> Welcome to Shepherd Staff</h1>
+            <p>"Feed my sheep" - John 21:17 | Comprehensive church management at your fingertips</p>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">0</div>
+                <div class="stat-label">Total Members</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">0</div>
+                <div class="stat-label">Active Groups</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">R0</div>
+                <div class="stat-label">This Month Donations</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">0</div>
+                <div class="stat-label">Upcoming Events</div>
             </div>
         </div>
-    </header>
-        <div style="background: linear-gradient(135deg, #fbbf24, #f59e0b); padding: 15px; text-align: center; font-weight: 700; font-size: 1.1rem; color: #000;">
-            🎉 LAUNCH SPECIAL: First 100 Churches Get 50% OFF FOR FULL YEAR! 🎉
-        </div>
 
-        <div style="background: linear-gradient(135deg, #fbbf24, #f59e0b); padding: 15px; text-align: center; font-weight: 700; font-size: 1.1rem; color: #000;">
-            🎉 LAUNCH SPECIAL: First 100 Churches Get 50% OFF FOR FULL YEAR! 🎉
-        </div>
-
-
-    <!-- Ministry Challenge Section -->
-    <section class="ministry-challenge">
-        <div class="container">
-            <div class="challenge-content">
-                <h2>Pastors Need Both the Rod AND the Staff</h2>
-                
-                <p class="challenge-text">
-                    To effectively obey the Lord Jesus Christ's Great Commission, pastors and churches need <strong>both a Rod and a Staff</strong> - both the Word & Anointing AND effective Church Administration & Management.
-                </p>
-                
-                <p class="challenge-text">
-                    All pastors have the Rod - the Word of God and the anointing of the Holy Spirit. But the harsh reality is that <strong>the majority of pastors and churches lack the Staff</strong> - proper church administration and management systems.
-                </p>
-                
-                <div class="highlight-box">
-                    <h3>The Devastating Cost of Poor Administration:</h3>
-                    <ul>
-                        <li><strong>Pastors Burn Out</strong> - Overwhelmed by administrative tasks instead of ministry</li>
-                        <li><strong>Souls Fall Through the Cracks</strong> - Follow-ups missed, visitors lost, members neglected</li>
-                        <li><strong>Resources Wasted</strong> - Money lost, volunteers mismanaged, opportunities missed</li>
-                        <li><strong>Potential Impact Never Realized</strong> - Churches operate at 30% capacity due to poor systems</li>
-                    </ul>
-                </div>
-                
-                <p class="challenge-text" style="text-align: center; font-size: 1.3rem; font-weight: 600; color: #16a34a; margin-top: 40px;">
-                    Without proper administration, even the most anointed ministry cannot reach its full potential.
-                </p>
+        <!-- Quick Actions -->
+        <div class="card-custom">
+            <h3><i class="fas fa-bolt"></i> Quick Actions</h3>
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                <button class="btn-primary-custom">
+                    <i class="fas fa-user-plus"></i> Add New Member
+                </button>
+                <button class="btn-primary-custom">
+                    <i class="fas fa-calendar-plus"></i> Create Event
+                </button>
+                <button class="btn-primary-custom">
+                    <i class="fas fa-envelope"></i> Send Message
+                </button>
+                <button class="btn-primary-custom">
+                    <i class="fas fa-dollar-sign"></i> Record Donation
+                </button>
             </div>
         </div>
-    </section>
 
-    <!-- ROI Section -->
-    <section class="roi-section">
-        <div class="container">
-            <h2 class="section-title" style="color: white; font-size: 2.5rem;">What You're Losing Without Proper Church Management 🐑</h2>
-            
-            <div class="roi-grid">
-                <div class="roi-card">
-                    <div class="roi-number">20+</div>
-                    <div class="roi-label">Hours Lost Weekly</div>
-                    <p style="margin-top: 15px; opacity: 0.9;">Pastor's time wasted on manual admin tasks instead of shepherding</p>
+        <!-- Add New Member -->
+        <div class="card-custom">
+            <h3><i class="fas fa-user-plus"></i> Add New Member</h3>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label><i class="fas fa-user"></i> First Name</label>
+                        <input type="text" placeholder="John">
+                    </div>
                 </div>
-                
-                <div class="roi-card">
-                    <div class="roi-number">40%</div>
-                    <div class="roi-label">Visitors Never Return</div>
-                    <p style="margin-top: 15px; opacity: 0.9;">First-time guests lost due to poor follow-up systems</p>
-                </div>
-                
-                <div class="roi-card">
-                    <div class="roi-number">30%</div>
-                    <div class="roi-label">Members Become Inactive</div>
-                    <p style="margin-top: 15px; opacity: 0.9;">People slip away unnoticed without tracking systems</p>
-                </div>
-                
-                <div class="roi-card">
-                    <div class="roi-number">R50K+</div>
-                    <div class="roi-label">Monthly Value Lost</div>
-                    <p style="margin-top: 15px; opacity: 0.9;">Pastor's time, missed opportunities, and wasted resources</p>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label><i class="fas fa-user"></i> Last Name</label>
+                        <input type="text" placeholder="Doe">
+                    </div>
                 </div>
             </div>
-            
-            <div class="roi-calculation">
-                <h3>🌱 What Happens When Your Church Gets Shepherd Staff</h3>
-                <p style="margin-bottom: 30px; font-size: 1.1rem; color: #6b7280;">
-                    Real churches. Real transformation. Here's the growth you can expect in your first 12 months:
-                </p>
-                
-                <div class="savings-item">
-                    <span><strong>Pastor's Time Saved:</strong> 20 hours/week @ R1,000/hour</span>
-                    <span style="color: #059669; font-weight: 600;">R80,000/month</span>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label><i class="fas fa-envelope"></i> Email</label>
+                        <input type="email" placeholder="john@example.com">
+                    </div>
                 </div>
-                
-                <div class="savings-item">
-                    <span><strong>Visitor Retention:</strong> 10 new members @ R500 giving/month</span>
-                    <span style="color: #059669; font-weight: 600;">R5,000/month</span>
-                </div>
-                
-                <div class="savings-item">
-                    <span><strong>Member Retention:</strong> AI alerts prevent dropouts early</span>
-                    <span style="color: #059669; font-weight: 600;">85% active rate</span>
-                </div>
-                
-                <div class="savings-item">
-                    <span><strong>Souls Saved:</strong> Evangelism pipeline tracks first contact to salvation</span>
-                    <span style="color: #059669; font-weight: 600;">3-5 monthly</span>
-                </div>
-                
-                <div class="savings-item">
-                    <span><strong>Giving Increase:</strong> Online donations make tithing effortless</span>
-                    <span style="color: #059669; font-weight: 600;">+35% in 90 days</span>
-                </div>
-                
-                <div class="savings-item">
-                    <span><strong>Community Impact:</strong> Prayer tracking celebrates every answered prayer</span>
-                    <span style="color: #059669; font-weight: 600;">18 testimonies/month</span>
-                </div>
-                
-                <div style="text-align: center; margin-top: 40px; padding: 30px; background: #f0fdf4; border-radius: 8px;">
-                    <p style="font-size: 1.3rem; color: #1f2937; margin-bottom: 15px;">
-                        <strong>Shepherd Staff Investment:</strong> <span style="text-decoration: line-through; opacity: 0.6;">R3,600</span> <span style="color: #22c55e; font-size: 1.5rem;">R1,800/month</span> <span style="background: #fbbf24; color: #000; padding: 4px 12px; border-radius: 6px; font-size: 0.9rem; font-weight: 700;">50% OFF!</span>
-                    </p>
-                    <p style="font-size: 1.5rem; color: #059669; font-weight: 700; margin-bottom: 10px;">
-                        Average church sees 40% growth in first year
-                    </p>
-                    <p style="font-size: 1.8rem; color: #dc2626; font-weight: 800;">
-                        That's real transformation. 🐑
-                    </p>
-                    <p style="margin-top: 20px; font-size: 1rem; color: #6b7280;">
-                        Your church doesn't need software. It needs <strong>transformation</strong>.
-                    </p>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label><i class="fas fa-phone"></i> Phone Number</label>
+                        <input type="tel" placeholder="+27 123 456 789">
+                    </div>
                 </div>
             </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label><i class="fas fa-birthday-cake"></i> Date of Birth</label>
+                        <input type="date">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar-check"></i> Membership Date</label>
+                        <input type="date">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-users"></i> Assign to Group</label>
+                <select>
+                    <option>None</option>
+                    <option>Youth Group</option>
+                    <option>Women's Ministry</option>
+                    <option>Men's Fellowship</option>
+                    <option>Choir</option>
+                    <option>Elders</option>
+                    <option>Deacons</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-home"></i> Address</label>
+                <textarea placeholder="Home address"></textarea>
+            </div>
+
+            <button class="btn-primary-custom" onclick="alert('✅ Member added successfully!')">
+                <i class="fas fa-save"></i> Save Member
+            </button>
         </div>
-    </section>
 
-    <!-- Promo Banner -->
-    <div class="promo-banner">
-        <div class="container">
-            <h3>🔥 LIMITED TIME OFFER</h3>
-            <p>First 100 churches get 50% OFF for 12 months + FREE setup & training!</p>
+        <!-- Recent Members -->
+        <div class="card-custom">
+            <h3><i class="fas fa-users"></i> Recent Members</h3>
+
+            <table class="table-custom">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Group</th>
+                        <th>Joined</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 2rem; color: var(--royal-gold-light);">
+                            <i class="fas fa-users" style="font-size: 3rem; margin-bottom: 1rem; display: block;"></i>
+                            No members added yet. Add your first member above.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Record Attendance -->
+        <div class="card-custom">
+            <h3><i class="fas fa-calendar-check"></i> Record Attendance</h3>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar"></i> Service Date</label>
+                        <input type="date">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label><i class="fas fa-church"></i> Service Type</label>
+                        <select>
+                            <option>Sunday Morning Service</option>
+                            <option>Sunday Evening Service</option>
+                            <option>Wednesday Prayer</option>
+                            <option>Friday Night Service</option>
+                            <option>Special Event</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-users"></i> Number of Attendees</label>
+                <input type="number" placeholder="Enter total attendance count">
+            </div>
+
+            <button class="btn-primary-custom" onclick="alert('✅ Attendance recorded successfully!')">
+                <i class="fas fa-check"></i> Record Attendance
+            </button>
+        </div>
+
+        <!-- Record Donation -->
+        <div class="card-custom">
+            <h3><i class="fas fa-hand-holding-heart"></i> Record Donation/Tithe</h3>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label><i class="fas fa-user"></i> Member Name (Optional)</label>
+                        <input type="text" placeholder="Anonymous if not specified">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar"></i> Date</label>
+                        <input type="date">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label><i class="fas fa-dollar-sign"></i> Amount (R)</label>
+                        <input type="number" placeholder="0.00" step="0.01">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label><i class="fas fa-tag"></i> Category</label>
+                        <select>
+                            <option>Tithe</option>
+                            <option>Offering</option>
+                            <option>Building Fund</option>
+                            <option>Missions</option>
+                            <option>Special Project</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-credit-card"></i> Payment Method</label>
+                <select>
+                    <option>Cash</option>
+                    <option>Bank Transfer</option>
+                    <option>Card</option>
+                    <option>Mobile Money</option>
+                </select>
+            </div>
+
+            <button class="btn-primary-custom" onclick="alert('✅ Donation recorded successfully! Receipt will be generated.')">
+                <i class="fas fa-save"></i> Record Donation
+            </button>
+        </div>
+
+        <!-- Features -->
+        <div class="card-custom">
+            <h3><i class="fas fa-star"></i> Shepherd Staff Features</h3>
+            <ul class="features-list">
+                <li><i class="fas fa-check-circle"></i> <strong>Member Management</strong> - Complete database of church members with profiles</li>
+                <li><i class="fas fa-check-circle"></i> <strong>Attendance Tracking</strong> - Record and analyze service attendance</li>
+                <li><i class="fas fa-check-circle"></i> <strong>Donation Management</strong> - Track tithes, offerings, and donations</li>
+                <li><i class="fas fa-check-circle"></i> <strong>Event Planning</strong> - Schedule and manage church events</li>
+                <li><i class="fas fa-check-circle"></i> <strong>Group Management</strong> - Organize youth groups, ministries, and committees</li>
+                <li><i class="fas fa-check-circle"></i> <strong>SMS & Email</strong> - Bulk messaging to members and groups</li>
+                <li><i class="fas fa-check-circle"></i> <strong>Reports & Analytics</strong> - Financial and attendance reports</li>
+                <li><i class="fas fa-check-circle"></i> <strong>Birthday Reminders</strong> - Automatic birthday notifications</li>
+                <li><i class="fas fa-check-circle"></i> <strong>Visitor Tracking</strong> - Follow up with first-time visitors</li>
+                <li><i class="fas fa-check-circle"></i> <strong>Mobile Access</strong> - Access from any device</li>
+            </ul>
         </div>
     </div>
 
-    <!-- Features Section -->
-    <section id="features" class="features">
-        <div class="container">
-            <h2 class="section-title">Your Complete AI Church Management 🐑 Solution</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">🤖</div>
-                    <h3>AI-Powered Dashboard</h3>
-                    <p>Real-time insights with 8 key metrics, predictive analytics, and smart recommendations for your ministry.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">📖</div>
-                    <h3>Sermon Management</h3>
-                    <p>Organize unlimited sermons with AI assistance, series tracking, and automatic categorization.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🙏</div>
-                    <h3>Prayer Requests</h3>
-                    <p>Track prayer requests with AI follow-up reminders and public prayer wall for community engagement.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">👥</div>
-                    <h3>Evangelism Tracker</h3>
-                    <p>6-stage AI-guided pipeline from first contact to salvation. Never lose track of a single soul!</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">📈</div>
-                    <h3>Discipleship Pipeline</h3>
-                    <p>5-stage spiritual growth tracking with AI recommendations for personalized discipleship paths.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🏢</div>
-                    <h3>Ministry Groups</h3>
-                    <p>Organize 12+ ministry departments with AI-powered member matching and engagement tracking.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">📅</div>
-                    <h3>Events Calendar</h3>
-                    <p>AI-optimized scheduling, smart registration, attendance tracking, and automated reminders.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">💳</div>
-                    <h3>Online Giving</h3>
-                    <p>Secure donations with multiple payment gateways. AI insights on giving patterns and trends.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🌐</div>
-                    <h3>Public Website</h3>
-                    <p>Beautiful AI-generated church website with sermon archive, event calendar, and member portal.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">📧</div>
-                    <h3>AI Communication</h3>
-                    <p>Smart email & SMS automation with personalized messaging based on member engagement.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">📊</div>
-                    <h3>Advanced Analytics</h3>
-                    <p>AI-powered reports showing growth trends, engagement patterns, and actionable insights.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🔒</div>
-                    <h3>Secure & Reliable</h3>
-                    <p>Enterprise-grade security with AI threat detection, daily backups, and 99.9% uptime guarantee.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Pricing Section -->
-    <section id="pricing" class="pricing">
-        <div class="container">
-            <h2 class="section-title">Invest Less Than 1 Hour of Your Time Per Month</h2>
-            <p style="text-align: center; max-width: 700px; margin: 0 auto 40px; font-size: 1.15rem; color: #6b7280;">
-                If your time is worth R1,000/hour, even <strong>1 hour saved</strong> pays for the Growth plan. You'll save <strong>20+ hours weekly</strong>!
-            </p>
-            
-            <div class="pricing-grid">
-                <!-- Starter Plan -->
-                <div class="pricing-card">
-                    <div class="plan-name">Starter</div>
-                    <p>Perfect for small churches</p>
-                    <div class="price">
-                        R1,800
-                        <span class="price-period">/month</span>
-                    </div>
-                    <div class="annual-price">
-                        R18,000/year (Save R3,600)
-                    </div>
-                    <ul class="features-list">
-                        <li>Up to 150 members</li>
-                        <li>2 staff accounts</li>
-                        <li>AI Dashboard</li>
-                        <li>Sermons Management</li>
-                        <li>Prayer Requests</li>
-                        <li>Evangelism Tracker</li>
-                        <li>Discipleship Pipeline</li>
-                        <li>10 Ministry Groups</li>
-                        <li>5GB Storage</li>
-                        <li>Email Support</li>
-                    </ul>
-                    <a href="#contact" class="btn btn-primary" style="width: 100%; margin: 0;">Start Free Trial</a>
-                    <p style="margin-top: 15px; font-size: 0.9rem; color: #6b7280;">Less than R60/day</p>
-                </div>
-
-                <!-- Growth Plan -->
-                <div class="pricing-card popular">
-                    <div class="popular-badge">⭐ MOST POPULAR</div>
-                    <div class="plan-name">Growth</div>
-                    <p>Complete AI solution</p>
-                    <div class="price">
-                        R3,600
-                        <span class="price-period">/month</span>
-                    </div>
-                    <div class="annual-price">
-                        R36,000/year (Save R7,200)
-                    </div>
-                    <ul class="features-list">
-                        <li>Up to 500 members</li>
-                        <li>5 staff accounts</li>
-                        <li><strong>Everything in Starter PLUS:</strong></li>
-                        <li>AI-Powered Analytics</li>
-                        <li>Visits Tracking</li>
-                        <li>Social Help Cases</li>
-                        <li>Admin Tasks Module</li>
-                        <li>Events Calendar</li>
-                        <li>Public Website</li>
-                        <li>20GB Storage</li>
-                        <li>Priority Support</li>
-                    </ul>
-                    <a href="#contact" class="btn btn-primary" style="width: 100%; margin: 0; background: #22c55e; color: white;">Start Free Trial</a>
-                    <p style="margin-top: 15px; font-size: 0.9rem; color: #6b7280;">Less than R120/day • Saves R111K/month!</p>
-                </div>
-
-                <!-- Professional Plan -->
-                <div class="pricing-card">
-                    <div class="plan-name">Professional</div>
-                    <p>For large churches</p>
-                    <div class="price">
-                        R7,200
-                        <span class="price-period">/month</span>
-                    </div>
-                    <div class="annual-price">
-                        R72,000/year (Save R14,400)
-                    </div>
-                    <ul class="features-list">
-                        <li>Up to 2,000 members</li>
-                        <li>15 staff accounts</li>
-                        <li><strong>Everything in Growth PLUS:</strong></li>
-                        <li>AI Sermon Assistant</li>
-                        <li>Online Giving</li>
-                        <li>Fundraising Campaigns</li>
-                        <li>Digital Ministry Scheduler</li>
-                        <li>Email/SMS Automation</li>
-                        <li>Member Portal</li>
-                        <li>50GB Storage</li>
-                        <li>Phone Support</li>
-                    </ul>
-                    <a href="#contact" class="btn btn-primary" style="width: 100%; margin: 0;">Start Free Trial</a>
-                    <p style="margin-top: 15px; font-size: 0.9rem; color: #6b7280;">Less than R240/day</p>
-                </div>
-
-                <!-- Enterprise Plan -->
-                <div class="pricing-card">
-                    <div class="plan-name">Enterprise</div>
-                    <p>Unlimited everything</p>
-                    <div class="price">
-                        R14,400
-                        <span class="price-period">/month</span>
-                    </div>
-                    <div class="annual-price">
-                        R144,000/year (Save R28,800)
-                    </div>
-                    <ul class="features-list">
-                        <li>Unlimited members</li>
-                        <li>Unlimited staff</li>
-                        <li><strong>Everything in Professional PLUS:</strong></li>
-                        <li>Multi-Campus Support</li>
-                        <li>Advanced AI Features</li>
-                        <li>Mobile Apps (iOS/Android)</li>
-                        <li>White-Label Option</li>
-                        <li>Unlimited SMS/Email</li>
-                        <li>24/7 Priority Support</li>
-                        <li>200GB Storage</li>
-                        <li>Dedicated Manager</li>
-                    </ul>
-                    <a href="#contact" class="btn btn-primary" style="width: 100%; margin: 0;">Contact Sales</a>
-                    <p style="margin-top: 15px; font-size: 0.9rem; color: #6b7280;">Less than R480/day</p>
-                </div>
-            </div>
-
-            <div style="text-align: center; margin-top: 50px; padding: 40px; background: white; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.07);">
-                <p style="font-size: 1.3rem; color: #1f2937; margin-bottom: 15px;">
-                    🎁 <strong>Launch Special:</strong> First 100 churches get <span style="color: #dc2626; font-size: 1.4rem; font-weight: 700;">50% OFF</span> for 12 months!
-                </p>
-                <p style="font-size: 1.1rem; color: #6b7280;">
-                    Growth plan: Just <strong>R1,800/month</strong> (normally R3,600) for 12 months<br>
-                    <span style="color: #059669; font-weight: 600;">+ FREE setup + FREE training + Price lock guarantee</span>
-                </p>
-            </div>
-        </div>
-    </section>
-
-
-    <!-- How to Use Shepherd Staff - Practical Guide -->
-    <section style="padding: 80px 0; background: white;">
-        <div class="container">
-            <h2 class="section-title" style="text-align: center; margin-bottom: 20px;">
-                📖 How to Use Shepherd Staff at Each Ministry Stage
-            </h2>
-            <p style="text-align: center; color: #6b7280; font-size: 1.2rem; max-width: 800px; margin: 0 auto 60px auto;">
-                Your step-by-step guide to using the right features at the right time
-            </p>
-
-            <div style="max-width: 1000px; margin: 0 auto;">
-
-                <!-- Stage 1 Guide -->
-                <div style="background: linear-gradient(135deg, #f0fdf4, #dcfce7); border-left: 5px solid #22c55e; padding: 30px; border-radius: 12px; margin-bottom: 30px;">
-                    <div style="display: flex; align-items: center; margin-bottom: 20px;">
-                        <div style="width: 60px; height: 60px; background: #22c55e; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 20px;">
-                            <span style="color: white; font-size: 1.5rem; font-weight: 900;">1</span>
-                        </div>
-                        <div>
-                            <h3 style="color: #15803d; margin: 0; font-size: 1.5rem;">EVANGELISM - First Contact</h3>
-                            <p style="color: #6b7280; margin: 5px 0 0 0;">When a visitor walks through your doors</p>
-                        </div>
-                    </div>
-
-                    <div style="background: white; padding: 20px; border-radius: 8px;">
-                        <h4 style="color: #15803d; margin-bottom: 15px;">✅ Features to Use:</h4>
-                        <ul style="list-style: none; padding: 0;">
-                            <li style="padding: 10px 0; border-bottom: 1px solid #e5e7eb;">
-                                <strong style="color: #22c55e;">📱 Visitor Check-In App</strong><br>
-                                <span style="color: #6b7280;">Tablet at entrance → Visitor fills name, phone, how they heard about church → Instant database entry</span>
-                            </li>
-                            <li style="padding: 10px 0; border-bottom: 1px solid #e5e7eb;">
-                                <strong style="color: #22c55e;">🔔 AI Follow-Up Alerts</strong><br>
-                                <span style="color: #6b7280;">System alerts you Monday morning: "5 new visitors from Sunday - call them today!" → Auto-generates call list</span>
-                            </li>
-                            <li style="padding: 10px 0;">
-                                <strong style="color: #22c55e;">✝️ Salvation Decision Tracker</strong><br>
-                                <span style="color: #6b7280;">Mark when someone gets saved → Triggers discipleship pipeline → Assigns mentor automatically</span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Stage 2 Guide -->
-                <div style="background: linear-gradient(135deg, #dbeafe, #bfdbfe); border-left: 5px solid #3b82f6; padding: 30px; border-radius: 12px; margin-bottom: 30px;">
-                    <div style="display: flex; align-items: center; margin-bottom: 20px;">
-                        <div style="width: 60px; height: 60px; background: #3b82f6; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 20px;">
-                            <span style="color: white; font-size: 1.5rem; font-weight: 900;">2</span>
-                        </div>
-                        <div>
-                            <h3 style="color: #1e40af; margin: 0; font-size: 1.5rem;">SUNDAY SERVICE - Weekly Worship</h3>
-                            <p style="color: #6b7280; margin: 5px 0 0 0;">Regular attendance and giving management</p>
-                        </div>
-                    </div>
-
-                    <div style="background: white; padding: 20px; border-radius: 8px;">
-                        <h4 style="color: #1e40af; margin-bottom: 15px;">✅ Features to Use:</h4>
-                        <ul style="list-style: none; padding: 0;">
-                            <li style="padding: 10px 0; border-bottom: 1px solid #e5e7eb;">
-                                <strong style="color: #3b82f6;">📊 Smart Attendance System</strong><br>
-                                <span style="color: #6b7280;">QR code check-in OR manual tablet → Tracks streaks → Sends "We missed you!" texts after 2 absences</span>
-                            </li>
-                            <li style="padding: 10px 0; border-bottom: 1px solid #e5e7eb;">
-                                <strong style="color: #3b82f6;">💳 Online Giving Portal</strong><br>
-                                <span style="color: #6b7280;">Members give via phone during service → Set recurring tithes → Instant digital receipts for tax</span>
-                            </li>
-                            <li style="padding: 10px 0;">
-                                <strong style="color: #3b82f6;">🚨 Dropout Prevention AI</strong><br>
-                                <span style="color: #6b7280;">AI detects: "John missed 2 Sundays + hasn't given this month" → Alerts pastor → Suggests pastoral visit</span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Stage 3 Guide -->
-                <div style="background: linear-gradient(135deg, #fef3c7, #fde68a); border-left: 5px solid #f59e0b; padding: 30px; border-radius: 12px; margin-bottom: 30px;">
-                    <div style="display: flex; align-items: center; margin-bottom: 20px;">
-                        <div style="width: 60px; height: 60px; background: #f59e0b; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 20px;">
-                            <span style="color: white; font-size: 1.5rem; font-weight: 900;">3</span>
-                        </div>
-                        <div>
-                            <h3 style="color: #92400e; margin: 0; font-size: 1.5rem;">MID-WEEK - Discipleship & Growth</h3>
-                            <p style="color: #6b7280; margin: 5px 0 0 0;">Bible studies, prayer meetings, small groups</p>
-                        </div>
-                    </div>
-
-                    <div style="background: white; padding: 20px; border-radius: 8px;">
-                        <h4 style="color: #92400e; margin-bottom: 15px;">✅ Features to Use:</h4>
-                        <ul style="list-style: none; padding: 0;">
-                            <li style="padding: 10px 0; border-bottom: 1px solid #e5e7eb;">
-                                <strong style="color: #f59e0b;">🌱 5-Stage Discipleship Pipeline</strong><br>
-                                <span style="color: #6b7280;">New Believer → Growing → Serving → Leading → Multiplying → System tracks progression + assigns lessons</span>
-                            </li>
-                            <li style="padding: 10px 0; border-bottom: 1px solid #e5e7eb;">
-                                <strong style="color: #f59e0b;">🙏 Prayer Request Portal</strong><br>
-                                <span style="color: #6b7280;">Members submit prayers via app → Prayer team receives notifications → Mark as answered → Auto-share testimony</span>
-                            </li>
-                            <li style="padding: 10px 0;">
-                                <strong style="color: #f59e0b;">👥 Small Group Manager</strong><br>
-                                <span style="color: #6b7280;">Create cell groups → Assign leaders → Track attendance → Auto-schedule meetings → Monitor group health</span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Stage 4 Guide -->
-                <div style="background: linear-gradient(135deg, #e0e7ff, #c7d2fe); border-left: 5px solid #6366f1; padding: 30px; border-radius: 12px; margin-bottom: 30px;">
-                    <div style="display: flex; align-items: center; margin-bottom: 20px;">
-                        <div style="width: 60px; height: 60px; background: #6366f1; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 20px;">
-                            <span style="color: white; font-size: 1.5rem; font-weight: 900;">4</span>
-                        </div>
-                        <div>
-                            <h3 style="color: #4338ca; margin: 0; font-size: 1.5rem;">HR MANAGEMENT - Staff & Volunteers</h3>
-                            <p style="color: #6b7280; margin: 5px 0 0 0;">Organize your ministry team effectively</p>
-                        </div>
-                    </div>
-
-                    <div style="background: white; padding: 20px; border-radius: 8px;">
-                        <h4 style="color: #4338ca; margin-bottom: 15px;">✅ Features to Use:</h4>
-                        <ul style="list-style: none; padding: 0;">
-                            <li style="padding: 10px 0; border-bottom: 1px solid #e5e7eb;">
-                                <strong style="color: #6366f1;">📋 Volunteer Scheduler</strong><br>
-                                <span style="color: #6b7280;">Create service roles (usher, worship, tech) → Auto-assign volunteers → Sends reminders day before → Tracks hours</span>
-                            </li>
-                            <li style="padding: 10px 0; border-bottom: 1px solid #e5e7eb;">
-                                <strong style="color: #6366f1;">👔 Staff Performance Dashboard</strong><br>
-                                <span style="color: #6b7280;">Track ministry KPIs → Souls won per team → Event attendance → Volunteer engagement scores</span>
-                            </li>
-                            <li style="padding: 10px 0;">
-                                <strong style="color: #6366f1;">🎯 Ministry Assignment Tool</strong><br>
-                                <span style="color: #6b7280;">Match members' gifts to roles → Track spiritual gift assessments → Suggest best-fit ministries</span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Stage 5 Guide -->
-                <div style="background: linear-gradient(135deg, #fed7aa, #fdba74); border-left: 5px solid #ea580c; padding: 30px; border-radius: 12px; margin-bottom: 30px;">
-                    <div style="display: flex; align-items: center; margin-bottom: 20px;">
-                        <div style="width: 60px; height: 60px; background: #ea580c; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 20px;">
-                            <span style="color: white; font-size: 1.5rem; font-weight: 900;">5</span>
-                        </div>
-                        <div>
-                            <h3 style="color: #9a3412; margin: 0; font-size: 1.5rem;">FUNDRAISING - Financial Growth</h3>
-                            <p style="color: #6b7280; margin: 5px 0 0 0;">Building funds and special campaigns</p>
-                        </div>
-                    </div>
-
-                    <div style="background: white; padding: 20px; border-radius: 8px;">
-                        <h4 style="color: #9a3412; margin-bottom: 15px;">✅ Features to Use:</h4>
-                        <ul style="list-style: none; padding: 0;">
-                            <li style="padding: 10px 0; border-bottom: 1px solid #e5e7eb;">
-                                <strong style="color: #ea580c;">🎯 Campaign Manager</strong><br>
-                                <span style="color: #6b7280;">Set goal (R500K for new building) → Track progress bar → Members see live updates → Send milestone alerts</span>
-                            </li>
-                            <li style="padding: 10px 0; border-bottom: 1px solid #e5e7eb;">
-                                <strong style="color: #ea580c;">💰 Recurring Giving Setup</strong><br>
-                                <span style="color: #6b7280;">Members set monthly auto-tithes → System processes automatically → Reduces cash handling → Consistent revenue</span>
-                            </li>
-                            <li style="padding: 10px 0;">
-                                <strong style="color: #ea580c;">📊 Financial Transparency Reports</strong><br>
-                                <span style="color: #6b7280;">Auto-generate monthly reports → Share with congregation → Show where money goes → Build trust</span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Stage 6 Guide -->
-                <div style="background: linear-gradient(135deg, #e9d5ff, #d8b4fe); border-left: 5px solid #a855f7; padding: 30px; border-radius: 12px; margin-bottom: 30px;">
-                    <div style="display: flex; align-items: center; margin-bottom: 20px;">
-                        <div style="width: 60px; height: 60px; background: #a855f7; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 20px;">
-                            <span style="color: white; font-size: 1.5rem; font-weight: 900;">6</span>
-                        </div>
-                        <div>
-                            <h3 style="color: #6b21a8; margin: 0; font-size: 1.5rem;">SOCIAL IMPACT - Community Outreach</h3>
-                            <p style="color: #6b7280; margin: 5px 0 0 0;">Reaching beyond your four walls</p>
-                        </div>
-                    </div>
-
-                    <div style="background: white; padding: 20px; border-radius: 8px;">
-                        <h4 style="color: #6b21a8; margin-bottom: 15px;">✅ Features to Use:</h4>
-                        <ul style="list-style: none; padding: 0;">
-                            <li style="padding: 10px 0; border-bottom: 1px solid #e5e7eb;">
-                                <strong style="color: #a855f7;">📣 Mass Communication</strong><br>
-                                <span style="color: #6b7280;">Email 247 members in 10 seconds → SMS campaigns → Push notifications → Segment by age/ministry/location</span>
-                            </li>
-                            <li style="padding: 10px 0; border-bottom: 1px solid #e5e7eb;">
-                                <strong style="color: #a855f7;">🎉 Event Management</strong><br>
-                                <span style="color: #6b7280;">Create outreach event → Online registration → Auto-reminders → Track RSVPs → Post-event follow-up</span>
-                            </li>
-                            <li style="padding: 10px 0;">
-                                <strong style="color: #a855f7;">🏆 Testimony Sharing Hub</strong><br>
-                                <span style="color: #6b7280;">Members share answered prayers → Auto-post to social media → Create video testimonies → Inspire faith</span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Stage 7 Guide -->
-                <div style="background: linear-gradient(135deg, #dcfce7, #bbf7d0); border-left: 5px solid #22c55e; padding: 30px; border-radius: 12px;">
-                    <div style="display: flex; align-items: center; margin-bottom: 20px;">
-                        <div style="width: 60px; height: 60px; background: #22c55e; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 20px;">
-                            <span style="color: white; font-size: 1.5rem; font-weight: 900;">7</span>
-                        </div>
-                        <div>
-                            <h3 style="color: #15803d; margin: 0; font-size: 1.5rem;">CHURCH GROWTH - Analytics & Insights</h3>
-                            <p style="color: #6b7280; margin: 5px 0 0 0;">Measure what matters</p>
-                        </div>
-                    </div>
-
-                    <div style="background: white; padding: 20px; border-radius: 8px;">
-                        <h4 style="color: #15803d; margin-bottom: 15px;">✅ Features to Use:</h4>
-                        <ul style="list-style: none; padding: 0;">
-                            <li style="padding: 10px 0; border-bottom: 1px solid #e5e7eb;">
-                                <strong style="color: #22c55e;">📈 Growth Dashboard</strong><br>
-                                <span style="color: #6b7280;">Real-time metrics → Membership trends → Attendance patterns → Giving growth → Souls saved counter</span>
-                            </li>
-                            <li style="padding: 10px 0; border-bottom: 1px solid #e5e7eb;">
-                                <strong style="color: #22c55e;">🎯 AI Insights Engine</strong><br>
-                                <span style="color: #6b7280;">"Your visitor conversion dropped 15% this quarter" → "Youth attendance down on Sundays" → Actionable alerts</span>
-                            </li>
-                            <li style="padding: 10px 0;">
-                                <strong style="color: #22c55e;">📊 Custom Reports Builder</strong><br>
-                                <span style="color: #6b7280;">Generate reports for elders → Track any metric → Export to Excel → Compare year-over-year growth</span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- Quick Action CTA -->
-            <div style="text-align: center; margin-top: 50px; background: linear-gradient(135deg, #22c55e, #16a34a); padding: 40px; border-radius: 12px; color: white;">
-                <h3 style="font-size: 2rem; margin-bottom: 15px;">💡 See How Easy It Is?</h3>
-                <p style="font-size: 1.2rem; margin-bottom: 25px; opacity: 0.95;">
-                    Every feature is designed for simplicity. If you can use WhatsApp, you can use Shepherd Staff.
-                </p>
-                <a href="#pricing" style="background: white; color: #22c55e; padding: 18px 40px; border-radius: 10px; text-decoration: none; font-weight: 700; font-size: 1.1rem; display: inline-block;">
-                    Start Your 14-Day Free Trial
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Interactive Member Engagement Features -->
-    <section style="padding: 80px 0; background: linear-gradient(135deg, #1e1b4b, #312e81);">
-        <div class="container">
-            <h2 class="section-title" style="text-align: center; color: white; margin-bottom: 20px;">
-                🎮 Members Don't Just Attend... They ENGAGE!
-            </h2>
-            <p style="text-align: center; color: #a5b4fc; font-size: 1.3rem; max-width: 900px; margin: 0 auto 60px auto; line-height: 1.8;">
-                Shepherd Staff isn't just for pastors - it's a <strong style="color: #fbbf24;">complete interactive platform</strong> that gets members excited about church, tracks their spiritual growth, and empowers them to win souls on social media!
-            </p>
-
-            <!-- Feature Grid -->
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; margin-bottom: 60px;">
-
-                <!-- Member Dashboard -->
-                <div style="background: white; border-radius: 16px; padding: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); border-top: 5px solid #22c55e;">
-                    <div style="text-align: center; margin-bottom: 20px;">
-                        <i class="fas fa-mobile-alt" style="font-size: 3.5rem; color: #22c55e;"></i>
-                    </div>
-                    <h3 style="color: #1f2937; font-size: 1.4rem; margin-bottom: 15px; text-align: center;">📱 Personal Member Dashboard</h3>
-                    <p style="color: #6b7280; line-height: 1.7; margin-bottom: 20px;">
-                        Every member gets their own mobile-friendly dashboard to track their spiritual journey:
-                    </p>
-                    <ul style="list-style: none; padding: 0; color: #374151;">
-                        <li style="padding: 8px 0; border-bottom: 1px solid #e5e7eb;"><i class="fas fa-check" style="color: #22c55e;"></i> Attendance streak counter</li>
-                        <li style="padding: 8px 0; border-bottom: 1px solid #e5e7eb;"><i class="fas fa-check" style="color: #22c55e;"></i> Discipleship level progress bar</li>
-                        <li style="padding: 8px 0; border-bottom: 1px solid #e5e7eb;"><i class="fas fa-check" style="color: #22c55e;"></i> Giving history & tax receipts</li>
-                        <li style="padding: 8px 0; border-bottom: 1px solid #e5e7eb;"><i class="fas fa-check" style="color: #22c55e;"></i> Prayer requests & answered prayers</li>
-                        <li style="padding: 8px 0;"><i class="fas fa-check" style="color: #22c55e;"></i> Ministry involvement tracker</li>
-                    </ul>
-                </div>
-
-                <!-- Gamification -->
-                <div style="background: white; border-radius: 16px; padding: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); border-top: 5px solid #fbbf24;">
-                    <div style="text-align: center; margin-bottom: 20px;">
-                        <i class="fas fa-trophy" style="font-size: 3.5rem; color: #fbbf24;"></i>
-                    </div>
-                    <h3 style="color: #1f2937; font-size: 1.4rem; margin-bottom: 15px; text-align: center;">🏆 Gamification & Rewards</h3>
-                    <p style="color: #6b7280; line-height: 1.7; margin-bottom: 20px;">
-                        Make spiritual growth fun and competitive (in a healthy way!):
-                    </p>
-                    <ul style="list-style: none; padding: 0; color: #374151;">
-                        <li style="padding: 8px 0; border-bottom: 1px solid #e5e7eb;"><i class="fas fa-medal" style="color: #fbbf24;"></i> Badges: "30-Day Streak", "Soul Winner", "Prayer Warrior"</li>
-                        <li style="padding: 8px 0; border-bottom: 1px solid #e5e7eb;"><i class="fas fa-medal" style="color: #fbbf24;"></i> Leaderboards: Top soul winners, most consistent attendees</li>
-                        <li style="padding: 8px 0; border-bottom: 1px solid #e5e7eb;"><i class="fas fa-medal" style="color: #fbbf24;"></i> Milestones: "Completed Year 1", "Led 10 to Christ"</li>
-                        <li style="padding: 8px 0; border-bottom: 1px solid #e5e7eb;"><i class="fas fa-medal" style="color: #fbbf24;"></i> Challenges: "Invite 3 friends this month" → Win recognition</li>
-                        <li style="padding: 8px 0;"><i class="fas fa-medal" style="color: #fbbf24;"></i> Achievements unlock as they grow spiritually</li>
-                    </ul>
-                </div>
-
-                <!-- Social Media Soul Winning -->
-                <div style="background: white; border-radius: 16px; padding: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); border-top: 5px solid #8b5cf6;">
-                    <div style="text-align: center; margin-bottom: 20px;">
-                        <i class="fas fa-share-nodes" style="font-size: 3.5rem; color: #8b5cf6;"></i>
-                    </div>
-                    <h3 style="color: #1f2937; font-size: 1.4rem; margin-bottom: 15px; text-align: center;">📲 Social Media Evangelism</h3>
-                    <p style="color: #6b7280; line-height: 1.7; margin-bottom: 20px;">
-                        Turn every member into a digital missionary with 1-click sharing:
-                    </p>
-                    <ul style="list-style: none; padding: 0; color: #374151;">
-                        <li style="padding: 8px 0; border-bottom: 1px solid #e5e7eb;"><i class="fas fa-bolt" style="color: #8b5cf6;"></i> Share sermon clips to WhatsApp/Instagram/Facebook</li>
-                        <li style="padding: 8px 0; border-bottom: 1px solid #e5e7eb;"><i class="fas fa-bolt" style="color: #8b5cf6;"></i> Post testimony videos with auto-generated captions</li>
-                        <li style="padding: 8px 0; border-bottom: 1px solid #e5e7eb;"><i class="fas fa-bolt" style="color: #8b5cf6;"></i> Invite friends via personalized referral links</li>
-                        <li style="padding: 8px 0; border-bottom: 1px solid #e5e7eb;"><i class="fas fa-bolt" style="color: #8b5cf6;"></i> Track who came because of YOUR invite → Earn "Soul Winner" badge!</li>
-                        <li style="padding: 8px 0;"><i class="fas fa-bolt" style="color: #8b5cf6;"></i> Pre-designed social graphics for events</li>
-                    </ul>
-                </div>
-
-                <!-- Progress Tracking -->
-                <div style="background: white; border-radius: 16px; padding: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); border-top: 5px solid #3b82f6;">
-                    <div style="text-align: center; margin-bottom: 20px;">
-                        <i class="fas fa-chart-line" style="font-size: 3.5rem; color: #3b82f6;"></i>
-                    </div>
-                    <h3 style="color: #1f2937; font-size: 1.4rem; margin-bottom: 15px; text-align: center;">📊 Visual Progress Tracking</h3>
-                    <p style="color: #6b7280; line-height: 1.7; margin-bottom: 20px;">
-                        Members see their growth in real-time - like a spiritual fitness tracker:
-                    </p>
-                    <ul style="list-style: none; padding: 0; color: #374151;">
-                        <li style="padding: 8px 0; border-bottom: 1px solid #e5e7eb;"><i class="fas fa-chart-bar" style="color: #3b82f6;"></i> Discipleship Progress: 40% complete on "Growing" stage</li>
-                        <li style="padding: 8px 0; border-bottom: 1px solid #e5e7eb;"><i class="fas fa-chart-bar" style="color: #3b82f6;"></i> Attendance Graph: "You've attended 85% of services!"</li>
-                        <li style="padding: 8px 0; border-bottom: 1px solid #e5e7eb;"><i class="fas fa-chart-bar" style="color: #3b82f6;"></i> Bible Reading Streak: "23 days in a row!"</li>
-                        <li style="padding: 8px 0; border-bottom: 1px solid #e5e7eb;"><i class="fas fa-chart-bar" style="color: #3b82f6;"></i> Souls Won Counter: "You've led 3 people to Christ this year!"</li>
-                        <li style="padding: 8px 0;"><i class="fas fa-chart-bar" style="color: #3b82f6;"></i> Next milestone alerts: "2 more services to hit 90%!"</li>
-                    </ul>
-                </div>
-
-                <!-- Interactive Prayer Wall -->
-                <div style="background: white; border-radius: 16px; padding: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); border-top: 5px solid #ec4899;">
-                    <div style="text-align: center; margin-bottom: 20px;">
-                        <i class="fas fa-hands-praying" style="font-size: 3.5rem; color: #ec4899;"></i>
-                    </div>
-                    <h3 style="color: #1f2937; font-size: 1.4rem; margin-bottom: 15px; text-align: center;">🙏 Live Prayer Wall</h3>
-                    <p style="color: #6b7280; line-height: 1.7; margin-bottom: 20px;">
-                        Interactive community prayer feature that keeps members connected 24/7:
-                    </p>
-                    <ul style="list-style: none; padding: 0; color: #374151;">
-                        <li style="padding: 8px 0; border-bottom: 1px solid #e5e7eb;"><i class="fas fa-heart" style="color: #ec4899;"></i> Submit prayer requests instantly from phone</li>
-                        <li style="padding: 8px 0; border-bottom: 1px solid #e5e7eb;"><i class="fas fa-heart" style="color: #ec4899;"></i> Church members see requests & click "Praying for you!"</li>
-                        <li style="padding: 8px 0; border-bottom: 1px solid #e5e7eb;"><i class="fas fa-heart" style="color: #ec4899;"></i> Requester gets notification: "247 people are praying!"</li>
-                        <li style="padding: 8px 0; border-bottom: 1px solid #e5e7eb;"><i class="fas fa-heart" style="color: #ec4899;"></i> Mark as answered → Auto-post praise report</li>
-                        <li style="padding: 8px 0;"><i class="fas fa-heart" style="color: #ec4899;"></i> See answered prayer count: "God answered 18 prayers this month!"</li>
-                    </ul>
-                </div>
-
-                <!-- Ministry Involvement -->
-                <div style="background: white; border-radius: 16px; padding: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); border-top: 5px solid #10b981;">
-                    <div style="text-align: center; margin-bottom: 20px;">
-                        <i class="fas fa-hand-holding-heart" style="font-size: 3.5rem; color: #10b981;"></i>
-                    </div>
-                    <h3 style="color: #1f2937; font-size: 1.4rem; margin-bottom: 15px; text-align: center;">🤝 Ministry Sign-Up Portal</h3>
-                    <p style="color: #6b7280; line-height: 1.7; margin-bottom: 20px;">
-                        Make it easy for members to get involved and serve:
-                    </p>
-                    <ul style="list-style: none; padding: 0; color: #374151;">
-                        <li style="padding: 8px 0; border-bottom: 1px solid #e5e7eb;"><i class="fas fa-users" style="color: #10b981;"></i> Browse available ministry roles in app</li>
-                        <li style="padding: 8px 0; border-bottom: 1px solid #e5e7eb;"><i class="fas fa-users" style="color: #10b981;"></i> Take spiritual gifts assessment → Get role suggestions</li>
-                        <li style="padding: 8px 0; border-bottom: 1px solid #e5e7eb;"><i class="fas fa-users" style="color: #10b981;"></i> Sign up for serving slots (Sunday usher, youth leader, etc.)</li>
-                        <li style="padding: 8px 0; border-bottom: 1px solid #e5e7eb;"><i class="fas fa-users" style="color: #10b981;"></i> Get reminders before your shift</li>
-                        <li style="padding: 8px 0;"><i class="fas fa-users" style="color: #10b981;"></i> Track volunteer hours → Unlock "Faithful Servant" badge</li>
-                    </ul>
-                </div>
-
-            </div>
-
-            <!-- Real-World Example -->
-            <div style="background: white; border-radius: 16px; padding: 40px; max-width: 900px; margin: 0 auto; box-shadow: 0 20px 60px rgba(0,0,0,0.4);">
-                <h3 style="color: #1f2937; font-size: 1.8rem; margin-bottom: 20px; text-align: center;">
-                    🎯 Here's How It Works in Real Life:
-                </h3>
-
-                <div style="background: linear-gradient(135deg, #f0fdf4, #dcfce7); padding: 25px; border-radius: 12px; border-left: 4px solid #22c55e; margin-bottom: 20px;">
-                    <p style="color: #374151; line-height: 1.8; font-size: 1.05rem;">
-                        <strong style="color: #15803d;">Sunday Morning:</strong> Sarah checks in via QR code → Sees she's on a 12-week attendance streak → Gets "Consistent Member" badge notification → Feels encouraged!
-                    </p>
-                </div>
-
-                <div style="background: linear-gradient(135deg, #fef3c7, #fde68a); padding: 25px; border-radius: 12px; border-left: 4px solid #f59e0b; margin-bottom: 20px;">
-                    <p style="color: #374151; line-height: 1.8; font-size: 1.05rem;">
-                        <strong style="color: #92400e;">During Service:</strong> Pastor shares powerful testimony → Sarah clicks "Share" → Posts to Instagram with 1 tap → Her friend sees it → Visits church next Sunday!
-                    </p>
-                </div>
-
-                <div style="background: linear-gradient(135deg, #dbeafe, #bfdbfe); padding: 25px; border-radius: 12px; border-left: 4px solid #3b82f6; margin-bottom: 20px;">
-                    <p style="color: #374151; line-height: 1.8; font-size: 1.05rem;">
-                        <strong style="color: #1e40af;">Monday Night:</strong> Sarah's friend accepts Christ → System tracks: "Came via Sarah's invite" → Sarah gets "Soul Winner" badge + notification → She's thrilled!
-                    </p>
-                </div>
-
-                <div style="background: linear-gradient(135deg, #e9d5ff, #d8b4fe); padding: 25px; border-radius: 12px; border-left: 4px solid #8b5cf6;">
-                    <p style="color: #374151; line-height: 1.8; font-size: 1.05rem;">
-                        <strong style="color: #6b21a8;">Wednesday:</strong> Sarah submits prayer request → 247 church members click "Praying!" → She feels loved & supported → Prayer answered Friday → Auto-posted as testimony!
-                    </p>
-                </div>
-
-                <div style="text-align: center; margin-top: 30px; padding-top: 30px; border-top: 2px solid #e5e7eb;">
-                    <h4 style="color: #15803d; font-size: 1.5rem; margin-bottom: 15px;">
-                        🔥 Result: Sarah is ENGAGED, GROWING, and WINNING SOULS!
-                    </h4>
-                    <p style="color: #6b7280; font-size: 1.1rem; line-height: 1.7;">
-                        This is what happens when you give members <strong>interactive tools</strong> instead of just asking them to sit and listen. They become <strong>active participants</strong> in the Great Commission!
-                    </p>
-                </div>
-            </div>
-
-            <!-- Bottom CTA -->
-            <div style="text-align: center; margin-top: 60px;">
-                <h3 style="color: white; font-size: 2rem; margin-bottom: 20px;">
-                    🚀 Your Members Will LOVE This!
-                </h3>
-                <p style="color: #a5b4fc; font-size: 1.2rem; margin-bottom: 30px; max-width: 700px; margin-left: auto; margin-right: auto;">
-                    Imagine a church where every member has a personal dashboard, tracks their growth, competes for "Soul Winner" badges, and shares the Gospel on social media with 1 click!
-                </p>
-                <a href="#pricing" style="background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #000; padding: 20px 50px; border-radius: 10px; text-decoration: none; font-weight: 900; font-size: 1.2rem; display: inline-block; box-shadow: 0 10px 30px rgba(251, 191, 36, 0.4);">
-                    Get Shepherd Staff Now - 50% OFF!
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Ministry Journey Visual -->
-    <section style="padding: 80px 0; background: linear-gradient(180deg, #f9fafb 0%, white 100%);">
-        <div class="container">
-            <h2 class="section-title" style="text-align: center; margin-bottom: 60px;">
-                🐑 Shepherd Staff Supports Your Entire Ministry Journey
-            </h2>
-
-            <!-- Visual Journey Path -->
-            <div style="max-width: 1200px; margin: 0 auto;">
-
-                <!-- Stage 1: Evangelism -->
-                <div style="display: flex; align-items: center; margin-bottom: 50px;">
-                    <div style="flex: 0 0 150px; text-align: center;">
-                        <div style="width: 120px; height: 120px; background: linear-gradient(135deg, #22c55e, #16a34a); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto; box-shadow: 0 10px 30px rgba(34, 197, 94, 0.3);">
-                            <i class="fas fa-hands-praying" style="font-size: 3.5rem; color: white;"></i>
-                        </div>
-                        <div style="margin-top: 15px; font-weight: 700; color: #15803d; font-size: 1.1rem;">EVANGELISM</div>
-                    </div>
-                    <div style="flex: 1; padding-left: 40px;">
-                        <div style="background: white; border-left: 4px solid #22c55e; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08);">
-                            <div style="display: flex; gap: 30px; flex-wrap: wrap;">
-                                <div style="flex: 1; min-width: 200px;">
-                                    <i class="fas fa-user-plus" style="color: #22c55e; font-size: 2rem;"></i>
-                                    <div style="margin-top: 10px; font-weight: 600; color: #1f2937;">Visitor Tracking</div>
-                                    <div style="color: #6b7280; font-size: 0.9rem;">Never lose a first-time guest</div>
-                                </div>
-                                <div style="flex: 1; min-width: 200px;">
-                                    <i class="fas fa-phone" style="color: #22c55e; font-size: 2rem;"></i>
-                                    <div style="margin-top: 10px; font-weight: 600; color: #1f2937;">Auto Follow-up</div>
-                                    <div style="color: #6b7280; font-size: 0.9rem;">AI reminds you who to call</div>
-                                </div>
-                                <div style="flex: 1; min-width: 200px;">
-                                    <i class="fas fa-cross" style="color: #22c55e; font-size: 2rem;"></i>
-                                    <div style="margin-top: 10px; font-weight: 600; color: #1f2937;">Salvation Tracking</div>
-                                    <div style="color: #6b7280; font-size: 0.9rem;">First contact → saved soul</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Arrow Down -->
-                <div style="text-align: center; margin: 30px 0;">
-                    <i class="fas fa-arrow-down" style="font-size: 2.5rem; color: #22c55e;"></i>
-                </div>
-
-                <!-- Stage 2: Sunday Service -->
-                <div style="display: flex; align-items: center; margin-bottom: 50px;">
-                    <div style="flex: 0 0 150px; text-align: center;">
-                        <div style="width: 120px; height: 120px; background: linear-gradient(135deg, #16a34a, #15803d); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto; box-shadow: 0 10px 30px rgba(21, 128, 61, 0.3);">
-                            <i class="fas fa-church" style="font-size: 3.5rem; color: white;"></i>
-                        </div>
-                        <div style="margin-top: 15px; font-weight: 700; color: #15803d; font-size: 1.1rem;">SUNDAY SERVICE</div>
-                    </div>
-                    <div style="flex: 1; padding-left: 40px;">
-                        <div style="background: white; border-left: 4px solid #16a34a; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08);">
-                            <div style="display: flex; gap: 30px; flex-wrap: wrap;">
-                                <div style="flex: 1; min-width: 200px;">
-                                    <i class="fas fa-clipboard-check" style="color: #16a34a; font-size: 2rem;"></i>
-                                    <div style="margin-top: 10px; font-weight: 600; color: #1f2937;">AI Attendance</div>
-                                    <div style="color: #6b7280; font-size: 0.9rem;">Automatic check-ins</div>
-                                </div>
-                                <div style="flex: 1; min-width: 200px;">
-                                    <i class="fas fa-bell" style="color: #16a34a; font-size: 2rem;"></i>
-                                    <div style="margin-top: 10px; font-weight: 600; color: #1f2937;">Absence Alerts</div>
-                                    <div style="color: #6b7280; font-size: 0.9rem;">Catch dropouts early</div>
-                                </div>
-                                <div style="flex: 1; min-width: 200px;">
-                                    <i class="fas fa-hand-holding-heart" style="color: #16a34a; font-size: 2rem;"></i>
-                                    <div style="margin-top: 10px; font-weight: 600; color: #1f2937;">Online Giving</div>
-                                    <div style="color: #6b7280; font-size: 0.9rem;">Tithes made effortless</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Arrow Down -->
-                <div style="text-align: center; margin: 30px 0;">
-                    <i class="fas fa-arrow-down" style="font-size: 2.5rem; color: #22c55e;"></i>
-                </div>
-
-                <!-- Stage 3: Mid-Week Services -->
-                <div style="display: flex; align-items: center; margin-bottom: 50px;">
-                    <div style="flex: 0 0 150px; text-align: center;">
-                        <div style="width: 120px; height: 120px; background: linear-gradient(135deg, #15803d, #14532d); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto; box-shadow: 0 10px 30px rgba(20, 83, 45, 0.3);">
-                            <i class="fas fa-book-bible" style="font-size: 3.5rem; color: white;"></i>
-                        </div>
-                        <div style="margin-top: 15px; font-weight: 700; color: #15803d; font-size: 1.1rem;">MID-WEEK</div>
-                    </div>
-                    <div style="flex: 1; padding-left: 40px;">
-                        <div style="background: white; border-left: 4px solid #15803d; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08);">
-                            <div style="display: flex; gap: 30px; flex-wrap: wrap;">
-                                <div style="flex: 1; min-width: 200px;">
-                                    <i class="fas fa-user-graduate" style="color: #15803d; font-size: 2rem;"></i>
-                                    <div style="margin-top: 10px; font-weight: 600; color: #1f2937;">Discipleship</div>
-                                    <div style="color: #6b7280; font-size: 0.9rem;">5-stage growth pipeline</div>
-                                </div>
-                                <div style="flex: 1; min-width: 200px;">
-                                    <i class="fas fa-pray" style="color: #15803d; font-size: 2rem;"></i>
-                                    <div style="margin-top: 10px; font-weight: 600; color: #1f2937;">Prayer Tracking</div>
-                                    <div style="color: #6b7280; font-size: 0.9rem;">Never forget a request</div>
-                                </div>
-                                <div style="flex: 1; min-width: 200px;">
-                                    <i class="fas fa-users" style="color: #15803d; font-size: 2rem;"></i>
-                                    <div style="margin-top: 10px; font-weight: 600; color: #1f2937;">Small Groups</div>
-                                    <div style="color: #6b7280; font-size: 0.9rem;">Manage all cell groups</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Arrow Down -->
-                <div style="text-align: center; margin: 30px 0;">
-                    <i class="fas fa-arrow-down" style="font-size: 2.5rem; color: #22c55e;"></i>
-                </div>
-
-                <!-- Stage 4: HR Management -->
-                <div style="display: flex; align-items: center; margin-bottom: 50px;">
-                    <div style="flex: 0 0 150px; text-align: center;">
-                        <div style="width: 120px; height: 120px; background: linear-gradient(135deg, #3b82f6, #2563eb); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto; box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);">
-                            <i class="fas fa-people-group" style="font-size: 3.5rem; color: white;"></i>
-                        </div>
-                        <div style="margin-top: 15px; font-weight: 700; color: #1e40af; font-size: 1.1rem;">HR MANAGEMENT</div>
-                    </div>
-                    <div style="flex: 1; padding-left: 40px;">
-                        <div style="background: white; border-left: 4px solid #3b82f6; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08);">
-                            <div style="display: flex; gap: 30px; flex-wrap: wrap;">
-                                <div style="flex: 1; min-width: 200px;">
-                                    <i class="fas fa-user-tie" style="color: #3b82f6; font-size: 2rem;"></i>
-                                    <div style="margin-top: 10px; font-weight: 600; color: #1f2937;">Staff & Volunteers</div>
-                                    <div style="color: #6b7280; font-size: 0.9rem;">Manage your team</div>
-                                </div>
-                                <div style="flex: 1; min-width: 200px;">
-                                    <i class="fas fa-calendar-alt" style="color: #3b82f6; font-size: 2rem;"></i>
-                                    <div style="margin-top: 10px; font-weight: 600; color: #1f2937;">Scheduling</div>
-                                    <div style="color: #6b7280; font-size: 0.9rem;">Auto-assign roles</div>
-                                </div>
-                                <div style="flex: 1; min-width: 200px;">
-                                    <i class="fas fa-chart-line" style="color: #3b82f6; font-size: 2rem;"></i>
-                                    <div style="margin-top: 10px; font-weight: 600; color: #1f2937;">Performance</div>
-                                    <div style="color: #6b7280; font-size: 0.9rem;">Track ministry impact</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Arrow Down -->
-                <div style="text-align: center; margin: 30px 0;">
-                    <i class="fas fa-arrow-down" style="font-size: 2.5rem; color: #22c55e;"></i>
-                </div>
-
-                <!-- Stage 5: Fundraising -->
-                <div style="display: flex; align-items: center; margin-bottom: 50px;">
-                    <div style="flex: 0 0 150px; text-align: center;">
-                        <div style="width: 120px; height: 120px; background: linear-gradient(135deg, #f59e0b, #d97706); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto; box-shadow: 0 10px 30px rgba(245, 158, 11, 0.3);">
-                            <i class="fas fa-hand-holding-dollar" style="font-size: 3.5rem; color: white;"></i>
-                        </div>
-                        <div style="margin-top: 15px; font-weight: 700; color: #b45309; font-size: 1.1rem;">FUNDRAISING</div>
-                    </div>
-                    <div style="flex: 1; padding-left: 40px;">
-                        <div style="background: white; border-left: 4px solid #f59e0b; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08);">
-                            <div style="display: flex; gap: 30px; flex-wrap: wrap;">
-                                <div style="flex: 1; min-width: 200px;">
-                                    <i class="fas fa-donate" style="color: #f59e0b; font-size: 2rem;"></i>
-                                    <div style="margin-top: 10px; font-weight: 600; color: #1f2937;">Campaign Manager</div>
-                                    <div style="color: #6b7280; font-size: 0.9rem;">Track fundraising goals</div>
-                                </div>
-                                <div style="flex: 1; min-width: 200px;">
-                                    <i class="fas fa-wallet" style="color: #f59e0b; font-size: 2rem;"></i>
-                                    <div style="margin-top: 10px; font-weight: 600; color: #1f2937;">Recurring Giving</div>
-                                    <div style="color: #6b7280; font-size: 0.9rem;">Set it & forget it</div>
-                                </div>
-                                <div style="flex: 1; min-width: 200px;">
-                                    <i class="fas fa-chart-pie" style="color: #f59e0b; font-size: 2rem;"></i>
-                                    <div style="margin-top: 10px; font-weight: 600; color: #1f2937;">Financial Reports</div>
-                                    <div style="color: #6b7280; font-size: 0.9rem;">Clear transparency</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Arrow Down -->
-                <div style="text-align: center; margin: 30px 0;">
-                    <i class="fas fa-arrow-down" style="font-size: 2.5rem; color: #22c55e;"></i>
-                </div>
-
-                <!-- Stage 6: Social Impact -->
-                <div style="display: flex; align-items: center; margin-bottom: 50px;">
-                    <div style="flex: 0 0 150px; text-align: center;">
-                        <div style="width: 120px; height: 120px; background: linear-gradient(135deg, #8b5cf6, #7c3aed); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto; box-shadow: 0 10px 30px rgba(139, 92, 246, 0.3);">
-                            <i class="fas fa-heart" style="font-size: 3.5rem; color: white;"></i>
-                        </div>
-                        <div style="margin-top: 15px; font-weight: 700; color: #6b21a8; font-size: 1.1rem;">SOCIAL IMPACT</div>
-                    </div>
-                    <div style="flex: 1; padding-left: 40px;">
-                        <div style="background: white; border-left: 4px solid #8b5cf6; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08);">
-                            <div style="display: flex; gap: 30px; flex-wrap: wrap;">
-                                <div style="flex: 1; min-width: 200px;">
-                                    <i class="fas fa-hands-helping" style="color: #8b5cf6; font-size: 2rem;"></i>
-                                    <div style="margin-top: 10px; font-weight: 600; color: #1f2937;">Outreach Events</div>
-                                    <div style="color: #6b7280; font-size: 0.9rem;">Organize community help</div>
-                                </div>
-                                <div style="flex: 1; min-width: 200px;">
-                                    <i class="fas fa-bullhorn" style="color: #8b5cf6; font-size: 2rem;"></i>
-                                    <div style="margin-top: 10px; font-weight: 600; color: #1f2937;">Communication</div>
-                                    <div style="color: #6b7280; font-size: 0.9rem;">Reach 247 members instantly</div>
-                                </div>
-                                <div style="flex: 1; min-width: 200px;">
-                                    <i class="fas fa-medal" style="color: #8b5cf6; font-size: 2rem;"></i>
-                                    <div style="margin-top: 10px; font-weight: 600; color: #1f2937;">Testimonies</div>
-                                    <div style="color: #6b7280; font-size: 0.9rem;">Celebrate God's work</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Arrow Down -->
-                <div style="text-align: center; margin: 30px 0;">
-                    <i class="fas fa-arrow-down" style="font-size: 2.5rem; color: #22c55e;"></i>
-                </div>
-
-                <!-- Final Stage: Church Growth -->
-                <div style="display: flex; align-items: center;">
-                    <div style="flex: 0 0 150px; text-align: center;">
-                        <div style="width: 120px; height: 120px; background: linear-gradient(135deg, #fbbf24, #f59e0b); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto; box-shadow: 0 10px 30px rgba(251, 191, 36, 0.3); animation: pulse 2s infinite;">
-                            <i class="fas fa-seedling" style="font-size: 3.5rem; color: white;"></i>
-                        </div>
-                        <div style="margin-top: 15px; font-weight: 700; color: #92400e; font-size: 1.1rem;">CHURCH GROWTH</div>
-                    </div>
-                    <div style="flex: 1; padding-left: 40px;">
-                        <div style="background: linear-gradient(135deg, #fef3c7, #fde68a); border-left: 4px solid #fbbf24; padding: 30px; border-radius: 12px; box-shadow: 0 8px 25px rgba(251, 191, 36, 0.3);">
-                            <h3 style="color: #92400e; margin-bottom: 20px; font-size: 1.5rem;">🎉 The Result: Transformation!</h3>
-                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px;">
-                                <div style="text-align: center;">
-                                    <div style="font-size: 2.5rem; font-weight: 900; color: #f59e0b;">+40%</div>
-                                    <div style="color: #92400e; font-weight: 600;">Membership</div>
-                                </div>
-                                <div style="text-align: center;">
-                                    <div style="font-size: 2.5rem; font-weight: 900; color: #f59e0b;">1→23</div>
-                                    <div style="color: #92400e; font-weight: 600;">Disciples</div>
-                                </div>
-                                <div style="text-align: center;">
-                                    <div style="font-size: 2.5rem; font-weight: 900; color: #f59e0b;">85%</div>
-                                    <div style="color: #92400e; font-weight: 600;">Retention</div>
-                                </div>
-                                <div style="text-align: center;">
-                                    <div style="font-size: 2.5rem; font-weight: 900; color: #f59e0b;">3-5</div>
-                                    <div style="color: #92400e; font-weight: 600;">Souls/Month</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-    <style>
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-    </style>
-
-    <!-- Bless a Pastor Program -->
-    <section style="padding: 80px 0; background: linear-gradient(135deg, #f0fdf4, #dcfce7);">
-        <div class="container" style="text-align: center;">
-            <h2 style="color: #15803d; font-size: 2.5rem; margin-bottom: 20px;">
-                🎁 Z2B Members: Bless a Pastor for FREE!
-            </h2>
-            <p style="font-size: 1.3rem; color: #374151; max-width: 900px; margin: 0 auto 40px auto; line-height: 1.8;">
-                When you join Z2B at the <strong style="color: #15803d;">R480/month tier</strong>, you don't just build your legacy -
-                you get to <strong>BLESS a church</strong> with 90 days of Shepherd Staff (worth R2,700)!
-            </p>
-
-            <div style="background: white; padding: 40px; border-radius: 16px; max-width: 700px; margin: 0 auto 40px auto; box-shadow: 0 10px 40px rgba(0,0,0,0.1);">
-                <h3 style="color: #15803d; margin-bottom: 20px; font-size: 1.5rem;">✨ How It Works:</h3>
-                <div style="text-align: left; font-size: 1.1rem; color: #374151; line-height: 2;">
-                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px; padding: 15px; background: #f9fafb; border-radius: 10px;">
-                        <div style="width: 40px; height: 40px; background: #22c55e; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 900; flex-shrink: 0;">1</div>
-                        <div>Join Z2B at R480/month tier</div>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px; padding: 15px; background: #f9fafb; border-radius: 10px;">
-                        <div style="width: 40px; height: 40px; background: #22c55e; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 900; flex-shrink: 0;">2</div>
-                        <div>Choose a pastor or church you love</div>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px; padding: 15px; background: #f9fafb; border-radius: 10px;">
-                        <div style="width: 40px; height: 40px; background: #22c55e; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 900; flex-shrink: 0;">3</div>
-                        <div>We give them 90 days of Shepherd Staff FREE</div>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 15px; padding: 15px; background: #f9fafb; border-radius: 10px;">
-                        <div style="width: 40px; height: 40px; background: #22c55e; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 900; flex-shrink: 0;">4</div>
-                        <div>Watch their ministry transform!</div>
-                    </div>
-                </div>
-
-                <div style="margin-top: 30px; padding: 20px; background: linear-gradient(135deg, #fef3c7, #fde68a); border-radius: 12px;">
-                    <p style="font-size: 1.2rem; color: #92400e; margin: 0;">
-                        <strong>⏰ Limited to First 100 Z2B Members!</strong><br>
-                        <span style="font-size: 1rem;">Only 100 blessing spots remaining!</span>
-                    </p>
-                </div>
-            </div>
-
-            <!-- What Churches Get -->
-            <div style="max-width: 900px; margin: 0 auto 40px auto;">
-                <h3 style="color: #15803d; font-size: 1.5rem; margin-bottom: 25px;">🎁 What the Church Receives:</h3>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
-                    <div style="background: white; padding: 20px; border-radius: 12px; text-align: left; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
-                        <i class="fas fa-church" style="font-size: 2rem; color: #22c55e; margin-bottom: 10px;"></i>
-                        <h4 style="color: #1f2937; margin-bottom: 10px;">90-Day Full Access</h4>
-                        <p style="color: #6b7280; font-size: 0.95rem;">Complete Shepherd Staff Starter package worth R2,700</p>
-                    </div>
-                    <div style="background: white; padding: 20px; border-radius: 12px; text-align: left; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
-                        <i class="fas fa-gift" style="font-size: 2rem; color: #22c55e; margin-bottom: 10px;"></i>
-                        <h4 style="color: #1f2937; margin-bottom: 10px;">Zero Cost</h4>
-                        <p style="color: #6b7280; font-size: 0.95rem;">No credit card, no obligation, just blessing</p>
-                    </div>
-                    <div style="background: white; padding: 20px; border-radius: 12px; text-align: left; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
-                        <i class="fas fa-headset" style="font-size: 2rem; color: #22c55e; margin-bottom: 10px;"></i>
-                        <h4 style="color: #1f2937; margin-bottom: 10px;">Free Support</h4>
-                        <p style="color: #6b7280; font-size: 0.95rem;">Setup assistance and training included</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Impact Story -->
-            <div style="max-width: 800px; margin: 0 auto 40px auto; background: white; padding: 40px; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); border-left: 5px solid #22c55e;">
-                <h3 style="color: #15803d; margin-bottom: 20px; font-size: 1.5rem;">💡 Why This Matters:</h3>
-                <p style="color: #374151; font-size: 1.1rem; line-height: 1.8; text-align: left; margin-bottom: 20px;">
-                    <strong style="color: #15803d;">"Thank You, Jesus"</strong> isn't just words - it's action. When God blesses you with Z2B success, you get to <strong>bless a pastor</strong> who's struggling with church admin.
-                </p>
-                <div style="background: linear-gradient(135deg, #f0fdf4, #dcfce7); padding: 25px; border-radius: 12px; text-align: left;">
-                    <p style="color: #374151; font-size: 1rem; line-height: 1.7; margin-bottom: 15px;">
-                        <i class="fas fa-quote-left" style="color: #22c55e;"></i>
-                        <em>"I was drowning in spreadsheets and losing track of visitors. When [Member Name] blessed our church with Shepherd Staff, everything changed. We've tracked 47 new visitors in 30 days and none fell through the cracks!"</em>
-                    </p>
-                    <p style="color: #6b7280; font-size: 0.95rem; margin: 0;">
-                        - Pastor David, Grace Community Church
-                    </p>
-                </div>
-            </div>
-
-            <!-- CTA Buttons -->
-            <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
-                <a href="https://z2blegacybuilders.co.za/register.html" style="display: inline-block; background: linear-gradient(135deg, #22c55e, #16a34a); color: white; padding: 20px 50px; border-radius: 10px; text-decoration: none; font-weight: 900; font-size: 1.2rem; box-shadow: 0 10px 30px rgba(34, 197, 94, 0.3);">
-                    <i class="fas fa-rocket"></i> Join Z2B & Bless a Pastor
-                </a>
-                <a href="bless-a-pastor-form.html" style="display: inline-block; background: white; color: #22c55e; padding: 20px 50px; border-radius: 10px; text-decoration: none; font-weight: 700; font-size: 1.1rem; border: 3px solid #22c55e;">
-                    <i class="fas fa-info-circle"></i> Learn More
-                </a>
-            </div>
-
-            <!-- Fine Print -->
-            <p style="margin-top: 40px; color: #6b7280; font-size: 0.9rem; max-width: 700px; margin-left: auto; margin-right: auto;">
-                *Available only to Z2B members at R480/month tier or higher. Limited to first 100 members. One church blessing per member. Church receives 90-day free trial with no obligation to continue.
-            </p>
-        </div>
-    </section>
-    <!-- Trust Signals -->
-    <section class="trust">
-        <div class="container">
-            <h2 class="section-title">🚀 Join the First 100 Churches</h2>
-            <div class="trust-grid">
-                <div class="trust-item">
-                    <div class="trust-number">100</div>
-                    <p>Days Free Trial</p>
-                </div>
-                <div class="trust-item">
-                    <div class="trust-number">24/7</div>
-                    <p>AI-Powered Security</p>
-                </div>
-                <div class="trust-item">
-                    <div class="trust-number">99.9%</div>
-                    <p>Uptime Guarantee</p>
-                </div>
-                <div class="trust-item">
-                    <div class="trust-number">30</div>
-                    <p>Day Money Back</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- CTA Section -->
-    <section id="contact" class="cta-section">
-        <div class="container">
-            <h2>Stop Losing Souls, Time & Resources</h2>
-            <p style="font-size: 1.2rem; margin: 20px 0;">Get the Staff your ministry needs to fulfill the Great Commission.</p>
-            <p style="font-size: 1.1rem; margin-bottom: 30px;">Start your 14-day free trial today. No credit card required.</p>
-            <div class="cta-buttons">
-                <a href="https://app.shepherdstaff.com/register" class="btn btn-primary">Start Free Trial</a>
-                <a href="/cdn-cgi/l/email-protection#41282f272e01322924312924332532352027276f222e2c" class="btn btn-secondary">Contact Sales</a>
-            </div>
-            <p style="margin-top: 30px; font-size: 0.95rem;">
-                Questions? Email <strong><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a2cbccc4cde2d1cac7d2cac7d0c6d1d6c3c4c48cc1cdcf">[email&#160;protected]</a></strong>
-            </p>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <p>&copy; 2025 Shepherd Staff. All rights reserved.</p>
-            <p style="margin-top: 10px; font-size: 0.95rem;">Empowering churches worldwide with AI technology.</p>
-            <p class="built-with-love">Built with ❤️ by Z2B Legacy Builders</p>
-        </div>
-    </footer>
-
-    <!-- Smooth scroll -->
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-             
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
