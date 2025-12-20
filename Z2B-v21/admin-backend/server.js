@@ -87,10 +87,12 @@ const marketplaceAdminRoutes = require('./routes/marketplaceAdmin');
 const productRoutes = require('./routes/products');
 const grantAccessRoutes = require('./routes/grant-access');
 const appSelectionRoutes = require('./routes/appSelection');
+const didVideoRoutes = require('./routes/did-video');
 
 // Use Routes
 app.use('/api', grantAccessRoutes);
 app.use('/api/app-selection', appSelectionRoutes);
+app.use('/api/did-video', didVideoRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/settings', settingsRoutes);
 // IMPORTANT: Register marketplaceAdminRoutes BEFORE userRoutes

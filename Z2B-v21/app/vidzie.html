@@ -843,7 +843,7 @@ Hey everyone! Today I want to share some amazing insights about building a succe
             }
         }
 
-        // Generate video
+        // Generate video with D-ID API
         async function generateVideo() {
             const script = document.getElementById('script').value.trim();
             const resolution = document.getElementById('resolution').value;
@@ -874,47 +874,120 @@ Hey everyone! Today I want to share some amazing insights about building a succe
             document.getElementById('generateBtn').disabled = true;
             document.getElementById('loading').classList.add('active');
             document.getElementById('progressBar').classList.add('active');
+            document.getElementById('statusText').textContent = 'Uploading image and script...';
 
             // Simulate progress
             simulateProgress();
 
-            // Show info message
-            showMessage('AI is generating your video. This typically takes 2-3 minutes...', 'info');
-
-            // Simulate API call
             try {
-                // In production, replace this with actual API call
-                await new Promise(resolve => setTimeout(resolve, 3000));
+                // Start video generation with D-ID API
+                showMessage('🎬 Starting video generation with D-ID AI...', 'info');
 
-                // For demo purposes, show success
-                showMessage('✅ Video generated successfully! (Demo mode - Connect to AI service for real generation)', 'success');
+                const generateResponse = await fetch(`${API_URL}/api/did-video/generate`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        image: sourceImageUrl,
+                        script: script,
+                        voice: selectedVoice,
+                        resolution: resolution,
+                        background: background
+                    })
+                });
 
-                // Show preview placeholder
-                document.getElementById('previewArea').innerHTML = `
-                    <div class="video-preview-placeholder">
-                        <i class="fas fa-check-circle" style="color: #4CAF50; font-size: 4em;"></i>
-                        <div style="color: #4CAF50; margin-top: 20px;">Video Generation Complete!</div>
-                        <div style="color: #888; margin-top: 10px; font-size: 0.9em;">
-                            Connect to HeyGen, D-ID, or similar API for real video generation
-                        </div>
-                        <button class="btn btn-primary" style="margin-top: 20px;" onclick="showIntegrationGuide()">
-                            <i class="fas fa-plug"></i> View Integration Guide
-                        </button>
-                    </div>
-                `;
+                if (!generateResponse.ok) {
+                    const errorData = await generateResponse.json();
+                    throw new Error(errorData.error || 'Generation request failed');
+                }
 
-                // Enable action buttons
-                document.getElementById('downloadBtn').disabled = false;
-                document.getElementById('shareBtn').disabled = false;
+                const generateData = await generateResponse.json();
 
-                // Add to library
-                addToLibrary(script, selectedVoice);
+                if (!generateData.success) {
+                    throw new Error(generateData.error || 'Generation failed');
+                }
+
+                const talkId = generateData.talkId;
+                document.getElementById('statusText').textContent = 'Processing video with D-ID AI (2-3 minutes)...';
+                showMessage('⏳ Video is being generated. Please wait 2-3 minutes...', 'info');
+
+                // Poll for completion
+                let attempts = 0;
+                const maxAttempts = 60; // 5 minutes max
+
+                const checkStatus = async () => {
+                    attempts++;
+
+                    const statusResponse = await fetch(`${API_URL}/api/did-video/status/${talkId}`, {
+                        headers: {
+                            'Authorization': `Bearer ${authToken}`
+                        }
+                    });
+
+                    if (!statusResponse.ok) {
+                        throw new Error('Status check failed');
+                    }
+
+                    const statusData = await statusResponse.json();
+
+                    if (statusData.status === 'done' && statusData.videoUrl) {
+                        // Video ready!
+                        document.getElementById('progressBar').classList.remove('active');
+                        document.getElementById('loading').classList.remove('active');
+                        document.getElementById('statusText').textContent = 'Video generated successfully!';
+
+                        // Update video preview
+                        document.getElementById('previewArea').innerHTML = `
+                            <video controls style="width: 100%; border-radius: 10px; background: #000;">
+                                <source src="${statusData.videoUrl}" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            <div style="margin-top: 15px; display: flex; gap: 10px;">
+                                <button class="btn btn-primary" onclick="downloadVideo('${statusData.videoUrl}')">
+                                    <i class="fas fa-download"></i> Download Video
+                                </button>
+                                <button class="btn btn-secondary" onclick="shareVideo('${statusData.videoUrl}')">
+                                    <i class="fas fa-share"></i> Share
+                                </button>
+                                <button class="btn btn-secondary" onclick="createNewVideo()">
+                                    <i class="fas fa-plus"></i> Create New
+                                </button>
+                            </div>
+                        `;
+
+                        showMessage('✅ Video generated successfully!', 'success');
+                        addToLibrary(script, selectedVoice, statusData.videoUrl);
+                        document.getElementById('generateBtn').disabled = false;
+                        resetProgress();
+
+                    } else if (statusData.status === 'error' || statusData.status === 'rejected') {
+                        throw new Error('Video generation failed: ' + (statusData.error || 'Unknown error'));
+
+                    } else if (attempts >= maxAttempts) {
+                        throw new Error('Video generation timed out after 5 minutes');
+
+                    } else {
+                        // Still processing
+                        const progress = Math.min((attempts / maxAttempts) * 100, 95);
+                        document.getElementById('progressFill').style.width = progress + '%';
+                        document.getElementById('progressPercent').textContent = Math.floor(progress) + '%';
+                        document.getElementById('statusText').textContent = `Processing... (${Math.floor(progress)}%)`;
+
+                        // Check again in 5 seconds
+                        setTimeout(checkStatus, 5000);
+                    }
+                };
+
+                // Start status checking after 5 seconds
+                setTimeout(checkStatus, 5000);
 
             } catch (error) {
-                showMessage('Error generating video: ' + error.message, 'error');
-            } finally {
-                document.getElementById('loading').classList.remove('active');
+                console.error('Video generation error:', error);
+                showMessage('❌ Error: ' + error.message, 'error');
                 document.getElementById('progressBar').classList.remove('active');
+                document.getElementById('loading').classList.remove('active');
                 document.getElementById('generateBtn').disabled = false;
                 resetProgress();
             }
@@ -952,36 +1025,132 @@ Hey everyone! Today I want to share some amazing insights about building a succe
         }
 
         // Add to library
-        function addToLibrary(script, voice) {
+        function addToLibrary(script, voice, videoUrl) {
             const library = document.getElementById('videoLibrary');
             const date = new Date().toLocaleDateString();
 
             const videoCard = document.createElement('div');
             videoCard.className = 'video-card';
-            videoCard.innerHTML = `
-                <div class="video-thumbnail">
-                    <i class="fas fa-check-circle" style="color: #4CAF50;"></i>
-                </div>
-                <div class="video-card-title">${script.substring(0, 30)}...</div>
-                <div class="video-card-date">${date} • ${voice}</div>
-                <div class="video-card-actions">
-                    <button class="btn btn-secondary" onclick="showMessage('Download feature available in production', 'info')">
-                        <i class="fas fa-download"></i> Download
-                    </button>
-                </div>
-            `;
+
+            if (videoUrl) {
+                // Real video with thumbnail
+                videoCard.innerHTML = `
+                    <video class="video-thumbnail" onclick="playVideo('${videoUrl}')" style="cursor: pointer;">
+                        <source src="${videoUrl}" type="video/mp4">
+                    </video>
+                    <div class="video-card-title">${script.substring(0, 30)}...</div>
+                    <div class="video-card-date">${date} • ${voice}</div>
+                    <div class="video-card-actions">
+                        <button class="btn btn-secondary" onclick="downloadVideo('${videoUrl}')">
+                            <i class="fas fa-download"></i> Download
+                        </button>
+                    </div>
+                `;
+            } else {
+                // Demo placeholder
+                videoCard.innerHTML = `
+                    <div class="video-thumbnail">
+                        <i class="fas fa-check-circle" style="color: #4CAF50;"></i>
+                    </div>
+                    <div class="video-card-title">${script.substring(0, 30)}...</div>
+                    <div class="video-card-date">${date} • ${voice}</div>
+                `;
+            }
 
             // Remove placeholder if exists
-            if (library.children.length === 1 && library.children[0].querySelector('.video-card-title').textContent === 'No videos yet') {
+            if (library.children.length === 1 && library.children[0].textContent.includes('No videos yet')) {
                 library.innerHTML = '';
             }
 
             library.insertBefore(videoCard, library.firstChild);
         }
 
+        // Play video in preview
+        function playVideo(url) {
+            document.getElementById('previewArea').innerHTML = `
+                <video controls autoplay style="width: 100%; border-radius: 10px; background: #000;">
+                    <source src="${url}" type="video/mp4">
+                </video>
+                <div style="margin-top: 15px; display: flex; gap: 10px;">
+                    <button class="btn btn-primary" onclick="downloadVideo('${url}')">
+                        <i class="fas fa-download"></i> Download Video
+                    </button>
+                    <button class="btn btn-secondary" onclick="shareVideo('${url}')">
+                        <i class="fas fa-share"></i> Share
+                    </button>
+                </div>
+            `;
+            document.getElementById('previewArea').scrollIntoView({ behavior: 'smooth' });
+        }
+
         // Download video
-        function downloadVideo() {
-            showMessage('Download feature will be available once connected to video generation API', 'info');
+        function downloadVideo(url) {
+            if (!url) {
+                showMessage('Video URL not available', 'error');
+                return;
+            }
+
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `vidzie-video-${Date.now()}.mp4`;
+            a.target = '_blank';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            showMessage('✅ Video download started!', 'success');
+        }
+
+        // Share video
+        function shareVideo(url) {
+            if (!url) {
+                showMessage('Video URL not available', 'error');
+                return;
+            }
+
+            if (navigator.share) {
+                navigator.share({
+                    title: 'My AI Avatar Video',
+                    text: 'Check out this video I created with Vidzie AI!',
+                    url: url
+                }).then(() => {
+                    showMessage('✅ Video shared successfully!', 'success');
+                }).catch((err) => {
+                    console.log('Share failed:', err);
+                    copyToClipboard(url);
+                });
+            } else {
+                copyToClipboard(url);
+            }
+        }
+
+        // Copy URL to clipboard
+        function copyToClipboard(url) {
+            navigator.clipboard.writeText(url).then(() => {
+                showMessage('✅ Video URL copied to clipboard!', 'info');
+            }).catch(() => {
+                showMessage('Could not copy URL. Please copy manually: ' + url, 'info');
+            });
+        }
+
+        // Create new video (reset form)
+        function createNewVideo() {
+            document.getElementById('imageUpload').querySelector('input').value = '';
+            document.getElementById('uploadedImage').style.display = 'none';
+            document.getElementById('uploadPlaceholder').style.display = 'flex';
+            document.getElementById('imageUpload').classList.remove('has-image');
+            document.getElementById('script').value = '';
+            document.getElementById('charCount').textContent = '0';
+            document.querySelectorAll('.voice-option').forEach(opt => opt.classList.remove('selected'));
+            selectedVoice = null;
+            sourceImageUrl = null;
+            document.getElementById('previewArea').innerHTML = `
+                <div style="text-align: center; padding: 60px 20px; color: #888;">
+                    <i class="fas fa-video" style="font-size: 3em; margin-bottom: 15px; display: block;"></i>
+                    <p>Your generated video will appear here</p>
+                </div>
+            `;
+            document.getElementById('generateBtn').disabled = true;
+            showMessage('✅ Ready to create a new video!', 'info');
         }
 
         // Share video
