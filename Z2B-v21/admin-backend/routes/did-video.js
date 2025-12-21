@@ -60,8 +60,8 @@ router.post('/generate', verifyToken, async (req, res) => {
                     type: 'text',
                     input: script,
                     provider: {
-                        type: 'microsoft',
-                        voice_id: voiceId
+                        type: 'elevenlabs',
+                        voice_id: voiceId.startsWith('en-US-') ? 'Adam' : voiceId // Use ElevenLabs voices
                     }
                 },
                 config: {
@@ -167,18 +167,18 @@ router.get('/voices', async (req, res) => {
     }
 });
 
-// Map our voice names to D-ID provider voices
+// Map our voice names to D-ID provider voices (ElevenLabs for Lite plan)
 function mapVoiceToProvider(voiceId) {
     const voiceMap = {
-        'male-professional': 'en-US-GuyNeural',
-        'female-professional': 'en-US-JennyNeural',
-        'male-casual': 'en-US-ChristopherNeural',
-        'female-casual': 'en-US-AriaNeural',
-        'male-motivational': 'en-US-DavisNeural',
-        'motivational': 'en-US-DavisNeural',
-        'custom': 'en-US-GuyNeural' // Default for voice cloning feature
+        'male-professional': 'Adam',        // ElevenLabs male voice
+        'female-professional': 'Amber',     // ElevenLabs female voice
+        'male-casual': 'Drew',              // ElevenLabs casual male
+        'female-casual': 'Rachel',          // ElevenLabs casual female
+        'male-motivational': 'Adam',        // ElevenLabs strong male
+        'motivational': 'Adam',
+        'custom': 'Adam'                    // Default
     };
-    return voiceMap[voiceId] || 'en-US-GuyNeural';
+    return voiceMap[voiceId] || 'Adam';
 }
 
 module.exports = router;
