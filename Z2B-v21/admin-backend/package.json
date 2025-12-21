@@ -1,7 +1,7 @@
 {
   "name": "z2b-admin-backend",
-  "version": "2.0.1-PROFILE-ENDPOINT-FIX",
-  "description": "Z2B Legacy Builders Admin Panel Backend - Password Reset Active",
+  "version": "3.0.0-TEMPLATE-SYSTEM",
+  "description": "Z2B Legacy Builders Admin Panel Backend - VIDZIE Template System with HeyGen AI",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
