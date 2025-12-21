@@ -23,8 +23,8 @@ const allowedOrigins = [
 
 const corsOptions = {
     origin: function (origin, callback) {
-        // Allow requests with no origin (like mobile apps, Postman, curl)
-        if (!origin) return callback(null, true);
+        // Allow requests with no origin (like mobile apps, Postman, curl, local files)
+        if (!origin || origin === 'null') return callback(null, true);
 
         // Clean origin (remove trailing dots/slashes)
         const cleanOrigin = origin.replace(/\.$/, '').replace(/\/$/, '');
