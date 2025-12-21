@@ -29,14 +29,14 @@ router.post('/generate', verifyToken, async (req, res) => {
             });
         }
 
-        // HeyGen avatar mapping (use default avatars from HeyGen)
+        // HeyGen avatar mapping (use actual available avatars)
         const avatarMap = {
-            'male-professional': 'Wayne_20240711',
-            'female-professional': 'Anna_public_3_20240108',
-            'male-casual': 'josh_lite3_20230714',
-            'female-casual': 'Susan_public_2_20240328',
-            'male-motivational': 'Wayne_20240711',
-            'default': 'Wayne_20240711'
+            'male-professional': 'Aditya_public_1',           // Aditya in Blue blazer
+            'female-professional': 'Abigail_standing_office_front',  // Abigail Office Front
+            'male-casual': 'Aditya_public_2',                 // Aditya in Blue t-shirt
+            'female-casual': 'Abigail_sitting_sofa_front',    // Abigail Sofa Front
+            'male-motivational': 'Adrian_public_2_20240312',  // Adrian in Blue Suit
+            'default': 'Aditya_public_1'                      // Default to professional male
         };
 
         const selectedAvatar = avatar_id || avatarMap[voice] || avatarMap['default'];
@@ -182,18 +182,129 @@ router.get('/voices', verifyToken, async (req, res) => {
     }
 });
 
-// Map our voice names to HeyGen voice IDs
+// Get available templates
+router.get('/templates', verifyToken, async (req, res) => {
+    try {
+        const response = await axios.get(
+            `${HEYGEN_API_URL}/templates`,
+            {
+                headers: {
+                    'X-Api-Key': HEYGEN_API_KEY
+                }
+            }
+        );
+
+        res.json({
+            success: true,
+            templates: response.data.data.templates || []
+        });
+
+    } catch (error) {
+        console.error('Templates Error:', error.response?.data || error.message);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to fetch templates'
+        });
+    }
+});
+
+// Get template details and variables
+router.get('/templates/:templateId', verifyToken, async (req, res) => {
+    try {
+        const { templateId } = req.params;
+
+        const response = await axios.get(
+            `${HEYGEN_API_URL}/template/${templateId}`,
+            {
+                headers: {
+                    'X-Api-Key': HEYGEN_API_KEY
+                }
+            }
+        );
+
+        res.json({
+            success: true,
+            template: response.data.data,
+            variables: response.data.data.variables || []
+        });
+
+    } catch (error) {
+        console.error('Template Details Error:', error.response?.data || error.message);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to fetch template details'
+        });
+    }
+});
+
+// Generate video from template
+router.post('/generate-from-template', verifyToken, async (req, res) => {
+    try {
+        const { template_id, variables, test } = req.body;
+
+        console.log('HeyGen Template Generate Request:', {
+            template_id,
+            variableCount: Object.keys(variables || {}).length,
+            test: test || false
+        });
+
+        // Validate inputs
+        if (!template_id) {
+            return res.status(400).json({
+                success: false,
+                error: 'Template ID is required'
+            });
+        }
+
+        // Generate video from template
+        const heygenResponse = await axios.post(
+            `${HEYGEN_API_URL}/template/generate`,
+            {
+                template_id: template_id,
+                variables: variables,
+                test: test || false,
+                caption: false
+            },
+            {
+                headers: {
+                    'X-Api-Key': HEYGEN_API_KEY,
+                    'Content-Type': 'application/json'
+                }
+            }
+        );
+
+        const videoId = heygenResponse.data.data.video_id;
+
+        console.log('HeyGen Template Video Created:', videoId);
+
+        res.json({
+            success: true,
+            videoId: videoId,
+            message: 'Template video generation started',
+            estimatedTime: '2-3 minutes'
+        });
+
+    } catch (error) {
+        console.error('Template Generate Error:', error.response?.data || error.message);
+        res.status(500).json({
+            success: false,
+            error: error.response?.data?.message || error.message || 'Template video generation failed'
+        });
+    }
+});
+
+// Map our voice names to HeyGen voice IDs (actual available voices)
 function mapVoiceToHeyGen(voiceId) {
     const voiceMap = {
-        'male-professional': '1bd001e7e50f421d891986aad5158bc8',  // Professional male
-        'female-professional': '2d5b0e6cf36841b29b7b7f0fa5f6141c', // Professional female
-        'male-casual': '1bd001e7e50f421d891986aad5158bc8',       // Casual male
-        'female-casual': '2d5b0e6cf36841b29b7b7f0fa5f6141c',      // Casual female
-        'male-motivational': '1bd001e7e50f421d891986aad5158bc8',  // Motivational
-        'motivational': '1bd001e7e50f421d891986aad5158bc8',
-        'custom': '1bd001e7e50f421d891986aad5158bc8'              // Default
+        'male-professional': 'acff30ce1e944de8ac429d26fa9367ad',  // Mark - Professional male
+        'female-professional': 'fb8c5c3f02854c57a4da182d4ed59467', // Ivy - Professional female
+        'male-casual': 'f38a635bee7a4d1f9b0a654a31d050d2',       // Chill Brian - Casual male
+        'female-casual': 'e0cc82c22f414c95b1f25696c732f058',      // Cassidy - Casual female
+        'male-motivational': 'acff30ce1e944de8ac429d26fa9367ad',  // Mark - Motivational
+        'motivational': 'acff30ce1e944de8ac429d26fa9367ad',       // Mark
+        'custom': 'acff30ce1e944de8ac429d26fa9367ad'              // Default to Mark
     };
-    return voiceMap[voiceId] || '1bd001e7e50f421d891986aad5158bc8';
+    return voiceMap[voiceId] || 'acff30ce1e944de8ac429d26fa9367ad';
 }
 
 module.exports = router;
