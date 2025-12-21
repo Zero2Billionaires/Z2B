@@ -42,12 +42,20 @@ router.post('/generate', verifyToken, async (req, res) => {
 
         console.log('Creating D-ID talk with image type:', image.startsWith('data:image') ? 'base64' : 'URL');
 
+        // Handle base64 images - convert to just base64 string without data URL prefix
+        let processedImage = image;
+        if (image.startsWith('data:image')) {
+            console.log('Converting data URL to base64 string...');
+            // Remove the data URL prefix (e.g., "data:image/png;base64,")
+            processedImage = image.split(',')[1];
+            console.log('Base64 length:', processedImage.length);
+        }
+
         // Create D-ID talk (video generation)
-        // D-ID supports base64 images directly in source_url
         const didResponse = await axios.post(
             `${DID_API_URL}/talks`,
             {
-                source_url: image, // D-ID accepts base64 data URLs directly
+                source_url: processedImage, // Send just base64 string or URL
                 script: {
                     type: 'text',
                     input: script,
