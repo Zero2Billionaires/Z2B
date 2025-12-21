@@ -3,7 +3,7 @@ const router = express.Router();
 const axios = require('axios');
 
 // D-ID API Configuration
-const DID_API_KEY = process.env.DID_API_KEY || 'emVybzJiaWxsaW9uYWlyZXNAZ21haWwuY29t:ukcyB3Jw1Vg9P1falbuez';
+const DID_API_KEY = process.env.DID_API_KEY || 'emVybzJiaWxsaW9uYWlyZXNAZ21haWwuY29t:O9P1fb-BLiQR1As71WIK0';
 const DID_API_URL = 'https://api.d-id.com';
 
 // Auth middleware (assuming you have one)
