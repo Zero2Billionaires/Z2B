@@ -100,8 +100,9 @@ router.get('/status/:videoId', verifyToken, async (req, res) => {
 
         console.log('Checking HeyGen status for video:', videoId);
 
+        // Status endpoint uses v1, not v2
         const heygenResponse = await axios.get(
-            `${HEYGEN_API_URL}/video_status.get?video_id=${videoId}`,
+            `https://api.heygen.com/v1/video_status.get?video_id=${videoId}`,
             {
                 headers: {
                     'X-Api-Key': HEYGEN_API_KEY
