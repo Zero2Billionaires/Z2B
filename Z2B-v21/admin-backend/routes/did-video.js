@@ -40,36 +40,14 @@ router.post('/generate', verifyToken, async (req, res) => {
         // Map our voice to D-ID voice
         const voiceId = mapVoiceToProvider(voice);
 
-        // Handle image upload to D-ID if it's base64
-        let sourceUrl = image;
-        if (image.startsWith('data:image')) {
-            console.log('Uploading base64 image to D-ID...');
-            try {
-                const imageUploadResponse = await axios.post(
-                    `${DID_API_URL}/images`,
-                    {
-                        image: image
-                    },
-                    {
-                        headers: {
-                            'Authorization': `Basic ${DID_API_KEY}`,
-                            'Content-Type': 'application/json'
-                        }
-                    }
-                );
-                sourceUrl = imageUploadResponse.data.url;
-                console.log('Image uploaded to D-ID:', sourceUrl);
-            } catch (uploadError) {
-                console.error('Image upload failed:', uploadError.response?.data || uploadError.message);
-                throw new Error('Failed to upload image to D-ID: ' + (uploadError.response?.data?.description || uploadError.message));
-            }
-        }
+        console.log('Creating D-ID talk with image type:', image.startsWith('data:image') ? 'base64' : 'URL');
 
         // Create D-ID talk (video generation)
+        // D-ID supports base64 images directly in source_url
         const didResponse = await axios.post(
             `${DID_API_URL}/talks`,
             {
-                source_url: sourceUrl, // URL from D-ID or external URL
+                source_url: image, // D-ID accepts base64 data URLs directly
                 script: {
                     type: 'text',
                     input: script,
