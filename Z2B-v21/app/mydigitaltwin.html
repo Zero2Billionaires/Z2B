@@ -9,16 +9,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --royal-gold: #FFD700;
-            --royal-gold-light: #FFED4E;
-            --royal-gold-dark: #D4AF37;
-            --royal-blue: #0A1F44;
-            --royal-blue-light: #1E3A8A;
-            --royal-blue-deep: #030B1F;
-            --cyber-cyan: #00D9FF;
-            --cyber-purple: #B45FFF;
-            --white: #FFFFFF;
-            --success: #00FF88;
+            --neon-cyan: #00F0FF;
+            --neon-pink: #FF006E;
+            --neon-purple: #B45FFF;
+            --neon-blue: #0A84FF;
+            --cyber-dark: #0A0E27;
+            --cyber-darker: #050714;
+            --glass-white: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.18);
+            --glow-cyan: 0 0 20px rgba(0, 240, 255, 0.5);
+            --glow-pink: 0 0 20px rgba(255, 0, 110, 0.5);
+            --glow-purple: 0 0 20px rgba(180, 95, 255, 0.5);
         }
 
         * {
@@ -27,25 +28,82 @@
             box-sizing: border-box;
         }
 
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, var(--royal-blue-deep) 0%, var(--royal-blue) 50%, var(--royal-blue-deep) 100%);
-            color: var(--white);
-            min-height: 100vh;
-            overflow-x: hidden;
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
-        /* Sidebar */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes glow {
+            0%, 100% { filter: drop-shadow(0 0 5px currentColor); }
+            50% { filter: drop-shadow(0 0 20px currentColor); }
+        }
+
+        @keyframes scanline {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100vh); }
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(-45deg, #050714, #0A0E27, #1a0b2e, #0A0E27);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            color: #FFFFFF;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* 3D Animated Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 20% 30%, rgba(0, 240, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(255, 0, 110, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(180, 95, 255, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Animated Scanline Effect */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+            animation: scanline 8s linear infinite;
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0.3;
+        }
+
+        /* Glassmorphism Sidebar */
         .sidebar {
             position: fixed;
             left: 0;
             top: 0;
             height: 100vh;
             width: 280px;
-            background: rgba(10, 31, 68, 0.95);
-            backdrop-filter: blur(10px);
+            background: rgba(10, 14, 39, 0.7);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
             padding: 2rem 0;
-            border-right: 2px solid var(--royal-gold);
+            border-right: 1px solid rgba(0, 240, 255, 0.3);
+            box-shadow: 4px 0 24px rgba(0, 240, 255, 0.1);
             overflow-y: auto;
             z-index: 1000;
         }
@@ -54,20 +112,28 @@
             text-align: center;
             margin-bottom: 2rem;
             padding: 0 1.5rem 2rem;
-            border-bottom: 3px solid var(--royal-gold);
+            border-bottom: 2px solid rgba(0, 240, 255, 0.3);
+            position: relative;
         }
 
         .sidebar-brand h2 {
-            color: var(--royal-gold);
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             font-size: 1.8rem;
-            font-weight: 800;
+            font-weight: 900;
             margin-bottom: 0.5rem;
+            animation: glow 3s ease-in-out infinite;
+            text-shadow: 0 0 30px rgba(0, 240, 255, 0.5);
         }
 
         .sidebar-brand p {
-            color: var(--royal-gold-light);
+            color: var(--neon-cyan);
             font-size: 0.85rem;
             font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
 
         .sidebar-nav {
@@ -77,28 +143,54 @@
 
         .sidebar-nav li {
             margin-bottom: 0.5rem;
+            padding: 0 1rem;
         }
 
         .sidebar-nav a {
             display: flex;
             align-items: center;
             padding: 1rem 1.5rem;
-            color: var(--white);
+            color: #FFFFFF;
             text-decoration: none;
-            transition: all 0.3s;
-            border-left: 4px solid transparent;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-radius: 12px;
+            border-left: 3px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sidebar-nav a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .sidebar-nav a:hover::before {
+            left: 100%;
         }
 
         .sidebar-nav a:hover,
         .sidebar-nav a.active {
-            background: rgba(255, 215, 0, 0.1);
-            border-left-color: var(--royal-gold);
+            background: rgba(0, 240, 255, 0.1);
+            border-left-color: var(--neon-cyan);
+            box-shadow: var(--glow-cyan), inset 0 0 20px rgba(0, 240, 255, 0.1);
+            transform: translateX(5px);
         }
 
         .sidebar-nav a i {
             margin-right: 1rem;
-            color: var(--royal-gold);
+            color: var(--neon-cyan);
             font-size: 1.2rem;
+            transition: transform 0.3s;
+        }
+
+        .sidebar-nav a:hover i {
+            transform: scale(1.2) rotate(5deg);
         }
 
         /* Main Content */
@@ -106,187 +198,364 @@
             margin-left: 280px;
             padding: 2rem;
             min-height: 100vh;
+            position: relative;
+            z-index: 1;
         }
 
+        /* 3D Header with Holographic Effect */
         .header {
-            background: linear-gradient(135deg, rgba(10, 31, 68, 0.8), rgba(3, 11, 31, 0.9));
-            border-radius: 20px;
-            padding: 2rem;
+            background: rgba(10, 14, 39, 0.6);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-radius: 24px;
+            padding: 3rem;
             margin-bottom: 2rem;
-            border: 2px solid var(--royal-gold);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            box-shadow:
+                0 8px 32px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                0 0 40px rgba(0, 240, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+            transform: perspective(1000px) rotateX(0deg);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent,
+                rgba(0, 240, 255, 0.05),
+                transparent
+            );
+            transform: rotate(45deg);
+            animation: shine 6s linear infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        .header:hover {
+            transform: perspective(1000px) rotateX(2deg);
+            box-shadow:
+                0 12px 40px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                0 0 60px rgba(0, 240, 255, 0.4);
         }
 
         .header h1 {
-            font-size: 2.5rem;
-            color: var(--royal-gold);
+            font-size: 2.8rem;
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple), var(--neon-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 0.5rem;
-            font-weight: 800;
+            font-weight: 900;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 0 30px rgba(0, 240, 255, 0.5);
         }
 
         .header p {
-            color: var(--royal-gold-light);
-            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+            position: relative;
+            z-index: 1;
         }
 
-        /* Cards */
+        /* 3D Glassmorphism Cards */
         .card-custom {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 215, 0, 0.2);
-            border-radius: 15px;
-            padding: 2rem;
+            background: rgba(10, 14, 39, 0.6);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 20px;
+            padding: 2.5rem;
             margin-bottom: 2rem;
-            transition: all 0.3s;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            box-shadow:
+                0 8px 32px rgba(0, 0, 0, 0.37),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .card-custom::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.1), transparent);
+            transition: left 0.7s;
+        }
+
+        .card-custom:hover::before {
+            left: 100%;
         }
 
         .card-custom:hover {
-            border-color: var(--royal-gold);
-            box-shadow: 0 8px 32px rgba(255, 215, 0, 0.2);
+            border-color: rgba(0, 240, 255, 0.5);
+            box-shadow:
+                0 12px 40px rgba(0, 0, 0, 0.5),
+                var(--glow-cyan),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            transform: translateY(-5px) scale(1.01);
         }
 
         .card-custom h3 {
-            color: var(--royal-gold);
-            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 1.6rem;
             margin-bottom: 1.5rem;
             font-weight: 700;
         }
 
-        /* Form Elements */
+        /* Futuristic Form Elements */
         .form-group {
             margin-bottom: 1.5rem;
         }
 
         label {
             display: block;
-            color: var(--royal-gold-light);
+            color: var(--neon-cyan);
             margin-bottom: 0.5rem;
             font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
         }
 
         input[type="text"],
         input[type="url"],
+        input[type="file"],
         textarea,
         select {
             width: 100%;
-            padding: 0.75rem;
-            background: rgba(0, 0, 0, 0.3);
-            border: 2px solid rgba(255, 215, 0, 0.3);
-            border-radius: 10px;
-            color: var(--white);
+            padding: 1rem;
+            background: rgba(10, 14, 39, 0.8);
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            border-radius: 12px;
+            color: #FFFFFF;
             font-size: 1rem;
-            transition: all 0.3s;
+            transition: all 0.4s;
+            backdrop-filter: blur(10px);
         }
 
         input:focus,
         textarea:focus,
         select:focus {
             outline: none;
-            border-color: var(--royal-gold);
-            background: rgba(0, 0, 0, 0.5);
+            border-color: var(--neon-cyan);
+            background: rgba(10, 14, 39, 0.95);
+            box-shadow: var(--glow-cyan), inset 0 0 10px rgba(0, 240, 255, 0.1);
         }
 
         textarea {
-            min-height: 120px;
+            min-height: 150px;
             resize: vertical;
         }
 
-        /* Buttons */
+        /* 3D Neon Buttons */
         .btn-primary-custom {
-            background: linear-gradient(135deg, var(--royal-gold), var(--royal-gold-dark));
-            color: var(--royal-blue-deep);
-            padding: 0.75rem 2rem;
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+            color: #FFFFFF;
+            padding: 1rem 2.5rem;
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
             font-weight: 700;
             font-size: 1rem;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.7rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 240, 255, 0.4);
+        }
+
+        .btn-primary-custom::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-primary-custom:hover::before {
+            left: 100%;
         }
 
         .btn-primary-custom:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(0, 240, 255, 0.6), 0 0 40px rgba(0, 240, 255, 0.4);
+        }
+
+        .btn-primary-custom:active {
+            transform: translateY(-1px) scale(1.02);
         }
 
         .btn-secondary-custom {
-            background: rgba(255, 215, 0, 0.1);
-            color: var(--royal-gold);
-            padding: 0.75rem 2rem;
-            border: 2px solid var(--royal-gold);
-            border-radius: 10px;
+            background: rgba(0, 240, 255, 0.1);
+            color: var(--neon-cyan);
+            padding: 0.9rem 2rem;
+            border: 2px solid var(--neon-cyan);
+            border-radius: 12px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.4s;
+            backdrop-filter: blur(10px);
         }
 
         .btn-secondary-custom:hover {
-            background: rgba(255, 215, 0, 0.2);
+            background: rgba(0, 240, 255, 0.2);
+            box-shadow: var(--glow-cyan);
+            transform: translateY(-2px);
         }
 
-        /* Video Preview */
+        /* Holographic Video Preview */
         .video-preview {
             width: 100%;
             aspect-ratio: 16/9;
-            background: rgba(0, 0, 0, 0.5);
-            border: 2px solid rgba(255, 215, 0, 0.2);
-            border-radius: 15px;
+            background: rgba(10, 14, 39, 0.8);
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--royal-gold-light);
+            color: var(--neon-cyan);
             font-size: 1.2rem;
             margin-bottom: 1rem;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
         }
 
-        /* Stats Grid */
+        .video-preview::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(
+                from 0deg,
+                transparent,
+                rgba(0, 240, 255, 0.1),
+                transparent 30%
+            );
+            animation: rotate 6s linear infinite;
+        }
+
+        @keyframes rotate {
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 3D Animated Stats Grid */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
+            gap: 1.5rem;
             margin-bottom: 2rem;
         }
 
         .stat-card {
-            background: rgba(255, 215, 0, 0.1);
-            border: 2px solid rgba(255, 215, 0, 0.3);
-            border-radius: 12px;
-            padding: 1.5rem;
+            background: rgba(10, 14, 39, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            border-radius: 16px;
+            padding: 2rem;
             text-align: center;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.1), rgba(180, 95, 255, 0.1));
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .stat-card:hover::before {
+            opacity: 1;
+        }
+
+        .stat-card:hover {
+            border-color: var(--neon-cyan);
+            box-shadow: var(--glow-cyan);
+            transform: translateY(-10px) scale(1.05);
         }
 
         .stat-number {
-            font-size: 2rem;
-            font-weight: 800;
-            color: var(--royal-gold);
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 0.5rem;
+            animation: float 3s ease-in-out infinite;
         }
 
         .stat-label {
-            color: var(--royal-gold-light);
+            color: rgba(255, 255, 255, 0.8);
             font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        /* Features List */
+        /* Neon Features List */
         .features-list {
             list-style: none;
             padding: 0;
         }
 
         .features-list li {
-            padding: 0.75rem 0;
-            border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+            padding: 1rem;
+            border-bottom: 1px solid rgba(0, 240, 255, 0.1);
             display: flex;
             align-items: center;
+            transition: all 0.3s;
+            border-radius: 8px;
+        }
+
+        .features-list li:hover {
+            background: rgba(0, 240, 255, 0.05);
+            border-bottom-color: rgba(0, 240, 255, 0.3);
+            transform: translateX(10px);
         }
 
         .features-list li i {
-            color: var(--success);
+            color: var(--neon-cyan);
             margin-right: 1rem;
-            font-size: 1.2rem;
+            font-size: 1.3rem;
+            filter: drop-shadow(0 0 5px var(--neon-cyan));
+        }
+
+        .features-list li strong {
+            color: var(--neon-cyan);
         }
 
         /* Responsive */
@@ -316,6 +585,7 @@
             <li><a href="#"><i class="fas fa-microphone"></i> Voice Clones</a></li>
             <li><a href="#"><i class="fas fa-magic"></i> AI Scripts</a></li>
             <li><a href="#"><i class="fas fa-chart-line"></i> Analytics</a></li>
+            <li><a href="#pricing-section"><i class="fas fa-crown"></i> Upgrade Plan</a></li>
             <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
             <li><a href="dashboard.html"><i class="fas fa-arrow-left"></i> Back to Dashboard</a></li>
         </ul>
@@ -327,6 +597,19 @@
         <div class="header">
             <h1><i class="fas fa-robot"></i> Welcome to MyDigitalTwin</h1>
             <p>Create AI-powered video clones of yourself in minutes. Clone your voice, appearance, and style.</p>
+        </div>
+
+        <!-- Current Tier Card -->
+        <div class="card-custom" style="background: linear-gradient(135deg, rgba(157, 78, 221, 0.2), rgba(255, 0, 110, 0.2)); border: 2px solid #9D4EDD; margin-bottom: 2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h3 style="margin-bottom: 0.5rem;"><i class="fas fa-star"></i> Current Plan: <span id="current-tier-name">Twin Starter</span></h3>
+                    <p style="margin: 0; opacity: 0.9; font-size: 0.95rem;" id="current-tier-desc">10 videos/month • 15 voices • HD with watermark</p>
+                </div>
+                <a href="#pricing-section" class="btn-primary-custom" style="text-decoration: none;">
+                    <i class="fas fa-crown"></i> Upgrade Plan
+                </a>
+            </div>
         </div>
 
         <!-- Stats -->
@@ -360,8 +643,8 @@
 
             <div class="form-group">
                 <label><i class="fas fa-upload"></i> Upload Reference Video (5-10 minutes recommended)</label>
-                <input type="file" accept="video/*" style="color: var(--royal-gold-light);">
-                <small style="color: var(--royal-gold-light); display: block; margin-top: 0.5rem;">
+                <input type="file" accept="video/*" style="color: var(--neon-cyan);">
+                <small style="color: rgba(255,255,255,0.7); display: block; margin-top: 0.5rem;">
                     Upload a clear video of yourself speaking. The AI will analyze your appearance, voice, and mannerisms.
                 </small>
             </div>
@@ -459,22 +742,228 @@ Hey everyone! Today I'm excited to share some amazing insights about building a 
             </div>
         </div>
 
-        <!-- Features -->
-        <div class="card-custom">
-            <h3><i class="fas fa-star"></i> MyDigitalTwin Features</h3>
-            <ul class="features-list">
-                <li><i class="fas fa-check-circle"></i> <strong>AI Video Cloning</strong> - Create realistic digital clones of yourself</li>
-                <li><i class="fas fa-check-circle"></i> <strong>Voice Synthesis</strong> - Clone your voice with perfect accuracy</li>
-                <li><i class="fas fa-check-circle"></i> <strong>Unlimited Videos</strong> - Generate as many videos as you need</li>
-                <li><i class="fas fa-check-circle"></i> <strong>AI Script Writer</strong> - Let AI write engaging scripts for you</li>
-                <li><i class="fas fa-check-circle"></i> <strong>Multiple Backgrounds</strong> - Choose from professional backgrounds or upload your own</li>
-                <li><i class="fas fa-check-circle"></i> <strong>HD Quality</strong> - Export in Full HD 1080p quality</li>
-                <li><i class="fas fa-check-circle"></i> <strong>Fast Processing</strong> - Videos ready in 5-15 minutes</li>
-                <li><i class="fas fa-check-circle"></i> <strong>Commercial License</strong> - Use videos for business and marketing</li>
-            </ul>
+        <!-- Pricing Section -->
+        <div id="pricing-section" class="card-custom">
+            <h3 style="text-align: center; margin-bottom: 2rem;"><i class="fas fa-crown"></i> Choose Your Plan</h3>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+                <!-- Twin Starter -->
+                <div style="background: rgba(157, 78, 221, 0.1); border: 2px solid #9D4EDD; border-radius: 15px; padding: 2rem; position: relative; backdrop-filter: blur(10px);">
+                    <div style="text-align: center; margin-bottom: 1.5rem;">
+                        <div style="font-size: 2rem; margin-bottom: 0.5rem;">📦</div>
+                        <h4 style="background: linear-gradient(135deg, #9D4EDD, #B45FFF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.5rem; font-weight: 800;">Twin Starter</h4>
+                        <div style="font-size: 2rem; font-weight: bold; background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 1rem 0;">R600<span style="font-size: 1rem; opacity: 0.7; color: rgba(255,255,255,0.7);">/month</span></div>
+                    </div>
+                    <ul style="list-style: none; padding: 0; margin: 1.5rem 0; font-size: 0.9rem;">
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid rgba(157, 78, 221, 0.2);">✅ 10 videos/month</li>
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid rgba(157, 78, 221, 0.2);">✅ Max 1 minute each</li>
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid rgba(157, 78, 221, 0.2);">✅ 15 voices (African only)</li>
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid rgba(157, 78, 221, 0.2);">✅ 4 backgrounds</li>
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid rgba(157, 78, 221, 0.2);">✅ 3 caption styles</li>
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid rgba(157, 78, 221, 0.2);">✅ HD quality with watermark</li>
+                        <li style="padding: 0.5rem 0; opacity: 0.7; font-style: italic;">Perfect for: Casual users, testing</li>
+                    </ul>
+                    <button class="btn-secondary-custom" style="width: 100%;" onclick="alert('Redirecting to checkout for Twin Starter - R600/month')">
+                        <i class="fas fa-shopping-cart"></i> Select Plan
+                    </button>
+                </div>
+
+                <!-- Twin Pro -->
+                <div style="background: rgba(255, 0, 110, 0.1); border: 3px solid #FF006E; border-radius: 15px; padding: 2rem; position: relative; transform: scale(1.05); box-shadow: 0 10px 40px rgba(255, 0, 110, 0.3); backdrop-filter: blur(10px);">
+                    <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple)); color: white; padding: 0.5rem 1.5rem; border-radius: 20px; font-weight: bold; font-size: 0.85rem; box-shadow: 0 0 20px rgba(0,240,255,0.5);">
+                        ⭐ MOST POPULAR
+                    </div>
+                    <div style="text-align: center; margin-bottom: 1.5rem; margin-top: 1rem;">
+                        <div style="font-size: 2rem; margin-bottom: 0.5rem;">🔥</div>
+                        <h4 style="background: linear-gradient(135deg, #FF006E, var(--neon-pink)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.5rem; font-weight: 800;">Twin Pro</h4>
+                        <div style="font-size: 2rem; font-weight: bold; background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 1rem 0;">R1,900<span style="font-size: 1rem; opacity: 0.7; color: rgba(255,255,255,0.7);">/month</span></div>
+                    </div>
+                    <ul style="list-style: none; padding: 0; margin: 1.5rem 0; font-size: 0.9rem;">
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid rgba(255, 0, 110, 0.2);">✅ 30 videos/month</li>
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid rgba(255, 0, 110, 0.2);">✅ Max 3 minutes each (90 min total)</li>
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid rgba(255, 0, 110, 0.2);">✅ ALL 30+ voices (global)</li>
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid rgba(255, 0, 110, 0.2);">✅ ALL 8 backgrounds</li>
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid rgba(255, 0, 110, 0.2);">✅ ALL 5 caption styles</li>
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid rgba(255, 0, 110, 0.2);">✅ Full HD, NO watermark</li>
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid rgba(255, 0, 110, 0.2);">✅ Photo upload</li>
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid rgba(255, 0, 110, 0.2);">✅ Priority generation</li>
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid rgba(255, 0, 110, 0.2);">✅ Batch creation</li>
+                        <li style="padding: 0.5rem 0; opacity: 0.7; font-style: italic;">Perfect for: Creators, pastors, coaches</li>
+                    </ul>
+                    <button class="btn-primary-custom" style="width: 100%;" onclick="alert('Redirecting to checkout for Twin Pro - R1,900/month')">
+                        <i class="fas fa-fire"></i> Select Plan
+                    </button>
+                </div>
+
+                <!-- Twin Unlimited -->
+                <div style="background: rgba(255, 215, 0, 0.1); border: 2px solid var(--neon-cyan); border-radius: 15px; padding: 2rem; position: relative; backdrop-filter: blur(10px);">
+                    <div style="text-align: center; margin-bottom: 1.5rem;">
+                        <div style="font-size: 2rem; margin-bottom: 0.5rem; filter: drop-shadow(0 0 10px gold);">👑</div>
+                        <h4 style="background: linear-gradient(135deg, gold, var(--neon-cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.5rem; font-weight: 800;">Twin Unlimited</h4>
+                        <div style="font-size: 2rem; font-weight: bold; background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 1rem 0;">R3,000<span style="font-size: 1rem; opacity: 0.7; color: rgba(255,255,255,0.7);">/month</span></div>
+                    </div>
+                    <ul style="list-style: none; padding: 0; margin: 1.5rem 0; font-size: 0.9rem;">
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid rgba(255, 215, 0, 0.2);"><strong>👑 Everything in Pro PLUS:</strong></li>
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid rgba(255, 215, 0, 0.2);">👑 UNLIMITED videos</li>
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid rgba(255, 215, 0, 0.2);">👑 Max 3 minutes each</li>
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid rgba(255, 215, 0, 0.2);">👑 Voice cloning (YOUR voice)</li>
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid rgba(255, 215, 0, 0.2);">👑 Custom avatars (YOUR face)</li>
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid rgba(255, 215, 0, 0.2);">👑 White-label (resell app)</li>
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid rgba(255, 215, 0, 0.2);">👑 API access</li>
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid rgba(255, 215, 0, 0.2);">👑 5 team members</li>
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid rgba(255, 215, 0, 0.2);">👑 4K quality</li>
+                        <li style="padding: 0.5rem 0; opacity: 0.7; font-style: italic;">Perfect for: Agencies, large ministries</li>
+                    </ul>
+                    <button class="btn-primary-custom" style="width: 100%; background: linear-gradient(135deg, gold, var(--neon-cyan)); box-shadow: 0 4px 15px rgba(0,240,255,0.4);" onclick="alert('Redirecting to checkout for Twin Unlimited - R3,000/month')">
+                        <i class="fas fa-crown"></i> Select Plan
+                    </button>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem; padding: 1.5rem; background: rgba(0, 217, 255, 0.1); border-radius: 10px; border: 1px solid rgba(0, 217, 255, 0.3);">
+                <p style="margin: 0; font-size: 1.1rem;"><i class="fas fa-gift"></i> <strong>All plans include:</strong> 3-day free trial • Cancel anytime • No credit card required for trial</p>
+            </div>
         </div>
     </div>
 
+    <!-- Particle Canvas -->
+    <canvas id="particle-canvas" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0;"></canvas>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Futuristic Particle Animation -->
+    <script>
+        // Particle System for Cyberpunk Effect
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 0.5;
+                this.speedX = Math.random() * 0.5 - 0.25;
+                this.speedY = Math.random() * 0.5 - 0.25;
+                this.opacity = Math.random() * 0.5 + 0.2;
+
+                // Random color: cyan, purple, or pink
+                const colors = ['#00F0FF', '#B45FFF', '#FF006E'];
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                // Wrap around edges
+                if (this.x > canvas.width) this.x = 0;
+                if (this.x < 0) this.x = canvas.width;
+                if (this.y > canvas.height) this.y = 0;
+                if (this.y < 0) this.y = canvas.height;
+            }
+
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.globalAlpha = this.opacity;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Glow effect
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = this.color;
+            }
+        }
+
+        // Create particles
+        const particlesArray = [];
+        const numberOfParticles = 100;
+
+        for (let i = 0; i < numberOfParticles; i++) {
+            particlesArray.push(new Particle());
+        }
+
+        // Connect nearby particles
+        function connectParticles() {
+            for (let a = 0; a < particlesArray.length; a++) {
+                for (let b = a + 1; b < particlesArray.length; b++) {
+                    const dx = particlesArray[a].x - particlesArray[b].x;
+                    const dy = particlesArray[a].y - particlesArray[b].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < 120) {
+                        const opacity = 1 - (distance / 120);
+                        ctx.strokeStyle = `rgba(0, 240, 255, ${opacity * 0.2})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.beginPath();
+                        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                        ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        // Animation loop
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.globalAlpha = 1;
+            ctx.shadowBlur = 0;
+
+            particlesArray.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+
+            connectParticles();
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        // Mouse interaction
+        let mouse = {
+            x: null,
+            y: null,
+            radius: 150
+        };
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.x;
+            mouse.y = e.y;
+
+            // Particles react to mouse
+            particlesArray.forEach(particle => {
+                const dx = mouse.x - particle.x;
+                const dy = mouse.y - particle.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < mouse.radius) {
+                    const angle = Math.atan2(dy, dx);
+                    const force = (mouse.radius - distance) / mouse.radius;
+                    particle.x -= Math.cos(angle) * force * 2;
+                    particle.y -= Math.sin(angle) * force * 2;
+                }
+            });
+        });
+
+        // Add glitch effect on scroll
+        let scrollTimeout;
+        window.addEventListener('scroll', () => {
+            document.body.style.filter = 'hue-rotate(10deg)';
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                document.body.style.filter = 'none';
+            }, 100);
+        });
+    </script>
 </body>
 </html>
