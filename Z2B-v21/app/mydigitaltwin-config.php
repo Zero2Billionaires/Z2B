@@ -4,9 +4,9 @@ define('DB_NAME', 'Z2B_mydigitaltwin');
 define('DB_USER', 'YOUR_DATABASE_USERNAME');
 define('DB_PASS', 'YOUR_DATABASE_PASSWORD');
 
-define('ELEVENLABS_API_KEY', getenv('ELEVENLABS_API_KEY') ?: 'YOUR_ELEVENLABS_API_KEY');
-define('DID_API_KEY', getenv('DID_API_KEY') ?: 'YOUR_DID_API_KEY');
-define('GROQ_API_KEY', getenv('GROQ_API_KEY') ?: 'YOUR_GROQ_API_KEY');
+// HeyGen API (same as VIDZIE)
+define('HEYGEN_API_KEY', getenv('HEYGEN_API_KEY') ?: 'YOUR_HEYGEN_API_KEY');
+define('HEYGEN_API_URL', 'https://api.heygen.com/v2');
 
 // MyDigitalTwin Tiered Pricing
 define('PRICE_TWIN_STARTER', 600.00);
