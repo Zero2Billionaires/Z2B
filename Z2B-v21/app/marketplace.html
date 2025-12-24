@@ -1133,7 +1133,7 @@
                             <div class="product-price">
                                 <div style="font-size: 1.3rem; font-weight: bold; color: #9D4EDD;">R600<span style="font-size: 0.75rem; display: block; margin-top: 0.3rem;">/month</span></div>
                             </div>
-                            <button class="btn-buy" onclick="window.location.href='mydigitaltwin.html#pricing-section'" style="background: linear-gradient(135deg, #9D4EDD, #FF006E);">
+                            <button class="btn-buy" onclick="showMyDigitalTwinUpsell('Twin Starter', 600)" style="background: linear-gradient(135deg, #9D4EDD, #FF006E);">
                                 <i class="fas fa-shopping-cart"></i> Select Plan
                             </button>
                         </div>
@@ -1154,7 +1154,7 @@
                             <div class="product-price">
                                 <div style="font-size: 1.3rem; font-weight: bold; color: #FF006E;">R1,900<span style="font-size: 0.75rem; display: block; margin-top: 0.3rem;">/month</span></div>
                             </div>
-                            <button class="btn-buy" onclick="window.location.href='mydigitaltwin.html#pricing-section'" style="background: linear-gradient(135deg, #FF006E, #9D4EDD);">
+                            <button class="btn-buy" onclick="showMyDigitalTwinUpsell('Twin Pro', 1900)" style="background: linear-gradient(135deg, #FF006E, #9D4EDD);">
                                 <i class="fas fa-fire"></i> Select Plan
                             </button>
                         </div>
@@ -1174,7 +1174,7 @@
                             <div class="product-price">
                                 <div style="font-size: 1.3rem; font-weight: bold; color: #FFD700;">R3,000<span style="font-size: 0.75rem; display: block; margin-top: 0.3rem;">/month</span></div>
                             </div>
-                            <button class="btn-buy" onclick="window.location.href='mydigitaltwin.html#pricing-section'" style="background: linear-gradient(135deg, #FFD700, #FF8C00);">
+                            <button class="btn-buy" onclick="showMyDigitalTwinUpsell('Twin Unlimited', 3000)" style="background: linear-gradient(135deg, #FFD700, #FF8C00);">
                                 <i class="fas fa-crown"></i> Select Plan
                             </button>
                         </div>
@@ -1416,6 +1416,196 @@
             });
         }
     </script>
+
+    <!-- MyDigitalTwin Payment & Upsell Functions -->
+    <script>
+        function showMyDigitalTwinUpsell(tierName, tierPrice) {
+            const message = `
+                <div style="background: white; border-radius: 15px; padding: 20px; max-width: 550px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+                    <div style="text-align: center; margin-bottom: 15px;">
+                        <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #9D4EDD, #FF006E); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px auto;">
+                            <i class="fas fa-video" style="font-size: 1.8rem; color: white;"></i>
+                        </div>
+                        <h2 style="color: #0A2647; font-size: 1.5rem; margin-bottom: 5px;">💡 SMART TIP!</h2>
+                        <p style="color: #6b7280; font-size: 0.95rem;">Get more value with Z2B Membership</p>
+                    </div>
+
+                    <div style="background: linear-gradient(135deg, #fef3c7, #fde68a); padding: 15px; border-radius: 10px; margin-bottom: 15px; border-left: 4px solid #f59e0b;">
+                        <h3 style="color: #92400e; margin-bottom: 8px; font-size: 1.1rem;">You're about to buy:</h3>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <strong style="color: #0A2647; font-size: 1rem;">MyDigitalTwin ${tierName}</strong>
+                            <span style="color: #FF6B35; font-size: 1.3rem; font-weight: bold;">R${tierPrice}/month</span>
+                        </div>
+                    </div>
+
+                    <div style="background: #f0fdf4; padding: 15px; border-radius: 10px; margin-bottom: 15px; border: 2px solid #22c55e;">
+                        <h3 style="color: #15803d; margin-bottom: 10px; font-size: 1.1rem;"><i class="fas fa-star"></i> Better Option: Z2B Membership</h3>
+                        <div style="margin-bottom: 8px;">
+                            <div style="display: flex; justify-content: space-between; padding: 8px; background: white; border-radius: 6px; margin-bottom: 6px; font-size: 0.9rem;">
+                                <span><strong>Bronze (R480):</strong> 2 apps + MyDigitalTwin</span>
+                                <span style="color: #22c55e; font-weight: 600;">✓</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; padding: 8px; background: white; border-radius: 6px; margin-bottom: 6px; font-size: 0.9rem;">
+                                <span><strong>Copper (R980):</strong> 4 apps + MyDigitalTwin</span>
+                                <span style="color: #22c55e; font-weight: 600;">✓✓</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; padding: 8px; background: white; border-radius: 6px; margin-bottom: 6px; font-size: 0.9rem;">
+                                <span><strong>Silver (R1,480):</strong> 7 apps + MyDigitalTwin</span>
+                                <span style="color: #22c55e; font-weight: 600;">✓✓✓</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; padding: 8px; background: linear-gradient(135deg, #FFD700, #FFA500); border-radius: 6px; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3); font-size: 0.9rem;">
+                                <span style="color: #0A2647;"><strong>Gold (R2,490):</strong> ALL apps + MyDigitalTwin</span>
+                                <span style="color: #0A2647; font-weight: 900;">★ BEST</span>
+                            </div>
+                        </div>
+                        <p style="color: #15803d; font-weight: 600; text-align: center; margin-top: 8px; font-size: 0.85rem;">
+                            🎁 Plus: 30-day FREE trial + Income + Team support!
+                        </p>
+                    </div>
+
+                    <div style="display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap;">
+                        <button id="buyOnlyBtn" style="flex: 1; min-width: 140px; background: #9ca3af; color: white; border: none; padding: 12px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: all 0.3s; font-size: 0.85rem;">
+                            <i class="fas fa-credit-card"></i> Card/Yoco
+                        </button>
+                        <button id="directDepositBtn" style="flex: 1; min-width: 140px; background: #22c55e; color: white; border: none; padding: 12px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: all 0.3s; font-size: 0.85rem;">
+                            <i class="fas fa-university"></i> Direct Deposit
+                        </button>
+                        <button onclick="window.location.href='register.html'" style="flex: 1; min-width: 140px; background: linear-gradient(135deg, #FFD700, #FF6B35); color: #0A2647; border: none; padding: 12px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: all 0.3s; box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3); font-size: 0.85rem;">
+                            <i class="fas fa-rocket"></i> Join Z2B
+                        </button>
+                    </div>
+
+                    <p style="text-align: center; margin: 0; color: #6b7280; font-size: 0.8rem;">
+                        ⏰ Limited Time: 50% OFF Beta Pricing
+                    </p>
+                </div>
+            `;
+
+            const modal = document.createElement('div');
+            modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 10000; padding: 20px; overflow-y: auto;';
+            modal.innerHTML = message;
+
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    document.body.removeChild(modal);
+                }
+            });
+
+            document.body.appendChild(modal);
+
+            // Handle payment buttons
+            setTimeout(() => {
+                const buyBtn = document.getElementById('buyOnlyBtn');
+                if (buyBtn) {
+                    buyBtn.addEventListener('click', async function() {
+                        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+                        this.disabled = true;
+
+                        // TODO: Implement Yoco payment for MyDigitalTwin tiers
+                        // For now, show alert
+                        alert('Yoco payment integration coming soon! Contact support@z2blegacybuilders.co.za');
+                        this.innerHTML = '<i class="fas fa-credit-card"></i> Card/Yoco';
+                        this.disabled = false;
+                    });
+                }
+
+                const depositBtn = document.getElementById('directDepositBtn');
+                if (depositBtn) {
+                    depositBtn.addEventListener('click', function() {
+                        showDirectDepositModal(tierName, tierPrice);
+                    });
+                }
+            }, 100);
+        }
+
+        function showDirectDepositModal(tierName, tierPrice) {
+            const message = `
+                <div style="background: white; border-radius: 15px; padding: 25px; max-width: 500px; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+                    <h2 style="color: #0A2647; text-align: center; margin-bottom: 20px;">
+                        <i class="fas fa-university" style="color: #22c55e;"></i> Direct Bank Deposit
+                    </h2>
+
+                    <div style="background: #f0fdf4; padding: 15px; border-radius: 10px; margin-bottom: 15px; border: 2px solid #22c55e;">
+                        <h3 style="color: #15803d; margin-bottom: 10px;">Bank Details:</h3>
+                        <p style="margin: 5px 0; color: #0A2647;"><strong>Bank:</strong> FNB</p>
+                        <p style="margin: 5px 0; color: #0A2647;"><strong>Account Name:</strong> Zero2billionaires Amavulandlela</p>
+                        <p style="margin: 5px 0; color: #0A2647; font-size: 1.2rem;"><strong>Account Number:</strong> <span style="color: #22c55e; font-weight: 900;">1318257727</span></p>
+                        <p style="margin: 5px 0; color: #0A2647;"><strong>Amount:</strong> <span style="color: #FF6B35; font-weight: bold; font-size: 1.3rem;">R${tierPrice}</span></p>
+                    </div>
+
+                    <div style="background: #fef3c7; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                        <h3 style="color: #92400e; margin-bottom: 10px;">Payment Reference:</h3>
+                        <p style="margin: 5px 0; color: #0A2647;">Use your <strong>WhatsApp number</strong> as the payment reference.</p>
+                    </div>
+
+                    <div style="background: #e0f2fe; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                        <h3 style="color: #075985; margin-bottom: 10px;">After Payment:</h3>
+                        <p style="margin: 5px 0; color: #0A2647;">1. Send payment proof to: <strong>support@z2blegacybuilders.co.za</strong></p>
+                        <p style="margin: 5px 0; color: #0A2647;">2. Include your WhatsApp number</p>
+                        <p style="margin: 5px 0; color: #0A2647;">3. We'll activate your ${tierName} within 24 hours</p>
+                    </div>
+
+                    <button onclick="this.parentElement.parentElement.remove()" style="width: 100%; background: #22c55e; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1rem;">
+                        <i class="fas fa-check"></i> Got It!
+                    </button>
+                </div>
+            `;
+
+            const modal = document.createElement('div');
+            modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 10001; padding: 20px;';
+            modal.innerHTML = message;
+
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    document.body.removeChild(modal);
+                }
+            });
+
+            document.body.appendChild(modal);
+        }
+
+        function showThankYouModal() {
+            const message = `
+                <div style="background: white; border-radius: 15px; padding: 30px; max-width: 500px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+                    <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #22c55e, #16a34a); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto;">
+                        <i class="fas fa-check" style="font-size: 3rem; color: white;"></i>
+                    </div>
+
+                    <h2 style="color: #0A2647; margin-bottom: 15px;">🎉 Welcome to MyDigitalTwin!</h2>
+                    <p style="color: #6b7280; font-size: 1.1rem; margin-bottom: 20px;">
+                        Thank you for choosing MyDigitalTwin! Your AI video journey starts now.
+                    </p>
+
+                    <div style="background: linear-gradient(135deg, #fef3c7, #fde68a); padding: 20px; border-radius: 10px; margin: 20px 0;">
+                        <h3 style="color: #92400e; margin-bottom: 10px;">💪 Challenge Time!</h3>
+                        <p style="color: #0A2647; margin: 0;">
+                            Create your first AI video and share it with the world! Tag us and inspire others to join the AI revolution.
+                        </p>
+                    </div>
+
+                    <div style="display: flex; gap: 10px; margin-top: 20px;">
+                        <button onclick="window.location.href='https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(window.location.href)" style="flex: 1; background: #1877f2; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer;">
+                            <i class="fab fa-facebook"></i> Share on Facebook
+                        </button>
+                        <button onclick="window.location.href='https://twitter.com/intent/tweet?text=' + encodeURIComponent('I just joined MyDigitalTwin! Create AI videos with your own face and voice. Check it out: ') + encodeURIComponent(window.location.href)" style="flex: 1; background: #1da1f2; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer;">
+                            <i class="fab fa-twitter"></i> Share on Twitter
+                        </button>
+                    </div>
+
+                    <button onclick="this.parentElement.parentElement.remove()" style="width: 100%; background: linear-gradient(135deg, #9D4EDD, #FF006E); color: white; border: none; padding: 15px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 15px; font-size: 1rem;">
+                        <i class="fas fa-video"></i> Start Creating Videos!
+                    </button>
+                </div>
+            `;
+
+            const modal = document.createElement('div');
+            modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: flex; align-items: center; justify-content: center; z-index: 10002; padding: 20px;';
+            modal.innerHTML = message;
+
+            document.body.appendChild(modal);
+        }
+    </script>
+
     <!-- Footer -->
     <footer style="text-align: center; padding: 30px 20px; margin-top: 50px; background: rgba(255,255,255,0.05); border-top: 1px solid rgba(255,255,255,0.1);">
         <p style="margin: 0; color: rgba(255,255,255,0.7); font-size: 14px;">
