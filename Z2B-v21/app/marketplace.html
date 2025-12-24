@@ -1289,7 +1289,8 @@
                     }
                 }
 
-                alert(`Adding "${title}" to cart. This will redirect to checkout.`);
+                // Show general upsell for all apps
+                showGeneralAppUpsell(title, 700); // R700 base retail price
             });
         });
 
@@ -1453,8 +1454,12 @@
                                 <span><strong>Silver (R1,480):</strong> 7 apps + MyDigitalTwin</span>
                                 <span style="color: #22c55e; font-weight: 600;">✓✓✓</span>
                             </div>
+                            <div style="display: flex; justify-content: space-between; padding: 8px; background: white; border-radius: 6px; margin-bottom: 6px; font-size: 0.9rem;">
+                                <span><strong>Gold (R2,490):</strong> 11 apps + MyDigitalTwin</span>
+                                <span style="color: #22c55e; font-weight: 600;">✓✓✓✓</span>
+                            </div>
                             <div style="display: flex; justify-content: space-between; padding: 8px; background: linear-gradient(135deg, #FFD700, #FFA500); border-radius: 6px; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3); font-size: 0.9rem;">
-                                <span style="color: #0A2647;"><strong>Gold (R2,490):</strong> ALL apps + MyDigitalTwin</span>
+                                <span style="color: #0A2647;"><strong>Platinum (R3,490):</strong> ALL 12 apps + MyDigitalTwin</span>
                                 <span style="color: #0A2647; font-weight: 900;">★ BEST</span>
                             </div>
                         </div>
@@ -1513,6 +1518,95 @@
                 if (depositBtn) {
                     depositBtn.addEventListener('click', function() {
                         showDirectDepositModal(tierName, tierPrice);
+                    });
+                }
+            }, 100);
+        }
+
+        // General upsell for all apps showing 5-tier membership
+        function showGeneralAppUpsell(appName, appPrice) {
+            const message = `
+                <div style="background: white; border-radius: 15px; padding: 20px; max-width: 550px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+                    <div style="text-align: center; margin-bottom: 15px;">
+                        <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #FFD700, #FF6B35); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px auto;">
+                            <i class="fas fa-gift" style="font-size: 1.8rem; color: white;"></i>
+                        </div>
+                        <h2 style="color: #0A2647; font-size: 1.5rem; margin-bottom: 5px;">💡 SMART TIP!</h2>
+                        <p style="color: #6b7280; font-size: 0.95rem;">Get more value with Z2B Membership</p>
+                    </div>
+
+                    <div style="background: linear-gradient(135deg, #fef3c7, #fde68a); padding: 15px; border-radius: 10px; margin-bottom: 15px; border-left: 4px solid #f59e0b;">
+                        <h3 style="color: #92400e; margin-bottom: 8px; font-size: 1.1rem;">You're about to buy:</h3>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <strong style="color: #0A2647; font-size: 1rem;">${appName}</strong>
+                            <span style="color: #FF6B35; font-size: 1.3rem; font-weight: bold;">R${appPrice}/month</span>
+                        </div>
+                        <p style="color: #92400e; margin-top: 5px; font-size: 0.85rem;">Retail price - non-members only</p>
+                    </div>
+
+                    <div style="background: #f0fdf4; padding: 15px; border-radius: 10px; margin-bottom: 15px; border: 2px solid #22c55e;">
+                        <h3 style="color: #15803d; margin-bottom: 10px; font-size: 1.1rem;"><i class="fas fa-star"></i> Better Option: Z2B Membership (Wholesale)</h3>
+                        <div style="margin-bottom: 8px;">
+                            <div style="display: flex; justify-content: space-between; padding: 8px; background: white; border-radius: 6px; margin-bottom: 6px; font-size: 0.9rem;">
+                                <span><strong>Bronze (R480):</strong> 2 apps of your choice</span>
+                                <span style="color: #22c55e; font-weight: 600;">✓</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; padding: 8px; background: white; border-radius: 6px; margin-bottom: 6px; font-size: 0.9rem;">
+                                <span><strong>Copper (R980):</strong> 4 apps of your choice</span>
+                                <span style="color: #22c55e; font-weight: 600;">✓✓</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; padding: 8px; background: white; border-radius: 6px; margin-bottom: 6px; font-size: 0.9rem;">
+                                <span><strong>Silver (R1,480):</strong> 7 apps of your choice</span>
+                                <span style="color: #22c55e; font-weight: 600;">✓✓✓</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; padding: 8px; background: white; border-radius: 6px; margin-bottom: 6px; font-size: 0.9rem;">
+                                <span><strong>Gold (R2,490):</strong> 11 apps of your choice</span>
+                                <span style="color: #22c55e; font-weight: 600;">✓✓✓✓</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; padding: 8px; background: linear-gradient(135deg, #FFD700, #FFA500); border-radius: 6px; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3); font-size: 0.9rem;">
+                                <span style="color: #0A2647;"><strong>Platinum (R3,490):</strong> ALL 12 apps</span>
+                                <span style="color: #0A2647; font-weight: 900;">★ BEST</span>
+                            </div>
+                        </div>
+                        <p style="color: #15803d; font-weight: 600; text-align: center; margin-top: 8px; font-size: 0.85rem;">
+                            🎁 Plus: 30-days Moneyback Guarantee + Income + Team support!
+                        </p>
+                    </div>
+
+                    <div style="display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap;">
+                        <button id="buyAppRetailBtn" style="flex: 1; min-width: 140px; background: #9ca3af; color: white; border: none; padding: 12px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: all 0.3s; font-size: 0.85rem;">
+                            <i class="fas fa-shopping-cart"></i> Buy Retail (R${appPrice})
+                        </button>
+                        <button onclick="window.location.href='register.html'" style="flex: 1; min-width: 140px; background: linear-gradient(135deg, #FFD700, #FF6B35); color: #0A2647; border: none; padding: 12px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: all 0.3s; box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3); font-size: 0.85rem;">
+                            <i class="fas fa-rocket"></i> Join Z2B Wholesale
+                        </button>
+                    </div>
+
+                    <p style="text-align: center; margin: 0; color: #6b7280; font-size: 0.8rem;">
+                        💰 Members buy wholesale, non-members pay retail
+                    </p>
+                </div>
+            `;
+
+            const modal = document.createElement('div');
+            modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 10000; padding: 20px; overflow-y: auto;';
+            modal.innerHTML = message;
+
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    document.body.removeChild(modal);
+                }
+            });
+
+            document.body.appendChild(modal);
+
+            // Handle buy retail button
+            setTimeout(() => {
+                const buyBtn = document.getElementById('buyAppRetailBtn');
+                if (buyBtn) {
+                    buyBtn.addEventListener('click', function() {
+                        document.body.removeChild(modal);
+                        alert(`Retail purchase for ${appName}\\n\\nContact: support@z2blegacybuilders.co.za\\n\\nOr join Z2B Membership to save money!`);
                     });
                 }
             }, 100);
