@@ -1,24 +1,27 @@
 /**
- * Z2B Individual App 4-Tier Pricing Configuration
+ * Z2B Individual App 4-Package Pricing Configuration
  * December 24, 2025
  *
- * TIER PRICING STRUCTURE:
- * - Tier 1 (Starter): R700/month - Basic features
- * - Tier 2 (Pro): R1,900/month - Advanced features
- * - Tier 3 (Premium): R3,000/month - ALL features + Gold Profit Sharing (28%)
- * - Tier 4 (Ultimate): R5,000/month - Everything + White-label + Platinum Profit Sharing (30%)
+ * PRODUCT PACKAGE PRICING STRUCTURE:
+ * - STARTER Package: R700/month - Basic features
+ * - PRO Package: R1,900/month - Advanced features
+ * - PREMIUM Package: R3,000/month - ALL features + Gold Tier ISP (28%)
+ * - ULTIMATE Package: R5,000/month - Everything + White-label + Platinum Tier ISP (30%)
+ *
+ * NOTE: "Packages" refers to individual app pricing tiers
+ *       "Tiers" refers to membership levels (Bronze, Copper, Silver, Gold, Platinum)
  */
 
-const Z2B_APP_TIERS = {
+const Z2B_APP_PACKAGES = {
     // VIDZIE - AI Video Generator
     'vidzie': {
         name: 'VIDZIE',
         description: 'HeyGen-Style AI Avatar Video Generator',
         icon: 'fas fa-video',
-        tiers: {
-            tier1: {
+        packages: {
+            package1: {
                 name: 'VIDZIE Starter',
-                badge: 'STARTER',
+                badge: 'STARTER PACKAGE',
                 price: 700,
                 pv: 35,
                 features: [
@@ -38,9 +41,9 @@ const Z2B_APP_TIERS = {
                     'Profit sharing'
                 ]
             },
-            tier2: {
+            package2: {
                 name: 'VIDZIE Pro',
-                badge: 'PRO ⭐',
+                badge: 'PRO PACKAGE ⭐',
                 price: 1900,
                 pv: 95,
                 popular: true,
@@ -63,9 +66,9 @@ const Z2B_APP_TIERS = {
                     'Profit sharing'
                 ]
             },
-            tier3: {
+            package3: {
                 name: 'VIDZIE Premium',
-                badge: 'PREMIUM + GOLD PROFIT',
+                badge: 'PREMIUM PACKAGE + GOLD ISP',
                 price: 3000,
                 pv: 150,
                 features: [
@@ -88,7 +91,7 @@ const Z2B_APP_TIERS = {
                     'Platinum profit sharing (30%)'
                 ]
             },
-            tier4: {
+            package4: {
                 name: 'VIDZIE Ultimate',
                 badge: 'ULTIMATE 👑',
                 price: 5000,
@@ -119,10 +122,10 @@ const Z2B_APP_TIERS = {
         name: 'Coach ManLaw',
         description: 'AI Billionaire Coach - 90-Day Transformation',
         icon: 'fas fa-robot',
-        tiers: {
+        packages: {
             tier1: {
                 name: 'Coach ManLaw Starter',
-                badge: 'STARTER',
+                badge: 'STARTER PACKAGE',
                 price: 700,
                 pv: 35,
                 features: [
@@ -139,9 +142,9 @@ const Z2B_APP_TIERS = {
                     'Profit sharing'
                 ]
             },
-            tier2: {
+            package2: {
                 name: 'Coach ManLaw Pro',
-                badge: 'PRO ⭐',
+                badge: 'PRO PACKAGE ⭐',
                 price: 1900,
                 pv: 95,
                 popular: true,
@@ -160,9 +163,9 @@ const Z2B_APP_TIERS = {
                     'Profit sharing'
                 ]
             },
-            tier3: {
+            package3: {
                 name: 'Coach ManLaw Premium',
-                badge: 'PREMIUM + GOLD PROFIT',
+                badge: 'PREMIUM PACKAGE + GOLD ISP',
                 price: 3000,
                 pv: 150,
                 features: [
@@ -181,7 +184,7 @@ const Z2B_APP_TIERS = {
                     'Platinum profit sharing'
                 ]
             },
-            tier4: {
+            package4: {
                 name: 'Coach ManLaw Ultimate',
                 badge: 'ULTIMATE 👑',
                 price: 5000,
@@ -207,10 +210,10 @@ const Z2B_APP_TIERS = {
         name: 'CaptionPro',
         description: 'AI Video Captions & Auto-Cut Reels',
         icon: 'fas fa-closed-captioning',
-        tiers: {
+        packages: {
             tier1: {
                 name: 'CaptionPro Starter',
-                badge: 'STARTER',
+                badge: 'STARTER PACKAGE',
                 price: 700,
                 pv: 35,
                 features: [
@@ -228,9 +231,9 @@ const Z2B_APP_TIERS = {
                     'Profit sharing'
                 ]
             },
-            tier2: {
+            package2: {
                 name: 'CaptionPro Pro',
-                badge: 'PRO ⭐',
+                badge: 'PRO PACKAGE ⭐',
                 price: 1900,
                 pv: 95,
                 popular: true,
@@ -251,9 +254,9 @@ const Z2B_APP_TIERS = {
                     'Profit sharing'
                 ]
             },
-            tier3: {
+            package3: {
                 name: 'CaptionPro Premium',
-                badge: 'PREMIUM + GOLD PROFIT',
+                badge: 'PREMIUM PACKAGE + GOLD ISP',
                 price: 3000,
                 pv: 150,
                 features: [
@@ -272,7 +275,7 @@ const Z2B_APP_TIERS = {
                     'Platinum profit sharing'
                 ]
             },
-            tier4: {
+            package4: {
                 name: 'CaptionPro Ultimate',
                 badge: 'ULTIMATE 👑',
                 price: 5000,
@@ -298,10 +301,10 @@ const Z2B_APP_TIERS = {
         name: 'GLOWIE',
         description: 'AI Content Creation & Social Media Manager',
         icon: 'fas fa-sparkles',
-        tiers: {
+        packages: {
             tier1: {
                 name: 'GLOWIE Starter',
-                badge: 'STARTER',
+                badge: 'STARTER PACKAGE',
                 price: 700,
                 pv: 35,
                 features: [
@@ -313,9 +316,9 @@ const Z2B_APP_TIERS = {
                 ],
                 excluded: ['Advanced AI', 'Multi-platform', 'Profit sharing']
             },
-            tier2: {
+            package2: {
                 name: 'GLOWIE Pro',
-                badge: 'PRO ⭐',
+                badge: 'PRO PACKAGE ⭐',
                 price: 1900,
                 pv: 95,
                 popular: true,
@@ -330,9 +333,9 @@ const Z2B_APP_TIERS = {
                 ],
                 excluded: ['API', 'White-label', 'Profit sharing']
             },
-            tier3: {
+            package3: {
                 name: 'GLOWIE Premium',
-                badge: 'PREMIUM + GOLD PROFIT',
+                badge: 'PREMIUM PACKAGE + GOLD ISP',
                 price: 3000,
                 pv: 150,
                 features: [
@@ -345,7 +348,7 @@ const Z2B_APP_TIERS = {
                 ],
                 excluded: ['White-label', 'Platinum profit']
             },
-            tier4: {
+            package4: {
                 name: 'GLOWIE Ultimate',
                 badge: 'ULTIMATE 👑',
                 price: 5000,
@@ -367,7 +370,7 @@ const Z2B_APP_TIERS = {
 };
 
 // PV Calculation: Price ÷ 20 = PV
-// T1: R700 ÷ 20 = 35 PV
-// T2: R1,900 ÷ 20 = 95 PV
-// T3: R3,000 ÷ 20 = 150 PV
-// T4: R5,000 ÷ 20 = 250 PV
+// STARTER Package: R700 ÷ 20 = 35 PV
+// PRO Package: R1,900 ÷ 20 = 95 PV
+// PREMIUM Package: R3,000 ÷ 20 = 150 PV
+// ULTIMATE Package: R5,000 ÷ 20 = 250 PV
