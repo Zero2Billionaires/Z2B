@@ -3350,7 +3350,174 @@
 
             document.body.appendChild(overlay);
         }
+
+        /**
+         * Show App Package Selection Modal
+         * Displays 4-package comparison for individual app purchase
+         */
+        function showAppPackageModal(appCode) {
+            // Load package configuration
+            if (typeof Z2B_APP_PACKAGES === 'undefined') {
+                alert('Package configuration not loaded. Please refresh the page.');
+                return;
+            }
+
+            const appData = Z2B_APP_PACKAGES[appCode];
+            if (!appData) {
+                alert('App configuration not found: ' + appCode);
+                return;
+            }
+
+            // Build modal HTML
+            const modalHTML = `
+                <div class="app-tier-modal" id="packageModal">
+                    <div class="app-tier-modal-backdrop" onclick="closePackageModal()"></div>
+                    <div class="app-tier-modal-content">
+                        <button class="app-tier-modal-close" onclick="closePackageModal()">
+                            <i class="fas fa-times"></i>
+                        </button>
+
+                        <div class="app-tier-modal-header">
+                            <i class="${appData.icon}" style="font-size: 3rem; color: var(--gold); margin-bottom: 1rem;"></i>
+                            <h2>${appData.name}</h2>
+                            <p style="opacity: 0.8; margin-bottom: 2rem;">${appData.description}</p>
+                        </div>
+
+                        <div class="tier-cards-grid">
+                            ${generatePackageCard(appData.packages.package1, appCode, 1)}
+                            ${generatePackageCard(appData.packages.package2, appCode, 2)}
+                            ${generatePackageCard(appData.packages.package3, appCode, 3)}
+                            ${generatePackageCard(appData.packages.package4, appCode, 4)}
+                        </div>
+
+                        <div class="wholesale-comparison">
+                            <div style="background: rgba(255, 215, 0, 0.1); border: 2px solid var(--gold); border-radius: 15px; padding: 20px; margin-top: 30px;">
+                                <h3 style="color: var(--gold); margin-bottom: 15px;">
+                                    <i class="fas fa-lightbulb"></i> Save Money with Z2B Membership!
+                                </h3>
+                                <p style="margin-bottom: 15px;">
+                                    Instead of buying individual apps at retail prices, join Z2B membership and get <strong>wholesale access to multiple apps</strong> at huge discounts!
+                                </p>
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
+                                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; text-align: center;">
+                                        <div style="font-size: 1.8rem; font-weight: bold; color: #CD7F32;">R480/month</div>
+                                        <div style="font-size: 0.9rem; opacity: 0.8;">Bronze: 2 apps</div>
+                                    </div>
+                                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; text-align: center;">
+                                        <div style="font-size: 1.8rem; font-weight: bold; color: #B87333;">R990/month</div>
+                                        <div style="font-size: 0.9rem; opacity: 0.8;">Copper: 4 apps</div>
+                                    </div>
+                                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; text-align: center;">
+                                        <div style="font-size: 1.8rem; font-weight: bold; color: #C0C0C0;">R1,490/month</div>
+                                        <div style="font-size: 0.9rem; opacity: 0.8;">Silver: 7 apps</div>
+                                    </div>
+                                    <div style="background: rgba(255,215,0,0.3); padding: 15px; border-radius: 10px; text-align: center; border: 2px solid var(--gold);">
+                                        <div style="font-size: 1.8rem; font-weight: bold; color: var(--gold);">R2,490/month</div>
+                                        <div style="font-size: 0.9rem; opacity: 0.8;">Gold: 11 apps</div>
+                                        <div style="font-size: 0.75rem; color: var(--gold); margin-top: 5px;">⭐ BEST VALUE</div>
+                                    </div>
+                                </div>
+                                <button onclick="window.location.href='register.html'" style="width: 100%; background: linear-gradient(135deg, var(--gold), var(--orange)); color: var(--navy-blue); border: none; padding: 15px; border-radius: 10px; font-weight: bold; font-size: 1.1rem; cursor: pointer;">
+                                    <i class="fas fa-users"></i> Join Z2B Membership Instead
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Insert modal into page
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+            // Prevent body scroll
+            document.body.style.overflow = 'hidden';
+        }
+
+        /**
+         * Generate individual package card HTML
+         */
+        function generatePackageCard(pkg, appCode, packageNum) {
+            const isPopular = pkg.popular || false;
+            const isPremium = packageNum === 3;
+            const isUltimate = packageNum === 4;
+
+            let cardClass = 'tier-option-card';
+            if (isPopular) cardClass += ' popular';
+            if (isPremium) cardClass += ' premium';
+            if (isUltimate) cardClass += ' ultimate';
+
+            return `
+                <div class="${cardClass}">
+                    ${isPopular ? '<div class="popular-badge">MOST POPULAR</div>' : ''}
+
+                    <div class="tier-badge">${pkg.badge}</div>
+                    <div class="tier-name">${pkg.name}</div>
+                    <div class="tier-price">
+                        <span class="currency">R</span>${pkg.price.toLocaleString()}<span class="period">/month</span>
+                    </div>
+                    <div class="tier-pv">${pkg.pv} PV Points</div>
+
+                    <ul class="tier-features-list">
+                        ${pkg.features.map(feature => {
+                            const isProfit = feature.includes('ISP COMMISSION') || feature.includes('PROFIT SHARING');
+                            return `<li class="${isProfit ? 'profit-sharing' : ''}">${feature}</li>`;
+                        }).join('')}
+                    </ul>
+
+                    ${pkg.excluded && pkg.excluded.length > 0 ? `
+                        <div class="tier-excluded">
+                            <strong>Not Included:</strong>
+                            <ul>
+                                ${pkg.excluded.map(item => `<li>${item}</li>`).join('')}
+                            </ul>
+                        </div>
+                    ` : ''}
+
+                    <button class="tier-select-btn" onclick="selectPackage('${appCode}', ${packageNum}, ${pkg.price}, '${pkg.name}')">
+                        <i class="fas fa-check-circle"></i> Select ${pkg.badge.split(' ')[0]}
+                    </button>
+                </div>
+            `;
+        }
+
+        /**
+         * Close package modal
+         */
+        function closePackageModal() {
+            const modal = document.getElementById('packageModal');
+            if (modal) {
+                modal.remove();
+                document.body.style.overflow = '';
+            }
+        }
+
+        /**
+         * Select package and proceed to payment
+         */
+        function selectPackage(appCode, packageNum, price, packageName) {
+            // Close modal
+            closePackageModal();
+
+            // Show payment confirmation
+            if (confirm(`You selected: ${packageName}\\n\\nPrice: R${price.toLocaleString()}/month\\n\\nProceed to payment?`)) {
+                // Store selected package info
+                localStorage.setItem('selectedPackage', JSON.stringify({
+                    appCode: appCode,
+                    packageNum: packageNum,
+                    price: price,
+                    name: packageName
+                }));
+
+                // Redirect to payment page (create app-specific payment page or generic)
+                // For now, show membership tip with updated price
+                showMembershipTip(packageName, price, appCode);
+            }
+        }
     </script>
+
+    <!-- Load App Package Configuration -->
+    <script src="js/z2b-app-tiers-config.js"></script>
+
     <!-- Footer -->
     <footer style="text-align: center; padding: 30px 20px; margin-top: 50px; background: rgba(255,255,255,0.05); border-top: 1px solid rgba(255,255,255,0.1);">
         <p style="margin: 0; color: rgba(255,255,255,0.7); font-size: 14px;">
