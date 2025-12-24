@@ -537,7 +537,7 @@
                 <p>Take our 5-minute assessment and unlock your personalized transformation roadmap</p>
             </div>
             <a href="questionnaire.html" class="questionnaire-btn">
-                <i class="fas fa-clipboard-check"></i> Start Free Assessment
+                <i class="fas fa-clipboard-check"></i> Begin Assessment
             </a>
         </div>
     </div>
@@ -1029,20 +1029,12 @@
         async function processTierPurchase(paymentMethod, user) {
             const tierItem = cartData.items.find(i => i.type === 'tier');
 
-            // Check if eligible for 30-day trial
-            const isEligibleForTrial = cart.isEligibleForTrial();
-            const isUpgrade = cart.isUpgrade(tierItem.code);
-
-            // If eligible for trial and not upgrading, offer free trial
-            if (isEligibleForTrial && !isUpgrade) {
-                if (confirm('🎉 You\'re eligible for a 30-Day FREE TRIAL!\n\n✅ Pay After 30 Days\n✅ Try all features\n✅ Cancel anytime\n\nWould you like to activate your free trial?\n\n(Click OK for FREE TRIAL, Cancel to Pay Now)')) {
-                    // Activate free trial
-                    activateFreeTrial(tierItem, user);
-                    return;
-                }
+            // Show money back guarantee notice
+            if (!confirm('💰 30-DAY MONEY BACK GUARANTEE\n\n✅ Full refund if not satisfied\n✅ No questions asked\n✅ Risk-free trial period\n\nProceed to payment?\n\n(Click OK to continue, Cancel to go back)')) {
+                return;
             }
 
-            // Otherwise, proceed with payment
+            // Proceed with payment
             alert('Processing payment via ' + paymentMethod + '...');
 
             try {
@@ -1110,34 +1102,6 @@
             } catch (error) {
                 alert('Payment processing error: ' + error.message);
             }
-        }
-
-        // Activate free trial
-        function activateFreeTrial(tierItem, user) {
-            // Save trial activation
-            const trial = {
-                userId: user.userId,
-                tierCode: tierItem.code,
-                tierName: tierItem.name,
-                startDate: new Date().toISOString(),
-                endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-                status: 'active'
-            };
-
-            localStorage.setItem(`${user.userId}_freeTrial`, JSON.stringify(trial));
-
-            // Grant immediate access to tier benefits
-            user.tier = tierItem.code;
-            user.tierName = tierItem.name;
-            user.trialMode = true;
-            localStorage.setItem('currentUser', JSON.stringify(user));
-
-            // Clear cart
-            cart.clearCart();
-
-            // Redirect to success page (you may want to create trial-activated.html)
-            alert('🎉 30-Day Free Trial Activated!\n\nYou now have full access to ' + tierItem.name + '!\n\nEnjoy your trial period!');
-            window.location.href = 'dashboard.html';
         }
 
         // Payment method selection
