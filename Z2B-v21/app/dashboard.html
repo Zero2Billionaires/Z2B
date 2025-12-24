@@ -1716,7 +1716,7 @@
                     let isFAMTrial = false;
                     let famDaysRemaining = 0;
 
-                    // Check FAM tier 30-day trial
+                    // Check FAM tier 30-day evaluation
                     if (user.tier === 'FAM' && user.famExpiryDate) {
                         isFAMTrial = true;
                         const now = new Date();
@@ -1730,7 +1730,7 @@
 
                         if (famDaysRemaining <= 0) {
                             // FAM trial expired
-                            alert('⏰ Your 30-day FREE trial has expired.\n\n✨ Upgrade to Bronze tier (R480/month) to continue accessing Coach Manlaw and unlock more features!\n\nContact support via WhatsApp: 077 490 1639');
+                            alert('⏰ Your 30-day evaluation period has expired.\n\n✨ Upgrade to Bronze tier (R480/month) to continue accessing Coach Manlaw and unlock more features!\n\nContact support via WhatsApp: 077 490 1639');
                             localStorage.removeItem('z2b_token');
                             localStorage.removeItem('z2b_current_user');
                             window.location.href = 'login.html';
@@ -2460,7 +2460,7 @@
                     <div class="warning-icon">⚠️</div>
                     <h4>CRITICAL: Your New Builders Are At Risk!</h4>
                     <p><strong>You invited ${data.newBuildersCount} new builder${data.newBuildersCount > 1 ? 's' : ''} this month.</strong> If you don't upgrade to at least Bronze by the 3rd of next month, <strong style="color: var(--orange);">they will be LOST to you FOREVER!</strong></p>
-                    <p>They will be allocated as <strong>spillovers to active builders</strong> who ARE qualified. You'll only keep the one-time 20% ISP commission from this month.</p>
+                    <p>They will be allocated as <strong>spillovers to active builders</strong> who ARE qualified. You'll only keep the one-time 12% ISP commission from this month.</p>
                     <p><strong style="color: var(--gold);">Upgrade now to secure them in your team and start earning TSC, TLI, and build your legacy!</strong></p>
                 </div>
                 ` : ''}

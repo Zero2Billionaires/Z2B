@@ -1,0 +1,213 @@
+<!-- Marketplace Product Access Management -->
+<div id="users" class="content-section">
+    <h2><i class="fas fa-store"></i> Marketplace Product Access Management</h2>
+    <p>Manage user access to all marketplace products (MAVULA, ZYRO, ZYRA, BENOWN, GLOWIE, VIDZIE, ZYNTH, ZYNECT)</p>
+
+    <!-- Action Tabs -->
+    <div style="display: flex; gap: 1rem; margin: 2rem 0; border-bottom: 2px solid rgba(255,215,0,0.3); flex-wrap: wrap;">
+        <button class="user-tab active" data-tab="all-users" style="padding: 1rem 2rem; border: none; background: none; cursor: pointer; border-bottom: 3px solid var(--gold); font-weight: bold; color: var(--navy-blue);">
+            <i class="fas fa-users"></i> All Users
+        </button>
+        <button class="user-tab" data-tab="product-users" style="padding: 1rem 2rem; border: none; background: none; cursor: pointer; border-bottom: 3px solid transparent; color: #666;">
+            <i class="fas fa-box-open"></i> Product Access
+        </button>
+        <button class="user-tab" data-tab="pending-payments" style="padding: 1rem 2rem; border: none; background: none; cursor: pointer; border-bottom: 3px solid transparent; color: #666;">
+            <i class="fas fa-clock"></i> Pending Payments <span id="pendingCount" style="background: var(--danger); color: white; padding: 0.2rem 0.5rem; border-radius: 50%; font-size: 0.8rem; margin-left: 0.5rem;">0</span>
+        </button>
+        <button class="user-tab" data-tab="grant-access" style="padding: 1rem 2rem; border: none; background: none; cursor: pointer; border-bottom: 3px solid transparent; color: #666;">
+            <i class="fas fa-gift"></i> Grant Access
+        </button>
+    </div>
+
+    <!-- Tab Content -->
+
+    <!-- All Users Tab -->
+    <div id="all-users-content" class="user-tab-content">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+            <input type="text" id="userSearchInput" placeholder="Search by name, email, or Z2B ID..." style="flex: 1; min-width: 300px; padding: 0.8rem 1rem; border: 2px solid #e0e0e0; border-radius: 10px;">
+            <button onclick="refreshUserList()" style="padding: 0.8rem 1.5rem; background: var(--gold); border: none; border-radius: 10px; color: var(--navy-blue); font-weight: 600; cursor: pointer;">
+                <i class="fas fa-sync-alt"></i> Refresh
+            </button>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Z2B ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Tier</th>
+                        <th>Product Access</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="allUsersTableBody">
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 2rem;">
+                            <i class="fas fa-spinner fa-spin"></i> Loading users...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Product Access Tab -->
+    <div id="product-users-content" class="user-tab-content" style="display: none;">
+        <!-- Product Selector -->
+        <div style="margin-bottom: 2rem;">
+            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--navy-blue);">Select Product:</label>
+            <select id="productSelector" style="padding: 0.8rem 1rem; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 1rem; width: 100%; max-width: 400px;">
+                <option value="mavula">🤖 MAVULA - AI Prospecting</option>
+                <option value="zyro">🎯 ZYRO - Goal Setting</option>
+                <option value="zyra">💼 ZYRA - Business Assistant</option>
+                <option value="benown">📊 BENOWN - Analytics</option>
+                <option value="glowie">✨ GLOWIE - Social Media</option>
+                <option value="vidzie">🎬 VIDZIE - Video Creation</option>
+                <option value="zynth">🎵 ZYNTH - Audio Production</option>
+                <option value="zynect">🔗 ZYNECT - Network Builder</option>
+            </select>
+        </div>
+
+        <!-- Stats for Selected Product -->
+        <div id="productStats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+            <!-- Stats will be loaded dynamically -->
+        </div>
+
+        <!-- Users Table -->
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Z2B ID</th>
+                        <th>Name</th>
+                        <th>Access Type</th>
+                        <th>Granted Date</th>
+                        <th>Expiry Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="productUsersTableBody">
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 2rem;">
+                            <i class="fas fa-spinner fa-spin"></i> Loading users...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Pending Payments Tab -->
+    <div id="pending-payments-content" class="user-tab-content" style="display: none;">
+        <div style="background: rgba(255,215,0,0.1); padding: 1.5rem; border-radius: 10px; margin-bottom: 1.5rem; border-left: 4px solid var(--gold);">
+            <h3 style="margin: 0 0 0.5rem 0; color: var(--gold);"><i class="fas fa-info-circle"></i> Payment Approval Process</h3>
+            <p style="margin: 0; color: #666;">Review payment proof submitted by users. Approve to grant product access, or reject with a reason.</p>
+        </div>
+
+        <div id="pendingPaymentsList">
+            <div style="text-align: center; padding: 3rem; color: #999;">
+                <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;"></i>
+                <p>No pending payments at the moment.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grant Access Tab -->
+    <div id="grant-access-content" class="user-tab-content" style="display: none;">
+        <div style="background: linear-gradient(135deg, rgba(255,215,0,0.1), rgba(255,165,0,0.05)); padding: 2rem; border-radius: 15px; border: 2px solid rgba(255,215,0,0.3);">
+            <h3 style="margin: 0 0 1.5rem 0; color: var(--gold);"><i class="fas fa-gift"></i> Grant Marketplace Product Access</h3>
+
+            <form id="grantAccessForm" onsubmit="grantProductAccess(event)">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                    <!-- User Selection -->
+                    <div class="form-group">
+                        <label>Select User *</label>
+                        <select id="grantUserId" required style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 1rem;">
+                            <option value="">-- Select User --</option>
+                        </select>
+                        <small style="color: #666;">Search by typing name or Z2B ID</small>
+                    </div>
+
+                    <!-- Product Selection -->
+                    <div class="form-group">
+                        <label>Select Product *</label>
+                        <select id="grantProductId" required style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 1rem;">
+                            <option value="">-- Select Product --</option>
+                            <option value="mavula">🤖 MAVULA - AI Prospecting</option>
+                            <option value="zyro">🎯 ZYRO - Goal Setting</option>
+                            <option value="zyra">💼 ZYRA - Business Assistant</option>
+                            <option value="benown">📊 BENOWN - Analytics</option>
+                            <option value="glowie">✨ GLOWIE - Social Media</option>
+                            <option value="vidzie">🎬 VIDZIE - Video Creation</option>
+                            <option value="zynth">🎵 ZYNTH - Audio Production</option>
+                            <option value="zynect">🔗 ZYNECT - Network Builder</option>
+                        </select>
+                    </div>
+
+                    <!-- Access Type -->
+                    <div class="form-group">
+                        <label>Access Type *</label>
+                        <select id="grantAccessType" required style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 1rem;">
+                            <option value="">-- Select Type --</option>
+                            <option value="PAID">💳 Paid Subscription</option>
+                            <option value="GIFT">🎁 Gift / Promotional</option>
+                            <option value="BETA">🧪 Beta Tester</option>
+                            <option value="ADMIN">👑 Admin Access</option>
+                            <option value="FREE">🆓 Free Trial</option>
+                        </select>
+                    </div>
+
+                    <!-- Subscription Plan -->
+                    <div class="form-group" id="subscriptionPlanGroup" style="display: none;">
+                        <label>Subscription Plan</label>
+                        <select id="grantSubscriptionPlan" style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 1rem;">
+                            <option value="MONTHLY">Monthly (R497/month)</option>
+                            <option value="LIFETIME">Lifetime (R2,997 once-off)</option>
+                            <option value="PAY_AS_GO">Pay as You Go</option>
+                        </select>
+                    </div>
+
+                    <!-- Expiry Date -->
+                    <div class="form-group">
+                        <label>Expiry Date (Optional)</label>
+                        <input type="date" id="grantExpiryDate" style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 1rem;">
+                        <small style="color: #666;">Leave blank for no expiry</small>
+                    </div>
+
+                    <!-- Notes -->
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label>Notes / Reason</label>
+                        <textarea id="grantNotes" rows="3" placeholder="e.g., Beta tester program, Gift for referrals, Payment confirmed..." style="width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 1rem; font-family: inherit;"></textarea>
+                    </div>
+
+                    <!-- Send Credentials -->
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                            <input type="checkbox" id="grantSendCredentials" checked style="width: auto;">
+                            <span>Send login credentials via Email & WhatsApp</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                    <button type="submit" style="flex: 1; padding: 1rem; background: linear-gradient(135deg, var(--gold), var(--orange)); border: none; border-radius: 10px; color: white; font-size: 1.1rem; font-weight: 600; cursor: pointer;">
+                        <i class="fas fa-check"></i> Grant Product Access
+                    </button>
+                    <button type="button" onclick="resetGrantForm()" style="padding: 1rem 2rem; background: #e0e0e0; border: none; border-radius: 10px; color: #666; font-weight: 600; cursor: pointer;">
+                        <i class="fas fa-times"></i> Clear
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Recent Grants -->
+        <div style="margin-top: 2rem;">
+            <h3 style="margin-bottom: 1rem;"><i class="fas fa-history"></i> Recent Access Grants</h3>
+            <div id="recentGrantsList" style="background: white; border-radius: 10px; padding: 1rem;">
+                <p style="text-align: center; color: #999; padding: 2rem;">No recent grants to display.</p>
+            </div>
+        </div>
+    </div>
+</div>
