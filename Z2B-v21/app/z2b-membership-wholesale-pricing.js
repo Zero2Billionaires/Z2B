@@ -1,6 +1,7 @@
 /**
  * Z2B MEMBERSHIP: WHOLESALE vs RETAIL PRICING
- * Simplified: All apps retail at R700, members get wholesale via membership
+ * CORRECTED: 5 Tiers with proper app allocation
+ * Bronze (2) | Copper (4) | Silver (7) | Gold (11) | Platinum (12)
  */
 
 const Z2B_WHOLESALE_RETAIL_PRICING = {
@@ -23,7 +24,7 @@ const Z2B_WHOLESALE_RETAIL_PRICING = {
 
         // Savings by being a member
         savings: (2 * 700) - 480, // R920
-        savingsPercent: Math.round((((2 * 700) - 480) / (2 * 700)) * 100), // 66%
+        savingsPercent: 66,
 
         message: 'Bronze Members get 2 apps for R480. Non-members pay R1,400 for the same 2 apps. Save R920 by becoming a Z2B member and buying at wholesale!'
     },
@@ -43,7 +44,7 @@ const Z2B_WHOLESALE_RETAIL_PRICING = {
 
         // Savings by being a member
         savings: (4 * 700) - 980, // R1,820
-        savingsPercent: Math.round((((4 * 700) - 980) / (4 * 700)) * 100), // 65%
+        savingsPercent: 65,
 
         message: 'Copper Members get 4 apps for R980. Non-members pay R2,800 for the same 4 apps. Save R1,820 by becoming a Z2B member and buying at wholesale!'
     },
@@ -63,7 +64,7 @@ const Z2B_WHOLESALE_RETAIL_PRICING = {
 
         // Savings by being a member
         savings: (7 * 700) - 1480, // R3,420
-        savingsPercent: Math.round((((7 * 700) - 1480) / (7 * 700)) * 100), // 70%
+        savingsPercent: 70,
 
         message: 'Silver Members get 7 apps for R1,480. Non-members pay R4,900 for the same 7 apps. Save R3,420 by becoming a Z2B member and buying at wholesale!'
     },
@@ -71,6 +72,26 @@ const Z2B_WHOLESALE_RETAIL_PRICING = {
     gold: {
         membershipPrice: 2490,
         membershipPV: 124.5,
+        appsIncluded: 11,
+
+        // Non-members pay retail
+        retailPrice: 11 * 700, // R7,700
+        retailPV: 11 * 35,     // 385 PV
+
+        // Members pay wholesale (membership fee)
+        wholesalePrice: 2490,
+        wholesalePV: 124.5,
+
+        // Savings by being a member
+        savings: (11 * 700) - 2490, // R5,210
+        savingsPercent: 68,
+
+        message: 'Gold Members get 11 apps for R2,490. Non-members pay R7,700 for the same 11 apps. Save R5,210 by becoming a Z2B member and buying at wholesale!'
+    },
+
+    platinum: {
+        membershipPrice: 3490,
+        membershipPV: 174.5,
         appsIncluded: 12,
 
         // Non-members pay retail
@@ -78,20 +99,20 @@ const Z2B_WHOLESALE_RETAIL_PRICING = {
         retailPV: 12 * 35,     // 420 PV
 
         // Members pay wholesale (membership fee)
-        wholesalePrice: 2490,
-        wholesalePV: 124.5,
+        wholesalePrice: 3490,
+        wholesalePV: 174.5,
 
         // Savings by being a member
-        savings: (12 * 700) - 2490, // R5,910
-        savingsPercent: Math.round((((12 * 700) - 2490) / (12 * 700)) * 100), // 70%
+        savings: (12 * 700) - 3490, // R4,910
+        savingsPercent: 58,
 
-        message: 'Gold Members get ALL 12 apps for R2,490. Non-members pay R8,400 for the same 12 apps. Save R5,910 by becoming a Z2B member and buying at wholesale!'
+        message: 'Platinum Members get ALL 12 apps for R3,490. Non-members pay R8,400 for the same 12 apps. Save R4,910 by becoming a Z2B member and buying at wholesale!'
     }
 };
 
 /**
  * MEMBERSHIP VALUE COMPARISON TABLE
- * Clean comparison: Wholesale vs Retail
+ * CORRECTED: 5 tiers
  */
 const MEMBERSHIP_COMPARISON_TABLE = {
     headers: ['Tier', 'Apps', 'Member Price (Wholesale)', 'Non-Member Price (Retail)', 'You Save'],
@@ -122,10 +143,18 @@ const MEMBERSHIP_COMPARISON_TABLE = {
 
     gold: {
         tier: 'Gold',
-        apps: 'ALL 12 apps',
+        apps: '11 apps',
         memberPrice: 'R2,490',
+        nonMemberPrice: 'R7,700 (11 × R700)',
+        savings: 'R5,210 (68%)'
+    },
+
+    platinum: {
+        tier: 'Platinum',
+        apps: 'ALL 12 apps',
+        memberPrice: 'R3,490',
         nonMemberPrice: 'R8,400 (12 × R700)',
-        savings: 'R5,910 (70%)'
+        savings: 'R4,910 (58%)'
     }
 };
 
@@ -162,11 +191,20 @@ const UPSELL_MESSAGES = {
 
     gold: {
         headline: '💡 Smart Choice Alert!',
-        comparison: 'Why pay retail when you can buy wholesale?',
-        alternative: 'Join Gold Membership and get ALL 12 apps for R2,490 (wholesale price)',
-        benefit: 'Non-members pay R8,400 retail. Members pay R2,490 wholesale.',
-        savings: 'Save R5,910 with wholesale pricing!',
+        comparison: 'Almost there! Get the best value.',
+        alternative: 'Join Gold Membership and get 11 apps for R2,490 (wholesale price)',
+        benefit: 'Non-members pay R7,700 retail. Members pay R2,490 wholesale.',
+        savings: 'Save R5,210 with wholesale pricing!',
         cta: 'Join Gold - Get Wholesale Pricing'
+    },
+
+    platinum: {
+        headline: '💡 Ultimate Value Alert!',
+        comparison: 'Why pay retail when you can buy wholesale?',
+        alternative: 'Join Platinum Membership and get ALL 12 apps for R3,490 (wholesale price)',
+        benefit: 'Non-members pay R8,400 retail. Members pay R3,490 wholesale.',
+        savings: 'Save R4,910 with wholesale pricing + get premium bonuses!',
+        cta: 'Join Platinum - Get Ultimate Wholesale Access'
     }
 };
 
@@ -189,7 +227,8 @@ const WHOLESALE_ADVANTAGE = {
         'Bronze: 2 apps for R480 wholesale vs R1,400 retail (Save R920)',
         'Copper: 4 apps for R980 wholesale vs R2,800 retail (Save R1,820)',
         'Silver: 7 apps for R1,480 wholesale vs R4,900 retail (Save R3,420)',
-        'Gold: ALL 12 apps for R2,490 wholesale vs R8,400 retail (Save R5,910)'
+        'Gold: 11 apps for R2,490 wholesale vs R7,700 retail (Save R5,210)',
+        'Platinum: ALL 12 apps for R3,490 wholesale vs R8,400 retail (Save R4,910)'
     ]
 };
 
