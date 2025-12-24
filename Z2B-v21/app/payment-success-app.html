@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Successful - Z2B Legacy Builders</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --navy-blue: #0A2647;
+            --gold: #FFD700;
+            --orange: #FF6B35;
+            --green: #4CAF50;
+            --white: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--navy-blue), #051428);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .success-card {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .success-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--green), #388E3C);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            animation: scaleUp 0.6s ease-out;
+        }
+
+        .success-icon i {
+            font-size: 3rem;
+            color: white;
+        }
+
+        @keyframes scaleUp {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        h1 {
+            color: var(--green);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .purchase-details {
+            background: rgba(255, 215, 0, 0.1);
+            border: 2px solid var(--gold);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            text-align: left;
+        }
+
+        .purchase-details h3 {
+            color: var(--navy-blue);
+            margin: 0 0 1rem 0;
+            font-size: 1.3rem;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #666;
+        }
+
+        .detail-value {
+            font-weight: 700;
+            color: var(--navy-blue);
+        }
+
+        .next-steps {
+            background: rgba(76, 175, 80, 0.1);
+            border-left: 4px solid var(--green);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 2rem 0;
+            text-align: left;
+        }
+
+        .next-steps h3 {
+            color: var(--green);
+            margin: 0 0 1rem 0;
+        }
+
+        .next-steps ul {
+            margin: 0;
+            padding-left: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold), var(--orange));
+            color: var(--navy-blue);
+            box-shadow: 0 8px 20px rgba(255, 215, 0, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(255, 215, 0, 0.6);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--navy-blue);
+            border: 2px solid var(--navy-blue);
+        }
+
+        .btn-secondary:hover {
+            background: var(--navy-blue);
+            color: white;
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: var(--gold);
+            position: absolute;
+            animation: confetti-fall 3s linear infinite;
+        }
+
+        @keyframes confetti-fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="success-card">
+            <div class="success-icon">
+                <i class="fas fa-check"></i>
+            </div>
+
+            <h1>Payment Successful!</h1>
+            <p class="subtitle">Your app purchase has been confirmed</p>
+
+            <div class="purchase-details" id="purchaseDetails">
+                <h3>📋 Purchase Details</h3>
+                <div class="detail-row">
+                    <span class="detail-label">App:</span>
+                    <span class="detail-value" id="appName">Loading...</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Amount Paid:</span>
+                    <span class="detail-value" id="amount">Loading...</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">PV Points:</span>
+                    <span class="detail-value" id="pvPoints">Loading...</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Reference:</span>
+                    <span class="detail-value" id="reference">Loading...</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Status:</span>
+                    <span class="detail-value" style="color: var(--green);">✅ Confirmed</span>
+                </div>
+            </div>
+
+            <div class="next-steps">
+                <h3>🚀 What's Next?</h3>
+                <ul>
+                    <li><strong>Access Your App:</strong> Your app is now available in your dashboard</li>
+                    <li><strong>Confirmation Email:</strong> Check your inbox for purchase details</li>
+                    <li><strong>PV Points Added:</strong> Your account has been credited</li>
+                    <li><strong>Start Using:</strong> Launch the app and explore features!</li>
+                </ul>
+            </div>
+
+            <div style="margin-top: 2rem;">
+                <a href="#" class="btn btn-primary" id="launchAppBtn">
+                    <i class="fas fa-rocket"></i> Launch App Now
+                </a>
+                <a href="dashboard.html" class="btn btn-secondary">
+                    <i class="fas fa-home"></i> Go to Dashboard
+                </a>
+            </div>
+
+            <p style="margin-top: 2rem; color: #999; font-size: 0.9rem;">
+                Need help? <a href="mailto:support@z2blegacybuilders.co.za" style="color: var(--gold);">Contact Support</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // App configurations
+        const APP_CONFIG = {
+            'captionpro': {
+                name: 'CaptionPro - AI Video Captions & Auto-Cut',
+                price: 700,
+                pv: 35,
+                url: 'captionpro/index.html'
+            },
+            'coach-manlaw': {
+                name: 'Coach Manlaw - AI Billionaire Coach',
+                price: 700,
+                pv: 35,
+                url: 'coach-manlaw.html'
+            },
+            'glowie': {
+                name: 'GLOWIE - AI App Builder',
+                price: 700,
+                pv: 35,
+                url: 'glowie.html'
+            },
+            'benown': {
+                name: 'BENOWN - AI Content Creator',
+                price: 700,
+                pv: 35,
+                url: 'benown.html'
+            },
+            'zyra': {
+                name: 'ZYRA - AI Sales Agent',
+                price: 700,
+                pv: 35,
+                url: 'zyra.html'
+            },
+            'vidzie': {
+                name: 'VIDZIE - AI Video Creator',
+                price: 700,
+                pv: 35,
+                url: 'vidzie.html'
+            },
+            'zynth': {
+                name: 'ZYNTH - AI Voice Cloning',
+                price: 700,
+                pv: 35,
+                url: 'zynth.html'
+            },
+            'zyro': {
+                name: 'ZYRO - Gamification Hub',
+                price: 700,
+                pv: 35,
+                url: 'zyro.html'
+            },
+            'zynect': {
+                name: 'ZYNECT - Complete CRM',
+                price: 700,
+                pv: 35,
+                url: 'zynect.html'
+            }
+        };
+
+        // Get URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const reference = urlParams.get('ref');
+        const appCode = urlParams.get('app');
+
+        // Display purchase details
+        if (appCode && APP_CONFIG[appCode]) {
+            const app = APP_CONFIG[appCode];
+
+            document.getElementById('appName').textContent = app.name;
+            document.getElementById('amount').textContent = `R${app.price}`;
+            document.getElementById('pvPoints').textContent = `+${app.pv} Points`;
+            document.getElementById('reference').textContent = reference || 'N/A';
+
+            // Set launch button
+            const launchBtn = document.getElementById('launchAppBtn');
+            launchBtn.href = app.url;
+
+            // Save app ownership to localStorage
+            const user = JSON.parse(localStorage.getItem('currentUser') || 'null');
+            if (user) {
+                const ownedApps = JSON.parse(localStorage.getItem(`${user.userId}_ownedApps`) || '[]');
+                if (!ownedApps.includes(appCode)) {
+                    ownedApps.push(appCode);
+                    localStorage.setItem(`${user.userId}_ownedApps`, JSON.stringify(ownedApps));
+                }
+
+                // Add PV points
+                const currentPV = parseInt(localStorage.getItem(`${user.userId}_pvPoints`) || '0');
+                localStorage.setItem(`${user.userId}_pvPoints`, (currentPV + app.pv).toString());
+            }
+
+            // Clear pending purchase
+            localStorage.removeItem('pendingAppPurchase');
+
+            // Show success animation
+            createConfetti();
+        } else {
+            document.getElementById('appName').textContent = 'Unknown App';
+            document.getElementById('amount').textContent = 'N/A';
+            document.getElementById('pvPoints').textContent = 'N/A';
+        }
+
+        // Create confetti animation
+        function createConfetti() {
+            const colors = ['#FFD700', '#FF6B35', '#4CAF50', '#2196F3'];
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animationDelay = Math.random() * 3 + 's';
+                    document.body.appendChild(confetti);
+
+                    setTimeout(() => confetti.remove(), 3000);
+                }, i * 30);
+            }
+        }
+
+        // Redirect to dashboard after 30 seconds if no action
+        setTimeout(() => {
+            if (confirm('Would you like to go to your dashboard now?')) {
+                window.location.href = 'dashboard.html';
+            }
+        }, 30000);
+    </script>
+</body>
+</html>
