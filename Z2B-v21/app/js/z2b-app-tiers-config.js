@@ -79,9 +79,9 @@ const Z2B_APP_TIERS = {
                     'Team collaboration (5 users)',
                     'Advanced analytics',
                     'Premium support (4-8h)',
-                    '🏆 GOLD PROFIT SHARING: Quarterly profit distribution',
-                    '💰 Earn from company profits (Board-determined quarterly based on P&L)',
-                    '📊 Higher tier = Higher profit allocation priority'
+                    '🏆 GOLD ISP COMMISSION: 28% on all referrals',
+                    '💰 Earn passive income from network building',
+                    '📊 Same commission rate as Gold membership tier!'
                 ],
                 excluded: [
                     'White-label (resell rights)',
@@ -105,9 +105,9 @@ const Z2B_APP_TIERS = {
                     'Dedicated account manager',
                     'Priority feature requests',
                     'Advanced API with webhooks',
-                    '👑 PLATINUM PROFIT SHARING: Maximum quarterly profit distribution',
-                    '💎 HIGHEST profit allocation priority (Board-determined quarterly)',
-                    '🏆 Top-tier profit sharing + reseller rights = Ultimate earning potential!'
+                    '👑 PLATINUM ISP COMMISSION: 30% on all referrals',
+                    '💎 HIGHEST commission rate in the entire platform!',
+                    '🏆 Maximum earning potential + reseller rights!'
                 ],
                 excluded: []
             }
