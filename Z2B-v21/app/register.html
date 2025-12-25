@@ -493,9 +493,29 @@
             }
         });
 
+        // Pre-select tier from URL parameter
+        function preselectTierFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const tier = urlParams.get('tier');
+            if (tier) {
+                const tierSelect = document.getElementById('tier');
+                const tierValue = tier.toUpperCase();
+                // Check if the tier option exists
+                const option = Array.from(tierSelect.options).find(opt => opt.value === tierValue);
+                if (option) {
+                    tierSelect.value = tierValue;
+                    // Highlight the select to show it was pre-selected
+                    tierSelect.style.backgroundColor = '#fff4cc';
+                    tierSelect.style.borderColor = '#FFD700';
+                    console.log('✅ Tier pre-selected:', tierValue);
+                }
+            }
+        }
+
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             loadSponsorInfo();
+            preselectTierFromURL();
         });
     </script>
     <!-- Footer -->
