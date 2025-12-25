@@ -179,8 +179,9 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">ID Number *</label>
-                        <input type="text" class="form-control" id="idNumber" name="idNumber" required>
+                        <label class="form-label">Z2B SPONSOR ID (Optional)</label>
+                        <input type="text" class="form-control" id="idNumber" name="idNumber" placeholder="Auto-filled from referral link or enter manually">
+                        <small class="text-muted">Your sponsor's ID will auto-fill if you used a referral link. Leave empty if you don't have a sponsor.</small>
                     </div>
 
                     <div class="mb-4">
@@ -195,7 +196,7 @@
                         <select class="form-select" id="tier" name="tier" required>
                             <option value="">Select a tier...</option>
                             <option value="FAM">FAM - Free Access Member (R0)</option>
-                            <option value="BRONZE">BRONZE - R480 Beta Price 🎁 + Bless a Pastor Bonus (R2,700 Gift)</option>
+                            <option value="BRONZE">BRONZE - R960/month (or R480 Beta Price)</option>
                             <option value="COPPER">COPPER - R1,980/month (or R990 Beta Price)</option>
                             <option value="SILVER">SILVER - R2,980/month (or R1,490 Beta Price)</option>
                             <option value="GOLD">GOLD - R4,980/month (or R2,490 Beta Price)</option>
@@ -232,7 +233,7 @@
                         <h6><i class="fas fa-info-circle"></i> Bank Transfer Details:</h6>
                         <p class="mb-1"><strong>Account Name:</strong> Zero2billionaires Amavulandlela</p>
                         <p class="mb-1"><strong>Account Number:</strong> 1318257727</p>
-                        <p class="mb-1"><strong>Bank:</strong> FNB</p>
+                        <p class="mb-1"><strong>Bank:</strong> NEDBANK</p>
                         <p class="mb-3"><strong>Reference:</strong> Your WhatsApp Number</p>
                         <div class="alert alert-warning mb-0">
                             <small><i class="fas fa-exclamation-triangle"></i> Please use your WhatsApp number as the payment reference so we can identify your payment.</small>
@@ -273,12 +274,12 @@
                         <h6 class="mt-3"><i class="fas fa-info-circle"></i> Cash Deposit Details:</h6>
                         <p class="mb-1"><strong>Account Name:</strong> Zero2billionaires Amavulandlela</p>
                         <p class="mb-1"><strong>Account Number:</strong> 1318257727</p>
-                        <p class="mb-1"><strong>Bank:</strong> FNB</p>
+                        <p class="mb-1"><strong>Bank:</strong> NEDBANK</p>
                         <p class="mb-3"><strong>Reference:</strong> Your WhatsApp Number</p>
                         <div class="alert alert-success">
                             <h6 class="mb-2"><strong>Important Instructions:</strong></h6>
                             <ol class="mb-0" style="padding-left: 1.2rem;">
-                                <li>Make your cash deposit at any FNB branch</li>
+                                <li>Make your cash deposit at any NEDBANK branch</li>
                                 <li>Use your WhatsApp number as the reference</li>
                                 <li>Keep the deposit slip/receipt</li>
                                 <li>Send proof of payment to our WhatsApp: <strong>077 490 1639</strong></li>
@@ -305,7 +306,7 @@
         </div>
 
         <div class="text-center mt-3">
-            <a href="landing-page.html" class="text-white"><i class="fas fa-arrow-left"></i> Back to Home</a>
+            <a href="index.html" class="text-white"><i class="fas fa-arrow-left"></i> Back to Home</a>
         </div>
     </div>
 
@@ -316,10 +317,25 @@
             ? 'http://localhost:5000'
             : 'https://z2b-production-3cd3.up.railway.app';
 
-        // Extract sponsor code from URL
+        // Extract sponsor code from URL or localStorage
         function getSponsorCodeFromURL() {
             const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get('ref') || urlParams.get('sponsor');
+            let sponsorCode = urlParams.get('ref') || urlParams.get('sponsor') || urlParams.get('referral');
+
+            // Fallback to localStorage if not in URL (persistent tracking)
+            if (!sponsorCode) {
+                sponsorCode = localStorage.getItem('z2b_sponsor_code');
+                if (sponsorCode) {
+                    console.log('✅ Sponsor code retrieved from localStorage:', sponsorCode);
+                }
+            } else {
+                // Update localStorage if URL has a sponsor code
+                localStorage.setItem('z2b_sponsor_code', sponsorCode);
+                localStorage.setItem('z2b_sponsor_timestamp', Date.now().toString());
+                console.log('✅ Sponsor code captured and stored:', sponsorCode);
+            }
+
+            return sponsorCode;
         }
 
         // Load sponsor information
@@ -327,6 +343,12 @@
             const sponsorCode = getSponsorCodeFromURL();
             if (sponsorCode) {
                 document.getElementById('sponsorCode').value = sponsorCode;
+
+                // Auto-fill the Z2B SPONSOR ID field
+                document.getElementById('idNumber').value = sponsorCode;
+                document.getElementById('idNumber').style.backgroundColor = '#e8f5e9';
+                document.getElementById('idNumber').style.borderColor = '#4CAF50';
+
                 document.getElementById('sponsorInfo').style.display = 'block';
                 document.getElementById('sponsorDetails').innerHTML = `<i class="fas fa-spinner fa-spin"></i> Loading sponsor information...`;
 
@@ -383,6 +405,10 @@
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
 
             try {
+                // Get introApp from URL parameter (if user came from standalone app purchase)
+                const urlParams = new URLSearchParams(window.location.search);
+                const introApp = urlParams.get('introApp'); // e.g., ?introApp=mydigitaltwin
+
                 const formData = {
                     firstName: document.getElementById('firstName').value.trim(),
                     lastName: document.getElementById('lastName').value.trim(),
@@ -392,7 +418,8 @@
                     password: document.getElementById('password').value,
                     tier: document.getElementById('tier').value,
                     sponsorCode: document.getElementById('sponsorCode').value || null,
-                    paymentMethod: document.querySelector('input[name="paymentMethod"]:checked')?.value
+                    paymentMethod: document.querySelector('input[name="paymentMethod"]:checked')?.value,
+                    introApp: introApp || null // NEW: Track which app introduced the user
                 };
 
                 // Validate tier selection first
@@ -427,7 +454,7 @@
 
                     // Handle FAM tier (Free Access Member - no payment required)
                     if (formData.tier === 'FAM') {
-                        alert('🎉 Welcome to your FREE 3-Month Coach Manlaw Trial!\n\nYou get 5 AI credits per month to experience Coach Manlaw.\n\nLogin to your dashboard to start your transformation journey!');
+                        alert('🎉 Welcome to your FREE 30-Day Coach Manlaw Trial!\n\nYou get 5 AI credits per week to experience Coach Manlaw.\n\nLogin to your dashboard to start your transformation journey!');
                         window.location.href = 'dashboard.html';
                     }
                     // Handle payment redirection for paid tiers
@@ -466,10 +493,43 @@
             }
         });
 
+        // Pre-select tier from URL parameter
+        function preselectTierFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const tier = urlParams.get('tier');
+            if (tier) {
+                const tierSelect = document.getElementById('tier');
+                const tierValue = tier.toUpperCase();
+                // Check if the tier option exists
+                const option = Array.from(tierSelect.options).find(opt => opt.value === tierValue);
+                if (option) {
+                    tierSelect.value = tierValue;
+                    // Highlight the select to show it was pre-selected
+                    tierSelect.style.backgroundColor = '#fff4cc';
+                    tierSelect.style.borderColor = '#FFD700';
+                    console.log('✅ Tier pre-selected:', tierValue);
+                }
+            }
+        }
+
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             loadSponsorInfo();
+            preselectTierFromURL();
         });
     </script>
+    <!-- Footer -->
+    <footer style="text-align: center; padding: 30px 20px; margin-top: 50px; background: rgba(255,255,255,0.05); border-top: 1px solid rgba(255,255,255,0.1);">
+        <p style="margin: 0; color: rgba(255,255,255,0.7); font-size: 14px;">
+            Built with <i class="fas fa-heart" style="color: #ff6b6b; animation: heartbeat 1.5s infinite;"></i> by <strong style="color: #FFD700;">Z2B Legacy Builders</strong>
+        </p>
+    </footer>
+    <style>
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.1); }
+            50% { transform: scale(1); }
+        }
+    </style>
 </body>
 </html>
