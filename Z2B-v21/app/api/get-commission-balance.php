@@ -26,8 +26,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 // Database connection (adjust path as needed)
 require_once __DIR__ . '/../config/database.php';
 
-// Get member_id from query parameter
-$memberId = isset($_GET['member_id']) ? intval($_GET['member_id']) : null;
+// Get member_id from query parameter (can be MongoDB ObjectId string or integer)
+$memberId = isset($_GET['member_id']) ? $_GET['member_id'] : null;
 
 if (!$memberId) {
     http_response_code(400);
@@ -35,7 +35,22 @@ if (!$memberId) {
     exit;
 }
 
+// Handle MongoDB ObjectId (string) or MySQL integer
+$memberIdForQuery = $memberId;
+
 try {
+    // Check if commission_balances table exists
+    $tableCheck = $pdo->query("SHOW TABLES LIKE 'commission_balances'");
+    if ($tableCheck->rowCount() == 0) {
+        http_response_code(503);
+        echo json_encode([
+            'success' => false,
+            'error' => 'Database not initialized',
+            'details' => 'The commission_balances table does not exist. Please run the database migration: database/tier-upgrade-payment-system.sql'
+        ]);
+        exit;
+    }
+
     // Get commission balance
     $stmt = $pdo->prepare("
         SELECT
@@ -47,7 +62,7 @@ try {
         FROM commission_balances
         WHERE member_id = ?
     ");
-    $stmt->execute([$memberId]);
+    $stmt->execute([$memberIdForQuery]);
     $balance = $stmt->fetch(PDO::FETCH_ASSOC);
 
     // If no balance record exists, create one
@@ -56,7 +71,7 @@ try {
             INSERT INTO commission_balances (member_id, total_earned, total_withdrawn, total_used_for_upgrades)
             VALUES (?, 0.00, 0.00, 0.00)
         ");
-        $stmt->execute([$memberId]);
+        $stmt->execute([$memberIdForQuery]);
 
         $balance = [
             'total_earned' => 0.00,
@@ -83,51 +98,63 @@ try {
         ORDER BY sp.created_at DESC
         LIMIT 1
     ");
-    $stmt->execute([$memberId]);
+    $stmt->execute([$memberIdForQuery]);
     $activeScheduledPayment = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // Get recent commission transactions (last 10)
-    $stmt = $pdo->prepare("
-        SELECT
-            t.id,
-            t.transaction_type,
-            t.amount,
-            t.description,
-            t.status,
-            t.created_at,
-            CASE
-                WHEN cdl.id IS NOT NULL THEN cdl.deduction_amount
-                ELSE 0.00
-            END as deduction_amount,
-            CASE
-                WHEN cdl.id IS NOT NULL THEN cdl.amount_paid_to_user
-                ELSE t.amount
-            END as net_amount
-        FROM transactions t
-        LEFT JOIN commission_deduction_log cdl ON t.id = cdl.commission_transaction_id
-        WHERE t.member_id = ? AND t.status = 'completed'
-        ORDER BY t.created_at DESC
-        LIMIT 10
-    ");
-    $stmt->execute([$memberId]);
-    $recentTransactions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // Get recent commission transactions (last 10) - if transactions table exists
+    $recentTransactions = [];
+    try {
+        $stmt = $pdo->prepare("
+            SELECT
+                t.id,
+                t.transaction_type,
+                t.amount,
+                t.description,
+                t.status,
+                t.created_at,
+                CASE
+                    WHEN cdl.id IS NOT NULL THEN cdl.deduction_amount
+                    ELSE 0.00
+                END as deduction_amount,
+                CASE
+                    WHEN cdl.id IS NOT NULL THEN cdl.amount_paid_to_user
+                    ELSE t.amount
+                END as net_amount
+            FROM transactions t
+            LEFT JOIN commission_deduction_log cdl ON t.id = cdl.commission_transaction_id
+            WHERE t.member_id = ? AND t.status = 'completed'
+            ORDER BY t.created_at DESC
+            LIMIT 10
+        ");
+        $stmt->execute([$memberIdForQuery]);
+        $recentTransactions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        // Transactions table might not exist or have different structure
+        $recentTransactions = [];
+    }
 
-    // Get payout history (last 5)
-    $stmt = $pdo->prepare("
-        SELECT
-            id,
-            amount,
-            payment_method,
-            status,
-            requested_at,
-            processed_at
-        FROM payouts
-        WHERE member_id = ?
-        ORDER BY requested_at DESC
-        LIMIT 5
-    ");
-    $stmt->execute([$memberId]);
-    $recentPayouts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // Get payout history (last 5) - if payouts table exists
+    $recentPayouts = [];
+    try {
+        $stmt = $pdo->prepare("
+            SELECT
+                id,
+                amount,
+                payment_method,
+                status,
+                requested_at,
+                processed_at
+            FROM payouts
+            WHERE member_id = ?
+            ORDER BY requested_at DESC
+            LIMIT 5
+        ");
+        $stmt->execute([$memberIdForQuery]);
+        $recentPayouts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        // Payouts table might not exist or have different structure
+        $recentPayouts = [];
+    }
 
     // Prepare response
     $response = [
