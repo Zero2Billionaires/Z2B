@@ -324,6 +324,121 @@
             margin-top: 0;
             color: #ffd700;
         }
+
+        /* Smart Savings Specific Styles */
+        .badge.smart-savings {
+            background: linear-gradient(45deg, #10b981, #34d399);
+            color: white;
+        }
+
+        .tier-jump-selector {
+            margin: 20px 0;
+        }
+
+        .tier-select {
+            width: 100%;
+            padding: 12px;
+            font-size: 1rem;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        .tier-select option {
+            background: #1a1a2e;
+            color: #fff;
+        }
+
+        .tier-cost-display {
+            margin-top: 10px;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+
+        .savings-progress-container {
+            background: rgba(16, 185, 129, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #10b981;
+        }
+
+        .savings-progress-container h4 {
+            margin-top: 0;
+            color: #10b981;
+        }
+
+        .progress-bar-outer {
+            width: 100%;
+            height: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-bar-inner {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #34d399);
+            transition: width 0.5s ease;
+            border-radius: 15px;
+        }
+
+        .progress-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #10b981;
+            margin: 10px 0;
+        }
+
+        .estimate-text {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            opacity: 0.7;
+            margin-top: 5px;
+        }
+
+        .savings-notice {
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 4px solid #3b82f6;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-size: 0.9rem;
+        }
+
+        .savings-notice i {
+            color: #3b82f6;
+            margin-right: 8px;
+        }
+
+        .savings-benefits {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .benefit-item {
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .benefit-item i {
+            color: #10b981;
+        }
+
     </style>
 </head>
 <body>
@@ -384,31 +499,85 @@
                     </div>
                 </div>
 
-                <!-- Option 3: Scheduled Commission Deductions -->
-                <div class="payment-card" id="card-scheduled" data-method="scheduled">
-                    <span class="badge instant-access">INSTANT ACCESS</span>
-                    <h3><i class="fas fa-calendar-check"></i> Schedule from Future Commissions</h3>
-                    <p>Get instant tier upgrade now, pay from future earnings automatically</p>
+                                <!-- Option 3: Smart Savings - Save for Bigger Upgrade -->
+                <div class="payment-card" id="card-savings" data-method="savings">
+                    <span class="badge smart-savings">SMART SAVINGS</span>
+                    <h3><i class="fas fa-piggy-bank"></i> Save for Bigger Upgrade</h3>
+                    <p>Jump up to 2 tiers! Save from your commissions, upgrade when fully paid</p>
 
+                    <!-- Tier Jump Selector -->
+                    <div class="tier-jump-selector">
+                        <label><strong>Choose Your Goal Tier:</strong></label>
+                        <select id="target-tier-select" class="tier-select">
+                            <!-- Options populated by JavaScript based on current tier -->
+                        </select>
+                        <div class="tier-cost-display">
+                            Total Cost: <span class="highlight">R<span id="selected-tier-cost">0</span></span>
+                        </div>
+                    </div>
+
+                    <!-- Savings Progress (shown if already saving) -->
+                    <div class="savings-progress-container" id="savings-progress-container" style="display:none;">
+                        <h4>📊 Your Savings Progress</h4>
+                        <div class="progress-bar-outer">
+                            <div class="progress-bar-inner" id="progress-bar-fill" style="width: 0%;"></div>
+                        </div>
+                        <p class="progress-text">
+                            R<span id="amount-saved">0</span> / R<span id="total-target">0</span> saved
+                            (<span id="progress-percentage">0</span>%)
+                        </p>
+                        <p class="estimate-text">
+                            <i class="fas fa-clock"></i> Estimated: <span id="estimated-time">calculating...</span>
+                        </p>
+                    </div>
+
+                    <!-- Deduction Slider -->
                     <div class="slider-control">
-                        <label>Deduction Percentage: <span id="deduction-pct">50</span>%</label>
-                        <input type="range" id="deduction-slider" min="1" max="100" value="50">
+                        <label>Save from Each Commission: <span id="savings-pct">50</span>%</label>
+                        <input type="range" id="savings-slider" min="30" max="70" value="50" step="5">
+                        <div class="slider-labels">
+                            <span>30%</span>
+                            <span>50%</span>
+                            <span>70%</span>
+                        </div>
                     </div>
 
+                    <!-- Live Example -->
                     <div class="live-preview">
-                        Example: Earn R<span id="example-earn">1000</span> →
-                        Deduct <span class="highlight">R<span id="example-deduct">500</span></span> →
-                        Receive <span class="highlight">R<span id="example-receive">500</span></span>
+                        <strong>Example:</strong> Earn R<span id="savings-example-earn">1000</span> →
+                        Save <span class="highlight">R<span id="savings-example-save">500</span></span> →
+                        Receive <span class="highlight">R<span id="savings-example-receive">500</span></span>
                     </div>
 
-                    <div class="scheduled-info" id="scheduled-estimate">
-                        <h4>Payment Estimate</h4>
-                        <p id="estimate-text">Based on your earning history, you'll pay this off in approximately 3-5 commission payments.</p>
+                    <!-- Important Notice -->
+                    <div class="savings-notice">
+                        <i class="fas fa-info-circle"></i>
+                        <strong>Important:</strong> You'll remain at your current tier and commission rate
+                        until your savings goal is reached. Then instant automatic upgrade!
                     </div>
 
+                    <!-- Benefits List -->
+                    <div class="savings-benefits">
+                        <div class="benefit-item">
+                            <i class="fas fa-check-circle"></i> Zero upfront payment
+                        </div>
+                        <div class="benefit-item">
+                            <i class="fas fa-check-circle"></i> Jump up to 2 tiers
+                        </div>
+                        <div class="benefit-item">
+                            <i class="fas fa-check-circle"></i> Cancel anytime & get refund
+                        </div>
+                        <div class="benefit-item">
+                            <i class="fas fa-check-circle"></i> Track progress daily
+                        </div>
+                    </div>
+
+                    <!-- Authorization -->
                     <div class="checkbox-auth">
-                        <input type="checkbox" id="authorize-scheduled">
-                        <label for="authorize-scheduled">I authorize automatic commission deductions until paid in full</label>
+                        <input type="checkbox" id="authorize-savings">
+                        <label for="authorize-savings">
+                            <strong>I authorize automatic savings deductions from my commissions</strong>
+                        </label>
                     </div>
                 </div>
 
@@ -463,6 +632,9 @@
         let commissionBalance = null;
         let tierCosts = null;
         let selectedMethod = null;
+        let savingsProgress = null;
+        let selectedSavingsTier = null;
+
 
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', async () => {
@@ -490,6 +662,13 @@
 
                 // Check payment options visibility
                 checkPaymentOptions();
+
+                // Load savings progress if applicable
+                savingsProgress = await loadSavingsProgress(upgradeData.userId);
+                if (savingsProgress && savingsProgress.has_active_plan) {
+                    displaySavingsProgress(savingsProgress);
+                }
+
 
                 // Setup event listeners
                 setupEventListeners();
@@ -527,6 +706,131 @@
             return data.tiers;
         }
 
+
+        async function loadSavingsProgress(memberId) {
+            try {
+                const response = await fetch(`API/get-savings-progress.php?member_id=${memberId}`);
+                const data = await response.json();
+
+                if (!data.success) {
+                    return null;
+                }
+
+                return data;
+            } catch (error) {
+                console.error('Error loading savings progress:', error);
+                return null;
+            }
+        }
+
+        function displaySavingsProgress(progress) {
+            if (!progress.has_active_plan) return;
+
+            const container = document.getElementById('savings-progress-container');
+            const fillBar = document.getElementById('progress-bar-fill');
+            const amountSaved = document.getElementById('amount-saved');
+            const totalTarget = document.getElementById('total-target');
+            const progressPct = document.getElementById('progress-percentage');
+            const estimatedTime = document.getElementById('estimated-time');
+
+            // Show progress container
+            container.style.display = 'block';
+
+            // Update values
+            fillBar.style.width = progress.progress.progress_percentage + '%';
+            amountSaved.textContent = progress.progress.amount_saved.toLocaleString();
+            totalTarget.textContent = progress.progress.total_cost.toLocaleString();
+            progressPct.textContent = progress.progress.progress_percentage;
+
+            // Update estimated time
+            if (progress.estimates.estimated_months > 0) {
+                estimatedTime.textContent = progress.estimates.estimated_months + ' month(s)';
+            } else if (progress.estimates.estimated_weeks > 0) {
+                estimatedTime.textContent = progress.estimates.estimated_weeks + ' week(s)';
+            } else {
+                estimatedTime.textContent = 'Almost there!';
+            }
+        }
+
+        function populateTierSelector() {
+            const TIER_ORDER = ['BRONZE', 'COPPER', 'SILVER', 'GOLD', 'PLATINUM'];
+            const currentTier = upgradeData.fromTier;
+            const currentIndex = TIER_ORDER.indexOf(currentTier);
+
+            const selector = document.getElementById('target-tier-select');
+            selector.innerHTML = '<option value="">-- Select Target Tier --</option>';
+
+            // Add options for tiers up to 2 levels above
+            for (let i = currentIndex + 1; i <= currentIndex + 2 && i < TIER_ORDER.length; i++) {
+                const tier = TIER_ORDER[i];
+                const cost = tierCosts[tier].beta_price;
+                const option = document.createElement('option');
+                option.value = tier;
+                option.textContent = `${tier} - R${cost.toLocaleString()}`;
+                selector.appendChild(option);
+            }
+
+            // Add event listener for tier selection
+            selector.addEventListener('change', (e) => {
+                selectedSavingsTier = e.target.value;
+                if (selectedSavingsTier && tierCosts[selectedSavingsTier]) {
+                    const cost = tierCosts[selectedSavingsTier].beta_price;
+                    document.getElementById('selected-tier-cost').textContent = cost.toLocaleString();
+                }
+            });
+        }
+
+        function updateSavingsPreview(percentage) {
+            document.getElementById('savings-pct').textContent = percentage;
+
+            const exampleEarn = 1000;
+            const save = Math.round(exampleEarn * (percentage / 100));
+            const receive = exampleEarn - save;
+
+            document.getElementById('savings-example-earn').textContent = exampleEarn;
+            document.getElementById('savings-example-save').textContent = save;
+            document.getElementById('savings-example-receive').textContent = receive;
+        }
+
+        async function createSavingsPlan() {
+            const targetTier = document.getElementById('target-tier-select').value;
+            const deductionPct = parseInt(document.getElementById('savings-slider').value);
+            const authorized = document.getElementById('authorize-savings').checked;
+
+            if (!targetTier) {
+                throw new Error('Please select a target tier');
+            }
+
+            if (!authorized) {
+                throw new Error('Please authorize automatic savings deductions');
+            }
+
+            const cost = tierCosts[targetTier].beta_price;
+
+            const response = await fetch('API/create-savings-plan.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    member_id: upgradeData.userId,
+                    current_tier: upgradeData.fromTier,
+                    target_tier: targetTier,
+                    deduction_percentage: deductionPct
+                })
+            });
+
+            const result = await response.json();
+
+            if (!result.success) {
+                throw new Error(result.error || result.details || 'Failed to create savings plan');
+            }
+
+            // Show success message
+            showSuccess(`Smart Savings plan created! You'll save ${deductionPct}% from each commission towards ${targetTier} tier (R${cost.toLocaleString()})`);
+
+            // Redirect to dashboard
+            setTimeout(() => window.location.href = 'dashboard.html', 3000);
+        }
+
         async function loadCommissionBalance(memberId) {
             const response = await fetch(`API/get-commission-balance.php?member_id=${memberId}`);
             const data = await response.json();
@@ -557,6 +861,8 @@
         }
 
         function checkPaymentOptions() {
+            // Populate tier selector for Smart Savings
+            populateTierSelector();
             const cost = parseFloat(document.getElementById('proceed-btn').dataset.cost);
             const balance = parseFloat(document.getElementById('proceed-btn').dataset.balance);
 
@@ -585,6 +891,14 @@
         }
 
         function setupEventListeners() {
+            // Savings slider
+            const savingsSlider = document.getElementById('savings-slider');
+            if (savingsSlider) {
+                savingsSlider.addEventListener('input', (e) => {
+                    updateSavingsPreview(parseInt(e.target.value));
+                });
+            }
+
             // Payment card selection
             document.querySelectorAll('.payment-card').forEach(card => {
                 card.addEventListener('click', function() {
@@ -716,6 +1030,9 @@
                         break;
                     case 'commission_partial':
                         await usePartialCommission();
+                        break;
+                    case 'savings':
+                        await createSavingsPlan();
                         break;
                     case 'scheduled':
                         await scheduleCommissionPayment();
