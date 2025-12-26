@@ -369,8 +369,8 @@
         // Process tier upgrade checkout
         async function processTierUpgradeCheckout(tierCode, upgradeData) {
             try {
-                // Call your tier checkout API
-                const response = await fetch(`${API_BASE_URL}/api/create-tier-checkout.php`, {
+                // Call tier checkout API (relative path - PHP file is on same server)
+                const response = await fetch('api/create-tier-checkout.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

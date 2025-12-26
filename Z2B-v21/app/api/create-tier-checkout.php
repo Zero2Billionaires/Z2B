@@ -27,15 +27,24 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $input = file_get_contents('php://input');
 $data = json_decode($input, true);
 
-// Validate input
-if (!isset($data['tier_code'])) {
+// Validate input - accept both 'tier' and 'tier_code' for backward compatibility
+$tierCode = isset($data['tier']) ? $data['tier'] : (isset($data['tier_code']) ? $data['tier_code'] : null);
+
+if (!$tierCode) {
     http_response_code(400);
     echo json_encode(['success' => false, 'error' => 'Tier code is required']);
     exit;
 }
 
-$tierCode = $data['tier_code'];
+// Get additional fields
 $referralCode = isset($data['referral_code']) ? $data['referral_code'] : null;
+$isUpgrade = isset($data['isUpgrade']) ? $data['isUpgrade'] : false;
+$userId = isset($data['userId']) ? $data['userId'] : null;
+$userEmail = isset($data['email']) ? $data['email'] : null;
+$userName = isset($data['name']) ? $data['name'] : null;
+$userPhone = isset($data['phone']) ? $data['phone'] : null;
+$fromTier = isset($data['fromTier']) ? $data['fromTier'] : null;
+$toTier = isset($data['toTier']) ? $data['toTier'] : null;
 
 // Tier configurations (Beta pricing - 50% off)
 $tiers = [
@@ -69,19 +78,33 @@ $baseUrl = $protocol . '://' . $host;
 $yocoSecretKey = 'sk_test_960bfde0VBrLlpK098e4ffeb53e1'; // Replace with live key for production
 $yocoApiUrl = 'https://payments.yoco.com/api/checkouts';
 
+// Prepare metadata
+$metadata = [
+    'tier_code' => $tierCode,
+    'tier_name' => $tier['name'],
+    'reference' => $reference,
+    'referral_code' => $referralCode ?: '',
+    'is_upgrade' => $isUpgrade ? 'true' : 'false'
+];
+
+// Add upgrade-specific metadata
+if ($isUpgrade) {
+    $metadata['user_id'] = $userId;
+    $metadata['user_email'] = $userEmail;
+    $metadata['user_name'] = $userName;
+    $metadata['user_phone'] = $userPhone;
+    $metadata['from_tier'] = $fromTier;
+    $metadata['to_tier'] = $toTier;
+}
+
 // Prepare checkout payload
 $payload = [
     'amount' => $amountInCents,
     'currency' => 'ZAR',
-    'successUrl' => $baseUrl . '/payment-success-register.html?ref=' . $reference . '&tier=' . $tierCode,
-    'cancelUrl' => $baseUrl . '/index.html#tiers',
+    'successUrl' => $baseUrl . '/payment-success-register.html?ref=' . $reference . '&tier=' . $tierCode . ($isUpgrade ? '&upgrade=true' : ''),
+    'cancelUrl' => $baseUrl . '/tiers.html',
     'failureUrl' => $baseUrl . '/payment-failed.html?ref=' . $reference,
-    'metadata' => [
-        'tier_code' => $tierCode,
-        'tier_name' => $tier['name'],
-        'reference' => $reference,
-        'referral_code' => $referralCode ?: ''
-    ]
+    'metadata' => $metadata
 ];
 
 // Make request to Yoco API
