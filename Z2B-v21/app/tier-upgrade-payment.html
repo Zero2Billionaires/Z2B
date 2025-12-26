@@ -439,9 +439,62 @@
             color: #10b981;
         }
 
+
+        .back-to-dashboard {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            color: #ffd700;
+            padding: 12px 24px;
+            border-radius: 30px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+        }
+
+        .back-to-dashboard:hover {
+            background: rgba(255, 215, 0, 0.2);
+            border-color: #ffd700;
+            transform: translateX(-5px);
+        }
+
+        .back-to-dashboard i {
+            font-size: 1.2rem;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 50px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .footer a {
+            color: #ffd700;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
     </style>
 </head>
 <body>
+    <a href="dashboard.html" class="back-to-dashboard">
+        <i class="fas fa-arrow-left"></i>
+        <span>Back to Dashboard</span>
+    </a>
+
     <div class="container">
         <div id="alert-container"></div>
 
@@ -625,6 +678,12 @@
             </button>
         </div>
     </div>
+
+
+    <footer class="footer">
+        <p>Built with <i class="fas fa-heart" style="color: #ff6b6b;"></i> by <a href="https://www.z2blegacybuilders.co.za" target="_blank">Z2B Legacy Builders</a></p>
+        <p style="font-size: 0.9rem; margin-top: 10px; opacity: 0.6;">Empowering Legacy Builders Worldwide</p>
+    </footer>
 
     <script>
         // Global state
