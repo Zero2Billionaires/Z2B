@@ -227,6 +227,27 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
 
+        .current-tier-badge {
+            width: 100%;
+            padding: 1rem;
+            border: 3px solid var(--tier-color);
+            border-radius: 50px;
+            background: linear-gradient(135deg, var(--tier-color), var(--orange));
+            color: var(--white);
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-align: center;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-downgrade {
+            background: linear-gradient(135deg, #6B7280, #9CA3AF);
+        }
+
+        .btn-upgrade {
+            background: linear-gradient(135deg, var(--gold), var(--orange));
+        }
+
         .comparison-table {
             background: var(--white);
             border-radius: 20px;
@@ -766,8 +787,152 @@
             });
         });
 
+        // Handle tier downgrade
+        async function handleDowngrade(newTier, user) {
+            const tierNames = {
+                'FAM': 'FAM - Free Affiliate',
+                'BRONZE': 'Bronze Legacy Builder',
+                'COPPER': 'Copper Legacy Builder',
+                'SILVER': 'Silver Legacy Builder',
+                'GOLD': 'Gold Legacy Builder',
+                'PLATINUM': 'Platinum Legacy Builder'
+            };
+
+            const confirmed = confirm(
+                `⚠️ DOWNGRADE CONFIRMATION\n\n` +
+                `Current Tier: ${user.tierName}\n` +
+                `New Tier: ${tierNames[newTier]}\n\n` +
+                `⚠️ You will IMMEDIATELY LOSE:\n` +
+                `• Higher commission rates\n` +
+                `• App access\n` +
+                `• Team bonuses\n` +
+                `• PV points\n\n` +
+                `This action is permanent. Continue?`
+            );
+
+            if (!confirmed) return;
+
+            try {
+                const API_URL = 'https://z2b-production-3cd3.up.railway.app';
+                const token = localStorage.getItem('z2b_token');
+
+                const response = await fetch(`${API_URL}/api/users/${user.id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ tier: newTier })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Update localStorage
+                    user.tier = newTier;
+                    user.tierName = tierNames[newTier];
+                    localStorage.setItem('z2b_current_user', JSON.stringify(user));
+
+                    alert(`✅ Tier downgraded successfully!\n\nYou are now a ${tierNames[newTier]} member.`);
+                    window.location.reload(); // Reload to show new tier
+                } else {
+                    alert('❌ Downgrade failed: ' + (result.message || 'Unknown error'));
+                }
+            } catch (error) {
+                alert('❌ Error processing downgrade. Please try again or contact support.');
+                console.error('Downgrade error:', error);
+            }
+        }
+
+        // Handle tier upgrade
+        function handleUpgrade(newTier, user) {
+            const tierNames = {
+                'FAM': 'FAM - Free Affiliate',
+                'BRONZE': 'Bronze Legacy Builder',
+                'COPPER': 'Copper Legacy Builder',
+                'SILVER': 'Silver Legacy Builder',
+                'GOLD': 'Gold Legacy Builder',
+                'PLATINUM': 'Platinum Legacy Builder'
+            };
+
+            // Store upgrade intent for pre-filling checkout form
+            localStorage.setItem('z2b_tier_upgrade', JSON.stringify({
+                action: 'upgrade',
+                fromTier: user.tier,
+                toTier: newTier,
+                userId: user.id,
+                userEmail: user.email,
+                userName: user.name,
+                userPhone: user.phone
+            }));
+
+            // Use existing registration flow (will detect existing user and skip registration)
+            const tierCodes = {
+                'FAM': 'FAM',
+                'BRONZE': 'BLB',
+                'COPPER': 'CLB',
+                'SILVER': 'SLB',
+                'GOLD': 'GLB',
+                'PLATINUM': 'PLB'
+            };
+
+            // Redirect to register page with tier parameter
+            // The register page should detect existing user and go straight to payment
+            window.location.href = `register.html?tier=${tierCodes[newTier]}&upgrade=true`;
+        }
+
         // Display referral info if coming from referral link
         window.addEventListener('DOMContentLoaded', function() {
+            // DYNAMIC TIER DETECTION - Replace buttons based on user's current tier
+            const currentUser = JSON.parse(localStorage.getItem('z2b_current_user') || '{}');
+            const currentTier = currentUser.tier || null;
+
+            if (currentTier) {
+                const tierHierarchy = ['FAM', 'BRONZE', 'COPPER', 'SILVER', 'GOLD', 'PLATINUM'];
+                const currentTierIndex = tierHierarchy.indexOf(currentTier);
+
+                document.querySelectorAll('.tier-card').forEach(card => {
+                    const cardClasses = card.className;
+                    let cardTier = null;
+
+                    if (cardClasses.includes('fam')) cardTier = 'FAM';
+                    else if (cardClasses.includes('bronze')) cardTier = 'BRONZE';
+                    else if (cardClasses.includes('copper')) cardTier = 'COPPER';
+                    else if (cardClasses.includes('silver')) cardTier = 'SILVER';
+                    else if (cardClasses.includes('gold')) cardTier = 'GOLD';
+                    else if (cardClasses.includes('platinum')) cardTier = 'PLATINUM';
+
+                    if (!cardTier) return;
+
+                    const cardTierIndex = tierHierarchy.indexOf(cardTier);
+                    const button = card.querySelector('.btn-select-tier');
+
+                    if (cardTierIndex < currentTierIndex) {
+                        // LOWER TIER - Downgrade button
+                        button.textContent = 'Downgrade Your Tier';
+                        button.className = 'btn-select-tier btn-downgrade';
+                        button.onclick = () => handleDowngrade(cardTier, currentUser);
+                    } else if (cardTierIndex === currentTierIndex) {
+                        // CURRENT TIER - Congratulations badge
+                        const tierNames = {
+                            'FAM': 'FAM',
+                            'BRONZE': 'Bronze',
+                            'COPPER': 'Copper',
+                            'SILVER': 'Silver',
+                            'GOLD': 'Gold',
+                            'PLATINUM': 'Platinum'
+                        };
+                        button.outerHTML = `<div class="current-tier-badge">🎉 Congratulations! You are a ${tierNames[cardTier]} member</div>`;
+                    } else {
+                        // HIGHER TIER - Upgrade button
+                        button.textContent = 'Upgrade and Earn More';
+                        button.className = 'btn-select-tier btn-upgrade';
+                        button.onclick = () => handleUpgrade(cardTier, currentUser);
+                    }
+                });
+            }
+
+            // Referral tracking
             const urlParams = new URLSearchParams(window.location.search);
             const referrerId = urlParams.get('ref');
             const referrerName = urlParams.get('ref_name');
