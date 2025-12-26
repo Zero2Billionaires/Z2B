@@ -369,36 +369,61 @@
         // Process tier upgrade checkout
         async function processTierUpgradeCheckout(tierCode, upgradeData) {
             try {
+                console.log('🚀 Starting upgrade checkout...');
+                console.log('Tier Code:', tierCode);
+                console.log('Upgrade Data:', upgradeData);
+
                 // Call tier checkout API (relative path - PHP file is on same server)
+                const requestBody = {
+                    tier: tierCode,
+                    userId: upgradeData.userId,
+                    email: upgradeData.userEmail,
+                    name: upgradeData.userName,
+                    phone: upgradeData.userPhone,
+                    isUpgrade: true,
+                    fromTier: upgradeData.fromTier,
+                    toTier: upgradeData.toTier
+                };
+
+                console.log('📤 Request Body:', requestBody);
+
                 const response = await fetch('api/create-tier-checkout.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({
-                        tier: tierCode,
-                        userId: upgradeData.userId,
-                        email: upgradeData.userEmail,
-                        name: upgradeData.userName,
-                        phone: upgradeData.userPhone,
-                        isUpgrade: true,
-                        fromTier: upgradeData.fromTier,
-                        toTier: upgradeData.toTier
-                    })
+                    body: JSON.stringify(requestBody)
                 });
 
+                console.log('📥 Response Status:', response.status);
+                console.log('📥 Response OK:', response.ok);
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('❌ API Error Response:', errorText);
+                    alert(`❌ API Error (${response.status}): ${errorText}`);
+                    window.location.href = 'tiers.html';
+                    return;
+                }
+
                 const result = await response.json();
+                console.log('📥 API Response:', result);
 
                 if (result.success && result.redirectUrl) {
+                    console.log('✅ Redirecting to Yoco:', result.redirectUrl);
                     // Redirect to Yoco payment
                     window.location.href = result.redirectUrl;
                 } else {
-                    alert('❌ Error creating checkout: ' + (result.message || 'Unknown error'));
+                    const errorMsg = result.error || result.message || JSON.stringify(result);
+                    console.error('❌ Checkout failed:', errorMsg);
+                    alert('❌ Error creating checkout: ' + errorMsg);
                     window.location.href = 'tiers.html';
                 }
             } catch (error) {
-                console.error('Upgrade checkout error:', error);
-                alert('❌ Error processing upgrade. Please try again or contact support.');
+                console.error('❌ Upgrade checkout error:', error);
+                console.error('Error details:', error.message);
+                console.error('Error stack:', error.stack);
+                alert('❌ Error processing upgrade: ' + error.message + '\n\nCheck browser console for details.');
                 window.location.href = 'tiers.html';
             }
         }
