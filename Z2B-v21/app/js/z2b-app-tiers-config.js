@@ -41,7 +41,7 @@ const Z2B_APP_PACKAGES = {
                     'Custom avatars',
                     'API access',
                     'White-label',
-                    'Profit sharing'
+                    'Gold membership'
                 ]
             },
             package2: {
@@ -69,7 +69,7 @@ const Z2B_APP_PACKAGES = {
                     'Custom avatars',
                     'API access',
                     'White-label',
-                    'Profit sharing'
+                    'Gold membership'
                 ]
             },
             package3: {
@@ -94,7 +94,7 @@ const Z2B_APP_PACKAGES = {
                 ],
                 excluded: [
                     'White-label (resell rights)',
-                    'Platinum profit sharing (30%)'
+                    'Platinum membership'
                 ]
             },
             package4: {
@@ -149,7 +149,7 @@ const Z2B_APP_PACKAGES = {
                     'Voice coaching',
                     'Video coaching',
                     'Live sessions',
-                    'Profit sharing'
+                    'Gold membership'
                 ]
             },
             package2: {
@@ -173,7 +173,7 @@ const Z2B_APP_PACKAGES = {
                 excluded: [
                     'Video coaching with avatar',
                     'Live group sessions',
-                    'Profit sharing'
+                    'Gold membership'
                 ]
             },
             package3: {
@@ -195,7 +195,7 @@ const Z2B_APP_PACKAGES = {
                 ],
                 excluded: [
                     'White-label (rebrand as your coach)',
-                    'Platinum profit sharing'
+                    'Platinum membership'
                 ]
             },
             package4: {
@@ -247,7 +247,7 @@ const Z2B_APP_PACKAGES = {
                     'Advanced caption animations',
                     'Custom branding',
                     'Batch processing',
-                    'Profit sharing'
+                    'Gold membership'
                 ]
             },
             package2: {
@@ -273,7 +273,7 @@ const Z2B_APP_PACKAGES = {
                 excluded: [
                     'API access',
                     'White-label',
-                    'Profit sharing'
+                    'Gold membership'
                 ]
             },
             package3: {
@@ -295,7 +295,7 @@ const Z2B_APP_PACKAGES = {
                 ],
                 excluded: [
                     'White-label reseller rights',
-                    'Platinum profit sharing'
+                    'Platinum membership'
                 ]
             },
             package4: {
@@ -342,7 +342,7 @@ const Z2B_APP_PACKAGES = {
                     '💎 Choose 2 MORE apps from our marketplace',
                     '📊 Access Tier 1 features on your selected apps'
                 ],
-                excluded: ['Advanced AI', 'Multi-platform', 'Profit sharing']
+                excluded: ['Advanced AI', 'Multi-platform', 'Gold membership']
             },
             package2: {
                 name: 'GLOWIE Pro',
@@ -362,7 +362,7 @@ const Z2B_APP_PACKAGES = {
                     '💎 Choose 7 MORE apps from our marketplace',
                     '📊 Access up to Tier 3 features on your selected apps'
                 ],
-                excluded: ['API', 'White-label', 'Profit sharing']
+                excluded: ['API', 'White-label', 'Gold membership']
             },
             package3: {
                 name: 'GLOWIE Premium',
