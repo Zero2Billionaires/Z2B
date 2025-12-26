@@ -855,18 +855,6 @@
                 'PLATINUM': 'Platinum Legacy Builder'
             };
 
-            // Store upgrade intent for pre-filling checkout form
-            localStorage.setItem('z2b_tier_upgrade', JSON.stringify({
-                action: 'upgrade',
-                fromTier: user.tier,
-                toTier: newTier,
-                userId: user.id,
-                userEmail: user.email,
-                userName: user.name,
-                userPhone: user.phone
-            }));
-
-            // Use existing registration flow (will detect existing user and skip registration)
             const tierCodes = {
                 'FAM': 'FAM',
                 'BRONZE': 'BLB',
@@ -876,9 +864,20 @@
                 'PLATINUM': 'PLB'
             };
 
-            // Redirect to register page with tier parameter
-            // The register page should detect existing user and go straight to payment
-            window.location.href = `register.html?tier=${tierCodes[newTier]}&upgrade=true`;
+            // Store upgrade intent with tier code for payment page
+            localStorage.setItem('z2b_tier_upgrade', JSON.stringify({
+                action: 'upgrade',
+                fromTier: user.tier,
+                toTier: newTier,
+                tierCode: tierCodes[newTier],
+                userId: user.id,
+                userEmail: user.email,
+                userName: user.name,
+                userPhone: user.phone
+            }));
+
+            // Redirect to new payment options page (not register.html)
+            window.location.href = 'tier-upgrade-payment.html';
         }
 
         // Display referral info if coming from referral link

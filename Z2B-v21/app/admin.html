@@ -482,6 +482,7 @@
                 <li><a href="#" class="menu-link" data-section="compensation"><i class="fas fa-dollar-sign"></i> Compensation Plan</a></li>
                 <li><a href="#" class="menu-link" data-section="branding"><i class="fas fa-palette"></i> Branding</a></li>
                 <li><a href="#" class="menu-link" data-section="payment"><i class="fas fa-credit-card"></i> Payment Gateways</a></li>
+                <li><a href="#" class="menu-link" data-section="manual-payments"><i class="fas fa-money-check-alt"></i> Manual Payments <span class="badge" id="pending-payments-badge" style="background: var(--danger); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; margin-left: 8px; display: none;">0</span></a></li>
                 <li><a href="#" class="menu-link" data-section="fam"><i class="fas fa-user-clock"></i> FAM Management</a></li>
                 <li><a href="#" class="menu-link" data-section="statistics"><i class="fas fa-chart-bar"></i> Statistics</a></li>
             </ul>
@@ -1036,6 +1037,72 @@
             <div id="compensation" class="content-section"></div>
             <div id="branding" class="content-section"></div>
             <div id="payment" class="content-section"></div>
+
+            <!-- Manual Payments Verification Section -->
+            <div id="manual-payments" class="content-section">
+                <h2><i class="fas fa-money-check-alt"></i> Manual Payment Verification (EFT/Cash)</h2>
+                <p>Review and verify manual payment proofs submitted by builders for tier upgrades</p>
+
+                <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin: 2rem 0;">
+                    <div class="stat-card" style="background: rgba(255, 152, 0, 0.1); border-left: 4px solid var(--warning);">
+                        <h3 id="pending-payments-count">0</h3>
+                        <p>Pending Verification</p>
+                    </div>
+                    <div class="stat-card" style="background: rgba(76, 175, 80, 0.1); border-left: 4px solid var(--success);">
+                        <h3 id="verified-today-count">0</h3>
+                        <p>Verified Today</p>
+                    </div>
+                    <div class="stat-card" style="background: rgba(244, 67, 54, 0.1); border-left: 4px solid var(--danger);">
+                        <h3 id="rejected-count">0</h3>
+                        <p>Rejected</p>
+                    </div>
+                </div>
+
+                <!-- Filter Tabs -->
+                <div style="display: flex; gap: 1rem; margin: 2rem 0; border-bottom: 2px solid rgba(255,215,0,0.3);">
+                    <button class="payment-status-tab active" data-status="pending" style="padding: 1rem 2rem; border: none; background: none; cursor: pointer; border-bottom: 3px solid var(--gold); font-weight: bold; color: var(--navy-blue);">
+                        <i class="fas fa-clock"></i> Pending
+                    </button>
+                    <button class="payment-status-tab" data-status="verified" style="padding: 1rem 2rem; border: none; background: none; cursor: pointer; border-bottom: 3px solid transparent; color: rgba(255, 255, 255, 0.6);">
+                        <i class="fas fa-check-circle"></i> Verified
+                    </button>
+                    <button class="payment-status-tab" data-status="rejected" style="padding: 1rem 2rem; border: none; background: none; cursor: pointer; border-bottom: 3px solid transparent; color: rgba(255, 255, 255, 0.6);">
+                        <i class="fas fa-times-circle"></i> Rejected
+                    </button>
+                </div>
+
+                <!-- Payments Table -->
+                <div style="overflow-x: auto; background: rgba(255,255,255,0.05); border-radius: 10px; padding: 1rem;">
+                    <table id="manual-payments-table" style="width: 100%; color: white; border-collapse: collapse;">
+                        <thead>
+                            <tr style="border-bottom: 2px solid rgba(255,215,0,0.3);">
+                                <th style="padding: 1rem; text-align: left;">Date</th>
+                                <th style="padding: 1rem; text-align: left;">Member</th>
+                                <th style="padding: 1rem; text-align: left;">Method</th>
+                                <th style="padding: 1rem; text-align: left;">Tier Upgrade</th>
+                                <th style="padding: 1rem; text-align: left;">Amount</th>
+                                <th style="padding: 1rem; text-align: left;">Reference</th>
+                                <th style="padding: 1rem; text-align: left;">Proof</th>
+                                <th style="padding: 1rem; text-align: left;">Status</th>
+                                <th style="padding: 1rem; text-align: left;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="payments-tbody">
+                            <tr>
+                                <td colspan="9" style="padding: 3rem; text-align: center; opacity: 0.6;">
+                                    <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                                    <p>No payments to display</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Auto-refresh notice -->
+                <p style="text-align: center; margin-top: 2rem; opacity: 0.6;">
+                    <i class="fas fa-sync-alt"></i> Auto-refreshes every 30 seconds
+                </p>
+            </div>
 
             <!-- FAM Management Section -->
             <div id="fam" class="content-section">
@@ -5785,6 +5852,242 @@ function formatDate(dateString) {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-ZA', { year: 'numeric', month: 'short', day: 'numeric' });
 }
+
+// ========== MANUAL PAYMENTS FUNCTIONS ==========
+
+let currentAdminId = 1; // TODO: Get from admin authentication
+let currentPaymentStatus = 'pending';
+let refreshInterval = null;
+
+// Initialize Manual Payments when section loads
+document.addEventListener('DOMContentLoaded', function() {
+    // Payment status tab switching
+    const paymentTabs = document.querySelectorAll('.payment-status-tab');
+    paymentTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            const status = this.getAttribute('data-status');
+            currentPaymentStatus = status;
+
+            // Update tabs
+            paymentTabs.forEach(t => {
+                t.classList.remove('active');
+                t.style.borderBottom = '3px solid transparent';
+                t.style.fontWeight = 'normal';
+                t.style.color = 'rgba(255, 255, 255, 0.6)';
+            });
+
+            this.classList.add('active');
+            this.style.borderBottom = '3px solid var(--gold)';
+            this.style.fontWeight = 'bold';
+            this.style.color = 'var(--navy-blue)';
+
+            // Reload payments with new status filter
+            loadManualPayments();
+        });
+    });
+
+    // Load initial pending count for badge
+    updatePendingBadge();
+
+    // Setup section visibility handler
+    const menuLinks = document.querySelectorAll('.menu-link');
+    menuLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            const section = this.getAttribute('data-section');
+
+            if (section === 'manual-payments') {
+                // Clear any existing interval
+                if (refreshInterval) {
+                    clearInterval(refreshInterval);
+                }
+
+                // Load payments
+                loadManualPayments();
+
+                // Start auto-refresh every 30 seconds
+                refreshInterval = setInterval(loadManualPayments, 30000);
+            } else {
+                // Clear interval when leaving section
+                if (refreshInterval) {
+                    clearInterval(refreshInterval);
+                    refreshInterval = null;
+                }
+            }
+        });
+    });
+});
+
+async function loadManualPayments() {
+    try {
+        const response = await fetch(`API/admin/get-pending-manual-payments.php?status=${currentPaymentStatus}`);
+        const data = await response.json();
+
+        if (!data.success) {
+            console.error('Failed to load payments:', data.error);
+            return;
+        }
+
+        // Update stats
+        document.getElementById('pending-payments-count').textContent = data.pending_count;
+        document.getElementById('verified-today-count').textContent = data.verified_count;
+        document.getElementById('rejected-count').textContent = data.rejected_count;
+
+        // Update badge
+        const badge = document.getElementById('pending-payments-badge');
+        if (data.pending_count > 0) {
+            badge.textContent = data.pending_count;
+            badge.style.display = 'inline';
+        } else {
+            badge.style.display = 'none';
+        }
+
+        // Populate table
+        const tbody = document.getElementById('payments-tbody');
+        tbody.innerHTML = '';
+
+        if (data.payments.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="9" style="padding: 3rem; text-align: center; opacity: 0.6;">
+                        <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                        <p>No ${currentPaymentStatus} payments to display</p>
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        data.payments.forEach(payment => {
+            const row = document.createElement('tr');
+            row.style.borderBottom = '1px solid rgba(255, 255, 255, 0.1)';
+
+            const statusBadge = getStatusBadge(payment.status);
+            const actionButtons = getActionButtons(payment);
+
+            row.innerHTML = `
+                <td style="padding: 1rem;">${formatDate(payment.submitted_at)}</td>
+                <td style="padding: 1rem;">
+                    <div><strong>${payment.member_name}</strong></div>
+                    <div style="font-size: 0.85rem; opacity: 0.7;">${payment.member_email}</div>
+                    <div style="font-size: 0.85rem; opacity: 0.7;">${payment.member_phone}</div>
+                </td>
+                <td style="padding: 1rem; text-transform: uppercase;">${payment.payment_method}</td>
+                <td style="padding: 1rem;">
+                    <strong>${payment.from_tier}</strong>
+                    <i class="fas fa-arrow-right" style="margin: 0 5px; color: var(--gold);"></i>
+                    <strong style="color: var(--gold);">${payment.to_tier}</strong>
+                </td>
+                <td style="padding: 1rem; font-weight: bold;">R${payment.submitted_amount.toLocaleString()}</td>
+                <td style="padding: 1rem;">${payment.submitted_reference || '-'}</td>
+                <td style="padding: 1rem;">
+                    <a href="${payment.proof_url}" target="_blank" style="color: var(--gold); text-decoration: none;">
+                        <i class="fas fa-external-link-alt"></i> View Proof
+                    </a>
+                </td>
+                <td style="padding: 1rem;">${statusBadge}</td>
+                <td style="padding: 1rem;">${actionButtons}</td>
+            `;
+
+            tbody.appendChild(row);
+        });
+
+    } catch (error) {
+        console.error('Error loading manual payments:', error);
+    }
+}
+
+function getStatusBadge(status) {
+    const badges = {
+        'pending': '<span style="background: rgba(255, 152, 0, 0.2); color: #ff9800; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600;"><i class="fas fa-clock"></i> Pending</span>',
+        'verified': '<span style="background: rgba(76, 175, 80, 0.2); color: #4caf50; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600;"><i class="fas fa-check-circle"></i> Verified</span>',
+        'rejected': '<span style="background: rgba(244, 67, 54, 0.2); color: #f44336; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600;"><i class="fas fa-times-circle"></i> Rejected</span>'
+    };
+    return badges[status] || status;
+}
+
+function getActionButtons(payment) {
+    if (payment.status === 'pending') {
+        return `
+            <button onclick="verifyPayment(${payment.queue_id}, 'verify')"
+                style="padding: 0.5rem 1rem; background: var(--success); color: white; border: none; border-radius: 5px; cursor: pointer; margin-right: 0.5rem;">
+                <i class="fas fa-check"></i> Verify
+            </button>
+            <button onclick="verifyPayment(${payment.queue_id}, 'reject')"
+                style="padding: 0.5rem 1rem; background: var(--danger); color: white; border: none; border-radius: 5px; cursor: pointer;">
+                <i class="fas fa-times"></i> Reject
+            </button>
+        `;
+    } else if (payment.status === 'verified') {
+        return `<span style="opacity: 0.6;">Verified by Admin #${payment.verified_by_admin}</span>`;
+    } else if (payment.status === 'rejected') {
+        return `<span style="opacity: 0.6; color: var(--danger);">Rejected: ${payment.rejection_reason || 'No reason provided'}</span>`;
+    }
+    return '-';
+}
+
+async function verifyPayment(queueId, action) {
+    let notes = null;
+
+    if (action === 'reject') {
+        notes = prompt('Please enter rejection reason:');
+        if (!notes || notes.trim() === '') {
+            alert('Rejection reason is required');
+            return;
+        }
+    } else {
+        notes = prompt('Admin notes (optional):');
+    }
+
+    try {
+        const response = await fetch('API/admin/verify-manual-payment.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                queue_id: queueId,
+                action: action,
+                admin_id: currentAdminId,
+                admin_notes: notes,
+                rejection_reason: action === 'reject' ? notes : null
+            })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            alert(`Payment ${action}ed successfully!${action === 'reject' ? ' Member downgraded back to original tier.' : ''}`);
+            // Reload payments table
+            loadManualPayments();
+        } else {
+            alert('Error: ' + (result.error || 'Unknown error'));
+        }
+    } catch (error) {
+        console.error('Payment verification error:', error);
+        alert('Failed to process payment: ' + error.message);
+    }
+}
+
+async function updatePendingBadge() {
+    try {
+        const response = await fetch('API/admin/get-pending-manual-payments.php?status=pending');
+        const data = await response.json();
+
+        if (data.success) {
+            const badge = document.getElementById('pending-payments-badge');
+            if (data.pending_count > 0) {
+                badge.textContent = data.pending_count;
+                badge.style.display = 'inline';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+    } catch (error) {
+        console.error('Failed to update pending badge:', error);
+    }
+}
+
+// Update badge every 60 seconds
+setInterval(updatePendingBadge, 60000);
+
     </script>
     <!-- Footer -->
     <footer style="text-align: center; padding: 30px 20px; margin-top: 50px; background: rgba(255,255,255,0.05); border-top: 1px solid rgba(255,255,255,0.1);">
