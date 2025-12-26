@@ -50,10 +50,10 @@ $toTier = isset($data['toTier']) ? $data['toTier'] : null;
 $tiers = [
     'FAM' => ['name' => 'FAM - Free Affiliate', 'price' => 0, 'pv' => 0],
     'BLB' => ['name' => 'Bronze Legacy Builder', 'price' => 480, 'pv' => 24],
-    'CLB' => ['name' => 'Copper Legacy Builder', 'price' => 990, 'pv' => 50],
-    'SLB' => ['name' => 'Silver Legacy Builder', 'price' => 1490, 'pv' => 74],
-    'GLB' => ['name' => 'Gold Legacy Builder', 'price' => 2490, 'pv' => 149],
-    'PLB' => ['name' => 'Platinum Legacy Builder', 'price' => 3490, 'pv' => 249]
+    'CLB' => ['name' => 'Copper Legacy Builder', 'price' => 980, 'pv' => 50],
+    'SLB' => ['name' => 'Silver Legacy Builder', 'price' => 1480, 'pv' => 74],
+    'GLB' => ['name' => 'Gold Legacy Builder', 'price' => 2980, 'pv' => 149],
+    'PLB' => ['name' => 'Platinum Legacy Builder', 'price' => 4980, 'pv' => 249]
 ];
 
 // Check if tier exists
