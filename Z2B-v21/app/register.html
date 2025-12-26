@@ -317,6 +317,92 @@
             ? 'http://localhost:5000'
             : 'https://z2b-production-3cd3.up.railway.app';
 
+        // UPGRADE DETECTION - Check if this is a tier upgrade scenario
+        function checkUpgradeScenario() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const isUpgrade = urlParams.get('upgrade') === 'true';
+            const tierCode = urlParams.get('tier');
+            const upgradeIntent = localStorage.getItem('z2b_tier_upgrade');
+
+            if (isUpgrade && upgradeIntent) {
+                const upgradeData = JSON.parse(upgradeIntent);
+
+                // Hide registration form and show upgrade processing
+                document.querySelector('.register-card').innerHTML = `
+                    <div class="register-header">
+                        <h2><i class="fas fa-arrow-circle-up"></i> Processing Tier Upgrade</h2>
+                    </div>
+                    <div class="register-body" style="padding: 3rem;">
+                        <div style="text-align: center;">
+                            <div style="font-size: 4rem; color: var(--gold); margin-bottom: 1rem;">
+                                <i class="fas fa-rocket"></i>
+                            </div>
+                            <h3 style="color: var(--navy-blue); margin-bottom: 1rem;">Upgrading Your Tier</h3>
+                            <p style="font-size: 1.2rem; color: #666; margin-bottom: 2rem;">
+                                <strong>From:</strong> ${upgradeData.fromTier}<br>
+                                <strong>To:</strong> ${upgradeData.toTier}
+                            </p>
+                            <div style="background: #e8f5e9; padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem;">
+                                <p style="color: #2e7d32; margin: 0; font-size: 1.1rem;">
+                                    <i class="fas fa-user"></i> ${upgradeData.userName}<br>
+                                    <i class="fas fa-envelope"></i> ${upgradeData.userEmail}
+                                </p>
+                            </div>
+                            <p style="color: #666;">
+                                <i class="fas fa-spinner fa-spin"></i> Redirecting to payment checkout...
+                            </p>
+                        </div>
+                    </div>
+                `;
+
+                // Redirect to tier checkout after 2 seconds
+                setTimeout(() => {
+                    processTierUpgradeCheckout(tierCode, upgradeData);
+                }, 2000);
+
+                return true; // Upgrade detected
+            }
+
+            return false; // Not an upgrade
+        }
+
+        // Process tier upgrade checkout
+        async function processTierUpgradeCheckout(tierCode, upgradeData) {
+            try {
+                // Call your tier checkout API
+                const response = await fetch(`${API_BASE_URL}/api/create-tier-checkout.php`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        tier: tierCode,
+                        userId: upgradeData.userId,
+                        email: upgradeData.userEmail,
+                        name: upgradeData.userName,
+                        phone: upgradeData.userPhone,
+                        isUpgrade: true,
+                        fromTier: upgradeData.fromTier,
+                        toTier: upgradeData.toTier
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success && result.redirectUrl) {
+                    // Redirect to Yoco payment
+                    window.location.href = result.redirectUrl;
+                } else {
+                    alert('❌ Error creating checkout: ' + (result.message || 'Unknown error'));
+                    window.location.href = 'tiers.html';
+                }
+            } catch (error) {
+                console.error('Upgrade checkout error:', error);
+                alert('❌ Error processing upgrade. Please try again or contact support.');
+                window.location.href = 'tiers.html';
+            }
+        }
+
         // Extract sponsor code from URL or localStorage
         function getSponsorCodeFromURL() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -514,6 +600,12 @@
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
+            // Check for upgrade scenario first
+            if (checkUpgradeScenario()) {
+                return; // Stop normal registration flow if this is an upgrade
+            }
+
+            // Normal registration flow
             loadSponsorInfo();
             preselectTierFromURL();
         });
