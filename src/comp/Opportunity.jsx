@@ -26,8 +26,9 @@ const Opportunity = () => {
       name: 'Quick Pathfinder Bonus',
       icon: '⚡',
       shortDesc: 'Fast-start bonus for your first 90 days',
-      fullDesc: 'Get 7.5% on your first 3 invites and 10% on subsequent sets. Only available during your first 90 days to help you build momentum fast!',
-      highlight: 'First 90 Days Only'
+      fullDesc: 'Unlocked when you invite 3 or multiple sets of 3 within the Z2B month calendar (4th of current month to 3rd of following month). Get 7.5% on your first 3 invites and 10% on subsequent sets of 3. Only available during your first 90 days to help you build momentum fast!',
+      highlight: 'First 90 Days Only',
+      hasCalendar: true
     },
     {
       id: 'tsc',
@@ -35,8 +36,9 @@ const Opportunity = () => {
       name: 'Team Sales Commission',
       icon: '👥',
       shortDesc: 'Passive income from your team depth',
-      fullDesc: 'Earn from up to 10 generations deep with decreasing percentages: 10% at generation 2, down to 1% at generations 6-10.',
-      depth: 'Up to 10 Generations'
+      fullDesc: 'Earn from up to 10 generations deep in your team structure. Build a deep network and earn passive income from every level!',
+      depth: 'Up to 10 Generations',
+      hasGenerations: true
     },
     {
       id: 'tli',
@@ -151,6 +153,49 @@ const Opportunity = () => {
                   {stream.depth && (
                     <div className="stream-badge info-badge">
                       🌐 {stream.depth}
+                    </div>
+                  )}
+
+                  {stream.hasGenerations && (
+                    <div className="generations-preview">
+                      <h5>10 Generations Deep:</h5>
+                      <div className="generations-grid">
+                        <div className="gen-item"><span className="gen-num">Gen 1:</span> <span className="gen-val">Direct (ISP applies)</span></div>
+                        <div className="gen-item"><span className="gen-num">Gen 2:</span> <span className="gen-val">10%</span></div>
+                        <div className="gen-item"><span className="gen-num">Gen 3:</span> <span className="gen-val">5%</span></div>
+                        <div className="gen-item"><span className="gen-num">Gen 4:</span> <span className="gen-val">3%</span></div>
+                        <div className="gen-item"><span className="gen-num">Gen 5:</span> <span className="gen-val">2%</span></div>
+                        <div className="gen-item"><span className="gen-num">Gen 6:</span> <span className="gen-val">1%</span></div>
+                        <div className="gen-item"><span className="gen-num">Gen 7:</span> <span className="gen-val">1%</span></div>
+                        <div className="gen-item"><span className="gen-num">Gen 8:</span> <span className="gen-val">1%</span></div>
+                        <div className="gen-item"><span className="gen-num">Gen 9:</span> <span className="gen-val">1%</span></div>
+                        <div className="gen-item"><span className="gen-num">Gen 10:</span> <span className="gen-val">1%</span></div>
+                      </div>
+                      <p className="gen-note">💡 Build deep, earn passively from your entire network!</p>
+                    </div>
+                  )}
+
+                  {stream.hasCalendar && (
+                    <div className="calendar-preview">
+                      <h5>📅 Z2B Month Calendar:</h5>
+                      <div className="calendar-info">
+                        <div className="calendar-dates">
+                          <span className="date-start">4th of Month</span>
+                          <span className="date-arrow">→</span>
+                          <span className="date-end">3rd of Next Month</span>
+                        </div>
+                        <div className="qpb-structure">
+                          <div className="qpb-tier">
+                            <span className="tier-icon">🥇</span>
+                            <span className="tier-text">First 3 invites: <strong>7.5%</strong></span>
+                          </div>
+                          <div className="qpb-tier">
+                            <span className="tier-icon">🏆</span>
+                            <span className="tier-text">Each subsequent set of 3: <strong>10%</strong></span>
+                          </div>
+                        </div>
+                        <p className="calendar-note">⚡ Unlock QPB by inviting 3 or multiple sets of 3 within each Z2B month!</p>
+                      </div>
                     </div>
                   )}
 

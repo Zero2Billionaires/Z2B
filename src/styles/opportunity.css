@@ -273,6 +273,134 @@
   color: white;
 }
 
+/* Generations Preview (TSC) */
+.generations-preview {
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  background: rgba(50, 205, 50, 0.05);
+  border: 2px solid rgba(50, 205, 50, 0.3);
+  border-radius: 12px;
+}
+
+.generations-preview h5 {
+  color: #32cd32;
+  font-size: 1.1rem;
+  margin: 0 0 1rem 0;
+}
+
+.generations-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.gen-item {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.75rem;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid rgba(50, 205, 50, 0.2);
+}
+
+.gen-num {
+  color: #32cd32;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.gen-val {
+  color: #ffd700;
+  font-weight: bold;
+}
+
+.gen-note {
+  color: #c4a76f;
+  font-style: italic;
+  font-size: 0.9rem;
+  margin: 0.5rem 0 0 0;
+  text-align: center;
+}
+
+/* Calendar Preview (QPB) */
+.calendar-preview {
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  background: rgba(255, 165, 0, 0.05);
+  border: 2px solid rgba(255, 165, 0, 0.3);
+  border-radius: 12px;
+}
+
+.calendar-preview h5 {
+  color: #ffa500;
+  font-size: 1.1rem;
+  margin: 0 0 1rem 0;
+}
+
+.calendar-dates {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: rgba(255, 215, 0, 0.1);
+  border-radius: 8px;
+}
+
+.date-start,
+.date-end {
+  color: #ffd700;
+  font-weight: bold;
+  font-size: 1.05rem;
+}
+
+.date-arrow {
+  color: #ffa500;
+  font-size: 1.5rem;
+}
+
+.qpb-structure {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.qpb-tier {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 165, 0, 0.2);
+}
+
+.tier-icon {
+  font-size: 1.5rem;
+}
+
+.tier-text {
+  color: #f5f5dc;
+  font-size: 0.95rem;
+}
+
+.tier-text strong {
+  color: #32cd32;
+  font-size: 1.1rem;
+}
+
+.calendar-note {
+  color: #c4a76f;
+  font-style: italic;
+  font-size: 0.9rem;
+  margin: 0.5rem 0 0 0;
+  text-align: center;
+}
+
 /* TLI Levels Preview */
 .tli-levels-preview {
   margin-top: 1.5rem;
@@ -461,5 +589,14 @@
   .btn-primary,
   .btn-secondary {
     width: 100%;
+  }
+
+  .generations-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .calendar-dates {
+    flex-direction: column;
+    gap: 0.5rem;
   }
 }
