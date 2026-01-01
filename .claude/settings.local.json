@@ -92,7 +92,10 @@
       "Bash(start \"http://localhost:5000/app/sell-product.html\")",
       "Bash(git checkout:*)",
       "Bash(powershell.exe -Command \"Compress-Archive -Path ''build\\\\*'' -DestinationPath ''z2b-react-deployment.zip'' -Force\")",
-      "Bash(git reset:*)"
+      "Bash(git reset:*)",
+      "Bash(powershell.exe -Command \"Compress-Archive -Path ''build\\\\*'' -DestinationPath ''z2b-cpanel-deployment.zip'' -Force\")",
+      "Bash(powershell.exe -Command \"New-Item -Path ''src/comp/MembershipSignUp.jsx'' -ItemType File -Force | Out-Null; Write-Host ''File created''\")",
+      "Bash(powershell.exe -Command \"New-Item -Path ''src/styles/membership-signup.css'' -ItemType File -Force | Out-Null; Write-Host ''File created''\")"
     ],
     "deny": [],
     "ask": []

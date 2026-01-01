@@ -15,6 +15,8 @@ const MembershipSignUp = ({ onNavigate, onComplete }) => {
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [isReferralLocked, setIsReferralLocked] = useState(false);
+  const [referrerInfo, setReferrerInfo] = useState(null);
 
   useEffect(() => {
     const saved = localStorage.getItem('selectedTier');
@@ -24,6 +26,19 @@ const MembershipSignUp = ({ onNavigate, onComplete }) => {
       if (onNavigate) {
         onNavigate('tiers');
       }
+    }
+
+    // Auto-fill referral code from localStorage
+    const savedReferralCode = localStorage.getItem('referralCode');
+    if (savedReferralCode) {
+      setFormData(prev => ({ ...prev, referralCode: savedReferralCode }));
+      setIsReferralLocked(true);
+      // In a real app, you would fetch referrer info from API here
+      // For now, we'll just show the code
+      setReferrerInfo({
+        code: savedReferralCode,
+        name: 'Legacy Builder Member' // This would come from API
+      });
     }
   }, [onNavigate]);
 
@@ -148,10 +163,41 @@ const MembershipSignUp = ({ onNavigate, onComplete }) => {
           </div>
           <div className="form-section">
             <h3>Referral Code (Optional)</h3>
+            {referrerInfo && (
+              <div className="referrer-badge">
+                <span className="referrer-icon">🤝</span>
+                <div className="referrer-info">
+                  <strong>Referred by: {referrerInfo.name}</strong>
+                  <span className="referrer-code">Code: {referrerInfo.code}</span>
+                </div>
+                {isReferralLocked && (
+                  <button
+                    type="button"
+                    className="btn-unlock-referral"
+                    onClick={() => {
+                      setIsReferralLocked(false);
+                      setReferrerInfo(null);
+                      setFormData(prev => ({ ...prev, referralCode: '' }));
+                      localStorage.removeItem('referralCode');
+                    }}
+                    title="Remove referral code"
+                  >
+                    ✕
+                  </button>
+                )}
+              </div>
+            )}
             <div className="form-group">
-              <label htmlFor="referralCode">Referred by a member?</label>
-              <input id="referralCode" name="referralCode" type="text" value={formData.referralCode} onChange={handleChange} disabled={loading} placeholder="Enter referral code" />
-              <small>Leave blank if not referred</small>
+              <label htmlFor="referralCode">
+                {referrerInfo ? 'Sponsor ID (Auto-filled)' : 'Referred by a member?'}
+              </label>
+              <input id="referralCode" name="referralCode" type="text" value={formData.referralCode} onChange={handleChange} disabled={loading || isReferralLocked} placeholder={isReferralLocked ? 'Auto-filled from referral link' : 'Enter referral code'} className={isReferralLocked ? 'locked' : ''} />
+              {!referrerInfo && <small>Leave blank if you were not referred by a member</small>}
+              {isReferralLocked && (
+                <small className="referral-locked-note">
+                  ✅ This member will be credited for your sale. Click ✕ above to change.
+                </small>
+              )}
             </div>
           </div>
           <div className="form-section">

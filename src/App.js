@@ -37,6 +37,15 @@ function AppContent() {
       setIsAuthenticated(true);
       setCurrentUser(JSON.parse(userData));
     }
+
+    // Capture referral code from URL parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const refCode = urlParams.get('ref') || urlParams.get('referral');
+    if (refCode) {
+      // Store referral code in localStorage for later use
+      localStorage.setItem('referralCode', refCode);
+      console.log('Referral code captured:', refCode);
+    }
   }, []);
 
   const handleNavigate = (path) => {
