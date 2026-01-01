@@ -124,10 +124,13 @@
 /* Password Input with Toggle */
 .password-input-wrapper {
   position: relative;
+  width: 100%;
 }
 
 .password-input-wrapper input {
+  width: 100%;
   padding-right: 3rem;
+  box-sizing: border-box;
 }
 
 .password-toggle {

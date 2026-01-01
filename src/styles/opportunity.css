@@ -1,0 +1,465 @@
+/* Opportunity Page Styles */
+
+.opportunity-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f0a08 0%, #1a0f0a 50%, #0f0a08 100%);
+  color: #f5f5dc;
+  font-family: Georgia, serif;
+  padding: 4rem 2rem;
+}
+
+/* Hero Section */
+.opportunity-hero {
+  max-width: 1200px;
+  margin: 0 auto 4rem;
+  text-align: center;
+}
+
+.hero-title {
+  font-size: 3.5rem;
+  color: #ffd700;
+  margin-bottom: 1rem;
+  text-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.hero-icon {
+  font-size: 4rem;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.hero-subtitle {
+  font-size: 1.5rem;
+  color: #daa520;
+  font-style: italic;
+  margin-bottom: 1.5rem;
+}
+
+.hero-description {
+  font-size: 1.15rem;
+  color: #c4a76f;
+  line-height: 1.8;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.hero-description strong {
+  color: #ffd700;
+  font-weight: bold;
+}
+
+/* Section Title */
+.section-title {
+  font-size: 2.5rem;
+  color: #ffd700;
+  text-align: center;
+  margin-bottom: 3rem;
+  position: relative;
+  padding-bottom: 1rem;
+}
+
+.title-underline {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 150px;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, #daa520, transparent);
+  border-radius: 2px;
+}
+
+/* Income Streams Section */
+.income-streams-section {
+  max-width: 1200px;
+  margin: 0 auto 4rem;
+}
+
+.income-streams-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+}
+
+/* Income Stream Card */
+.income-stream-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(218, 165, 32, 0.3);
+  border-radius: 16px;
+  padding: 2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.income-stream-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, #ffd700, #daa520);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.income-stream-card:hover::before,
+.income-stream-card.expanded::before {
+  transform: scaleX(1);
+}
+
+.income-stream-card:hover {
+  border-color: #daa520;
+  box-shadow: 0 10px 40px rgba(218, 165, 32, 0.3);
+  transform: translateY(-5px);
+}
+
+.income-stream-card.expanded {
+  border-color: #ffd700;
+  box-shadow: 0 15px 50px rgba(255, 215, 0, 0.4);
+}
+
+.stream-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.stream-icon {
+  font-size: 3rem;
+  flex-shrink: 0;
+}
+
+.stream-info {
+  flex: 1;
+}
+
+.stream-code {
+  font-size: 0.9rem;
+  color: #daa520;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.stream-name {
+  font-size: 1.5rem;
+  color: #ffd700;
+  margin: 0.25rem 0 0 0;
+}
+
+.expand-icon {
+  font-size: 2rem;
+  color: #daa520;
+  font-weight: bold;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.income-stream-card.expanded .expand-icon {
+  transform: rotate(180deg);
+}
+
+.stream-short-desc {
+  color: #c4a76f;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+/* Stream Details */
+.stream-details {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid rgba(218, 165, 32, 0.2);
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.stream-full-desc {
+  color: #f5f5dc;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+}
+
+/* Tiers Breakdown */
+.tiers-breakdown {
+  margin-top: 1.5rem;
+}
+
+.tiers-breakdown h4 {
+  color: #daa520;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+.tiers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 0.75rem;
+}
+
+.tier-item {
+  background: rgba(218, 165, 32, 0.1);
+  border: 1px solid rgba(218, 165, 32, 0.3);
+  border-radius: 8px;
+  padding: 0.75rem;
+  text-align: center;
+}
+
+.tier-name {
+  display: block;
+  font-size: 0.85rem;
+  color: #c4a76f;
+  margin-bottom: 0.25rem;
+}
+
+.tier-value {
+  display: block;
+  font-size: 1.25rem;
+  color: #ffd700;
+  font-weight: bold;
+}
+
+/* Stream Badges */
+.stream-badge {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin-top: 1rem;
+  margin-right: 0.5rem;
+}
+
+.highlight-badge {
+  background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+  color: white;
+}
+
+.info-badge {
+  background: linear-gradient(135deg, #4169e1, #1e3a8a);
+  color: white;
+}
+
+.exclusive-badge {
+  background: linear-gradient(135deg, #9370db, #6a5acd);
+  color: white;
+}
+
+.success-badge {
+  background: linear-gradient(135deg, #32cd32, #228b22);
+  color: white;
+}
+
+/* TLI Levels Preview */
+.tli-levels-preview {
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  background: rgba(65, 105, 225, 0.05);
+  border: 2px solid rgba(65, 105, 225, 0.3);
+  border-radius: 12px;
+}
+
+.tli-levels-preview h5 {
+  color: #4169e1;
+  font-size: 1.1rem;
+  margin: 0 0 1rem 0;
+}
+
+.levels-list {
+  color: #f5f5dc;
+  line-height: 1.8;
+  padding-left: 1.5rem;
+  margin: 0 0 1.5rem 0;
+}
+
+.levels-list li {
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.btn-view-all {
+  width: 100%;
+  padding: 0.875rem;
+  background: linear-gradient(135deg, #4169e1, #1e3a8a);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: Georgia, serif;
+}
+
+.btn-view-all:hover {
+  background: linear-gradient(135deg, #5a7bec, #4169e1);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(65, 105, 225, 0.4);
+}
+
+/* CTA Section */
+.opportunity-cta {
+  max-width: 800px;
+  margin: 0 auto 3rem;
+  text-align: center;
+  padding: 3rem;
+  background: rgba(255, 215, 0, 0.05);
+  border: 2px solid rgba(255, 215, 0, 0.3);
+  border-radius: 20px;
+}
+
+.opportunity-cta h2 {
+  font-size: 2.5rem;
+  color: #ffd700;
+  margin-bottom: 1rem;
+}
+
+.opportunity-cta p {
+  font-size: 1.2rem;
+  color: #c4a76f;
+  margin-bottom: 2rem;
+}
+
+.cta-buttons {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-primary,
+.btn-secondary {
+  padding: 1rem 2.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: Georgia, serif;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #ffd700, #daa520);
+  color: #0f0a08;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #ffed4e, #ffd700);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(255, 215, 0, 0.5);
+}
+
+.btn-secondary {
+  background: transparent;
+  border: 2px solid #daa520;
+  color: #ffd700;
+}
+
+.btn-secondary:hover {
+  background: rgba(218, 165, 32, 0.1);
+  border-color: #ffd700;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(218, 165, 32, 0.3);
+}
+
+/* Ethical Notice */
+.ethical-notice {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: rgba(218, 165, 32, 0.05);
+  border-left: 4px solid #daa520;
+  border-radius: 8px;
+}
+
+.ethical-notice p {
+  color: #c4a76f;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.ethical-notice strong {
+  color: #ffd700;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .opportunity-container {
+    padding: 2rem 1rem;
+  }
+
+  .hero-title {
+    font-size: 2.5rem;
+    flex-direction: column;
+  }
+
+  .hero-icon {
+    font-size: 3rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.25rem;
+  }
+
+  .hero-description {
+    font-size: 1rem;
+  }
+
+  .section-title {
+    font-size: 2rem;
+  }
+
+  .income-streams-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stream-name {
+    font-size: 1.25rem;
+  }
+
+  .tiers-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .opportunity-cta {
+    padding: 2rem 1.5rem;
+  }
+
+  .opportunity-cta h2 {
+    font-size: 2rem;
+  }
+
+  .cta-buttons {
+    flex-direction: column;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+  }
+}

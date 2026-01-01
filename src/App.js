@@ -10,6 +10,8 @@ import DailyCheckIn from './comp/DailyCheckIn';
 import AboutZ2B from './comp/AboutZ2B';
 import MeetCoachManlaw from './comp/MeetCoachManlaw';
 import SuccessStories from './comp/SuccessStories';
+import Opportunity from './comp/Opportunity';
+import TLIChallenge from './comp/TLIChallenge';
 import Login from './comp/Login';
 import AdminLogin from './comp/AdminLogin';
 import MembersDashboard from './comp/MembersDashboard';
@@ -141,6 +143,11 @@ function App() {
         return <MeetCoachManlaw />;
       case 'testimonials':
         return <SuccessStories />;
+      case 'opportunity':
+        return <Opportunity />;
+      case 'tli':
+      case 'milestones':
+        return <TLIChallenge />;
       case 'login':
         return <Login onLoginSuccess={handleLoginSuccess} />;
       case 'admin-login':

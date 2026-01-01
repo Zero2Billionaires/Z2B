@@ -20,7 +20,7 @@ const MainNavigation = ({ currentPage, onNavigate, isLoggedIn = false }) => {
         { id: 'testimonials', label: 'Success Stories' }
       ]
     },
-    { id: 'milestones', label: 'Milestones', icon: '🗺️' },
+    { id: 'opportunity', label: 'Opportunity', icon: '💰', highlight: true },
     { id: 'ecosystem', label: 'Ecosystem', icon: '🌐' },
     { id: 'tiers', label: 'Membership Tiers', icon: '💎' },
     { id: 'tli', label: 'TLI Challenge', icon: '🚀' },
@@ -29,6 +29,7 @@ const MainNavigation = ({ currentPage, onNavigate, isLoggedIn = false }) => {
 
   // Side menu items (quick access links)
   const sideMenuItems = [
+    { id: 'milestones', label: 'Milestones & Goals', icon: '🗺️' },
     { id: 'income', label: 'Income Tracker', icon: '💰', external: true, url: 'https://www.z2blegacybuilders.co.za/income.html' },
     { id: 'marketplace', label: 'Marketplace', icon: '🏪', external: true, url: 'https://www.z2blegacybuilders.co.za/marketplace.html' },
     { id: 'upgrade', label: 'Upgrade Tier', icon: '⬆️', external: true, url: 'https://www.z2blegacybuilders.co.za/tier-upgrade-payment.html' },
@@ -93,7 +94,7 @@ const MainNavigation = ({ currentPage, onNavigate, isLoggedIn = false }) => {
                 </>
               ) : (
                 <button
-                  className={`nav-item ${currentPage === item.id ? 'active' : ''}`}
+                  className={`nav-item ${currentPage === item.id ? 'active' : ''} ${item.highlight ? 'highlight' : ''}`}
                   onClick={() => handleNavigate(item.id, item.url)}
                 >
                   <span className="nav-icon">{item.icon}</span>
@@ -171,7 +172,7 @@ const MainNavigation = ({ currentPage, onNavigate, isLoggedIn = false }) => {
                   </>
                 ) : (
                   <button
-                    className="mobile-item-button"
+                    className={`mobile-item-button ${item.highlight ? 'highlight' : ''}`}
                     onClick={() => handleNavigate(item.id, item.url)}
                   >
                     <span className="nav-icon">{item.icon}</span>
