@@ -34,11 +34,6 @@ const Footer = ({ onNavigate }) => {
         >
           Z2B Legacy Builders
         </span>
-        {clickCount > 0 && clickCount < 5 && (
-          <span style={{ marginLeft: '0.5rem', fontSize: '0.7rem', opacity: 0.3 }}>
-            ({clickCount}/5)
-          </span>
-        )}
       </p>
     </footer>
   );
