@@ -1,103 +1,91 @@
 /* Sign Up Button Styles */
-
 .signup-btn {
-  border: none;
-  border-radius: 12px;
+  font-family: Georgia, serif;
   font-weight: bold;
+  border: none;
+  border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-family: Georgia, serif;
-  text-transform: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
+  text-align: center;
+  white-space: nowrap;
 }
 
-/* Sizes */
-.signup-btn-large {
-  padding: 1.25rem 3rem;
-  font-size: 1.3rem;
-}
-
-.signup-btn-medium {
-  padding: 1rem 2rem;
-  font-size: 1.1rem;
-}
-
-.signup-btn-small {
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-}
-
-/* Variants */
+/* Primary Variant (Gold) */
 .signup-btn-primary {
-  background: linear-gradient(135deg, #ffd700, #daa520);
-  color: #0f0a08;
-  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+  background: linear-gradient(135deg, #daa520, #b8860b);
+  color: #1a0f0a;
+  box-shadow: 0 4px 15px rgba(218, 165, 32, 0.4);
 }
 
 .signup-btn-primary:hover {
-  background: linear-gradient(135deg, #ffed4e, #ffd700);
-  transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.5);
+  background: linear-gradient(135deg, #ffd700, #daa520);
+  box-shadow: 0 6px 20px rgba(218, 165, 32, 0.6);
+  transform: translateY(-2px);
 }
 
+/* Secondary Variant (Green) */
 .signup-btn-secondary {
-  background: transparent;
-  border: 3px solid #ffd700;
-  color: #ffd700;
+  background: linear-gradient(135deg, #32cd32, #228b22);
+  color: white;
+  box-shadow: 0 4px 15px rgba(50, 205, 50, 0.4);
 }
 
 .signup-btn-secondary:hover {
-  background: rgba(255, 215, 0, 0.1);
-  border-color: #ffed4e;
-  transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
+  background: linear-gradient(135deg, #3cb371, #32cd32);
+  box-shadow: 0 6px 20px rgba(50, 205, 50, 0.6);
+  transform: translateY(-2px);
 }
 
+/* Outline Variant */
 .signup-btn-outline {
   background: transparent;
-  border: 2px solid #daa520;
   color: #daa520;
+  border: 2px solid #daa520;
 }
 
 .signup-btn-outline:hover {
   background: rgba(218, 165, 32, 0.1);
   border-color: #ffd700;
   color: #ffd700;
-  transform: translateY(-2px);
 }
 
-/* Animations */
-@keyframes pulse-glow {
-  0%, 100% {
-    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
-  }
-  50% {
-    box-shadow: 0 4px 25px rgba(255, 215, 0, 0.6);
-  }
+/* Size Variants */
+.signup-btn-large {
+  padding: 1rem 2.5rem;
+  font-size: 1.2rem;
 }
 
-.signup-btn-primary {
-  animation: pulse-glow 2s ease-in-out infinite;
+.signup-btn-medium {
+  padding: 0.8rem 2rem;
+  font-size: 1rem;
 }
 
-/* Mobile Responsive */
+.signup-btn-small {
+  padding: 0.6rem 1.5rem;
+  font-size: 0.9rem;
+}
+
+/* Disabled State */
+.signup-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* Responsive */
 @media (max-width: 768px) {
   .signup-btn-large {
-    padding: 1rem 2rem;
+    padding: 0.9rem 2rem;
     font-size: 1.1rem;
-    width: 100%;
   }
 
   .signup-btn-medium {
-    padding: 0.875rem 1.5rem;
-    font-size: 1rem;
+    padding: 0.7rem 1.5rem;
+    font-size: 0.95rem;
   }
 
   .signup-btn-small {
-    padding: 0.75rem 1.25rem;
-    font-size: 0.95rem;
+    padding: 0.5rem 1.2rem;
+    font-size: 0.85rem;
   }
 }

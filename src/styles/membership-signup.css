@@ -1,0 +1,288 @@
+.membership-signup-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, rgba(26, 15, 10, 0.9) 0%, rgba(45, 24, 16, 0.95) 100%), url('../assets/z2b-table-logo.jpeg');
+  background-size: cover;
+  background-attachment: fixed;
+  padding: 3rem 2rem;
+  font-family: Georgia, serif;
+}
+
+.signup-content {
+  max-width: 900px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(218, 165, 32, 0.3);
+  border-radius: 16px;
+  padding: 3rem;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+.signup-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.signup-header h1 {
+  font-size: 2.5rem;
+  color: #daa520;
+  margin-bottom: 0.5rem;
+}
+
+.signup-tagline {
+  font-size: 1.2rem;
+  color: #c4a76f;
+  font-style: italic;
+}
+
+.tier-summary {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  background: rgba(218, 165, 32, 0.1);
+  border: 2px solid rgba(218, 165, 32, 0.3);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.tier-summary-badge {
+  font-size: 4rem;
+}
+
+.tier-summary-info h3 {
+  color: #daa520;
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.tier-summary-price {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #ffd700;
+}
+
+.tier-summary-price span {
+  font-size: 1rem;
+  color: #c4a76f;
+  font-weight: normal;
+}
+
+.signup-form {
+  color: #f5f5dc;
+}
+
+.form-section {
+  margin-bottom: 2rem;
+}
+
+.form-section h3 {
+  color: #daa520;
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid rgba(218, 165, 32, 0.3);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  color: #c4a76f;
+  font-size: 0.95rem;
+  font-weight: bold;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="tel"],
+.form-group input[type="password"] {
+  padding: 0.8rem 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(218, 165, 32, 0.3);
+  border-radius: 8px;
+  color: #f5f5dc;
+  font-family: Georgia, serif;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #daa520;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.form-group input.error {
+  border-color: #ff6b6b;
+}
+
+.form-group input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.error-message {
+  color: #ff6b6b;
+  font-size: 0.85rem;
+  margin-top: -0.25rem;
+}
+
+.form-group small {
+  color: #c4a76f;
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
+.checkbox-group {
+  margin-top: 1rem;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  cursor: pointer;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  margin-top: 0.2rem;
+  cursor: pointer;
+  accent-color: #daa520;
+}
+
+.checkbox-label span {
+  color: #c4a76f;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.checkbox-label a {
+  color: #daa520;
+  text-decoration: underline;
+}
+
+.checkbox-label a:hover {
+  color: #ffd700;
+}
+
+.alert {
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.alert-error {
+  background: rgba(220, 53, 69, 0.2);
+  border: 2px solid rgba(220, 53, 69, 0.5);
+  color: #ff6b6b;
+}
+
+.alert-icon {
+  font-size: 1.5rem;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 2px solid rgba(218, 165, 32, 0.3);
+}
+
+.btn-primary,
+.btn-secondary {
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  font-family: Georgia, serif;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #daa520, #b8860b);
+  color: #1a0f0a;
+  flex: 1;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #ffd700, #daa520);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(218, 165, 32, 0.4);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: #c4a76f;
+  border: 2px solid rgba(218, 165, 32, 0.3);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #daa520;
+  color: #daa520;
+}
+
+.btn-primary:disabled,
+.btn-secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.loading {
+  text-align: center;
+  color: #daa520;
+  font-size: 1.5rem;
+  padding: 3rem;
+}
+
+@media (max-width: 768px) {
+  .membership-signup-container {
+    padding: 2rem 1rem;
+  }
+
+  .signup-content {
+    padding: 2rem 1.5rem;
+  }
+
+  .signup-header h1 {
+    font-size: 2rem;
+  }
+
+  .tier-summary {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+  }
+}

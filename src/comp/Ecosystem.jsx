@@ -1,7 +1,7 @@
 import React from 'react';
 import '../styles/ecosystem.css';
 
-const Ecosystem = () => {
+const Ecosystem = ({ onNavigate }) => {
   const apps = [
     {
       id: 'coach-manlaw',
@@ -323,9 +323,26 @@ const Ecosystem = () => {
 
             <div className="app-tier">{app.tier}</div>
 
-            <button className="btn-app-action">
-              {typeof app.price === 'number' ? 'Get Now' :
-               app.price === 'Coming Soon' ? 'Join Waitlist' : 'Access Now'}
+            <button
+              className="btn-app-action"
+              onClick={() => {
+                if (app.price === 'Coming Soon') {
+                  alert('App coming soon! We will notify you when it launches.');
+                } else if (app.price === 'Included') {
+                  // Included apps - encourage tier purchase
+                  if (onNavigate) {
+                    onNavigate('tiers');
+                  }
+                } else {
+                  // Paid apps - go to tier selection
+                  if (onNavigate) {
+                    onNavigate('tiers');
+                  }
+                }
+              }}
+            >
+              {app.price === 'Coming Soon' ? 'Join Waitlist' :
+               app.price === 'Included' ? 'Included in Membership' : '🛒 Buy Now'}
             </button>
           </div>
         ))}

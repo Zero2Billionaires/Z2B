@@ -9,11 +9,8 @@ const SignUpButton = ({
   className = ''
 }) => {
   const handleSignUp = () => {
-    // Navigate to membership tiers page for sign up
     if (onNavigate) {
       onNavigate('tiers');
-    } else {
-      window.location.href = '/';
     }
   };
 

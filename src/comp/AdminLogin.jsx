@@ -28,7 +28,7 @@ const AdminLogin = ({ onLoginSuccess }) => {
     setError('');
 
     try {
-      const response = await fetch(`${API_URL}/api/auth/login`, {
+      const response = await fetch(`${API_URL}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -82,7 +82,7 @@ const AdminLogin = ({ onLoginSuccess }) => {
     setResetMessage('');
 
     try {
-      const response = await fetch(`${API_URL}/api/auth/forgot-password`, {
+      const response = await fetch(`${API_URL}/auth/forgot-password`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

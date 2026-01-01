@@ -28,7 +28,7 @@ const Login = ({ onLoginSuccess }) => {
     setError('');
 
     try {
-      const response = await fetch(`${API_URL}/api/auth/login`, {
+      const response = await fetch(`${API_URL}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -75,7 +75,7 @@ const Login = ({ onLoginSuccess }) => {
     setResetMessage('');
 
     try {
-      const response = await fetch(`${API_URL}/api/auth/forgot-password`, {
+      const response = await fetch(`${API_URL}/auth/forgot-password`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -283,7 +283,7 @@ const Login = ({ onLoginSuccess }) => {
           <button
             type="button"
             className="btn-register"
-            onClick={() => window.location.href = '#get-started'}
+            onClick={() => window.location.href = '/get-started'}
           >
             🚀 Start Free Journey
           </button>

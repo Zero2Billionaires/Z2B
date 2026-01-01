@@ -18,6 +18,7 @@ import Login from './comp/Login';
 import AdminLogin from './comp/AdminLogin';
 import MembersDashboard from './comp/MembersDashboard';
 import AdminPanel from './comp/AdminPanel';
+import MembershipSignUp from './comp/MembershipSignUp';
 import PaymentProcessing from './comp/PaymentProcessing';
 import Footer from './comp/Footer';
 import './App.css';
@@ -55,6 +56,10 @@ function AppContent() {
   };
 
   const handleMembershipSelected = (tier) => {
+    navigate('/signup');
+  };
+
+  const handleSignUpComplete = (membershipData) => {
     navigate('/payment');
   };
 
@@ -98,9 +103,10 @@ function AppContent() {
         <Routes>
           <Route path="/" element={<Welcome onStartJourney={handleStartJourney} onNavigate={handleNavigate} />} />
           <Route path="/home" element={<Welcome onStartJourney={handleStartJourney} onNavigate={handleNavigate} />} />
-          <Route path="/ecosystem" element={<Ecosystem />} />
+          <Route path="/ecosystem" element={<Ecosystem onNavigate={handleNavigate} />} />
           <Route path="/tiers" element={<MembershipPricing onTierSelected={handleMembershipSelected} />} />
           <Route path="/membership" element={<MembershipPricing onTierSelected={handleMembershipSelected} />} />
+          <Route path="/signup" element={<MembershipSignUp onNavigate={handleNavigate} onComplete={handleSignUpComplete} />} />
           <Route path="/payment" element={<PaymentProcessing onNavigate={handleNavigate} />} />
           <Route path="/get-started" element={<VisionBoard onComplete={handleVisionBoardComplete} />} />
           <Route path="/vision-board" element={<VisionBoard onComplete={handleVisionBoardComplete} />} />
