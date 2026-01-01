@@ -1,0 +1,381 @@
+.skills-assessment-container {
+  min-height: 100vh;
+  background:
+    linear-gradient(135deg, #1a0f0a 25%, transparent 25%) -20px 0,
+    linear-gradient(225deg, #1a0f0a 25%, transparent 25%) -20px 0,
+    linear-gradient(315deg, #1a0f0a 25%, transparent 25%),
+    linear-gradient(45deg, #1a0f0a 25%, transparent 25%);
+  background-size: 40px 40px;
+  background-color: #0f0a08;
+  position: relative;
+  padding: 2rem;
+  color: #f5f5dc;
+  font-family: Georgia, serif;
+}
+
+.skills-assessment-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(26, 15, 10, 0.7) 0%, rgba(45, 24, 16, 0.8) 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.skills-assessment-container > * {
+  position: relative;
+  z-index: 1;
+}
+
+.skills-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.skills-header h1 {
+  font-size: 2.5rem;
+  color: #daa520;
+  margin-bottom: 0.5rem;
+}
+
+.skills-form {
+  max-width: 1000px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 3rem;
+  border-radius: 12px;
+  border: 1px solid rgba(218, 165, 32, 0.2);
+}
+
+.skills-form h2 {
+  font-size: 2rem;
+  color: #daa520;
+  margin-bottom: 1rem;
+}
+
+/* Skill Categories */
+.skill-category {
+  margin-bottom: 2.5rem;
+}
+
+.skill-category h3 {
+  color: #daa520;
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+}
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.8rem;
+}
+
+.skill-chip {
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(218, 165, 32, 0.3);
+  color: #c4a76f;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  text-align: left;
+}
+
+.skill-chip:hover {
+  border-color: #daa520;
+  background: rgba(218, 165, 32, 0.1);
+}
+
+.skill-chip.selected {
+  background: rgba(34, 139, 34, 0.2);
+  border-color: #32cd32;
+  color: #32cd32;
+  font-weight: bold;
+}
+
+/* Skill Gaps Section */
+.skill-gaps-section {
+  margin-bottom: 2rem;
+}
+
+.gap-input-group {
+  display: flex;
+  gap: 0.8rem;
+  margin-bottom: 1.5rem;
+}
+
+.gap-input {
+  flex: 1;
+  padding: 1rem 1.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(218, 165, 32, 0.3);
+  border-radius: 8px;
+  color: #f5f5dc;
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+.gap-input:focus {
+  outline: none;
+  border-color: #daa520;
+}
+
+.btn-add {
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, #daa520, #b8860b);
+  color: #1a0f0a;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.gaps-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.gap-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255, 140, 0, 0.1);
+  border: 2px solid rgba(255, 140, 0, 0.3);
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  color: #ff8c00;
+}
+
+.btn-remove {
+  background: rgba(220, 20, 60, 0.3);
+  color: #ff6b6b;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn-remove:hover {
+  background: rgba(220, 20, 60, 0.5);
+}
+
+/* Goals Section */
+.goals-section {
+  margin-bottom: 2rem;
+}
+
+.goal-creator {
+  display: grid;
+  grid-template-columns: 2fr 1fr auto auto;
+  gap: 0.8rem;
+  margin-bottom: 1.5rem;
+}
+
+.goal-input, .goal-deadline, .goal-priority {
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(218, 165, 32, 0.3);
+  border-radius: 8px;
+  color: #f5f5dc;
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+.goal-input:focus, .goal-deadline:focus, .goal-priority:focus {
+  outline: none;
+  border-color: #daa520;
+}
+
+.goals-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.goal-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(218, 165, 32, 0.3);
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.goal-item.completed {
+  opacity: 0.6;
+  background: rgba(34, 139, 34, 0.1);
+  border-color: #32cd32;
+}
+
+.goal-item.priority-high {
+  border-left: 4px solid #ff4500;
+}
+
+.goal-item.priority-medium {
+  border-left: 4px solid #ffd700;
+}
+
+.goal-item.priority-low {
+  border-left: 4px solid #32cd32;
+}
+
+.goal-checkbox input {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.goal-content {
+  flex: 1;
+}
+
+.goal-title {
+  color: #f5f5dc;
+  font-size: 1.1rem;
+  margin-bottom: 0.3rem;
+}
+
+.goal-item.completed .goal-title {
+  text-decoration: line-through;
+  color: #888;
+}
+
+.goal-meta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.9rem;
+  color: #c4a76f;
+}
+
+.priority-badge {
+  padding: 0.2rem 0.8rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.priority-badge.priority-high {
+  background: rgba(255, 69, 0, 0.2);
+  color: #ff4500;
+}
+
+.priority-badge.priority-medium {
+  background: rgba(255, 215, 0, 0.2);
+  color: #ffd700;
+}
+
+.priority-badge.priority-low {
+  background: rgba(50, 205, 50, 0.2);
+  color: #32cd32;
+}
+
+/* Review Section */
+.review-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.review-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(218, 165, 32, 0.3);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.review-card h3 {
+  color: #daa520;
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+}
+
+.review-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.review-tag {
+  background: rgba(34, 139, 34, 0.2);
+  color: #32cd32;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  border: 1px solid rgba(50, 205, 50, 0.3);
+}
+
+.review-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.review-item {
+  color: #c4a76f;
+  font-size: 1rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(218, 165, 32, 0.2);
+}
+
+.review-item:last-child {
+  border-bottom: none;
+}
+
+.completion-message {
+  background: rgba(218, 165, 32, 0.1);
+  border: 2px solid rgba(218, 165, 32, 0.3);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.completion-message p {
+  color: #f5f5dc;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.empty-state {
+  text-align: center;
+  color: #888;
+  font-style: italic;
+  padding: 2rem;
+}
+
+@media (max-width: 768px) {
+  .skills-assessment-container {
+    padding: 1rem;
+  }
+
+  .skills-form {
+    padding: 1.5rem;
+  }
+
+  .skills-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .skills-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .goal-creator {
+    grid-template-columns: 1fr;
+  }
+
+  .gap-input-group {
+    flex-direction: column;
+  }
+}

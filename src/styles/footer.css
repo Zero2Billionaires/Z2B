@@ -1,0 +1,36 @@
+.app-footer {
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(218, 165, 32, 0.2);
+  padding: 1.5rem;
+  text-align: center;
+  margin-top: auto;
+  width: 100%;
+}
+
+.app-footer p {
+  margin: 0;
+  color: #000000 !important;
+  font-size: 1rem;
+  font-family: Georgia, serif;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+.app-footer .heart {
+  color: #ff0000;
+  display: inline-block;
+  animation: heartbeat 1.5s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+  0%, 100% {
+    transform: scale(1);
+  }
+  10%, 30% {
+    transform: scale(1.1);
+  }
+  20%, 40% {
+    transform: scale(1);
+  }
+}

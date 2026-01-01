@@ -1,0 +1,250 @@
+.tli-tracker {
+  background: rgba(255, 255, 255, 0.03);
+  border: 2px solid rgba(218, 165, 32, 0.3);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.tli-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.tli-header h2 {
+  font-size: 2rem;
+  color: #daa520;
+  margin: 0 0 0.5rem 0;
+}
+
+.tli-subtitle {
+  color: #c4a76f;
+  font-size: 1rem;
+  margin: 0;
+  font-style: italic;
+}
+
+.tli-current-level {
+  margin-bottom: 2rem;
+}
+
+.tli-level-badge {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 3px solid;
+  margin-bottom: 1.5rem;
+}
+
+.tli-level-icon {
+  font-size: 4rem;
+  line-height: 1;
+}
+
+.tli-level-info {
+  flex: 1;
+}
+
+.tli-level-number {
+  font-size: 0.9rem;
+  color: #c4a76f;
+  font-weight: bold;
+  letter-spacing: 1px;
+  margin-bottom: 0.3rem;
+}
+
+.tli-level-name {
+  font-size: 1.8rem;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+
+.tli-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.tli-stat {
+  background: rgba(255, 255, 255, 0.03);
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid rgba(218, 165, 32, 0.2);
+  text-align: center;
+}
+
+.tli-stat.platinum-required {
+  background: rgba(138, 43, 226, 0.1);
+  border-color: rgba(138, 43, 226, 0.4);
+}
+
+.tli-stat-label {
+  font-size: 0.85rem;
+  color: #c4a76f;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.tli-stat-value {
+  font-size: 1.3rem;
+  color: #daa520;
+  font-weight: bold;
+}
+
+.tli-progress-section {
+  margin-bottom: 2rem;
+}
+
+.tli-progress-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.8rem;
+  color: #c4a76f;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.tli-progress-bar {
+  height: 24px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 2px solid rgba(218, 165, 32, 0.3);
+}
+
+.tli-progress-fill {
+  height: 100%;
+  transition: width 0.5s ease;
+  border-radius: 10px;
+}
+
+.tli-next-level {
+  background: rgba(218, 165, 32, 0.1);
+  border: 2px solid rgba(218, 165, 32, 0.3);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.tli-next-level h3 {
+  color: #daa520;
+  font-size: 1.3rem;
+  margin: 0 0 1rem 0;
+}
+
+.tli-next-requirements {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.tli-requirement {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  color: #c4a76f;
+  font-size: 1rem;
+}
+
+.requirement-icon {
+  font-size: 1.5rem;
+}
+
+.tli-max-level {
+  background: linear-gradient(135deg, rgba(138, 43, 226, 0.2), rgba(218, 165, 32, 0.2));
+  border: 3px solid #daa520;
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+}
+
+.tli-max-level h3 {
+  color: #ffd700;
+  font-size: 1.8rem;
+  margin: 0 0 1rem 0;
+}
+
+.tli-max-level p {
+  color: #c4a76f;
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+/* Compact Version */
+.tli-compact {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.8rem 1.2rem;
+  border-radius: 30px;
+  border: 2px solid rgba(218, 165, 32, 0.3);
+}
+
+.tli-compact-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tli-compact-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.tli-compact-level {
+  color: #daa520;
+  font-weight: bold;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.tli-compact-bar {
+  flex: 1;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+  min-width: 100px;
+}
+
+.tli-compact-progress {
+  height: 100%;
+  transition: width 0.5s ease;
+  border-radius: 10px;
+}
+
+@media (max-width: 768px) {
+  .tli-tracker {
+    padding: 1.5rem;
+  }
+
+  .tli-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .tli-level-badge {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .tli-level-name {
+    font-size: 1.3rem;
+  }
+
+  .tli-stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tli-compact {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .tli-compact-bar {
+    min-width: auto;
+  }
+}

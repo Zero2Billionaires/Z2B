@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reset Progress - Z2B Table</title>
+    <style>
+        body {
+            font-family: Georgia, serif;
+            background: #0f0a08;
+            color: #f5f5dc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .reset-container {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid #daa520;
+            border-radius: 16px;
+            padding: 3rem;
+            max-width: 500px;
+            text-align: center;
+        }
+        h1 {
+            color: #daa520;
+            margin-bottom: 1rem;
+        }
+        p {
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        button {
+            background: linear-gradient(135deg, #daa520, #b8860b);
+            color: #1a0f0a;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 0.5rem;
+        }
+        button:hover {
+            transform: scale(1.05);
+        }
+        .btn-danger {
+            background: linear-gradient(135deg, #ff4500, #dc143c);
+            color: white;
+        }
+        .status {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: rgba(34, 139, 34, 0.2);
+            border: 2px solid #32cd32;
+            border-radius: 8px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="reset-container">
+        <h1>🔄 Reset Progress</h1>
+        <p>Choose what to reset to test different parts of the app:</p>
+
+        <button onclick="resetToM2()">Reset to Milestone 2</button>
+        <button onclick="resetToMembership()">Reset to Membership</button>
+        <button onclick="resetAll()" class="btn-danger">Reset Everything</button>
+
+        <div id="status" class="status"></div>
+
+        <p style="margin-top: 2rem; font-size: 0.9rem; color: #888;">
+            After resetting, <a href="/" style="color: #daa520;">click here to return to the app</a>
+        </p>
+    </div>
+
+    <script>
+        function showStatus(message) {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.style.display = 'block';
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 1500);
+        }
+
+        function resetToM2() {
+            // Keep M1 and membership, clear M2
+            localStorage.removeItem('milestone2Complete');
+            localStorage.removeItem('skillsAssessment');
+            showStatus('✅ Reset to Milestone 2! Redirecting...');
+        }
+
+        function resetToMembership() {
+            // Keep M1, clear membership and M2
+            localStorage.removeItem('selectedTier');
+            localStorage.removeItem('milestone2Complete');
+            localStorage.removeItem('skillsAssessment');
+            showStatus('✅ Reset to Membership Selection! Redirecting...');
+        }
+
+        function resetAll() {
+            // Clear everything
+            localStorage.clear();
+            showStatus('✅ Everything reset! Redirecting...');
+        }
+    </script>
+</body>
+</html>

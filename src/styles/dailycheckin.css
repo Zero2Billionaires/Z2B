@@ -1,0 +1,253 @@
+.checkin-container {
+  min-height: 100vh;
+  padding: 2rem;
+  color: #f5f5dc;
+  font-family: Georgia, serif;
+}
+
+.checkin-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.checkin-header h1 {
+  font-size: 3rem;
+  color: #daa520;
+  margin-bottom: 0.5rem;
+}
+
+.checkin-subtitle {
+  font-size: 1.2rem;
+  color: #c4a76f;
+  font-style: italic;
+  margin-bottom: 1.5rem;
+}
+
+.streak-badge {
+  display: inline-block;
+  padding: 0.75rem 2rem;
+  background: linear-gradient(135deg, #daa520 0%, #ffd700 100%);
+  color: #1a0f0a;
+  font-size: 1.5rem;
+  font-weight: bold;
+  border-radius: 50px;
+  box-shadow: 0 4px 15px rgba(218, 165, 32, 0.4);
+}
+
+.checkin-question {
+  max-width: 700px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 3rem;
+  border-radius: 16px;
+  border: 2px solid rgba(218, 165, 32, 0.3);
+  text-align: center;
+}
+
+.checkin-question h2 {
+  font-size: 2.2rem;
+  color: #daa520;
+  margin-bottom: 1rem;
+}
+
+.question-detail {
+  font-size: 1.1rem;
+  color: #c4a76f;
+  margin-bottom: 2.5rem;
+  line-height: 1.7;
+}
+
+.checkin-buttons {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.btn-yes, .btn-no {
+  padding: 1.5rem 3rem;
+  font-size: 1.3rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-yes {
+  background: linear-gradient(135deg, #32cd32 0%, #228b22 100%);
+  color: white;
+}
+
+.btn-yes:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(50, 205, 50, 0.4);
+}
+
+.btn-no {
+  background: linear-gradient(135deg, #dc143c 0%, #8b0000 100%);
+  color: white;
+}
+
+.btn-no:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(220, 20, 60, 0.4);
+}
+
+.reminder-box {
+  background: rgba(218, 165, 32, 0.1);
+  padding: 1.5rem;
+  border-radius: 10px;
+  border: 2px solid rgba(218, 165, 32, 0.3);
+  margin-top: 2rem;
+}
+
+.reminder-box p {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #daa520;
+}
+
+.checkin-result {
+  max-width: 700px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.reward-display, .punishment-display {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 3rem;
+  border-radius: 16px;
+  margin-bottom: 2rem;
+}
+
+.reward-display {
+  border: 3px solid rgba(50, 205, 50, 0.5);
+  background: rgba(34, 139, 34, 0.1);
+}
+
+.punishment-display {
+  border: 3px solid rgba(220, 20, 60, 0.5);
+  background: rgba(139, 0, 0, 0.1);
+}
+
+.result-icon {
+  font-size: 5rem;
+  margin-bottom: 1rem;
+}
+
+.checkin-result h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.reward-display h2 {
+  color: #32cd32;
+}
+
+.punishment-display h2 {
+  color: #ff6b6b;
+}
+
+.result-message {
+  font-size: 1.2rem;
+  color: #c4a76f;
+  margin-bottom: 2rem;
+  line-height: 1.7;
+}
+
+.reward-box, .punishment-box {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 2rem;
+  border-radius: 12px;
+  margin: 2rem 0;
+}
+
+.reward-box {
+  border: 2px solid rgba(50, 205, 50, 0.4);
+}
+
+.punishment-box {
+  border: 2px solid rgba(220, 20, 60, 0.4);
+}
+
+.reward-box h3, .punishment-box h3 {
+  color: #daa520;
+  font-size: 1.5rem;
+  margin: 0 0 1rem 0;
+}
+
+.reward-box p, .punishment-box p {
+  font-size: 1.2rem;
+  color: #f5f5dc;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.motivational-quote {
+  background: rgba(218, 165, 32, 0.15);
+  padding: 1.5rem;
+  border-radius: 10px;
+  border-left: 4px solid #daa520;
+  font-size: 1.1rem;
+  color: #ffd700;
+  font-style: italic;
+  margin-top: 2rem;
+}
+
+.btn-reset {
+  padding: 1rem 2rem;
+  background: rgba(218, 165, 32, 0.2);
+  color: #daa520;
+  border: 2px solid #daa520;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 1.5rem;
+}
+
+.btn-reset:hover {
+  background: rgba(218, 165, 32, 0.3);
+}
+
+.vision-reminder {
+  max-width: 800px;
+  margin: 3rem auto 0;
+  background: rgba(218, 165, 32, 0.1);
+  padding: 2rem;
+  border-radius: 12px;
+  border: 2px solid rgba(218, 165, 32, 0.3);
+}
+
+.vision-reminder h3 {
+  color: #daa520;
+  font-size: 1.5rem;
+  margin: 0 0 1rem 0;
+  text-align: center;
+}
+
+.vision-text {
+  font-size: 1.1rem;
+  color: #f5f5dc;
+  line-height: 1.8;
+  margin: 0;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .checkin-buttons {
+    flex-direction: column;
+  }
+
+  .btn-yes, .btn-no {
+    width: 100%;
+  }
+
+  .checkin-header h1 {
+    font-size: 2rem;
+  }
+
+  .streak-badge {
+    font-size: 1.2rem;
+  }
+}

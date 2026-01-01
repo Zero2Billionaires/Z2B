@@ -2,6 +2,42 @@
   text-align: center;
 }
 
+.completion-page {
+  min-height: calc(100vh - 80px);
+  background:
+    linear-gradient(135deg, #1a0f0a 25%, transparent 25%) -20px 0,
+    linear-gradient(225deg, #1a0f0a 25%, transparent 25%) -20px 0,
+    linear-gradient(315deg, #1a0f0a 25%, transparent 25%),
+    linear-gradient(45deg, #1a0f0a 25%, transparent 25%);
+  background-size: 40px 40px;
+  background-color: #0f0a08;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #f5f5dc;
+  text-align: center;
+  padding: 2rem;
+}
+
+.completion-page::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(26, 15, 10, 0.7) 0%, rgba(45, 24, 16, 0.8) 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.completion-page > * {
+  position: relative;
+  z-index: 1;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;

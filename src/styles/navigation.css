@@ -1,0 +1,265 @@
+.app-navigation {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: rgba(15, 10, 8, 0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 2px solid rgba(218, 165, 32, 0.3);
+}
+
+.nav-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.menu-toggle {
+  background: rgba(218, 165, 32, 0.1);
+  border: 2px solid rgba(218, 165, 32, 0.3);
+  color: #daa520;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.3rem;
+  transition: all 0.3s ease;
+  line-height: 1;
+}
+
+.menu-toggle:hover {
+  background: rgba(218, 165, 32, 0.2);
+  border-color: #daa520;
+  transform: scale(1.05);
+}
+
+.menu-icon {
+  display: block;
+}
+
+.current-milestone {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.milestone-icon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.milestone-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.milestone-number {
+  font-size: 0.75rem;
+  color: #c4a76f;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.milestone-name {
+  font-size: 1.1rem;
+  color: #daa520;
+  font-weight: bold;
+}
+
+.nav-right {
+  flex-shrink: 0;
+}
+
+/* Navigation Menu */
+.nav-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: rgba(15, 10, 8, 0.98);
+  backdrop-filter: blur(10px);
+  border-bottom: 2px solid rgba(218, 165, 32, 0.3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+.menu-header {
+  padding: 1.5rem 2rem 1rem;
+  border-bottom: 1px solid rgba(218, 165, 32, 0.2);
+}
+
+.menu-header h3 {
+  color: #daa520;
+  font-size: 1.3rem;
+  margin: 0;
+}
+
+.menu-items {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 2px solid rgba(218, 165, 32, 0.2);
+  padding: 1.2rem 1.5rem;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 0.8rem;
+  text-align: left;
+}
+
+.menu-item:hover:not(.locked) {
+  background: rgba(218, 165, 32, 0.1);
+  border-color: #daa520;
+  transform: translateX(8px);
+}
+
+.menu-item.active {
+  background: rgba(218, 165, 32, 0.15);
+  border-color: #ffd700;
+  border-width: 3px;
+}
+
+.menu-item.locked {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.item-icon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.item-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.item-name {
+  color: #f5f5dc;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.locked-badge {
+  font-size: 0.85rem;
+  color: #888;
+  font-style: italic;
+}
+
+.active-badge {
+  font-size: 0.85rem;
+  color: #32cd32;
+  font-weight: bold;
+}
+
+.menu-footer {
+  padding: 1rem 2rem 1.5rem;
+  text-align: center;
+  border-top: 1px solid rgba(218, 165, 32, 0.2);
+}
+
+.progress-text {
+  color: #c4a76f;
+  font-size: 1rem;
+  margin: 0;
+  font-weight: 600;
+}
+
+.menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 998;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .nav-container {
+    padding: 1rem;
+  }
+
+  .nav-left {
+    gap: 1rem;
+  }
+
+  .milestone-icon {
+    font-size: 1.5rem;
+  }
+
+  .milestone-name {
+    font-size: 0.95rem;
+  }
+
+  .milestone-number {
+    font-size: 0.7rem;
+  }
+
+  .menu-header {
+    padding: 1rem;
+  }
+
+  .menu-header h3 {
+    font-size: 1.1rem;
+  }
+
+  .menu-items {
+    padding: 0.8rem;
+  }
+
+  .menu-item {
+    padding: 1rem;
+  }
+
+  .item-name {
+    font-size: 1rem;
+  }
+
+  .item-icon {
+    font-size: 1.5rem;
+  }
+
+  /* Make TLI compact tracker stack on mobile */
+  .nav-right .tli-compact {
+    padding: 0.6rem 1rem;
+  }
+
+  .nav-right .tli-compact-icon {
+    font-size: 1.2rem;
+  }
+
+  .nav-right .tli-compact-level {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .milestone-info {
+    display: none;
+  }
+
+  .nav-right {
+    display: none;
+  }
+}
