@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import '../styles/login.css';
 
-const Login = ({ onLoginSuccess }) => {
+const AdminLogin = ({ onLoginSuccess }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -39,11 +39,18 @@ const Login = ({ onLoginSuccess }) => {
       const data = await response.json();
 
       if (response.ok && data.token) {
+        // Verify user is admin
+        if (data.user.role !== 'admin') {
+          setError('Access denied. Admin credentials required.');
+          setTimeout(() => setError(''), 5000);
+          return;
+        }
+
         // Store auth data
         localStorage.setItem('authToken', data.token);
         localStorage.setItem('userData', JSON.stringify(data.user));
 
-        setSuccess('Login successful! Redirecting...');
+        setSuccess('Admin access granted! Redirecting...');
 
         // Call parent callback with user data
         setTimeout(() => {
@@ -107,7 +114,7 @@ const Login = ({ onLoginSuccess }) => {
 
   const handleEmailKeyPress = (e) => {
     if (e.key === 'Enter') {
-      document.getElementById('password-input').focus();
+      document.getElementById('admin-password-input').focus();
     }
   };
 
@@ -117,8 +124,8 @@ const Login = ({ onLoginSuccess }) => {
         <div className="login-card">
           {/* Header */}
           <div className="login-header">
-            <h1>Password Reset</h1>
-            <p className="login-tagline">Reset Your Member Access</p>
+            <h1>🔐 Admin Password Reset</h1>
+            <p className="login-tagline">Reset Your Admin Access</p>
           </div>
 
           {/* Reset Message */}
@@ -132,13 +139,13 @@ const Login = ({ onLoginSuccess }) => {
           {/* Reset Form */}
           <form onSubmit={handleForgotPassword} className="login-form">
             <div className="form-group">
-              <label htmlFor="reset-email-input">Email Address</label>
+              <label htmlFor="reset-email-input">Admin Email Address</label>
               <input
                 id="reset-email-input"
                 type="email"
                 value={resetEmail}
                 onChange={(e) => setResetEmail(e.target.value)}
-                placeholder="your@email.com"
+                placeholder="admin@z2blegacybuilders.co.za"
                 disabled={resetLoading}
                 autoComplete="email"
               />
@@ -172,7 +179,7 @@ const Login = ({ onLoginSuccess }) => {
               }}
               style={{ background: 'none', border: 'none', cursor: 'pointer' }}
             >
-              ← Back to Login
+              ← Back to Admin Login
             </button>
           </div>
         </div>
@@ -185,8 +192,8 @@ const Login = ({ onLoginSuccess }) => {
       <div className="login-card">
         {/* Header */}
         <div className="login-header">
-          <h1>Z2B Legacy Builders</h1>
-          <p className="login-tagline">Welcome Back, Legacy Builder</p>
+          <h1>🔐 Z2B Admin Panel</h1>
+          <p className="login-tagline">Administrator Access Only</p>
         </div>
 
         {/* Alert Messages */}
@@ -206,28 +213,28 @@ const Login = ({ onLoginSuccess }) => {
         {/* Login Form */}
         <form onSubmit={handleLogin} className="login-form">
           <div className="form-group">
-            <label htmlFor="email-input">Email Address</label>
+            <label htmlFor="admin-email-input">Admin Email</label>
             <input
-              id="email-input"
+              id="admin-email-input"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               onKeyPress={handleEmailKeyPress}
-              placeholder="your@email.com"
+              placeholder="admin@z2blegacybuilders.co.za"
               disabled={loading}
               autoComplete="email"
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="password-input">Password</label>
+            <label htmlFor="admin-password-input">Admin Password</label>
             <div className="password-input-wrapper">
               <input
-                id="password-input"
+                id="admin-password-input"
                 type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter your password"
+                placeholder="Enter admin password"
                 disabled={loading}
                 autoComplete="current-password"
               />
@@ -250,10 +257,10 @@ const Login = ({ onLoginSuccess }) => {
             {loading ? (
               <>
                 <span className="spinner"></span>
-                Logging in...
+                Authenticating...
               </>
             ) : (
-              'Login to Dashboard'
+              'Access Admin Panel'
             )}
           </button>
         </form>
@@ -268,29 +275,20 @@ const Login = ({ onLoginSuccess }) => {
           >
             Forgot Password?
           </button>
-          <span className="separator">•</span>
-          <a href="#register" className="link-secondary">
-            Create Account
-          </a>
         </div>
 
-        {/* Free Access Promo */}
-        <div className="login-promo">
-          <p>
-            Don't have an account?{' '}
-            <strong>Start FREE with Milestone 1!</strong>
+        {/* Security Notice */}
+        <div className="login-promo" style={{ backgroundColor: 'rgba(220, 53, 69, 0.1)', borderColor: 'rgba(220, 53, 69, 0.3)' }}>
+          <p style={{ color: '#ff6b6b', fontSize: '0.9rem' }}>
+            🔒 <strong>Secure Admin Access</strong>
           </p>
-          <button
-            type="button"
-            className="btn-register"
-            onClick={() => window.location.href = '#get-started'}
-          >
-            🚀 Start Free Journey
-          </button>
+          <p style={{ color: '#c4a76f', fontSize: '0.85rem', marginTop: '0.5rem' }}>
+            This area is for authorized administrators only. All login attempts are monitored and logged.
+          </p>
         </div>
       </div>
     </div>
   );
 };
 
-export default Login;
+export default AdminLogin;

@@ -9,9 +9,9 @@ const Footer = ({ onNavigate }) => {
     setClickCount(newCount);
 
     if (newCount === 5) {
-      // 5 clicks reached - navigate to admin login
+      // 5 clicks reached - navigate to admin login (secret access)
       if (onNavigate) {
-        onNavigate('login');
+        onNavigate('admin-login');
       }
       // Reset counter after navigation
       setTimeout(() => setClickCount(0), 1000);

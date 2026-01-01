@@ -11,6 +11,7 @@ import AboutZ2B from './comp/AboutZ2B';
 import MeetCoachManlaw from './comp/MeetCoachManlaw';
 import SuccessStories from './comp/SuccessStories';
 import Login from './comp/Login';
+import AdminLogin from './comp/AdminLogin';
 import MembersDashboard from './comp/MembersDashboard';
 import AdminPanel from './comp/AdminPanel';
 import Footer from './comp/Footer';
@@ -142,6 +143,8 @@ function App() {
         return <SuccessStories />;
       case 'login':
         return <Login onLoginSuccess={handleLoginSuccess} />;
+      case 'admin-login':
+        return <AdminLogin onLoginSuccess={handleLoginSuccess} />;
       case 'dashboard':
         return isAuthenticated ? (
           <MembersDashboard user={currentUser} onLogout={handleLogout} />
@@ -196,8 +199,8 @@ function App() {
     milestone2Complete
   };
 
-  // Don't show navigation/footer on dashboard or admin pages
-  const showMainLayout = !['dashboard', 'admin'].includes(currentView);
+  // Don't show navigation/footer on dashboard, admin pages, or admin-login
+  const showMainLayout = !['dashboard', 'admin', 'admin-login'].includes(currentView);
 
   return (
     <Router>
