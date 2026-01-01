@@ -24,7 +24,6 @@ const MainNavigation = ({ currentPage, onNavigate, isLoggedIn = false }) => {
     { id: 'ecosystem', label: 'Ecosystem', icon: '🌐' },
     { id: 'tiers', label: 'Membership Tiers', icon: '💎' },
     { id: 'tli', label: 'TLI Challenge', icon: '🚀' },
-    { id: isLoggedIn ? 'dashboard' : 'login', label: isLoggedIn ? 'Dashboard' : 'Login', icon: isLoggedIn ? '📊' : '🔐' },
   ];
 
   // Side menu items (quick access links)
@@ -118,9 +117,6 @@ const MainNavigation = ({ currentPage, onNavigate, isLoggedIn = false }) => {
             </>
           ) : (
             <>
-              <button className="btn-login" onClick={() => handleNavigate('login')}>
-                Login
-              </button>
               <button className="btn-start" onClick={() => handleNavigate('get-started')}>
                 🚀 Start Free
               </button>
@@ -184,14 +180,9 @@ const MainNavigation = ({ currentPage, onNavigate, isLoggedIn = false }) => {
 
             <div className="mobile-cta-section">
               {!isLoggedIn && (
-                <>
-                  <button className="btn-login mobile" onClick={() => handleNavigate('login')}>
-                    Login
-                  </button>
-                  <button className="btn-start mobile" onClick={() => handleNavigate('get-started')}>
-                    🚀 Start Free
-                  </button>
-                </>
+                <button className="btn-start mobile" onClick={() => handleNavigate('get-started')}>
+                  🚀 Start Free
+                </button>
               )}
             </div>
           </div>

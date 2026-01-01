@@ -214,7 +214,7 @@ function App() {
             <Route path="/" element={renderContent()} />
           </Routes>
         </div>
-        {showMainLayout && <Footer />}
+        {showMainLayout && <Footer onNavigate={handleNavigate} />}
       </div>
     </Router>
   );
