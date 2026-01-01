@@ -31,7 +31,7 @@ const MainNavigation = ({ currentPage, onNavigate, isLoggedIn = false }) => {
   // Side menu items (quick access links)
   const sideMenuItems = [
     { id: 'milestones', label: 'Milestones & Goals', icon: '🗺️' },
-    { id: 'income', label: 'Income Tracker', icon: '💰', external: true, url: 'https://www.z2blegacybuilders.co.za/income.html' },
+    { id: 'income', label: 'Income Tracker', icon: '💰' },
     { id: 'marketplace', label: 'Marketplace', icon: '🏪', external: true, url: 'https://www.z2blegacybuilders.co.za/marketplace.html' },
     { id: 'upgrade', label: 'Upgrade Tier', icon: '⬆️', external: true, url: 'https://www.z2blegacybuilders.co.za/tier-upgrade-payment.html' },
   ];

@@ -12,6 +12,8 @@ import MeetCoachManlaw from './comp/MeetCoachManlaw';
 import SuccessStories from './comp/SuccessStories';
 import Opportunity from './comp/Opportunity';
 import TLIChallenge from './comp/TLIChallenge';
+import MilestoneTracker from './comp/MilestoneTracker';
+import IncomeTracker from './comp/IncomeTracker';
 import Login from './comp/Login';
 import AdminLogin from './comp/AdminLogin';
 import MembersDashboard from './comp/MembersDashboard';
@@ -151,7 +153,9 @@ function App() {
       case 'tli':
         return <TLIChallenge onNavigate={handleNavigate} />;
       case 'milestones':
-        return <TLIChallenge onNavigate={handleNavigate} />;
+        return <MilestoneTracker onNavigate={handleNavigate} />;
+      case 'income':
+        return <IncomeTracker onNavigate={handleNavigate} />;
       case 'login':
         return <Login onLoginSuccess={handleLoginSuccess} />;
       case 'admin-login':
