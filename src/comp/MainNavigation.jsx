@@ -72,7 +72,7 @@ const MainNavigation = ({ currentPage, onNavigate, isLoggedIn = false }) => {
               {item.dropdown ? (
                 <>
                   <button
-                    className={`nav-item ${currentPage === item.id ? 'active' : ''}`}
+                    className={`nav-item ${currentPage?.includes(item.id) ? 'active' : ''}`}
                     onClick={() => toggleDropdown(item.id)}
                   >
                     <span className="nav-icon">{item.icon}</span>
@@ -95,7 +95,7 @@ const MainNavigation = ({ currentPage, onNavigate, isLoggedIn = false }) => {
                 </>
               ) : (
                 <button
-                  className={`nav-item ${currentPage === item.id ? 'active' : ''} ${item.highlight ? 'highlight' : ''}`}
+                  className={`nav-item ${currentPage?.includes(item.id) || currentPage === '/' && item.id === 'home' ? 'active' : ''} ${item.highlight ? 'highlight' : ''}`}
                   onClick={() => handleNavigate(item.id, item.url)}
                 >
                   <span className="nav-icon">{item.icon}</span>

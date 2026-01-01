@@ -195,7 +195,7 @@
   font-size: 1.05rem;
   line-height: 1.6;
   margin-bottom: 1.5rem;
-  text-align: left;
+  text-align: center;
 }
 
 .app-features {
@@ -207,7 +207,7 @@
   color: #daa520;
   font-size: 1.1rem;
   margin-bottom: 1rem;
-  text-align: left;
+  text-align: center;
 }
 
 .app-features ul {
