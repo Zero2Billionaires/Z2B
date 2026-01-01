@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import '../styles/tli-challenge.css';
+import SignUpButton from './SignUpButton';
 
-const TLIChallenge = () => {
+const TLIChallenge = ({ onNavigate }) => {
   const [activeGoal, setActiveGoal] = useState(null);
   const [showGoalForm, setShowGoalForm] = useState(false);
   const [selectedLevel, setSelectedLevel] = useState(null);
@@ -345,9 +346,12 @@ Join me on this transformation journey! #Z2BLegacyBuilders #TLIChallenge`;
       <div className="tli-cta">
         <h2>Ready to Start Your Journey?</h2>
         <p>Set your SMART goal, share it with the world, and let's build your legacy together!</p>
-        <button className="btn-cta-primary" onClick={() => window.location.href = '#tiers'}>
-          🚀 Choose Your Tier
-        </button>
+        <SignUpButton
+          onNavigate={onNavigate}
+          variant="primary"
+          size="large"
+          text="🚀 Join Z2B Now"
+        />
       </div>
     </div>
   );

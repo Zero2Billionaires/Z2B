@@ -16,6 +16,7 @@ import Login from './comp/Login';
 import AdminLogin from './comp/AdminLogin';
 import MembersDashboard from './comp/MembersDashboard';
 import AdminPanel from './comp/AdminPanel';
+import PaymentProcessing from './comp/PaymentProcessing';
 import Footer from './comp/Footer';
 import './App.css';
 
@@ -86,7 +87,7 @@ function App() {
 
   const handleMembershipSelected = (tier) => {
     setMembershipSelected(true);
-    setCurrentView('skills-assessment');
+    setCurrentView('payment');
     console.log('Membership Tier Selected:', tier);
   };
 
@@ -124,12 +125,14 @@ function App() {
     switch (currentView) {
       case 'home':
       case 'welcome':
-        return <Welcome onStartJourney={handleStartJourney} />;
+        return <Welcome onStartJourney={handleStartJourney} onNavigate={handleNavigate} />;
       case 'ecosystem':
         return <Ecosystem />;
       case 'tiers':
       case 'membership':
         return <MembershipPricing onTierSelected={handleMembershipSelected} />;
+      case 'payment':
+        return <PaymentProcessing onNavigate={handleNavigate} />;
       case 'get-started':
       case 'vision-board':
         return <VisionBoard onComplete={handleVisionBoardComplete} />;
@@ -144,10 +147,11 @@ function App() {
       case 'testimonials':
         return <SuccessStories />;
       case 'opportunity':
-        return <Opportunity />;
+        return <Opportunity onNavigate={handleNavigate} />;
       case 'tli':
+        return <TLIChallenge onNavigate={handleNavigate} />;
       case 'milestones':
-        return <TLIChallenge />;
+        return <TLIChallenge onNavigate={handleNavigate} />;
       case 'login':
         return <Login onLoginSuccess={handleLoginSuccess} />;
       case 'admin-login':

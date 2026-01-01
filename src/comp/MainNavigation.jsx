@@ -24,7 +24,8 @@ const MainNavigation = ({ currentPage, onNavigate, isLoggedIn = false }) => {
     { id: 'ecosystem', label: 'Ecosystem', icon: '🌐' },
     { id: 'tiers', label: 'Membership Tiers', icon: '💎' },
     { id: 'tli', label: 'TLI Challenge', icon: '🚀' },
-    { id: isLoggedIn ? 'dashboard' : 'login', label: isLoggedIn ? 'Dashboard' : 'Members Login', icon: isLoggedIn ? '📊' : '🔐' },
+    // Dashboard link for logged-in users only
+    ...(isLoggedIn ? [{ id: 'dashboard', label: 'Dashboard', icon: '📊' }] : []),
   ];
 
   // Side menu items (quick access links)

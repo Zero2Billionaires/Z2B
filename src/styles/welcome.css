@@ -676,22 +676,36 @@
   font-weight: bold;
 }
 
+.cta-buttons-wrapper {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
 .cta-button {
   background: linear-gradient(135deg, #32cd32, #228b22);
   color: white;
   border: none;
   padding: 1.5rem 3rem;
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: bold;
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 10px 30px rgba(50, 205, 50, 0.4);
+  font-family: Georgia, serif;
 }
 
 .cta-button:hover {
   transform: scale(1.05);
   box-shadow: 0 15px 40px rgba(50, 205, 50, 0.6);
+}
+
+.cta-signup-btn {
+  flex: 1;
+  max-width: 300px;
 }
 
 .cta-footnote {

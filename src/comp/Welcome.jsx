@@ -1,8 +1,9 @@
 import React from 'react';
 import '../styles/welcome.css';
 import z2bTableLogo from '../assets/z2b-table-logo.jpeg';
+import SignUpButton from './SignUpButton';
 
-const Welcome = ({ onStartJourney }) => {
+const Welcome = ({ onStartJourney, onNavigate }) => {
   const milestones = [
     { number: 1, name: 'Vision Board', icon: '🎯', free: true, description: 'Define your WHY, SWOT, and legacy vision' },
     { number: 2, name: 'Skills Assessment', icon: '📚', free: false, description: 'Identify skills, gaps, and set goals' },
@@ -344,12 +345,21 @@ const Welcome = ({ onStartJourney }) => {
             <div className="cta-feature">✅ Instant Access</div>
           </div>
 
-          <button className="cta-button" onClick={onStartJourney}>
-            🚀 Start Milestone 1 FREE
-          </button>
+          <div className="cta-buttons-wrapper">
+            <button className="cta-button cta-button-primary" onClick={onStartJourney}>
+              🎯 Start Milestone 1 FREE
+            </button>
+            <SignUpButton
+              onNavigate={onNavigate}
+              variant="primary"
+              size="large"
+              text="🚀 Join Z2B Now"
+              className="cta-signup-btn"
+            />
+          </div>
 
           <p className="cta-footnote">
-            After completing M1, you can choose to upgrade to access the full 7-milestone TEEE journey and income opportunities.
+            Try M1 free, or jump straight to membership. After completing M1, you can upgrade to access the full 7-milestone TEEE journey and income opportunities.
           </p>
         </div>
       </div>

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import '../styles/opportunity.css';
+import SignUpButton from './SignUpButton';
 
-const Opportunity = () => {
+const Opportunity = ({ onNavigate }) => {
   const [expandedStream, setExpandedStream] = useState(null);
 
   const incomeStreams = [
@@ -222,7 +223,7 @@ const Opportunity = () => {
                           className="btn-view-all"
                           onClick={(e) => {
                             e.stopPropagation();
-                            window.location.href = '#tli';
+                            if (onNavigate) onNavigate('tli');
                           }}
                         >
                           🚀 View Full TLI Challenge
@@ -260,10 +261,13 @@ const Opportunity = () => {
         <h2>Ready to Build Your Legacy?</h2>
         <p>Join thousands of legacy builders earning through authentic transformation sharing.</p>
         <div className="cta-buttons">
-          <button className="btn-primary" onClick={() => window.location.href = '#tiers'}>
-            🚀 Choose Your Tier
-          </button>
-          <button className="btn-secondary" onClick={() => window.location.href = '#tli'}>
+          <SignUpButton
+            onNavigate={onNavigate}
+            variant="primary"
+            size="large"
+            text="🚀 Join Z2B Now"
+          />
+          <button className="btn-secondary" onClick={() => onNavigate && onNavigate('tli')}>
             📊 Explore TLI Challenge
           </button>
         </div>
