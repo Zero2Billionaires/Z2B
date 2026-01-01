@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Your Apps - Z2B Legacy Builders</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --navy-blue: #0A2647;
+            --medium-blue: #144272;
+            --light-blue: #205295;
+            --gold: #FFD700;
+            --orange: #FF6B35;
+            --white: #FFFFFF;
+            --success: #4CAF50;
+            --light-bg: #F8F9FA;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--navy-blue), var(--medium-blue));
+            min-height: 100vh;
+            padding: 2rem;
+            color: var(--white);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--gold);
+        }
+
+        .header .subtitle {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 0.5rem;
+        }
+
+        .header .instructions {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.7);
+            background: rgba(255, 215, 0, 0.1);
+            padding: 1rem;
+            border-radius: 10px;
+            border-left: 4px solid var(--gold);
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .section h3 {
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .app-card {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .app-card.mandatory {
+            background: rgba(76, 175, 80, 0.2);
+            border-color: var(--success);
+            cursor: default;
+        }
+
+        .app-card.selectable:hover {
+            transform: translateY(-5px);
+            border-color: var(--gold);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+        }
+
+        .app-card.selected {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.3), rgba(255, 107, 53, 0.3));
+            border-color: var(--gold);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+
+        .app-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .app-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        .badge.unlocked {
+            background: var(--success);
+            color: var(--white);
+        }
+
+        .selection-indicator {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .app-card.selected .selection-indicator {
+            content: '✓';
+        }
+
+        .app-card.selected .selection-indicator::before {
+            content: '✓';
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        .selection-status {
+            background: rgba(255, 215, 0, 0.15);
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            margin: 2rem 0;
+            border: 2px solid var(--gold);
+        }
+
+        .selection-status p {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--gold);
+        }
+
+        .selection-status .count {
+            font-size: 2rem;
+            color: var(--orange);
+        }
+
+        .btn-confirm {
+            width: 100%;
+            max-width: 400px;
+            padding: 1.2rem 2rem;
+            background: linear-gradient(135deg, var(--gold), var(--orange));
+            border: none;
+            border-radius: 50px;
+            color: var(--navy-blue);
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: block;
+            margin: 2rem auto;
+        }
+
+        .btn-confirm:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.5);
+        }
+
+        .btn-confirm:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .loading i {
+            font-size: 3rem;
+            color: var(--gold);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        .warning {
+            background: rgba(255, 107, 53, 0.2);
+            border-left: 4px solid var(--orange);
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .warning i {
+            color: var(--orange);
+            margin-right: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .apps-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 1rem;
+            }
+
+            .section {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎉 Welcome to Z2B Legacy Builders!</h1>
+            <p class="subtitle">Select <strong><span id="slotsNeeded">0</span> apps</strong> to unlock with your <strong><span id="tierName">Bronze</span></strong> membership</p>
+            <div class="instructions">
+                <i class="fas fa-info-circle"></i>
+                <strong>Important:</strong> Your app selection is permanent and cannot be changed later. Choose wisely!
+            </div>
+        </div>
+
+        <div id="loadingScreen" class="loading">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Loading your app options...</p>
+        </div>
+
+        <div id="selectionScreen" style="display: none;">
+            <!-- Already Unlocked Apps -->
+            <div class="section" id="mandatorySection" style="display: none;">
+                <h3>✅ Already Unlocked</h3>
+                <div id="mandatoryAppsList" class="apps-grid"></div>
+            </div>
+
+            <!-- Selectable Apps -->
+            <div class="section">
+                <h3>🎯 Choose Your Apps</h3>
+                <p style="margin-bottom: 1.5rem; opacity: 0.9;">Click on the apps you want to unlock. You can select <strong><span id="slotsNeededInline">0</span></strong> app(s).</p>
+                <div id="selectableAppsList" class="apps-grid"></div>
+            </div>
+
+            <!-- Selection Counter -->
+            <div class="selection-status">
+                <p>
+                    Selected: <span class="count"><span id="selectedCount">0</span> / <span id="requiredCount">0</span></span>
+                </p>
+            </div>
+
+            <!-- Warning -->
+            <div class="warning">
+                <i class="fas fa-exclamation-triangle"></i>
+                <strong>Remember:</strong> Once confirmed, your app selection is permanent and cannot be changed.
+            </div>
+
+            <!-- Confirm Button -->
+            <button id="confirmSelection" class="btn-confirm" disabled>
+                <i class="fas fa-check-circle"></i> Confirm My Selection (Permanent)
+            </button>
+        </div>
+    </div>
+
+    <script src="js/app-selection.js"></script>
+</body>
+</html>

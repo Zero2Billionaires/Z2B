@@ -1,0 +1,1589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payout Management - Z2B Admin</title>
+    <style>
+        :root {
+            --navy: #0A2647;
+            --gold: #FFD700;
+            --light-bg: #f5f7fa;
+            --white: #ffffff;
+            --text-dark: #2c3e50;
+            --text-light: #7f8c8d;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --info: #3498db;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--navy) 0%, #144272 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            background: var(--white);
+            padding: 20px 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            color: var(--navy);
+            font-size: 28px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .back-btn {
+            background: var(--navy);
+            color: var(--gold);
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: var(--gold);
+            color: var(--navy);
+            transform: translateY(-2px);
+        }
+
+        /* Statistics Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--white);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card h3 {
+            color: var(--text-light);
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .stat-card .value {
+            color: var(--navy);
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-card .change {
+            font-size: 13px;
+            color: var(--success);
+        }
+
+        .stat-card.pending .value { color: var(--warning); }
+        .stat-card.processed .value { color: var(--success); }
+        .stat-card.failed .value { color: var(--danger); }
+
+        /* Main Content */
+        .main-content {
+            background: var(--white);
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            border-bottom: 2px solid #e0e0e0;
+            margin-bottom: 30px;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-light);
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .tab:hover {
+            color: var(--navy);
+        }
+
+        .tab.active {
+            color: var(--navy);
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--gold);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Filters */
+        .filters-section {
+            background: var(--light-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .filter-group label {
+            font-size: 13px;
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        .filter-group input,
+        .filter-group select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            background: var(--white);
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: var(--navy);
+            color: var(--gold);
+        }
+
+        .btn-primary:hover {
+            background: var(--gold);
+            color: var(--navy);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: var(--white);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: var(--white);
+        }
+
+        .btn-info {
+            background: var(--info);
+            color: var(--white);
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: var(--white);
+        }
+
+        /* Bulk Actions Bar */
+        .bulk-actions {
+            background: var(--light-bg);
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .bulk-actions.active {
+            display: flex;
+        }
+
+        .bulk-actions-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .bulk-actions-right {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Table */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: var(--navy);
+            color: var(--gold);
+        }
+
+        thead th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #e0e0e0;
+            transition: background 0.2s;
+        }
+
+        tbody tr:hover {
+            background: var(--light-bg);
+        }
+
+        tbody td {
+            padding: 15px;
+            color: var(--text-dark);
+        }
+
+        /* Status Badges */
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            display: inline-block;
+        }
+
+        .status-badge.pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-badge.processed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-badge.failed {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        /* Action Buttons */
+        .action-btns {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .action-btn.view {
+            background: var(--info);
+            color: var(--white);
+        }
+
+        .action-btn.process {
+            background: var(--success);
+            color: var(--white);
+        }
+
+        .action-btn.hold {
+            background: var(--warning);
+            color: var(--white);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: 10px;
+            max-width: 700px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            background: var(--navy);
+            color: var(--gold);
+            padding: 20px 30px;
+            border-radius: 10px 10px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            font-size: 22px;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: var(--gold);
+            font-size: 28px;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .detail-section {
+            margin-bottom: 25px;
+        }
+
+        .detail-section h3 {
+            color: var(--navy);
+            font-size: 16px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--gold);
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        .detail-value {
+            color: var(--text-dark);
+            font-weight: 500;
+            text-align: right;
+        }
+
+        .commission-breakdown {
+            background: var(--light-bg);
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .commission-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .commission-item:last-child {
+            border-bottom: none;
+            font-weight: 700;
+            color: var(--navy);
+            font-size: 16px;
+            padding-top: 12px;
+        }
+
+        .modal-footer {
+            padding: 20px 30px;
+            background: var(--light-bg);
+            border-radius: 0 0 10px 10px;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        /* Checkbox */
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-light);
+        }
+
+        .empty-state h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        /* Payment Method Card */
+        .payment-card {
+            background: var(--light-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--navy);
+        }
+
+        .payment-card h4 {
+            color: var(--navy);
+            margin-bottom: 10px;
+        }
+
+        .payment-card p {
+            color: var(--text-dark);
+            font-size: 14px;
+            margin: 5px 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filters-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .tabs {
+                overflow-x: auto;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            thead th,
+            tbody td {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>💸 Payout Management</h1>
+            <a href="index.html" class="back-btn">
+                ← Back to Admin
+            </a>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="stats-grid">
+            <div class="stat-card pending">
+                <h3>Total Pending</h3>
+                <div class="value" id="stat-pending">R 0</div>
+                <div class="change"><span id="pending-count">0</span> payouts</div>
+            </div>
+
+            <div class="stat-card processed">
+                <h3>Processed This Month</h3>
+                <div class="value" id="stat-processed">R 0</div>
+                <div class="change"><span id="processed-count">0</span> payouts</div>
+            </div>
+
+            <div class="stat-card">
+                <h3>Scheduled</h3>
+                <div class="value" id="stat-scheduled">R 0</div>
+                <div class="change"><span id="scheduled-count">0</span> payouts</div>
+            </div>
+
+            <div class="stat-card failed">
+                <h3>Failed/Returned</h3>
+                <div class="value" id="stat-failed">R 0</div>
+                <div class="change"><span id="failed-count">0</span> payouts</div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('pending')">Pending Payouts</button>
+                <button class="tab" onclick="switchTab('history')">Payout History</button>
+                <button class="tab" onclick="switchTab('methods')">Payment Methods</button>
+            </div>
+
+            <!-- Pending Payouts Tab -->
+            <div class="tab-content active" id="tab-pending">
+                <!-- Filters -->
+                <div class="filters-section">
+                    <div class="filters-grid">
+                        <div class="filter-group">
+                            <label>Amount Range</label>
+                            <select id="filter-amount-pending">
+                                <option value="">All Amounts</option>
+                                <option value="0-500">R 0 - R 500</option>
+                                <option value="500-1000">R 500 - R 1,000</option>
+                                <option value="1000-5000">R 1,000 - R 5,000</option>
+                                <option value="5000+">R 5,000+</option>
+                            </select>
+                        </div>
+
+                        <div class="filter-group">
+                            <label>Tier</label>
+                            <select id="filter-tier-pending">
+                                <option value="">All Tiers</option>
+                                <option value="FAM">FAM</option>
+                                <option value="Bronze">Bronze</option>
+                                <option value="Copper">Copper</option>
+                                <option value="Silver">Silver</option>
+                                <option value="Gold">Gold</option>
+                                <option value="Platinum">Platinum</option>
+                                <option value="Diamond">Diamond</option>
+                            </select>
+                        </div>
+
+                        <div class="filter-group">
+                            <label>Member Search</label>
+                            <input type="text" id="filter-member-pending" placeholder="Name or membership #">
+                        </div>
+
+                        <div class="filter-group">
+                            <label>Payment Method</label>
+                            <select id="filter-payment-pending">
+                                <option value="">All Methods</option>
+                                <option value="bank">Bank Transfer</option>
+                                <option value="ewallet">E-Wallet</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="filter-actions">
+                        <button class="btn btn-primary" onclick="applyFiltersPending()">Apply Filters</button>
+                        <button class="btn btn-info" onclick="clearFiltersPending()">Clear</button>
+                        <button class="btn btn-warning" onclick="exportPendingPayouts()">Export</button>
+                    </div>
+                </div>
+
+                <!-- Bulk Actions Bar -->
+                <div class="bulk-actions" id="bulk-actions-pending">
+                    <div class="bulk-actions-left">
+                        <span><strong id="selected-pending-count">0</strong> payouts selected</span>
+                    </div>
+                    <div class="bulk-actions-right">
+                        <button class="btn btn-success" onclick="bulkProcessPayouts()">Process Selected</button>
+                        <button class="btn btn-info" onclick="generateBatchFile()">Generate Batch File</button>
+                        <button class="btn btn-warning" onclick="bulkHoldPayouts()">Hold Selected</button>
+                    </div>
+                </div>
+
+                <!-- Table -->
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="select-all-pending" onchange="toggleSelectAllPending()"></th>
+                                <th>Member</th>
+                                <th>Membership#</th>
+                                <th>Tier</th>
+                                <th>Amount Due</th>
+                                <th>Commissions</th>
+                                <th>Payment Method</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pending-table">
+                            <!-- Payouts will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="empty-state" id="empty-pending" style="display: none;">
+                    <h3>No Pending Payouts</h3>
+                    <p>All payouts have been processed.</p>
+                </div>
+            </div>
+
+            <!-- Payout History Tab -->
+            <div class="tab-content" id="tab-history">
+                <!-- Filters -->
+                <div class="filters-section">
+                    <div class="filters-grid">
+                        <div class="filter-group">
+                            <label>Date From</label>
+                            <input type="date" id="filter-date-from-history">
+                        </div>
+
+                        <div class="filter-group">
+                            <label>Date To</label>
+                            <input type="date" id="filter-date-to-history">
+                        </div>
+
+                        <div class="filter-group">
+                            <label>Status</label>
+                            <select id="filter-status-history">
+                                <option value="">All Statuses</option>
+                                <option value="processed">Processed</option>
+                                <option value="failed">Failed</option>
+                            </select>
+                        </div>
+
+                        <div class="filter-group">
+                            <label>Member Search</label>
+                            <input type="text" id="filter-member-history" placeholder="Name or membership #">
+                        </div>
+                    </div>
+
+                    <div class="filter-actions">
+                        <button class="btn btn-primary" onclick="applyFiltersHistory()">Apply Filters</button>
+                        <button class="btn btn-info" onclick="clearFiltersHistory()">Clear</button>
+                        <button class="btn btn-warning" onclick="exportHistoryPayouts()">Export</button>
+                    </div>
+                </div>
+
+                <!-- Table -->
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Member</th>
+                                <th>Membership#</th>
+                                <th>Amount</th>
+                                <th>Payment Method</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-table">
+                            <!-- History will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="empty-state" id="empty-history" style="display: none;">
+                    <h3>No Payout History</h3>
+                    <p>No payouts have been processed yet.</p>
+                </div>
+            </div>
+
+            <!-- Payment Methods Tab -->
+            <div class="tab-content" id="tab-methods">
+                <div style="margin-bottom: 20px;">
+                    <button class="btn btn-primary" onclick="addPaymentMethod()">+ Add Payment Method</button>
+                </div>
+
+                <div id="payment-methods-list">
+                    <!-- Payment methods will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payout Details Modal -->
+    <div class="modal" id="payout-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Payout Details</h2>
+                <button class="close-modal" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <!-- Details will be loaded here -->
+            </div>
+            <div class="modal-footer" id="modal-footer">
+                <!-- Actions will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // API Configuration
+        const API_CONFIG = {
+            BASE_URL: 'http://localhost:5000/api'
+        };
+
+        let pendingPayouts = [];
+        let payoutHistory = [];
+        let paymentMethods = [];
+        let filteredPending = [];
+        let filteredHistory = [];
+        let selectedPending = new Set();
+        let currentTab = 'pending';
+
+        // Load data on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            loadPendingPayouts();
+            loadPayoutHistory();
+            loadPaymentMethods();
+        });
+
+        // Switch Tabs
+        function switchTab(tab) {
+            currentTab = tab;
+
+            // Update tab buttons
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.getElementById(`tab-${tab}`).classList.add('active');
+        }
+
+        // Load Pending Payouts
+        async function loadPendingPayouts() {
+            try {
+                const response = await fetch(`${API_CONFIG.BASE_URL}/payouts/pending`);
+                const data = await response.json();
+
+                if (data.success) {
+                    pendingPayouts = data.payouts || [];
+                    filteredPending = [...pendingPayouts];
+                    renderPendingPayouts();
+                    updateStatistics();
+                } else {
+                    loadSamplePendingData();
+                }
+            } catch (error) {
+                console.error('Error loading pending payouts:', error);
+                loadSamplePendingData();
+            }
+        }
+
+        // Load Sample Pending Data
+        function loadSamplePendingData() {
+            pendingPayouts = [
+                {
+                    _id: '1',
+                    memberName: 'John Doe',
+                    membershipNumber: 'Z2B0000123',
+                    email: 'john@example.com',
+                    tier: 'Bronze',
+                    totalAmount: 1250.50,
+                    commissions: {
+                        ISP: 480,
+                        QPB: 384,
+                        TSC: 236.50,
+                        TPB: 150
+                    },
+                    deductions: 0,
+                    netAmount: 1250.50,
+                    paymentMethod: 'bank',
+                    bankDetails: {
+                        accountName: 'John Doe',
+                        bank: 'FNB',
+                        accountNumber: '****1234',
+                        branchCode: '250655'
+                    }
+                },
+                {
+                    _id: '2',
+                    memberName: 'Jane Smith',
+                    membershipNumber: 'Z2B0000456',
+                    email: 'jane@example.com',
+                    tier: 'Silver',
+                    totalAmount: 2875.75,
+                    commissions: {
+                        ISP: 1200,
+                        TSC: 875.75,
+                        TPB: 800
+                    },
+                    deductions: 0,
+                    netAmount: 2875.75,
+                    paymentMethod: 'bank',
+                    bankDetails: {
+                        accountName: 'Jane Smith',
+                        bank: 'Standard Bank',
+                        accountNumber: '****5678',
+                        branchCode: '051001'
+                    }
+                },
+                {
+                    _id: '3',
+                    memberName: 'Mike Johnson',
+                    membershipNumber: 'Z2B0000789',
+                    email: 'mike@example.com',
+                    tier: 'Gold',
+                    totalAmount: 4520.25,
+                    commissions: {
+                        ISP: 2100,
+                        QPB: 960,
+                        TSC: 1460.25
+                    },
+                    deductions: 0,
+                    netAmount: 4520.25,
+                    paymentMethod: 'ewallet',
+                    ewalletDetails: {
+                        provider: 'PayPal',
+                        email: 'mike@paypal.com'
+                    }
+                },
+                {
+                    _id: '4',
+                    memberName: 'Sarah Williams',
+                    membershipNumber: 'Z2B0000234',
+                    email: 'sarah@example.com',
+                    tier: 'Platinum',
+                    totalAmount: 8750.00,
+                    commissions: {
+                        ISP: 3500,
+                        TSC: 2250,
+                        TPB: 1500,
+                        TLI: 1500
+                    },
+                    deductions: 0,
+                    netAmount: 8750.00,
+                    paymentMethod: 'bank',
+                    bankDetails: {
+                        accountName: 'Sarah Williams',
+                        bank: 'ABSA',
+                        accountNumber: '****9012',
+                        branchCode: '632005'
+                    }
+                },
+                {
+                    _id: '5',
+                    memberName: 'David Brown',
+                    membershipNumber: 'Z2B0000567',
+                    email: 'david@example.com',
+                    tier: 'Diamond',
+                    totalAmount: 15250.00,
+                    commissions: {
+                        ISP: 7200,
+                        TSC: 4550,
+                        TPB: 1500,
+                        CEO: 2000
+                    },
+                    deductions: 0,
+                    netAmount: 15250.00,
+                    paymentMethod: 'bank',
+                    bankDetails: {
+                        accountName: 'David Brown',
+                        bank: 'Nedbank',
+                        accountNumber: '****3456',
+                        branchCode: '198765'
+                    }
+                }
+            ];
+
+            filteredPending = [...pendingPayouts];
+            renderPendingPayouts();
+            updateStatistics();
+        }
+
+        // Load Payout History
+        async function loadPayoutHistory() {
+            try {
+                const response = await fetch(`${API_CONFIG.BASE_URL}/payouts/history`);
+                const data = await response.json();
+
+                if (data.success) {
+                    payoutHistory = data.history || [];
+                    filteredHistory = [...payoutHistory];
+                    renderPayoutHistory();
+                } else {
+                    loadSampleHistoryData();
+                }
+            } catch (error) {
+                console.error('Error loading payout history:', error);
+                loadSampleHistoryData();
+            }
+        }
+
+        // Load Sample History Data
+        function loadSampleHistoryData() {
+            payoutHistory = [
+                {
+                    _id: 'h1',
+                    date: '2025-01-10T10:00:00Z',
+                    memberName: 'Emily Davis',
+                    membershipNumber: 'Z2B0000890',
+                    amount: 3500,
+                    paymentMethod: 'bank',
+                    status: 'processed'
+                },
+                {
+                    _id: 'h2',
+                    date: '2025-01-10T10:00:00Z',
+                    memberName: 'Robert Wilson',
+                    membershipNumber: 'Z2B0000345',
+                    amount: 2250,
+                    paymentMethod: 'bank',
+                    status: 'processed'
+                },
+                {
+                    _id: 'h3',
+                    date: '2025-01-09T15:00:00Z',
+                    memberName: 'Lisa Anderson',
+                    membershipNumber: 'Z2B0000678',
+                    amount: 1875,
+                    paymentMethod: 'ewallet',
+                    status: 'failed'
+                }
+            ];
+
+            filteredHistory = [...payoutHistory];
+            renderPayoutHistory();
+        }
+
+        // Load Payment Methods
+        async function loadPaymentMethods() {
+            try {
+                const response = await fetch(`${API_CONFIG.BASE_URL}/payouts/payment-methods`);
+                const data = await response.json();
+
+                if (data.success) {
+                    paymentMethods = data.methods || [];
+                    renderPaymentMethods();
+                } else {
+                    loadSamplePaymentMethods();
+                }
+            } catch (error) {
+                console.error('Error loading payment methods:', error);
+                loadSamplePaymentMethods();
+            }
+        }
+
+        // Load Sample Payment Methods
+        function loadSamplePaymentMethods() {
+            paymentMethods = [
+                {
+                    _id: 'm1',
+                    type: 'bank',
+                    name: 'Company Bank Account',
+                    bank: 'FNB',
+                    accountNumber: '****7890',
+                    isDefault: true
+                },
+                {
+                    _id: 'm2',
+                    type: 'ewallet',
+                    name: 'PayPal Business',
+                    provider: 'PayPal',
+                    email: 'business@z2b.com',
+                    isDefault: false
+                }
+            ];
+
+            renderPaymentMethods();
+        }
+
+        // Render Pending Payouts
+        function renderPendingPayouts() {
+            const tbody = document.getElementById('pending-table');
+            const emptyState = document.getElementById('empty-pending');
+
+            if (filteredPending.length === 0) {
+                tbody.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+
+            tbody.innerHTML = filteredPending.map(payout => {
+                const commissionsCount = Object.keys(payout.commissions).length;
+                const commissionsText = Object.entries(payout.commissions)
+                    .map(([type, amount]) => `${type}: R${amount.toFixed(2)}`)
+                    .join(', ');
+
+                return `
+                    <tr>
+                        <td>
+                            <input type="checkbox"
+                                   onchange="togglePayoutSelect('${payout._id}')"
+                                   ${selectedPending.has(payout._id) ? 'checked' : ''}>
+                        </td>
+                        <td><strong>${payout.memberName}</strong><br><small style="color: #7f8c8d;">${payout.email}</small></td>
+                        <td>${payout.membershipNumber}</td>
+                        <td>${payout.tier}</td>
+                        <td><strong style="color: var(--success); font-size: 16px;">R ${payout.netAmount.toFixed(2)}</strong></td>
+                        <td><small title="${commissionsText}">${commissionsCount} commission types</small></td>
+                        <td>${payout.paymentMethod === 'bank' ? '🏦 Bank Transfer' : '💳 E-Wallet'}</td>
+                        <td>
+                            <div class="action-btns">
+                                <button class="action-btn view" onclick="viewPayout('${payout._id}')">View</button>
+                                <button class="action-btn process" onclick="processSinglePayout('${payout._id}')">Process</button>
+                                <button class="action-btn hold" onclick="holdPayout('${payout._id}')">Hold</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Render Payout History
+        function renderPayoutHistory() {
+            const tbody = document.getElementById('history-table');
+            const emptyState = document.getElementById('empty-history');
+
+            if (filteredHistory.length === 0) {
+                tbody.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+
+            tbody.innerHTML = filteredHistory.map(payout => `
+                <tr>
+                    <td>${formatDate(payout.date)}</td>
+                    <td><strong>${payout.memberName}</strong></td>
+                    <td>${payout.membershipNumber}</td>
+                    <td><strong>R ${payout.amount.toFixed(2)}</strong></td>
+                    <td>${payout.paymentMethod === 'bank' ? '🏦 Bank Transfer' : '💳 E-Wallet'}</td>
+                    <td><span class="status-badge ${payout.status}">${payout.status}</span></td>
+                    <td>
+                        <div class="action-btns">
+                            <button class="action-btn view" onclick="viewHistoryPayout('${payout._id}')">View</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Render Payment Methods
+        function renderPaymentMethods() {
+            const container = document.getElementById('payment-methods-list');
+
+            container.innerHTML = paymentMethods.map(method => `
+                <div class="payment-card">
+                    <h4>${method.name} ${method.isDefault ? '⭐ (Default)' : ''}</h4>
+                    <p><strong>Type:</strong> ${method.type === 'bank' ? 'Bank Transfer' : 'E-Wallet'}</p>
+                    ${method.type === 'bank' ? `
+                        <p><strong>Bank:</strong> ${method.bank}</p>
+                        <p><strong>Account:</strong> ${method.accountNumber}</p>
+                    ` : `
+                        <p><strong>Provider:</strong> ${method.provider}</p>
+                        <p><strong>Email:</strong> ${method.email}</p>
+                    `}
+                    <div style="margin-top: 15px;">
+                        <button class="btn btn-info" style="font-size: 12px; padding: 6px 12px;">Edit</button>
+                        <button class="btn btn-danger" style="font-size: 12px; padding: 6px 12px;">Delete</button>
+                        ${!method.isDefault ? `<button class="btn btn-warning" style="font-size: 12px; padding: 6px 12px;">Set as Default</button>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Update Statistics
+        function updateStatistics() {
+            const totalPending = pendingPayouts.reduce((sum, p) => sum + p.netAmount, 0);
+            const processedThisMonth = payoutHistory
+                .filter(p => p.status === 'processed')
+                .reduce((sum, p) => sum + p.amount, 0);
+            const failed = payoutHistory.filter(p => p.status === 'failed');
+            const totalFailed = failed.reduce((sum, p) => sum + p.amount, 0);
+
+            document.getElementById('stat-pending').textContent = `R ${totalPending.toFixed(2)}`;
+            document.getElementById('stat-processed').textContent = `R ${processedThisMonth.toFixed(2)}`;
+            document.getElementById('stat-scheduled').textContent = 'R 0';
+            document.getElementById('stat-failed').textContent = `R ${totalFailed.toFixed(2)}`;
+
+            document.getElementById('pending-count').textContent = pendingPayouts.length;
+            document.getElementById('processed-count').textContent = payoutHistory.filter(p => p.status === 'processed').length;
+            document.getElementById('scheduled-count').textContent = '0';
+            document.getElementById('failed-count').textContent = failed.length;
+        }
+
+        // Toggle Select All Pending
+        function toggleSelectAllPending() {
+            const checkbox = document.getElementById('select-all-pending');
+            if (checkbox.checked) {
+                filteredPending.forEach(p => selectedPending.add(p._id));
+            } else {
+                selectedPending.clear();
+            }
+            renderPendingPayouts();
+            updateBulkActions();
+        }
+
+        // Toggle Payout Select
+        function togglePayoutSelect(id) {
+            if (selectedPending.has(id)) {
+                selectedPending.delete(id);
+            } else {
+                selectedPending.add(id);
+            }
+            updateBulkActions();
+        }
+
+        // Update Bulk Actions
+        function updateBulkActions() {
+            const bulkBar = document.getElementById('bulk-actions-pending');
+            const count = document.getElementById('selected-pending-count');
+
+            count.textContent = selectedPending.size;
+
+            if (selectedPending.size > 0) {
+                bulkBar.classList.add('active');
+            } else {
+                bulkBar.classList.remove('active');
+            }
+        }
+
+        // View Payout Details
+        function viewPayout(id) {
+            const payout = pendingPayouts.find(p => p._id === id);
+            if (!payout) return;
+
+            const modalBody = document.getElementById('modal-body');
+            const modalFooter = document.getElementById('modal-footer');
+
+            modalBody.innerHTML = `
+                <div class="detail-section">
+                    <h3>Member Information</h3>
+                    <div class="detail-row">
+                        <span class="detail-label">Name:</span>
+                        <span class="detail-value">${payout.memberName}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Membership #:</span>
+                        <span class="detail-value">${payout.membershipNumber}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Email:</span>
+                        <span class="detail-value">${payout.email}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Tier:</span>
+                        <span class="detail-value">${payout.tier}</span>
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <h3>Commission Breakdown</h3>
+                    <div class="commission-breakdown">
+                        ${Object.entries(payout.commissions).map(([type, amount]) => `
+                            <div class="commission-item">
+                                <span>${type}</span>
+                                <span>R ${amount.toFixed(2)}</span>
+                            </div>
+                        `).join('')}
+                        <div class="commission-item">
+                            <span>Total Amount:</span>
+                            <span>R ${payout.totalAmount.toFixed(2)}</span>
+                        </div>
+                        ${payout.deductions > 0 ? `
+                            <div class="commission-item">
+                                <span>Deductions:</span>
+                                <span style="color: var(--danger);">- R ${payout.deductions.toFixed(2)}</span>
+                            </div>
+                        ` : ''}
+                        <div class="commission-item">
+                            <span>Net Payout:</span>
+                            <span style="color: var(--success);">R ${payout.netAmount.toFixed(2)}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <h3>Payment Details</h3>
+                    ${payout.paymentMethod === 'bank' ? `
+                        <div class="detail-row">
+                            <span class="detail-label">Method:</span>
+                            <span class="detail-value">Bank Transfer</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Bank:</span>
+                            <span class="detail-value">${payout.bankDetails.bank}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Account Name:</span>
+                            <span class="detail-value">${payout.bankDetails.accountName}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Account Number:</span>
+                            <span class="detail-value">${payout.bankDetails.accountNumber}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Branch Code:</span>
+                            <span class="detail-value">${payout.bankDetails.branchCode}</span>
+                        </div>
+                    ` : `
+                        <div class="detail-row">
+                            <span class="detail-label">Method:</span>
+                            <span class="detail-value">E-Wallet</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Provider:</span>
+                            <span class="detail-value">${payout.ewalletDetails.provider}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Email:</span>
+                            <span class="detail-value">${payout.ewalletDetails.email}</span>
+                        </div>
+                    `}
+                </div>
+            `;
+
+            modalFooter.innerHTML = `
+                <button class="btn btn-warning" onclick="closeModal()">Close</button>
+                <button class="btn btn-danger" onclick="holdPayout('${payout._id}'); closeModal();">Hold</button>
+                <button class="btn btn-success" onclick="processSinglePayout('${payout._id}'); closeModal();">Process Now</button>
+            `;
+
+            document.getElementById('payout-modal').classList.add('active');
+        }
+
+        // Close Modal
+        function closeModal() {
+            document.getElementById('payout-modal').classList.remove('active');
+        }
+
+        // Process Single Payout
+        async function processSinglePayout(id) {
+            if (!confirm('Are you sure you want to process this payout?')) return;
+
+            try {
+                const response = await fetch(`${API_CONFIG.BASE_URL}/payouts/process`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ payoutIds: [id] })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    pendingPayouts = pendingPayouts.filter(p => p._id !== id);
+                    filteredPending = filteredPending.filter(p => p._id !== id);
+                    renderPendingPayouts();
+                    updateStatistics();
+                    alert('Payout processed successfully!');
+                } else {
+                    alert('Failed to process payout: ' + data.message);
+                }
+            } catch (error) {
+                console.error('Error processing payout:', error);
+                // Simulate for demo
+                pendingPayouts = pendingPayouts.filter(p => p._id !== id);
+                filteredPending = filteredPending.filter(p => p._id !== id);
+                renderPendingPayouts();
+                updateStatistics();
+                alert('Payout processed successfully!');
+            }
+        }
+
+        // Bulk Process Payouts
+        async function bulkProcessPayouts() {
+            if (selectedPending.size === 0) return;
+            if (!confirm(`Process ${selectedPending.size} selected payouts?`)) return;
+
+            try {
+                const response = await fetch(`${API_CONFIG.BASE_URL}/payouts/process`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ payoutIds: Array.from(selectedPending) })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    pendingPayouts = pendingPayouts.filter(p => !selectedPending.has(p._id));
+                    filteredPending = filteredPending.filter(p => !selectedPending.has(p._id));
+                    selectedPending.clear();
+                    renderPendingPayouts();
+                    updateStatistics();
+                    updateBulkActions();
+                    alert('Payouts processed successfully!');
+                } else {
+                    alert('Failed to process payouts: ' + data.message);
+                }
+            } catch (error) {
+                console.error('Error processing payouts:', error);
+                // Simulate for demo
+                pendingPayouts = pendingPayouts.filter(p => !selectedPending.has(p._id));
+                filteredPending = filteredPending.filter(p => !selectedPending.has(p._id));
+                selectedPending.clear();
+                renderPendingPayouts();
+                updateStatistics();
+                updateBulkActions();
+                alert('Payouts processed successfully!');
+            }
+        }
+
+        // Generate Batch File
+        function generateBatchFile() {
+            if (selectedPending.size === 0) {
+                alert('Please select payouts to include in batch file.');
+                return;
+            }
+
+            const selectedPayouts = pendingPayouts.filter(p => selectedPending.has(p._id));
+
+            let csv = 'Account Name,Bank,Account Number,Branch Code,Amount,Reference\n';
+
+            selectedPayouts.forEach(payout => {
+                if (payout.paymentMethod === 'bank') {
+                    csv += `"${payout.bankDetails.accountName}","${payout.bankDetails.bank}","${payout.bankDetails.accountNumber}","${payout.bankDetails.branchCode}","${payout.netAmount.toFixed(2)}","Z2B Payout ${payout.membershipNumber}"\n`;
+                }
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `batch_payouts_${new Date().toISOString().split('T')[0]}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+
+            alert('Batch file generated successfully!');
+        }
+
+        // Hold Payout
+        function holdPayout(id) {
+            const reason = prompt('Enter reason for holding this payout:');
+            if (!reason) return;
+
+            alert(`Payout held: ${reason}`);
+            // In production, send to API
+        }
+
+        // Bulk Hold Payouts
+        function bulkHoldPayouts() {
+            if (selectedPending.size === 0) return;
+            const reason = prompt('Enter reason for holding selected payouts:');
+            if (!reason) return;
+
+            alert(`${selectedPending.size} payouts held: ${reason}`);
+            selectedPending.clear();
+            updateBulkActions();
+        }
+
+        // Apply Filters
+        function applyFiltersPending() {
+            const amount = document.getElementById('filter-amount-pending').value;
+            const tier = document.getElementById('filter-tier-pending').value;
+            const member = document.getElementById('filter-member-pending').value.toLowerCase();
+            const payment = document.getElementById('filter-payment-pending').value;
+
+            filteredPending = pendingPayouts.filter(p => {
+                if (amount) {
+                    const amt = p.netAmount;
+                    if (amount === '0-500' && (amt < 0 || amt > 500)) return false;
+                    if (amount === '500-1000' && (amt < 500 || amt > 1000)) return false;
+                    if (amount === '1000-5000' && (amt < 1000 || amt > 5000)) return false;
+                    if (amount === '5000+' && amt < 5000) return false;
+                }
+                if (tier && p.tier !== tier) return false;
+                if (member) {
+                    const matchName = p.memberName.toLowerCase().includes(member);
+                    const matchNumber = p.membershipNumber.toLowerCase().includes(member);
+                    if (!matchName && !matchNumber) return false;
+                }
+                if (payment && p.paymentMethod !== payment) return false;
+
+                return true;
+            });
+
+            renderPendingPayouts();
+        }
+
+        function clearFiltersPending() {
+            document.getElementById('filter-amount-pending').value = '';
+            document.getElementById('filter-tier-pending').value = '';
+            document.getElementById('filter-member-pending').value = '';
+            document.getElementById('filter-payment-pending').value = '';
+            filteredPending = [...pendingPayouts];
+            renderPendingPayouts();
+        }
+
+        function applyFiltersHistory() {
+            const dateFrom = document.getElementById('filter-date-from-history').value;
+            const dateTo = document.getElementById('filter-date-to-history').value;
+            const status = document.getElementById('filter-status-history').value;
+            const member = document.getElementById('filter-member-history').value.toLowerCase();
+
+            filteredHistory = payoutHistory.filter(p => {
+                if (dateFrom && new Date(p.date) < new Date(dateFrom)) return false;
+                if (dateTo && new Date(p.date) > new Date(dateTo)) return false;
+                if (status && p.status !== status) return false;
+                if (member) {
+                    const matchName = p.memberName.toLowerCase().includes(member);
+                    const matchNumber = p.membershipNumber.toLowerCase().includes(member);
+                    if (!matchName && !matchNumber) return false;
+                }
+                return true;
+            });
+
+            renderPayoutHistory();
+        }
+
+        function clearFiltersHistory() {
+            document.getElementById('filter-date-from-history').value = '';
+            document.getElementById('filter-date-to-history').value = '';
+            document.getElementById('filter-status-history').value = '';
+            document.getElementById('filter-member-history').value = '';
+            filteredHistory = [...payoutHistory];
+            renderPayoutHistory();
+        }
+
+        // Export Functions
+        function exportPendingPayouts() {
+            const data = filteredPending.length > 0 ? filteredPending : pendingPayouts;
+
+            let csv = 'Member,Membership#,Tier,Amount,Payment Method\n';
+            data.forEach(p => {
+                csv += `"${p.memberName}","${p.membershipNumber}","${p.tier}","R ${p.netAmount.toFixed(2)}","${p.paymentMethod}"\n`;
+            });
+
+            downloadCSV(csv, 'pending_payouts');
+        }
+
+        function exportHistoryPayouts() {
+            const data = filteredHistory.length > 0 ? filteredHistory : payoutHistory;
+
+            let csv = 'Date,Member,Membership#,Amount,Payment Method,Status\n';
+            data.forEach(p => {
+                csv += `"${formatDate(p.date)}","${p.memberName}","${p.membershipNumber}","R ${p.amount.toFixed(2)}","${p.paymentMethod}","${p.status}"\n`;
+            });
+
+            downloadCSV(csv, 'payout_history');
+        }
+
+        function downloadCSV(csv, filename) {
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${filename}_${new Date().toISOString().split('T')[0]}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            alert('Export complete!');
+        }
+
+        // Add Payment Method
+        function addPaymentMethod() {
+            alert('Add Payment Method functionality - to be implemented');
+        }
+
+        // View History Payout
+        function viewHistoryPayout(id) {
+            alert('View history payout details - to be implemented');
+        }
+
+        // Utility Functions
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-ZA', {
+                year: 'numeric',
+                month: 'short',
+                day: '2-digit'
+            });
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('payout-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

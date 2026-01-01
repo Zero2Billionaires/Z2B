@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Successful - Z2B Legacy Builders</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --navy-blue: #0A2647;
+            --gold: #FFD700;
+            --orange: #FF6B35;
+            --dark-navy: #051428;
+            --white: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--navy-blue), var(--dark-navy));
+            color: var(--white);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .success-container {
+            background: var(--white);
+            border-radius: 30px;
+            padding: 3rem;
+            max-width: 600px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .success-icon {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            animation: scaleIn 0.5s ease-out;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+
+        .success-icon i {
+            font-size: 4rem;
+            color: white;
+        }
+
+        h1 {
+            color: var(--navy-blue);
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .purchase-details {
+            background: rgba(255, 215, 0, 0.1);
+            border: 2px solid var(--gold);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: left;
+        }
+
+        .purchase-details h3 {
+            color: var(--orange);
+            margin-bottom: 1rem;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            color: var(--dark-navy);
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-weight: 600;
+        }
+
+        .detail-value {
+            color: var(--orange);
+            font-weight: bold;
+        }
+
+        .btn-dashboard {
+            background: linear-gradient(135deg, var(--gold), var(--orange));
+            color: var(--navy-blue);
+            border: none;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-top: 1.5rem;
+            transition: all 0.3s;
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+        }
+
+        .btn-dashboard:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.6);
+        }
+    </style>
+</head>
+<body>
+    <div class="success-container">
+        <div class="success-icon">
+            <i class="fas fa-check"></i>
+        </div>
+
+        <h1>Payment Successful!</h1>
+        <p style="color: var(--dark-navy); font-size: 1.1rem; margin-bottom: 2rem;">
+            Your AI Fuel has been added to your account
+        </p>
+
+        <div class="purchase-details" id="purchaseDetails">
+            <h3><i class="fas fa-receipt"></i> Purchase Details</h3>
+            <div class="detail-row">
+                <span class="detail-label">AI Fuel Added:</span>
+                <span class="detail-value" id="fuelAmount">Loading...</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Amount Paid:</span>
+                <span class="detail-value" id="amountPaid">Loading...</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Valid Until:</span>
+                <span class="detail-value" id="expiryDate">Loading...</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Purchase ID:</span>
+                <span class="detail-value" id="purchaseId">Loading...</span>
+            </div>
+        </div>
+
+        <div style="background: rgba(76, 175, 80, 0.1); padding: 1.5rem; border-radius: 15px; margin-bottom: 1.5rem;">
+            <p style="color: var(--navy-blue); margin: 0;">
+                <i class="fas fa-users" style="color: #4CAF50;"></i>
+                <strong>Your upline has earned a commission from this purchase!</strong><br>
+                <span style="font-size: 0.95rem; opacity: 0.8;">Supporting each other's success is the Z2B way.</span>
+            </p>
+        </div>
+
+        <button class="btn-dashboard" onclick="window.location.href='dashboard.html'">
+            <i class="fas fa-home"></i> Return to Dashboard
+        </button>
+    </div>
+
+    <script>
+        // Get purchase ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const purchaseId = urlParams.get('purchase');
+
+        if (purchaseId) {
+            // Fetch purchase details
+            fetch(`http://localhost:8000/Z2B-v21/api/yoco-ai-fuel-payment.php/verify?purchaseId=${purchaseId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.purchase) {
+                        document.getElementById('fuelAmount').textContent = data.purchase.fuel_amount + ' Fuel';
+                        document.getElementById('amountPaid').textContent = 'R' + data.purchase.price;
+                        document.getElementById('purchaseId').textContent = '#' + data.purchase.id;
+
+                        // Calculate expiry date (3 months from purchase)
+                        const purchaseDate = new Date(data.purchase.purchase_date);
+                        const expiryDate = new Date(purchaseDate.setMonth(purchaseDate.getMonth() + 3));
+                        document.getElementById('expiryDate').textContent = expiryDate.toLocaleDateString('en-ZA');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching purchase details:', error);
+                });
+        }
+    </script>
+</body>
+</html>

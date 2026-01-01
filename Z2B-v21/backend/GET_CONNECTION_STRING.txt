@@ -1,0 +1,91 @@
+========================================
+How to Get MongoDB Connection String
+========================================
+
+You're logged in to MongoDB Atlas. Follow these steps:
+
+STEP 1: Find Your Cluster
+--------------------------
+Look at the left sidebar:
+- Click "Database" (should have a database icon)
+
+You'll see the main dashboard with your cluster(s).
+
+STEP 2: Locate the Connect Button
+----------------------------------
+You should see:
+- Cluster name (e.g., "Cluster0", "z2b-cluster", etc.)
+- A green "Connect" button next to it
+
+Click the "Connect" button.
+
+STEP 3: Choose Connection Method
+---------------------------------
+A popup appears with 3 options:
+1. "Compass"
+2. "Drivers" ← CHOOSE THIS ONE
+3. "MongoDB Shell"
+
+Click "Drivers"
+
+STEP 4: Select Driver Settings
+-------------------------------
+You'll see dropdown menus:
+
+Driver: Choose "Node.js"
+Version: Choose "4.1 or later" (or latest version)
+
+STEP 5: Copy Connection String
+-------------------------------
+Below the dropdowns, you'll see:
+
+"3. Add your connection string into your application code"
+
+You'll see a text box with a connection string like:
+
+mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/?retryWrites=true&w=majority
+
+Click the "Copy" button next to it (clipboard icon).
+
+STEP 6: Replace Password Placeholder
+-------------------------------------
+The string has "<password>" in it.
+
+You need to replace <password> with your actual database password.
+
+If you don't remember it:
+1. Click "Close" on this popup
+2. Click "Database Access" in left sidebar
+3. Find your user (e.g., "z2badmin" or similar)
+4. Click "Edit" button
+5. Click "Edit Password"
+6. Click "Autogenerate Secure Password"
+7. COPY THIS PASSWORD! Save it somewhere!
+8. Click "Update User"
+9. Go back to Step 1 and get connection string again
+
+STEP 7: Add Database Name
+--------------------------
+Your connection string looks like:
+mongodb+srv://username:PASSWORD@cluster.xxxxx.mongodb.net/?retryWrites=true&w=majority
+
+Add "/z2b_legacy_builders" BEFORE the "?":
+
+mongodb+srv://username:PASSWORD@cluster.xxxxx.mongodb.net/z2b_legacy_builders?retryWrites=true&w=majority
+                                                                            ^^^^^^^^^^^^^^^^^^^^
+                                                                            Add this!
+
+FINAL CONNECTION STRING FORMAT:
+-------------------------------
+mongodb+srv://[USERNAME]:[PASSWORD]@[CLUSTER].mongodb.net/z2b_legacy_builders?retryWrites=true&w=majority
+
+Example:
+mongodb+srv://z2badmin:MyPass123@cluster0.abc12.mongodb.net/z2b_legacy_builders?retryWrites=true&w=majority
+
+========================================
+PASTE YOUR CONNECTION STRING HERE
+========================================
+
+Once you have it, paste it here or tell me and I'll help you add it to the .env file!
+
+========================================

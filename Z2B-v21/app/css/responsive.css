@@ -1,0 +1,489 @@
+/* Z2B Legacy Builders - Mobile Responsive Styles */
+/* Mobile-First Responsive Design for Smartphones and Tablets */
+
+/* ==============================================
+   MOBILE BASE STYLES (320px - 480px)
+   ============================================== */
+
+/* Ensure all text is readable on mobile */
+@media (max-width: 480px) {
+    body {
+        font-size: 14px;
+        overflow-x: hidden;
+    }
+
+    /* Make all headings mobile-friendly */
+    h1 {
+        font-size: 1.8rem !important;
+        line-height: 1.3;
+    }
+
+    h2 {
+        font-size: 1.5rem !important;
+        line-height: 1.3;
+    }
+
+    h3 {
+        font-size: 1.3rem !important;
+        line-height: 1.3;
+    }
+
+    h4 {
+        font-size: 1.1rem !important;
+    }
+
+    h5 {
+        font-size: 1rem !important;
+    }
+
+    /* Navbar adjustments */
+    .navbar {
+        padding: 0.5rem 0 !important;
+    }
+
+    .navbar-brand {
+        font-size: 1.3rem !important;
+    }
+
+    .nav-link {
+        padding: 0.5rem 0.8rem !important;
+        font-size: 0.9rem;
+    }
+
+    /* Button adjustments - touch-friendly */
+    .btn, button {
+        min-height: 44px !important;
+        min-width: 44px !important;
+        padding: 0.6rem 1.2rem !important;
+        font-size: 0.9rem !important;
+    }
+
+    .btn-gold, .btn-primary, .btn-secondary {
+        padding: 0.7rem 1.5rem !important;
+        font-size: 0.95rem !important;
+    }
+
+    /* Container padding adjustments */
+    .container, .container-fluid {
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+    }
+
+    /* Card adjustments */
+    .card {
+        margin-bottom: 1rem !important;
+    }
+
+    .card-body {
+        padding: 1rem !important;
+    }
+
+    /* Form elements - touch-friendly */
+    input, select, textarea {
+        min-height: 44px !important;
+        font-size: 16px !important; /* Prevents zoom on iOS */
+        padding: 0.6rem !important;
+    }
+
+    /* Table responsiveness */
+    table {
+        font-size: 0.85rem;
+    }
+
+    table td, table th {
+        padding: 0.5rem !important;
+    }
+
+    /* Hide less important columns on mobile */
+    .hide-mobile {
+        display: none !important;
+    }
+
+    /* Stack tables vertically */
+    .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* ==============================================
+   SIDEBAR LAYOUT FIXES (Dashboard & Admin)
+   ============================================== */
+
+@media (max-width: 992px) {
+    /* Sidebar - hide by default, show with toggle */
+    .sidebar {
+        position: fixed !important;
+        transform: translateX(-100%) !important;
+        transition: transform 0.3s ease !important;
+        z-index: 1050 !important;
+        width: 280px !important;
+    }
+
+    .sidebar.active {
+        transform: translateX(0) !important;
+        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.5) !important;
+    }
+
+    /* Main content takes full width */
+    .main-content {
+        margin-left: 0 !important;
+        width: 100% !important;
+        padding: 1rem !important;
+    }
+
+    /* Mobile menu button */
+    .mobile-menu-btn {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        bottom: 1.5rem;
+        right: 1.5rem;
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        z-index: 1049;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Overlay for sidebar */
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1040;
+    }
+
+    .sidebar-overlay.active {
+        display: block;
+    }
+
+    /* Top header adjustments */
+    .top-header {
+        padding: 1rem !important;
+    }
+}
+
+/* ==============================================
+   MOBILE PORTRAIT (320px - 480px)
+   ============================================== */
+
+@media (max-width: 480px) {
+    /* Dashboard stats cards - stack vertically */
+    .stats-grid, .quick-actions-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+    }
+
+    /* Stat cards */
+    .stat-card {
+        padding: 1rem !important;
+        margin-bottom: 1rem;
+    }
+
+    .stat-value {
+        font-size: 1.8rem !important;
+    }
+
+    .stat-label {
+        font-size: 0.85rem !important;
+    }
+
+    /* Navigation items in sidebar */
+    .nav-item {
+        padding: 0.8rem 1rem !important;
+        font-size: 0.9rem !important;
+    }
+
+    .nav-item i {
+        font-size: 1.1rem !important;
+        margin-right: 0.8rem !important;
+    }
+
+    /* Marketplace cards - full width */
+    .product-card, .service-card {
+        width: 100% !important;
+        margin-bottom: 1rem !important;
+    }
+
+    /* Pricing tiers - stack vertically */
+    .tier-card, .pricing-card {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-bottom: 1.5rem !important;
+    }
+
+    /* Modal adjustments */
+    .modal-dialog {
+        margin: 0.5rem !important;
+        max-width: calc(100% - 1rem) !important;
+    }
+
+    .modal-content {
+        border-radius: 12px !important;
+    }
+
+    .modal-header, .modal-body, .modal-footer {
+        padding: 1rem !important;
+    }
+
+    /* Filter section */
+    .filter-section {
+        padding: 1rem !important;
+    }
+
+    .category-btn {
+        padding: 0.5rem 1rem !important;
+        font-size: 0.85rem !important;
+        margin: 0.3rem !important;
+    }
+
+    /* Hero section */
+    .hero {
+        min-height: 70vh !important;
+        padding: 2rem 1rem !important;
+    }
+
+    .hero h1 {
+        font-size: 2rem !important;
+    }
+
+    .hero p {
+        font-size: 1rem !important;
+    }
+
+    /* Feature cards */
+    .feature-card {
+        padding: 1.5rem 1rem !important;
+        margin-bottom: 1rem !important;
+    }
+
+    /* Hide decorative elements on very small screens */
+    .decorative-element,
+    .background-pattern,
+    .particle-background {
+        display: none !important;
+    }
+
+    /* Compensation grid */
+    .income-streams-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* Profile section */
+    .profile-section {
+        padding: 1rem !important;
+    }
+
+    .profile-avatar {
+        width: 60px !important;
+        height: 60px !important;
+    }
+
+    /* Footer */
+    footer {
+        padding: 2rem 1rem !important;
+        text-align: center;
+    }
+
+    .footer-links {
+        flex-direction: column !important;
+        gap: 1rem !important;
+    }
+}
+
+/* ==============================================
+   TABLET PORTRAIT (481px - 768px)
+   ============================================== */
+
+@media (min-width: 481px) and (max-width: 768px) {
+    /* Two-column layout for stats */
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 1rem !important;
+    }
+
+    /* Marketplace - 2 columns */
+    .marketplace-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 1.5rem !important;
+    }
+
+    /* Tiers - 2 columns */
+    .tiers-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 1.5rem !important;
+    }
+
+    /* Income streams - 2 columns */
+    .income-streams-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+
+    /* Buttons with icons - stack text */
+    .btn-with-icon {
+        flex-direction: column !important;
+        text-align: center !important;
+    }
+}
+
+/* ==============================================
+   TABLET LANDSCAPE (769px - 992px)
+   ============================================== */
+
+@media (min-width: 769px) and (max-width: 992px) {
+    /* Three-column layout */
+    .stats-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+    }
+
+    .marketplace-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+    }
+
+    /* Sidebar remains visible but narrower */
+    .sidebar {
+        width: 240px !important;
+    }
+
+    .main-content {
+        margin-left: 240px !important;
+    }
+}
+
+/* ==============================================
+   UTILITIES
+   ============================================== */
+
+/* Show/hide based on screen size */
+@media (max-width: 768px) {
+    .hide-mobile-tablet {
+        display: none !important;
+    }
+
+    .show-mobile-tablet {
+        display: block !important;
+    }
+}
+
+@media (min-width: 769px) {
+    .hide-desktop {
+        display: none !important;
+    }
+
+    .show-mobile-tablet {
+        display: none !important;
+    }
+}
+
+/* Touch-friendly spacing */
+@media (hover: none) and (pointer: coarse) {
+    /* This targets touch devices */
+    a, button, .clickable {
+        min-height: 44px;
+        min-width: 44px;
+        padding: 0.5rem;
+    }
+
+    /* Increase spacing between interactive elements */
+    .nav-item {
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* ==============================================
+   LANDSCAPE ORIENTATION FIXES
+   ============================================== */
+
+@media (max-height: 480px) and (orientation: landscape) {
+    /* Reduce vertical spacing in landscape */
+    .hero {
+        min-height: 100vh !important;
+        padding: 1rem !important;
+    }
+
+    .section-padding {
+        padding: 2rem 0 !important;
+    }
+
+    /* Make sidebar scrollable */
+    .sidebar {
+        overflow-y: auto !important;
+        max-height: 100vh !important;
+    }
+}
+
+/* ==============================================
+   PRINT STYLES
+   ============================================== */
+
+@media print {
+    .sidebar,
+    .mobile-menu-btn,
+    .navbar,
+    .no-print {
+        display: none !important;
+    }
+
+    .main-content {
+        margin-left: 0 !important;
+        width: 100% !important;
+    }
+
+    body {
+        font-size: 12pt;
+        color: black;
+        background: white;
+    }
+}
+
+/* ==============================================
+   ACCESSIBILITY IMPROVEMENTS
+   ============================================== */
+
+/* Larger touch targets for accessibility */
+@media (max-width: 768px) {
+    /* Ensure all clickable elements are at least 44x44px */
+    a:not(.btn),
+    button:not(.btn) {
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    /* Increase line height for better readability */
+    body {
+        line-height: 1.6;
+    }
+
+    /* Better focus indicators on mobile */
+    a:focus,
+    button:focus,
+    input:focus,
+    select:focus,
+    textarea:focus {
+        outline: 3px solid var(--gold, #FFD700);
+        outline-offset: 2px;
+    }
+}
+
+/* ==============================================
+   SAFE AREA INSETS (iPhone X+, etc.)
+   ============================================== */
+
+@supports (padding: max(0px)) {
+    body {
+        padding-left: max(0px, env(safe-area-inset-left));
+        padding-right: max(0px, env(safe-area-inset-right));
+    }
+
+    .mobile-menu-btn {
+        bottom: max(1.5rem, env(safe-area-inset-bottom));
+        right: max(1.5rem, env(safe-area-inset-right));
+    }
+}

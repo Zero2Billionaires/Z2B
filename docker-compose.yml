@@ -1,0 +1,161 @@
+version: '3.8'
+
+services:
+  # MongoDB Database
+  mongodb:
+    image: mongo:6.0
+    container_name: z2b-mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER:-admin}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:-changeme}
+      MONGO_INITDB_DATABASE: z2b
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_config:/data/configdb
+    networks:
+      - z2b-network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # MySQL Database (for marketplace)
+  mysql:
+    image: mysql:8.0
+    container_name: z2b-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-changeme}
+      MYSQL_DATABASE: z2b_marketplace
+      MYSQL_USER: ${MYSQL_USER:-z2b_user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-changeme}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./Z2B-v21/sql:/docker-entrypoint-initdb.d
+    networks:
+      - z2b-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis (for caching and sessions)
+  redis:
+    image: redis:7-alpine
+    container_name: z2b-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - z2b-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Z2B Application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: z2b-app
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      NODE_ENV: production
+      PORT: 5000
+
+      # MongoDB
+      MONGODB_URI: mongodb://${MONGO_ROOT_USER:-admin}:${MONGO_ROOT_PASSWORD:-changeme}@mongodb:27017/z2b?authSource=admin
+
+      # MySQL
+      DB_HOST: mysql
+      DB_USER: ${MYSQL_USER:-z2b_user}
+      DB_PASSWORD: ${MYSQL_PASSWORD:-changeme}
+      DB_NAME: z2b_marketplace
+
+      # Redis
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+
+      # JWT
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRE: 30d
+      JWT_COOKIE_EXPIRE: 30
+
+      # AI Configuration
+      AI_PROVIDER: ${AI_PROVIDER:-claude}
+      ENABLE_REAL_TIME_AI: ${ENABLE_REAL_TIME_AI:-false}
+      CLAUDE_API_KEY: ${CLAUDE_API_KEY}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+
+      # Email
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+
+      # Payment Gateways
+      PAYFAST_MERCHANT_ID: ${PAYFAST_MERCHANT_ID}
+      PAYFAST_MERCHANT_KEY: ${PAYFAST_MERCHANT_KEY}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
+
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - z2b-network
+    volumes:
+      - ./uploads:/app/uploads
+      - ./logs:/app/logs
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: z2b-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - ./client/dist:/usr/share/nginx/html:ro
+    depends_on:
+      - app
+    networks:
+      - z2b-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  mongodb_data:
+    driver: local
+  mongodb_config:
+    driver: local
+  mysql_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  z2b-network:
+    driver: bridge

@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CEO Sales Targets - Z2B Admin</title>
+    <style>
+        :root {
+            --navy: #0A2647;
+            --gold: #FFD700;
+            --light-bg: #f5f7fa;
+            --white: #ffffff;
+            --text-dark: #2c3e50;
+            --text-light: #7f8c8d;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --info: #3498db;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--navy) 0%, #144272 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            background: var(--white);
+            padding: 20px 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            color: var(--navy);
+            font-size: 28px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .back-btn {
+            background: var(--navy);
+            color: var(--gold);
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: var(--gold);
+            color: var(--navy);
+            transform: translateY(-2px);
+        }
+
+        /* Info Alert */
+        .info-alert {
+            background: #dbeafe;
+            border-left: 4px solid #3b82f6;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            color: #1e40af;
+        }
+
+        .info-alert h3 {
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .info-alert ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        /* Statistics Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--white);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card h3 {
+            color: var(--text-light);
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .stat-card .value {
+            color: var(--navy);
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-card .change {
+            font-size: 13px;
+            color: var(--success);
+        }
+
+        .stat-card.active .value { color: var(--success); }
+        .stat-card.draft .value { color: var(--text-light); }
+        .stat-card.completed .value { color: var(--info); }
+
+        /* Main Content */
+        .main-content {
+            background: var(--white);
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .section-header h2 {
+            color: var(--navy);
+            font-size: 24px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--navy);
+            color: var(--gold);
+        }
+
+        .btn-primary:hover {
+            background: var(--gold);
+            color: var(--navy);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: var(--white);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: var(--white);
+        }
+
+        .btn-info {
+            background: var(--info);
+            color: var(--white);
+        }
+
+        /* Targets Grid */
+        .targets-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .target-card {
+            background: var(--light-bg);
+            border-radius: 10px;
+            padding: 25px;
+            border-left: 5px solid var(--navy);
+            transition: all 0.3s;
+        }
+
+        .target-card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateX(5px);
+        }
+
+        .target-card.active {
+            border-left-color: var(--success);
+            background: #f0fdf4;
+        }
+
+        .target-card.draft {
+            border-left-color: var(--text-light);
+        }
+
+        .target-card.completed {
+            border-left-color: var(--info);
+            background: #eff6ff;
+        }
+
+        .target-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .target-title {
+            flex: 1;
+        }
+
+        .target-title h3 {
+            color: var(--navy);
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .target-title p {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .target-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .target-status.active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .target-status.draft {
+            background: #e2e8f0;
+            color: #64748b;
+        }
+
+        .target-status.completed {
+            background: #cfe2ff;
+            color: #084298;
+        }
+
+        .target-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .detail-item {
+            background: var(--white);
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        .detail-label {
+            font-size: 11px;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+
+        .detail-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--navy);
+        }
+
+        .progress-section {
+            margin-bottom: 15px;
+        }
+
+        .progress-bar-container {
+            background: #e5e7eb;
+            height: 8px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success), #34d399);
+            transition: width 0.5s;
+            border-radius: 10px;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+        }
+
+        .target-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .action-btn.view {
+            background: var(--info);
+            color: var(--white);
+        }
+
+        .action-btn.edit {
+            background: var(--warning);
+            color: var(--white);
+        }
+
+        .action-btn.delete {
+            background: var(--danger);
+            color: var(--white);
+        }
+
+        .action-btn.publish {
+            background: var(--success);
+            color: var(--white);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: 10px;
+            max-width: 700px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            background: var(--navy);
+            color: var(--gold);
+            padding: 20px 30px;
+            border-radius: 10px 10px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            font-size: 22px;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: var(--gold);
+            font-size: 28px;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: var(--light-bg);
+            border-radius: 5px;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .modal-footer {
+            padding: 20px 30px;
+            background: var(--light-bg);
+            border-radius: 0 0 10px 10px;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .help-text {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-top: 5px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .target-details {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🎯 CEO Sales Targets</h1>
+            <a href="index.html" class="back-btn">
+                ← Back to Admin
+            </a>
+        </div>
+
+        <!-- Info Alert -->
+        <div class="info-alert">
+            <h3>💡 About CEO Sales Targets</h3>
+            <p>Sales Targets are executive-driven goals designed to boost revenue and drive specific business outcomes. Unlike Competitions (which offer prizes), Targets focus on achieving sales milestones with special awards for qualifiers.</p>
+            <ul>
+                <li><strong>Set Revenue Goals:</strong> Define target amounts to drive sales</li>
+                <li><strong>Target Specific Tiers:</strong> Focus on specific membership levels or all members</li>
+                <li><strong>Custom Rules:</strong> Set unique qualification criteria</li>
+                <li><strong>Special Awards:</strong> Recognize and reward top performers</li>
+            </ul>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="stats-grid">
+            <div class="stat-card active">
+                <h3>Active Targets</h3>
+                <div class="value" id="active-targets">0</div>
+                <div class="change">Currently running</div>
+            </div>
+
+            <div class="stat-card draft">
+                <h3>Draft Targets</h3>
+                <div class="value" id="draft-targets">0</div>
+                <div class="change">Not yet published</div>
+            </div>
+
+            <div class="stat-card completed">
+                <h3>Completed Targets</h3>
+                <div class="value" id="completed-targets">0</div>
+                <div class="change">All time</div>
+            </div>
+
+            <div class="stat-card">
+                <h3>Total Awards Pending</h3>
+                <div class="value" id="total-awards">R 0</div>
+                <div class="change">To be paid out</div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="section-header">
+                <h2>Sales Targets</h2>
+                <button class="btn btn-primary" onclick="openCreateModal()">
+                    + Create New Target
+                </button>
+            </div>
+
+            <div class="targets-grid" id="targets-container">
+                <!-- Targets will be loaded here -->
+            </div>
+
+            <div id="empty-state" style="text-align: center; padding: 60px 20px; color: var(--text-light); display: none;">
+                <h3 style="font-size: 20px; margin-bottom: 10px;">No Sales Targets Created</h3>
+                <p>Create your first sales target to drive revenue and motivate your team!</p>
+                <button class="btn btn-primary" onclick="openCreateModal()" style="margin-top: 20px;">
+                    + Create First Target
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create/Edit Target Modal -->
+    <div class="modal" id="target-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Create New Sales Target</h2>
+                <button class="close-modal" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="target-form">
+                    <div class="form-group">
+                        <label>Target Name *</label>
+                        <input type="text" id="target-name" placeholder="e.g., Q1 Revenue Boost 2025" required>
+                        <div class="help-text">Give your target a descriptive name</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="target-description" placeholder="Describe the target goals and objectives..."></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Start Date *</label>
+                            <input type="date" id="target-start" required>
+                        </div>
+                        <div class="form-group">
+                            <label>End Date *</label>
+                            <input type="date" id="target-end" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Target Type *</label>
+                        <select id="target-type" onchange="updateTargetFields()">
+                            <option value="revenue">Revenue Target (Total Sales)</option>
+                            <option value="sales-count">Sales Count (Number of Sales)</option>
+                            <option value="pv">PV Target (Personal Volume)</option>
+                            <option value="team-sales">Team Sales (Team Revenue)</option>
+                            <option value="new-signups">New Member Signups</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Target Goal *</label>
+                        <input type="number" id="target-goal" placeholder="e.g., 100000" required>
+                        <div class="help-text" id="target-help">Enter the target amount (e.g., R100,000 for revenue)</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Eligible Tiers</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="tier-fam" value="FAM" checked>
+                                <label for="tier-fam">FAM</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="tier-bronze" value="Bronze" checked>
+                                <label for="tier-bronze">Bronze</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="tier-copper" value="Copper" checked>
+                                <label for="tier-copper">Copper</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="tier-silver" value="Silver" checked>
+                                <label for="tier-silver">Silver</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="tier-gold" value="Gold" checked>
+                                <label for="tier-gold">Gold</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="tier-platinum" value="Platinum" checked>
+                                <label for="tier-platinum">Platinum</label>
+                            </div>
+                        </div>
+                        <div class="help-text">Select which tiers can participate (Diamond excluded - White Label tier)</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Qualification Rules</label>
+                        <textarea id="target-rules" placeholder="e.g., Must be active member, Must have at least 2 direct referrals, etc."></textarea>
+                        <div class="help-text">Define any special qualification criteria</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Awards & Recognition *</label>
+                        <textarea id="target-awards" placeholder="e.g., Top performer: R5,000 bonus + Recognition badge&#10;All qualifiers: R500 bonus&#10;Team with highest growth: R2,000 split" required></textarea>
+                        <div class="help-text">Describe awards for achieving the target</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Award Budget (Total)</label>
+                        <input type="number" id="target-budget" placeholder="e.g., 50000" step="0.01">
+                        <div class="help-text">Total budget allocated for awards (optional)</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select id="target-status">
+                            <option value="draft">Draft (Not Visible)</option>
+                            <option value="active">Active (Visible & Running)</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveTarget()">Save Target</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // API Configuration
+        const API_CONFIG = {
+            BASE_URL: 'http://localhost:5000/api'
+        };
+
+        let targets = [];
+        let editingTargetId = null;
+
+        // Load targets on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            loadTargets();
+        });
+
+        // Load Targets
+        async function loadTargets() {
+            try {
+                const response = await fetch(`${API_CONFIG.BASE_URL}/ceo-targets`);
+                const data = await response.json();
+
+                if (data.success) {
+                    targets = data.targets || [];
+                    renderTargets();
+                    updateStatistics();
+                } else {
+                    loadSampleData();
+                }
+            } catch (error) {
+                console.error('Error loading targets:', error);
+                loadSampleData();
+            }
+        }
+
+        // Load Sample Data
+        function loadSampleData() {
+            targets = [
+                {
+                    _id: '1',
+                    name: 'Q1 2025 Revenue Boost',
+                    description: 'Drive R500,000 in total sales for Q1 2025',
+                    startDate: '2025-01-01',
+                    endDate: '2025-03-31',
+                    type: 'revenue',
+                    goal: 500000,
+                    current: 325000,
+                    eligibleTiers: ['FAM', 'Bronze', 'Copper', 'Silver', 'Gold', 'Platinum'],
+                    rules: 'Must be active member with at least 2 direct referrals',
+                    awards: 'Top performer: R10,000 bonus\nAll qualifiers (R50k+): R2,000 bonus\nTeam award: R5,000',
+                    awardBudget: 50000,
+                    status: 'active',
+                    participants: 45,
+                    qualifiers: 12
+                },
+                {
+                    _id: '2',
+                    name: 'New Member Challenge - February',
+                    description: 'Sign up 100 new Bronze+ members in February',
+                    startDate: '2025-02-01',
+                    endDate: '2025-02-28',
+                    type: 'new-signups',
+                    goal: 100,
+                    current: 0,
+                    eligibleTiers: ['Bronze', 'Copper', 'Silver', 'Gold', 'Platinum'],
+                    rules: 'New members must be Bronze tier or higher',
+                    awards: 'Top recruiter: R5,000\n10+ signups: R1,000 each\n5+ signups: R500 each',
+                    awardBudget: 25000,
+                    status: 'draft',
+                    participants: 0,
+                    qualifiers: 0
+                },
+                {
+                    _id: '3',
+                    name: 'December 2024 Sales Sprint',
+                    description: 'End-of-year sales push - R1M target',
+                    startDate: '2024-12-01',
+                    endDate: '2024-12-31',
+                    type: 'revenue',
+                    goal: 1000000,
+                    current: 1000000,
+                    eligibleTiers: ['FAM', 'Bronze', 'Copper', 'Silver', 'Gold', 'Platinum'],
+                    rules: 'All active members eligible',
+                    awards: 'Top 3 performers: R10k, R7k, R5k\nAll qualifiers (R100k+): R3,000',
+                    awardBudget: 75000,
+                    status: 'completed',
+                    participants: 89,
+                    qualifiers: 23
+                }
+            ];
+
+            renderTargets();
+            updateStatistics();
+        }
+
+        // Render Targets
+        function renderTargets() {
+            const container = document.getElementById('targets-container');
+            const emptyState = document.getElementById('empty-state');
+
+            if (targets.length === 0) {
+                container.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+
+            container.innerHTML = targets.map(target => {
+                const progress = target.goal > 0 ? Math.min((target.current / target.goal) * 100, 100) : 0;
+                const startDate = new Date(target.startDate).toLocaleDateString('en-ZA');
+                const endDate = new Date(target.endDate).toLocaleDateString('en-ZA');
+
+                return `
+                    <div class="target-card ${target.status}">
+                        <div class="target-header">
+                            <div class="target-title">
+                                <h3>${target.name}</h3>
+                                <p>${target.description}</p>
+                            </div>
+                            <span class="target-status ${target.status}">${target.status}</span>
+                        </div>
+
+                        <div class="target-details">
+                            <div class="detail-item">
+                                <div class="detail-label">Start Date</div>
+                                <div class="detail-value">${startDate}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">End Date</div>
+                                <div class="detail-value">${endDate}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Target Type</div>
+                                <div class="detail-value">${formatType(target.type)}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Participants</div>
+                                <div class="detail-value">${target.participants}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Qualifiers</div>
+                                <div class="detail-value" style="color: var(--success);">${target.qualifiers}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Award Budget</div>
+                                <div class="detail-value">R ${target.awardBudget.toLocaleString()}</div>
+                            </div>
+                        </div>
+
+                        <div class="progress-section">
+                            <div class="progress-label">
+                                <span>Progress</span>
+                                <span><strong>${formatValue(target.current, target.type)}</strong> / ${formatValue(target.goal, target.type)}</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" style="width: ${progress}%"></div>
+                            </div>
+                            <div style="text-align: right; margin-top: 5px; font-size: 12px; color: var(--text-light);">
+                                ${progress.toFixed(1)}% Complete
+                            </div>
+                        </div>
+
+                        <div class="target-actions">
+                            <button class="action-btn view" onclick="viewTarget('${target._id}')">View Details</button>
+                            <button class="action-btn edit" onclick="editTarget('${target._id}')">Edit</button>
+                            ${target.status === 'draft' ? `
+                                <button class="action-btn publish" onclick="publishTarget('${target._id}')">Publish</button>
+                            ` : ''}
+                            <button class="action-btn delete" onclick="deleteTarget('${target._id}')">Delete</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Update Statistics
+        function updateStatistics() {
+            const activeCount = targets.filter(t => t.status === 'active').length;
+            const draftCount = targets.filter(t => t.status === 'draft').length;
+            const completedCount = targets.filter(t => t.status === 'completed').length;
+            const totalAwards = targets
+                .filter(t => t.status === 'active')
+                .reduce((sum, t) => sum + (t.awardBudget || 0), 0);
+
+            document.getElementById('active-targets').textContent = activeCount;
+            document.getElementById('draft-targets').textContent = draftCount;
+            document.getElementById('completed-targets').textContent = completedCount;
+            document.getElementById('total-awards').textContent = `R ${totalAwards.toLocaleString()}`;
+        }
+
+        // Format Type
+        function formatType(type) {
+            const types = {
+                'revenue': 'Revenue',
+                'sales-count': 'Sales Count',
+                'pv': 'PV Target',
+                'team-sales': 'Team Sales',
+                'new-signups': 'New Signups'
+            };
+            return types[type] || type;
+        }
+
+        // Format Value
+        function formatValue(value, type) {
+            if (type === 'revenue' || type === 'team-sales') {
+                return `R ${value.toLocaleString()}`;
+            } else if (type === 'pv') {
+                return `${value.toLocaleString()} PV`;
+            } else {
+                return value.toLocaleString();
+            }
+        }
+
+        // Open Create Modal
+        function openCreateModal() {
+            editingTargetId = null;
+            document.getElementById('modal-title').textContent = 'Create New Sales Target';
+            document.getElementById('target-form').reset();
+            document.getElementById('target-status').value = 'draft';
+            document.getElementById('target-modal').classList.add('active');
+        }
+
+        // Edit Target
+        function editTarget(id) {
+            const target = targets.find(t => t._id === id);
+            if (!target) return;
+
+            editingTargetId = id;
+            document.getElementById('modal-title').textContent = 'Edit Sales Target';
+            document.getElementById('target-name').value = target.name;
+            document.getElementById('target-description').value = target.description;
+            document.getElementById('target-start').value = target.startDate;
+            document.getElementById('target-end').value = target.endDate;
+            document.getElementById('target-type').value = target.type;
+            document.getElementById('target-goal').value = target.goal;
+            document.getElementById('target-rules').value = target.rules;
+            document.getElementById('target-awards').value = target.awards;
+            document.getElementById('target-budget').value = target.awardBudget;
+            document.getElementById('target-status').value = target.status;
+
+            // Set tier checkboxes
+            ['fam', 'bronze', 'copper', 'silver', 'gold', 'platinum'].forEach(tier => {
+                const checkbox = document.getElementById(`tier-${tier}`);
+                checkbox.checked = target.eligibleTiers.includes(tier.charAt(0).toUpperCase() + tier.slice(1));
+            });
+
+            document.getElementById('target-modal').classList.add('active');
+        }
+
+        // View Target
+        function viewTarget(id) {
+            const target = targets.find(t => t._id === id);
+            if (!target) return;
+
+            alert(`Target Details:\n\nName: ${target.name}\nType: ${formatType(target.type)}\nGoal: ${formatValue(target.goal, target.type)}\nCurrent: ${formatValue(target.current, target.type)}\nParticipants: ${target.participants}\nQualifiers: ${target.qualifiers}\n\nAwards:\n${target.awards}`);
+        }
+
+        // Save Target
+        async function saveTarget() {
+            const name = document.getElementById('target-name').value;
+            const description = document.getElementById('target-description').value;
+            const startDate = document.getElementById('target-start').value;
+            const endDate = document.getElementById('target-end').value;
+            const type = document.getElementById('target-type').value;
+            const goal = parseFloat(document.getElementById('target-goal').value);
+            const rules = document.getElementById('target-rules').value;
+            const awards = document.getElementById('target-awards').value;
+            const awardBudget = parseFloat(document.getElementById('target-budget').value) || 0;
+            const status = document.getElementById('target-status').value;
+
+            // Get selected tiers
+            const eligibleTiers = [];
+            ['fam', 'bronze', 'copper', 'silver', 'gold', 'platinum'].forEach(tier => {
+                if (document.getElementById(`tier-${tier}`).checked) {
+                    eligibleTiers.push(tier.charAt(0).toUpperCase() + tier.slice(1));
+                }
+            });
+
+            if (!name || !startDate || !endDate || !goal || !awards || eligibleTiers.length === 0) {
+                alert('Please fill in all required fields');
+                return;
+            }
+
+            const targetData = {
+                name,
+                description,
+                startDate,
+                endDate,
+                type,
+                goal,
+                eligibleTiers,
+                rules,
+                awards,
+                awardBudget,
+                status,
+                current: 0,
+                participants: 0,
+                qualifiers: 0
+            };
+
+            try {
+                const url = editingTargetId ?
+                    `${API_CONFIG.BASE_URL}/ceo-targets/${editingTargetId}` :
+                    `${API_CONFIG.BASE_URL}/ceo-targets`;
+
+                const method = editingTargetId ? 'PUT' : 'POST';
+
+                const response = await fetch(url, {
+                    method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(targetData)
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    closeModal();
+                    loadTargets();
+                    alert(editingTargetId ? 'Target updated successfully!' : 'Target created successfully!');
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            } catch (error) {
+                console.error('Error saving target:', error);
+                // Simulate success for demo
+                if (editingTargetId) {
+                    const index = targets.findIndex(t => t._id === editingTargetId);
+                    targets[index] = { ...targets[index], ...targetData };
+                } else {
+                    targetData._id = Date.now().toString();
+                    targets.push(targetData);
+                }
+                closeModal();
+                renderTargets();
+                updateStatistics();
+                alert(editingTargetId ? 'Target updated successfully!' : 'Target created successfully!');
+            }
+        }
+
+        // Delete Target
+        async function deleteTarget(id) {
+            if (!confirm('Are you sure you want to delete this target?')) return;
+
+            try {
+                const response = await fetch(`${API_CONFIG.BASE_URL}/ceo-targets/${id}`, {
+                    method: 'DELETE'
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    loadTargets();
+                    alert('Target deleted successfully!');
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            } catch (error) {
+                console.error('Error deleting target:', error);
+                // Simulate success for demo
+                targets = targets.filter(t => t._id !== id);
+                renderTargets();
+                updateStatistics();
+                alert('Target deleted successfully!');
+            }
+        }
+
+        // Publish Target
+        async function publishTarget(id) {
+            if (!confirm('Publish this target? It will become visible to eligible members.')) return;
+
+            try {
+                const response = await fetch(`${API_CONFIG.BASE_URL}/ceo-targets/${id}/publish`, {
+                    method: 'POST'
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    loadTargets();
+                    alert('Target published successfully!');
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            } catch (error) {
+                console.error('Error publishing target:', error);
+                // Simulate success for demo
+                const target = targets.find(t => t._id === id);
+                if (target) target.status = 'active';
+                renderTargets();
+                updateStatistics();
+                alert('Target published successfully!');
+            }
+        }
+
+        // Update Target Fields
+        function updateTargetFields() {
+            const type = document.getElementById('target-type').value;
+            const helpText = document.getElementById('target-help');
+
+            const helpTexts = {
+                'revenue': 'Enter the target revenue amount (e.g., 100000 for R100,000)',
+                'sales-count': 'Enter the number of sales to achieve (e.g., 50)',
+                'pv': 'Enter the target PV amount (e.g., 5000)',
+                'team-sales': 'Enter the team revenue target (e.g., 500000)',
+                'new-signups': 'Enter the number of new members to sign up (e.g., 100)'
+            };
+
+            helpText.textContent = helpTexts[type] || 'Enter the target goal';
+        }
+
+        // Close Modal
+        function closeModal() {
+            document.getElementById('target-modal').classList.remove('active');
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('target-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

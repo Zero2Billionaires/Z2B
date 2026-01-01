@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Service - Z2B Marketplace</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --navy-blue: #0A2647;
+            --gold: #FFD700;
+            --orange: #FF6B35;
+            --light-gold: #FFF4CC;
+            --dark-navy: #051428;
+            --white: #FFFFFF;
+            --primary: #FFD700;
+            --success: #FF6B35;
+            --warning: #FFB800;
+            --danger: #FF6B6B;
+            --dark: #0A2647;
+            --light: #f8f9fa;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(to bottom, var(--navy-blue), var(--dark-navy));
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .service-info {
+            display: flex;
+            gap: 2rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid #f0f0f0;
+        }
+
+        .service-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary), var(--success));
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            flex-shrink: 0;
+        }
+
+        .service-details h2 {
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .service-meta {
+            color: #777;
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .service-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .booking-grid {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 2rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .card h3 {
+            color: #333;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5rem;
+        }
+
+        .calendar-header {
+            text-align: center;
+            font-weight: 600;
+            color: #555;
+            padding: 0.8rem;
+            font-size: 0.9rem;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            border: 2px solid #f0f0f0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .calendar-day:hover {
+            border-color: var(--primary);
+            background: rgba(108, 99, 255, 0.05);
+        }
+
+        .calendar-day.disabled {
+            color: #ccc;
+            cursor: not-allowed;
+            background: #f8f9fa;
+        }
+
+        .calendar-day.disabled:hover {
+            border-color: #f0f0f0;
+            background: #f8f9fa;
+        }
+
+        .calendar-day.selected {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .calendar-day.today {
+            border-color: var(--success);
+            color: var(--success);
+            font-weight: 700;
+        }
+
+        .time-slots {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+
+        .time-slot {
+            padding: 1rem;
+            border: 2px solid #f0f0f0;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .time-slot:hover {
+            border-color: var(--primary);
+            background: rgba(108, 99, 255, 0.05);
+        }
+
+        .time-slot.selected {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .time-slot.booked {
+            background: #f8f9fa;
+            color: #ccc;
+            cursor: not-allowed;
+            text-decoration: line-through;
+        }
+
+        .booking-summary {
+            position: sticky;
+            top: 2rem;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+
+        .summary-total {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+            padding-top: 1rem;
+            border-top: 2px solid var(--primary);
+            margin-top: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5952d4;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(108, 99, 255, 0.3);
+        }
+
+        .btn-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, rgba(108, 99, 255, 0.1), rgba(0, 255, 136, 0.1));
+            border-left: 4px solid var(--primary);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        .selected-datetime {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .selected-datetime .date {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .selected-datetime .time {
+            font-size: 1rem;
+            color: #555;
+            margin-top: 0.3rem;
+        }
+
+        @media (max-width: 968px) {
+            .booking-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .booking-summary {
+                position: static;
+            }
+
+            .time-slots {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>
+                <i class="fas fa-calendar-alt"></i>
+                Book Your Service
+            </h1>
+            <div class="service-info">
+                <div class="service-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="service-details">
+                    <h2>1-Hour MLM Strategy Consultation</h2>
+                    <p style="color: #777; margin: 0.5rem 0;">
+                        Expert guidance on growing your network marketing business
+                    </p>
+                    <div class="service-meta">
+                        <span><i class="fas fa-clock"></i> 60 minutes</span>
+                        <span><i class="fas fa-video"></i> Video Call</span>
+                        <span><i class="fas fa-user"></i> John Doe, Expert</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="booking-grid">
+            <!-- Left Column - Calendar & Times -->
+            <div>
+                <!-- Select Date -->
+                <div class="card">
+                    <h3><i class="fas fa-calendar"></i> Select Date</h3>
+
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <button class="btn" style="width: auto; background: #f0f0f0; color: #333;" onclick="prevMonth()">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <h4 id="currentMonth" style="color: var(--primary);">January 2026</h4>
+                        <button class="btn" style="width: auto; background: #f0f0f0; color: #333;" onclick="nextMonth()">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+
+                    <div class="calendar">
+                        <div class="calendar-header">Sun</div>
+                        <div class="calendar-header">Mon</div>
+                        <div class="calendar-header">Tue</div>
+                        <div class="calendar-header">Wed</div>
+                        <div class="calendar-header">Thu</div>
+                        <div class="calendar-header">Fri</div>
+                        <div class="calendar-header">Sat</div>
+
+                        <!-- Days (Generated by JS) -->
+                        <div class="calendar-day disabled">29</div>
+                        <div class="calendar-day disabled">30</div>
+                        <div class="calendar-day disabled">31</div>
+                        <div class="calendar-day disabled">1</div>
+                        <div class="calendar-day disabled">2</div>
+                        <div class="calendar-day disabled">3</div>
+                        <div class="calendar-day disabled">4</div>
+                        <div class="calendar-day disabled">5</div>
+                        <div class="calendar-day disabled">6</div>
+                        <div class="calendar-day disabled">7</div>
+                        <div class="calendar-day disabled">8</div>
+                        <div class="calendar-day disabled">9</div>
+                        <div class="calendar-day disabled">10</div>
+                        <div class="calendar-day today">11</div>
+                        <div class="calendar-day" onclick="selectDate(this, '12')">12</div>
+                        <div class="calendar-day" onclick="selectDate(this, '13')">13</div>
+                        <div class="calendar-day" onclick="selectDate(this, '14')">14</div>
+                        <div class="calendar-day" onclick="selectDate(this, '15')">15</div>
+                        <div class="calendar-day" onclick="selectDate(this, '16')">16</div>
+                        <div class="calendar-day" onclick="selectDate(this, '17')">17</div>
+                        <div class="calendar-day" onclick="selectDate(this, '18')">18</div>
+                        <div class="calendar-day" onclick="selectDate(this, '19')">19</div>
+                        <div class="calendar-day" onclick="selectDate(this, '20')">20</div>
+                        <div class="calendar-day" onclick="selectDate(this, '21')">21</div>
+                        <div class="calendar-day" onclick="selectDate(this, '22')">22</div>
+                        <div class="calendar-day" onclick="selectDate(this, '23')">23</div>
+                        <div class="calendar-day" onclick="selectDate(this, '24')">24</div>
+                        <div class="calendar-day" onclick="selectDate(this, '25')">25</div>
+                        <div class="calendar-day" onclick="selectDate(this, '26')">26</div>
+                        <div class="calendar-day" onclick="selectDate(this, '27')">27</div>
+                        <div class="calendar-day" onclick="selectDate(this, '28')">28</div>
+                        <div class="calendar-day" onclick="selectDate(this, '29')">29</div>
+                        <div class="calendar-day" onclick="selectDate(this, '30')">30</div>
+                        <div class="calendar-day" onclick="selectDate(this, '31')">31</div>
+                    </div>
+                </div>
+
+                <!-- Select Time -->
+                <div class="card">
+                    <h3><i class="fas fa-clock"></i> Select Time</h3>
+                    <p id="timePrompt" style="color: #777; margin-bottom: 1rem;">
+                        Please select a date first
+                    </p>
+
+                    <div class="time-slots" id="timeSlots">
+                        <!-- Will be populated after date selection -->
+                    </div>
+                </div>
+
+                <!-- Additional Notes -->
+                <div class="card">
+                    <h3><i class="fas fa-comment"></i> Additional Notes (Optional)</h3>
+                    <textarea class="form-control" id="notes" rows="4"
+                              placeholder="Tell us what you'd like to discuss or any specific goals for this session..."></textarea>
+                </div>
+            </div>
+
+            <!-- Right Column - Booking Summary -->
+            <div>
+                <div class="card booking-summary">
+                    <h3><i class="fas fa-receipt"></i> Booking Summary</h3>
+
+                    <div id="selectedDateTime" style="display: none;">
+                        <div class="selected-datetime">
+                            <div class="date" id="displayDate">-</div>
+                            <div class="time" id="displayTime">-</div>
+                        </div>
+                    </div>
+
+                    <div class="summary-item">
+                        <span>Service</span>
+                        <span style="font-weight: 600;">MLM Strategy Consultation</span>
+                    </div>
+
+                    <div class="summary-item">
+                        <span>Duration</span>
+                        <span>60 minutes</span>
+                    </div>
+
+                    <div class="summary-item">
+                        <span>Type</span>
+                        <span>Video Call (Zoom)</span>
+                    </div>
+
+                    <div class="summary-item">
+                        <span>Expert</span>
+                        <span>John Doe</span>
+                    </div>
+
+                    <div class="summary-item summary-total">
+                        <span>Total</span>
+                        <span>R 1,075</span>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>✓ Already Purchased</strong><br>
+                        <small style="color: #666;">
+                            This service was included in your order #Z2B-20260111-0001
+                        </small>
+                    </div>
+
+                    <button class="btn btn-primary" id="confirmBtn" onclick="confirmBooking()" disabled>
+                        <i class="fas fa-check"></i>
+                        Confirm Booking
+                    </button>
+
+                    <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 2px solid #f0f0f0;">
+                        <h4 style="margin-bottom: 1rem; font-size: 0.95rem; color: #555;">
+                            <i class="fas fa-info-circle"></i> What to Expect
+                        </h4>
+                        <ul style="color: #777; font-size: 0.85rem; line-height: 1.8; margin-left: 1.5rem;">
+                            <li>Confirmation email with Zoom link</li>
+                            <li>Reminder 24 hours before</li>
+                            <li>Reminder 1 hour before</li>
+                            <li>Session recording available</li>
+                            <li>Follow-up notes via email</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedDate = null;
+        let selectedTime = null;
+
+        // Select date
+        function selectDate(element, day) {
+            // Remove previous selection
+            document.querySelectorAll('.calendar-day').forEach(el => {
+                el.classList.remove('selected');
+            });
+
+            // Mark selected
+            element.classList.add('selected');
+            selectedDate = `2026-01-${day.padStart(2, '0')}`;
+
+            // Show available time slots
+            loadTimeSlots(selectedDate);
+
+            // Update display
+            document.getElementById('timePrompt').textContent = `Available times for January ${day}, 2026:`;
+            document.getElementById('displayDate').textContent = `January ${day}, 2026`;
+            document.getElementById('selectedDateTime').style.display = 'block';
+        }
+
+        // Load available time slots for selected date
+        function loadTimeSlots(date) {
+            const timeSlotsDiv = document.getElementById('timeSlots');
+
+            // Sample time slots (in production: fetch from API based on provider availability)
+            const slots = [
+                { time: '09:00', available: true },
+                { time: '10:00', available: true },
+                { time: '11:00', available: false }, // Booked
+                { time: '12:00', available: true },
+                { time: '13:00', available: true },
+                { time: '14:00', available: true },
+                { time: '15:00', available: false }, // Booked
+                { time: '16:00', available: true },
+                { time: '17:00', available: true }
+            ];
+
+            timeSlotsDiv.innerHTML = '';
+
+            slots.forEach(slot => {
+                const slotDiv = document.createElement('div');
+                slotDiv.className = 'time-slot' + (slot.available ? '' : ' booked');
+                slotDiv.textContent = slot.time;
+
+                if (slot.available) {
+                    slotDiv.onclick = () => selectTime(slotDiv, slot.time);
+                }
+
+                timeSlotsDiv.appendChild(slotDiv);
+            });
+        }
+
+        // Select time
+        function selectTime(element, time) {
+            // Remove previous selection
+            document.querySelectorAll('.time-slot').forEach(el => {
+                el.classList.remove('selected');
+            });
+
+            // Mark selected
+            element.classList.add('selected');
+            selectedTime = time;
+
+            // Update display
+            document.getElementById('displayTime').textContent = time;
+
+            // Enable confirm button
+            document.getElementById('confirmBtn').disabled = false;
+        }
+
+        // Confirm booking
+        function confirmBooking() {
+            if (!selectedDate || !selectedTime) {
+                alert('Please select both date and time');
+                return;
+            }
+
+            const notes = document.getElementById('notes').value;
+
+            const bookingData = {
+                service_id: 3,
+                date: selectedDate,
+                time: selectedTime,
+                notes: notes,
+                order_id: 'Z2B-20260111-0001'
+            };
+
+            console.log('Booking:', bookingData);
+
+            // In production: Send to API
+            // Show confirmation
+            alert('✅ Booking Confirmed!\n\n' +
+                  `Date: ${selectedDate}\n` +
+                  `Time: ${selectedTime}\n\n` +
+                  'You will receive a confirmation email with your Zoom link shortly.');
+
+            // Redirect to confirmation page
+            window.location.href = 'booking-confirmation.html';
+        }
+
+        // Calendar navigation
+        function prevMonth() {
+            alert('Previous month (implement date library for production)');
+        }
+
+        function nextMonth() {
+            alert('Next month (implement date library for production)');
+        }
+    </script>
+
+    <!-- Z2B Ecosystem Integration -->
+    <script src="../js/app-config.js"></script>
+    <script src="../js/ecosystem-footer.js"></script>
+</body>
+</html>

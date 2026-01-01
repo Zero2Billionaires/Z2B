@@ -1,0 +1,1599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GLOWIE - AI App Builder | Z2B Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Royal Gold - Main Brand Colors */
+            --royal-gold: #D4AF37;
+            --royal-gold-light: #F4E4C1;
+            --royal-gold-dark: #B8960D;
+            --royal-gold-shine: #FFE5A0;
+            --royal-gold-deep: #9B7E0D;
+
+            /* Supporting Colors */
+            --deep-navy: #0B1A2A;
+            --navy-blue: #0A2647;
+            --dark-navy: #051428;
+            --accent-orange: #FF6B35;
+            --purple: #9B59B6;
+            --success: #4ECDC4;
+            --white: #FFFFFF;
+            --light-bg: #FAF8F3;
+
+            /* Legacy aliases for gradual transition */
+            --gold: var(--royal-gold);
+            --light-gold: var(--royal-gold-light);
+            --orange: var(--accent-orange);
+            --border-color: rgba(212, 175, 55, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--deep-navy) 0%, var(--navy-blue) 100%);
+            color: var(--white);
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            width: 280px;
+            background: rgba(11, 26, 42, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem 0;
+            border-right: 2px solid var(--gold);
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .sidebar-brand {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 0 1.5rem 2rem;
+            border-bottom: 3px solid var(--royal-gold);
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(184, 150, 13, 0.05));
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+        }
+
+        .sidebar-brand h2 {
+            color: var(--royal-gold-shine);
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+            text-shadow:
+                0 0 20px rgba(212, 175, 55, 0.8),
+                0 0 30px rgba(255, 229, 160, 0.5),
+                0 2px 4px rgba(0, 0, 0, 0.3);
+            letter-spacing: 1.5px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        .sidebar-brand p {
+            color: var(--royal-gold-light);
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin: 0;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .sidebar-logo {
+            width: 60px;
+            height: auto;
+            display: block;
+            margin: 0 auto 1rem auto;
+            filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.5));
+        }
+
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            color: var(--white);
+            text-decoration: none;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+        }
+
+        .sidebar-nav a:hover,
+        .sidebar-nav a.active {
+            background: rgba(255, 215, 0, 0.1);
+            border-left-color: var(--gold);
+            color: var(--gold);
+        }
+
+        .sidebar-nav a i {
+            margin-right: 1rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .page-header {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--royal-gold-shine);
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 25px rgba(212, 175, 55, 0.9),
+                         0 0 50px rgba(255, 229, 160, 0.7),
+                         0 0 75px rgba(212, 175, 55, 0.5);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        .page-header h1 i {
+            filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.8))
+                    drop-shadow(0 0 30px rgba(255, 229, 160, 0.6));
+            animation: bulbGlow 1.5s ease-in-out infinite alternate;
+        }
+
+        .page-header p {
+            color: var(--white);
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        /* Royal Gold Glow Animations */
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 20px rgba(212, 175, 55, 0.8),
+                             0 0 40px rgba(212, 175, 55, 0.6),
+                             0 0 60px rgba(212, 175, 55, 0.4);
+            }
+            to {
+                text-shadow: 0 0 30px rgba(212, 175, 55, 1),
+                             0 0 60px rgba(255, 229, 160, 0.8),
+                             0 0 90px rgba(212, 175, 55, 0.6);
+            }
+        }
+
+        @keyframes bulbGlow {
+            from {
+                filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.7))
+                        drop-shadow(0 0 20px rgba(212, 175, 55, 0.5));
+            }
+            to {
+                filter: drop-shadow(0 0 20px rgba(212, 175, 55, 1))
+                        drop-shadow(0 0 40px rgba(255, 229, 160, 0.8))
+                        drop-shadow(0 0 60px rgba(212, 175, 55, 0.6));
+            }
+        }
+
+        /* Builder Grid */
+        .builder-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .builder-panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .builder-panel h3 {
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        .form-group textarea,
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border-radius: 10px;
+            border: 2px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s;
+        }
+
+        .form-group textarea:focus,
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--gold);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        /* App Type Grid */
+        .app-type-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .app-type-btn {
+            padding: 1rem;
+            border-radius: 10px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--white);
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .app-type-btn:hover {
+            transform: scale(1.05);
+            border-color: var(--gold);
+        }
+
+        .app-type-btn.active {
+            background: var(--gold);
+            color: var(--navy-blue);
+            border-color: var(--gold);
+        }
+
+        .app-type-btn i {
+            display: block;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Features Checklist */
+        .features-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.8rem;
+        }
+
+        .feature-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .feature-checkbox input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .feature-checkbox label {
+            cursor: pointer;
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        /* Generate Button */
+        .btn-generate {
+            width: 100%;
+            padding: 1.2rem;
+            background: linear-gradient(135deg, var(--gold), var(--orange));
+            color: var(--navy-blue);
+            border: none;
+            border-radius: 15px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1.5rem;
+        }
+
+        .btn-generate:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.5);
+        }
+
+        .btn-generate:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Preview Area */
+        .preview-container {
+            position: relative;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            min-height: 600px;
+        }
+
+        .preview-header {
+            background: var(--deep-navy);
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .preview-iframe {
+            width: 100%;
+            height: 550px;
+            border: none;
+            background: white;
+        }
+
+        .preview-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .btn-action {
+            flex: 1;
+            padding: 0.8rem;
+            border-radius: 10px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+        }
+
+        .btn-download {
+            background: var(--success);
+        }
+
+        .btn-code {
+            background: var(--purple);
+        }
+
+        .btn-new {
+            background: var(--orange);
+        }
+
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Code Modal */
+        .code-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .code-modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .code-content {
+            background: var(--deep-navy);
+            border-radius: 15px;
+            padding: 2rem;
+            max-width: 900px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .code-header h3 {
+            color: var(--gold);
+            margin: 0;
+        }
+
+        .btn-close-modal {
+            background: var(--orange);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            border-radius: 10px;
+            padding: 1.5rem;
+            overflow-x: auto;
+        }
+
+        .code-block pre {
+            margin: 0;
+            color: #d4d4d4;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #666;
+        }
+
+        .empty-state i {
+            font-size: 5rem;
+            color: #ccc;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state h3 {
+            color: #999;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 0;
+                overflow: hidden;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .builder-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .app-type-grid,
+            .features-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <img src="images/z2b-logo.png" alt="Z2B Logo" class="sidebar-logo">
+            <h2><i class="fas fa-gem"></i> Z2B LEGACY BUILDERS</h2>
+            <p>Transforming Employees to Entrepreneurs</p>
+        </div>
+
+        <ul class="sidebar-nav">
+            <li><a href="#" class="active"><i class="fas fa-plus-circle"></i> New App</a></li>
+            <li><a href="#my-apps"><i class="fas fa-folder"></i> My Apps</a></li>
+            <li><a href="#examples"><i class="fas fa-star"></i> Examples</a></li>
+            <li><a href="#tips"><i class="fas fa-lightbulb"></i> Tips & Guide</a></li>
+            <li><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1><i class="fas fa-lightbulb"></i> GLOWIE - AI App Builder</h1>
+            <p>Build instant apps with AI in seconds</p>
+        </div>
+
+        <!-- Sales Pitch Section -->
+        <div class="builder-panel" style="margin-bottom: 2rem; background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 107, 53, 0.1)); border: 2px solid var(--gold);">
+            <div style="text-align: center;">
+                <h2 style="color: var(--gold); font-size: 2rem; margin-bottom: 1rem; font-weight: 800;">
+                    <i class="fas fa-bolt"></i> Turn Ideas Into Reality in Seconds
+                </h2>
+                <p style="font-size: 1.2rem; margin-bottom: 1.5rem; line-height: 1.8;">
+                    While your competitors spend <strong style="color: #ff4444;">weeks struggling</strong> with developers, designers, and endless revisions...
+                    <br><strong style="color: var(--gold); font-size: 1.3rem;">GLOWIE builds your app in under 60 seconds.</strong>
+                </p>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 2rem;">
+                    <div style="text-align: center; padding: 1.5rem; background: rgba(255, 255, 255, 0.05); border-radius: 15px; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                        <i class="fas fa-rocket" style="font-size: 3rem; color: var(--gold); margin-bottom: 1rem;"></i>
+                        <h4 style="color: var(--gold); margin-bottom: 0.5rem;">Lightning Speed</h4>
+                        <p style="opacity: 0.9;">From idea to working app in 30-60 seconds. Not days. Not hours. <strong>Seconds.</strong></p>
+                    </div>
+                    <div style="text-align: center; padding: 1.5rem; background: rgba(255, 255, 255, 0.05); border-radius: 15px; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                        <i class="fas fa-trophy" style="font-size: 3rem; color: var(--orange); margin-bottom: 1rem;"></i>
+                        <h4 style="color: var(--orange); margin-bottom: 0.5rem;">Outrun Competition</h4>
+                        <p style="opacity: 0.9;">Launch faster, test more ideas, pivot instantly. <strong>Speed is your unfair advantage.</strong></p>
+                    </div>
+                    <div style="text-align: center; padding: 1.5rem; background: rgba(255, 255, 255, 0.05); border-radius: 15px; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                        <i class="fas fa-magic" style="font-size: 3rem; color: var(--success); margin-bottom: 1rem;"></i>
+                        <h4 style="color: var(--success); margin-bottom: 0.5rem;">Zero Code Required</h4>
+                        <p style="opacity: 0.9;">Just describe what you want. GLOWIE handles <strong>all the coding, design, and technical stuff.</strong></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Prompting Tips Section -->
+        <div class="builder-panel" style="margin-bottom: 2rem;">
+            <h3 style="color: var(--gold); margin-bottom: 1.5rem; text-align: center;">
+                <i class="fas fa-lightbulb"></i> Pro Tips: How to Prompt GLOWIE Like a Boss
+            </h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                <div>
+                    <h4 style="color: var(--success); margin-bottom: 1rem;"><i class="fas fa-check-circle"></i> DO This:</h4>
+                    <ul style="list-style: none; padding: 0; line-height: 2;">
+                        <li style="margin-bottom: 0.8rem;"><strong style="color: var(--gold);">Be specific:</strong> "Build a fitness tracker with calorie counter, workout timer, and progress charts"</li>
+                        <li style="margin-bottom: 0.8rem;"><strong style="color: var(--gold);">Mention colors:</strong> "Use blue and white theme with modern gradients"</li>
+                        <li style="margin-bottom: 0.8rem;"><strong style="color: var(--gold);">Define features:</strong> "Include dark mode toggle, save data locally, mobile responsive"</li>
+                        <li style="margin-bottom: 0.8rem;"><strong style="color: var(--gold);">State the purpose:</strong> "For busy professionals who need quick meal planning"</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="color: #ff4444; margin-bottom: 1rem;"><i class="fas fa-times-circle"></i> DON'T Do This:</h4>
+                    <ul style="list-style: none; padding: 0; line-height: 2;">
+                        <li style="margin-bottom: 0.8rem;"><span style="opacity: 0.6;">"Make me an app"</span> - Too vague!</li>
+                        <li style="margin-bottom: 0.8rem;"><span style="opacity: 0.6;">"Something for fitness"</span> - Not specific enough</li>
+                        <li style="margin-bottom: 0.8rem;"><span style="opacity: 0.6;">"Build it like that other app"</span> - GLOWIE doesn't know which one</li>
+                        <li style="margin-bottom: 0.8rem;"><span style="opacity: 0.6;">"Just do whatever"</span> - Be the director of your vision!</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- App Examples Section -->
+        <div class="builder-panel" style="margin-bottom: 2rem;">
+            <h3 style="color: var(--gold); margin-bottom: 1.5rem; text-align: center;">
+                <i class="fas fa-star"></i> What Can GLOWIE Build? (Literally Anything!)
+            </h3>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
+                <div style="background: rgba(255, 215, 0, 0.05); padding: 1.5rem; border-radius: 15px; border-left: 4px solid var(--gold);">
+                    <h4 style="color: var(--gold); margin-bottom: 0.8rem;"><i class="fas fa-tasks"></i> Productivity Apps</h4>
+                    <ul style="list-style: none; padding: 0; opacity: 0.9; line-height: 1.8;">
+                        <li>• Task managers & to-do lists</li>
+                        <li>• Habit trackers</li>
+                        <li>• Note-taking apps</li>
+                        <li>• Time trackers</li>
+                        <li>• Pomodoro timers</li>
+                    </ul>
+                </div>
+                <div style="background: rgba(255, 107, 53, 0.05); padding: 1.5rem; border-radius: 15px; border-left: 4px solid var(--orange);">
+                    <h4 style="color: var(--orange); margin-bottom: 0.8rem;"><i class="fas fa-store"></i> Business Tools</h4>
+                    <ul style="list-style: none; padding: 0; opacity: 0.9; line-height: 1.8;">
+                        <li>• Lead capture forms</li>
+                        <li>• Product catalogs</li>
+                        <li>• Quote calculators</li>
+                        <li>• Booking systems</li>
+                        <li>• Invoice generators</li>
+                    </ul>
+                </div>
+                <div style="background: rgba(78, 205, 196, 0.05); padding: 1.5rem; border-radius: 15px; border-left: 4px solid var(--success);">
+                    <h4 style="color: var(--success); margin-bottom: 0.8rem;"><i class="fas fa-heart"></i> Lifestyle & Fun</h4>
+                    <ul style="list-style: none; padding: 0; opacity: 0.9; line-height: 1.8;">
+                        <li>• Recipe organizers</li>
+                        <li>• Workout planners</li>
+                        <li>• Budget trackers</li>
+                        <li>• Quiz games</li>
+                        <li>• Daily journals</li>
+                    </ul>
+                </div>
+                <div style="background: rgba(155, 89, 182, 0.05); padding: 1.5rem; border-radius: 15px; border-left: 4px solid var(--purple);">
+                    <h4 style="color: var(--purple); margin-bottom: 0.8rem;"><i class="fas fa-chart-line"></i> Data & Analytics</h4>
+                    <ul style="list-style: none; padding: 0; opacity: 0.9; line-height: 1.8;">
+                        <li>• ROI calculators</li>
+                        <li>• Progress dashboards</li>
+                        <li>• Data visualizers</li>
+                        <li>• Report generators</li>
+                        <li>• Stat trackers</li>
+                    </ul>
+                </div>
+                <div style="background: rgba(255, 215, 0, 0.05); padding: 1.5rem; border-radius: 15px; border-left: 4px solid var(--gold);">
+                    <h4 style="color: var(--gold); margin-bottom: 0.8rem;"><i class="fas fa-graduation-cap"></i> Education</h4>
+                    <ul style="list-style: none; padding: 0; opacity: 0.9; line-height: 1.8;">
+                        <li>• Flashcard apps</li>
+                        <li>• Study planners</li>
+                        <li>• Quiz makers</li>
+                        <li>• Grade calculators</li>
+                        <li>• Learning trackers</li>
+                    </ul>
+                </div>
+                <div style="background: rgba(255, 107, 53, 0.05); padding: 1.5rem; border-radius: 15px; border-left: 4px solid var(--orange);">
+                    <h4 style="color: var(--orange); margin-bottom: 0.8rem;"><i class="fas fa-code"></i> Developer Tools</h4>
+                    <ul style="list-style: none; padding: 0; opacity: 0.9; line-height: 1.8;">
+                        <li>• API testers</li>
+                        <li>• Code snippets library</li>
+                        <li>• Regex builders</li>
+                        <li>• Color palette generators</li>
+                        <li>• JSON formatters</li>
+                    </ul>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 2rem; padding: 1.5rem; background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 107, 53, 0.1)); border-radius: 15px;">
+                <p style="font-size: 1.2rem; margin: 0;">
+                    <strong style="color: var(--gold);">And that's just scratching the surface!</strong>
+                    If you can describe it, GLOWIE can build it. 🚀
+                </p>
+            </div>
+        </div>
+
+        <!-- Builder Grid -->
+        <div class="builder-grid">
+            <!-- Left Panel: Builder -->
+            <div class="builder-panel">
+                <h3><i class="fas fa-cog"></i> App Builder</h3>
+
+                <!-- App Description -->
+                <div class="form-group">
+                    <label>Describe Your App</label>
+                    <textarea id="appDescription" placeholder="Example: Build me a task manager app with a clean design. Users should be able to add tasks, mark them complete, and delete them. Include a dark mode toggle and make it mobile responsive."></textarea>
+                    <small style="color: var(--gold); display: block; margin-top: 0.5rem;">
+                        <i class="fas fa-info-circle"></i> Be specific! The more detail you provide, the better your app will be.
+                    </small>
+                </div>
+
+                <!-- App Type -->
+                <div class="form-group">
+                    <label>App Type</label>
+                    <div class="app-type-grid">
+                        <div class="app-type-btn active" data-type="landing">
+                            <i class="fas fa-home"></i>
+                            <div>Landing Page</div>
+                        </div>
+                        <div class="app-type-btn" data-type="dashboard">
+                            <i class="fas fa-chart-line"></i>
+                            <div>Dashboard</div>
+                        </div>
+                        <div class="app-type-btn" data-type="form">
+                            <i class="fas fa-clipboard-list"></i>
+                            <div>Form/Survey</div>
+                        </div>
+                        <div class="app-type-btn" data-type="game">
+                            <i class="fas fa-gamepad"></i>
+                            <div>Game</div>
+                        </div>
+                        <div class="app-type-btn" data-type="tool">
+                            <i class="fas fa-tools"></i>
+                            <div>Tool/Utility</div>
+                        </div>
+                        <div class="app-type-btn" data-type="other">
+                            <i class="fas fa-star"></i>
+                            <div>Other</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Features -->
+                <div class="form-group">
+                    <label>Features to Include</label>
+                    <div class="features-list">
+                        <div class="feature-checkbox">
+                            <input type="checkbox" id="featureMobile" checked>
+                            <label for="featureMobile">Mobile Responsive</label>
+                        </div>
+                        <div class="feature-checkbox">
+                            <input type="checkbox" id="featureDark">
+                            <label for="featureDark">Dark Mode</label>
+                        </div>
+                        <div class="feature-checkbox">
+                            <input type="checkbox" id="featureStorage" checked>
+                            <label for="featureStorage">Local Storage</label>
+                        </div>
+                        <div class="feature-checkbox">
+                            <input type="checkbox" id="featureAnimations">
+                            <label for="featureAnimations">Animations</label>
+                        </div>
+                        <div class="feature-checkbox">
+                            <input type="checkbox" id="featureIcons" checked>
+                            <label for="featureIcons">Icons</label>
+                        </div>
+                        <div class="feature-checkbox">
+                            <input type="checkbox" id="featureModern" checked>
+                            <label for="featureModern">Modern Design</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video Generation (NEW) -->
+                <div class="form-group" style="border-top: 2px solid rgba(255, 215, 0, 0.2); padding-top: 1.5rem; margin-top: 1.5rem;">
+                    <label style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-video" style="color: var(--orange);"></i>
+                        Generate Promotional Video (Optional)
+                    </label>
+                    <div class="feature-checkbox" style="margin-bottom: 1rem;">
+                        <input type="checkbox" id="featureVideo">
+                        <label for="featureVideo">Include AI Video Demo</label>
+                    </div>
+                    <div id="videoOptions" style="display: none; background: rgba(255, 255, 255, 0.05); padding: 1rem; border-radius: 10px;">
+                        <small style="color: var(--light-gold); display: block; margin-bottom: 1rem;">
+                            <i class="fas fa-info-circle"></i> We'll generate a talking avatar video to demo your app!
+                        </small>
+                        <input type="text" id="videoScript" placeholder="Video script (optional - we'll auto-generate)"
+                               style="width: 100%; padding: 0.6rem; margin-bottom: 0.8rem; border-radius: 5px; border: 1px solid rgba(255, 215, 0, 0.3); background: rgba(255, 255, 255, 0.1); color: white;">
+                        <select id="videoVoice" style="width: 100%; padding: 0.6rem; border-radius: 5px; border: 1px solid rgba(255, 215, 0, 0.3); background: rgba(255, 255, 255, 0.1); color: white;">
+                            <option value="en-US-JennyNeural">Jenny (US Female)</option>
+                            <option value="en-US-GuyNeural">Guy (US Male)</option>
+                            <option value="en-GB-SoniaNeural">Sonia (UK Female)</option>
+                            <option value="en-US-AriaNeural">Aria (US Female - Cheerful)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Generate Button -->
+                <button class="btn-generate" id="btnGenerate">
+                    <i class="fas fa-magic"></i> Generate App with AI
+                </button>
+            </div>
+
+            <!-- Right Panel: Preview -->
+            <div class="builder-panel">
+                <h3><i class="fas fa-eye"></i> Live Preview</h3>
+
+                <div class="preview-container">
+                    <div class="preview-header">
+                        <span><i class="fas fa-desktop"></i> App Preview</span>
+                        <span id="previewStatus">Ready to build</span>
+                    </div>
+                    <div id="previewContent">
+                        <div class="empty-state">
+                            <i class="fas fa-rocket"></i>
+                            <h3>No App Yet</h3>
+                            <p>Describe your app and click "Generate" to see the magic happen!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="preview-actions">
+                    <button class="btn-action btn-download" id="btnDownload" disabled>
+                        <i class="fas fa-download"></i> Download
+                    </button>
+                    <button class="btn-action btn-code" id="btnViewCode" disabled>
+                        <i class="fas fa-code"></i> View Code
+                    </button>
+                    <button class="btn-action btn-new" id="btnNew">
+                        <i class="fas fa-plus"></i> New App
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Code Modal -->
+    <div class="code-modal" id="codeModal">
+        <div class="code-content">
+            <div class="code-header">
+                <h3><i class="fas fa-code"></i> Generated Code</h3>
+                <button class="btn-close-modal" onclick="closeCodeModal()">
+                    <i class="fas fa-times"></i> Close
+                </button>
+            </div>
+            <div class="code-block">
+                <pre id="codeDisplay"></pre>
+            </div>
+            <button class="btn-generate" style="margin-top: 1.5rem;" onclick="copyCode()">
+                <i class="fas fa-copy"></i> Copy Code
+            </button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Configuration
+        const API_BASE_URL = 'http://localhost:5000/api';
+
+        // State
+        let selectedAppType = 'landing';
+        let generatedCode = '';
+        let currentAppId = null;
+        let authToken = null;
+
+        // Initialize
+        window.addEventListener('DOMContentLoaded', () => {
+            loadAuthToken();
+            loadSettings();
+            setupEventListeners();
+        });
+
+        // Load auth token from localStorage
+        function loadAuthToken() {
+            authToken = localStorage.getItem('z2b_auth_token');
+            if (!authToken) {
+                alert('Please login to use Glowie. Redirecting to dashboard...');
+                // window.location.href = 'dashboard.html';
+            }
+        }
+
+        // Load user settings
+        async function loadSettings() {
+            if (!authToken) return;
+
+            try {
+                // Load usage stats only
+                loadUsageStats();
+            } catch (error) {
+                console.error('Load settings error:', error);
+            }
+        }
+
+        // Load usage statistics
+        async function loadUsageStats() {
+            if (!authToken) return;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/glowie/stats`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success) {
+                        const stats = data.data;
+                        console.log('Usage stats:', stats);
+                        // Could display this in UI
+                    }
+                }
+            } catch (error) {
+                console.error('Load stats error:', error);
+            }
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // App type selection
+            document.querySelectorAll('.app-type-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.app-type-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    selectedAppType = btn.dataset.type;
+                });
+            });
+
+            // Video feature toggle
+            document.getElementById('featureVideo').addEventListener('change', (e) => {
+                document.getElementById('videoOptions').style.display = e.target.checked ? 'block' : 'none';
+            });
+
+            // Generate button
+            document.getElementById('btnGenerate').addEventListener('click', generateApp);
+
+            // Download button
+            document.getElementById('btnDownload').addEventListener('click', downloadApp);
+
+            // View code button
+            document.getElementById('btnViewCode').addEventListener('click', viewCode);
+
+            // New app button
+            document.getElementById('btnNew').addEventListener('click', newApp);
+        }
+
+        // Generate app
+        async function generateApp() {
+            const btn = document.getElementById('btnGenerate');
+            const description = document.getElementById('appDescription').value.trim();
+
+            // Validation
+            if (!description) {
+                alert('Please describe your app!');
+                return;
+            }
+
+            if (!authToken) {
+                alert('Please login to use Glowie.');
+                return;
+            }
+
+            // Get selected features
+            const features = {
+                mobile: document.getElementById('featureMobile').checked,
+                darkMode: document.getElementById('featureDark').checked,
+                localStorage: document.getElementById('featureStorage').checked,
+                animations: document.getElementById('featureAnimations').checked,
+                icons: document.getElementById('featureIcons').checked,
+                modern: document.getElementById('featureModern').checked
+            };
+
+            // Disable button
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Building with AI...';
+            document.getElementById('previewStatus').textContent = 'Generating...';
+
+            try {
+                // Call backend API (color scheme is set by admin)
+                const response = await fetch(`${API_BASE_URL}/glowie/generate`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        description,
+                        appType: selectedAppType,
+                        features,
+                        colorScheme: 'z2b' // Default Z2B branding
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Failed to generate app');
+                }
+
+                if (!data.success) {
+                    throw new Error(data.message || 'Generation failed');
+                }
+
+                // Save the app ID
+                currentAppId = data.data.appId;
+
+                // Fetch the generated code
+                const codeResponse = await fetch(`${API_BASE_URL}/glowie/app/${currentAppId}/code`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+
+                const codeData = await codeResponse.json();
+
+                if (codeData.success) {
+                    generatedCode = codeData.data.code;
+
+                    // Display preview
+                    displayPreview(generatedCode);
+
+                    // Enable actions
+                    document.getElementById('btnDownload').disabled = false;
+                    document.getElementById('btnViewCode').disabled = false;
+
+                    document.getElementById('previewStatus').textContent = 'App Generated!';
+
+                    // Check if video generation is requested
+                    const generateVideo = document.getElementById('featureVideo').checked;
+
+                    if (generateVideo) {
+                        // Generate promotional video
+                        await generatePromoVideo(description, data.data.appName);
+                    } else {
+                        alert(`✅ App generated successfully! Time: ${data.data.generationTime}ms\nRemaining generations: ${data.data.remainingGenerations}`);
+                    }
+                }
+
+            } catch (error) {
+                console.error('Generation error:', error);
+                alert('Error generating app: ' + error.message);
+                document.getElementById('previewStatus').textContent = 'Error';
+            }
+
+            // Re-enable button
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-magic"></i> Generate App with AI';
+        }
+
+        // Display preview
+        function displayPreview(code) {
+            generatedCode = code;
+
+            // Create iframe to display the app
+            const previewContent = document.getElementById('previewContent');
+            previewContent.innerHTML = `
+                <iframe class="preview-iframe" id="previewIframe"></iframe>
+            `;
+
+            // Write code to iframe
+            const iframe = document.getElementById('previewIframe');
+            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+            iframeDoc.open();
+            iframeDoc.write(code);
+            iframeDoc.close();
+        }
+
+        // Download app
+        async function downloadApp() {
+            if (!generatedCode) {
+                alert('No app to download!');
+                return;
+            }
+
+            // Track download in backend
+            if (currentAppId && authToken) {
+                try {
+                    await fetch(`${API_BASE_URL}/glowie/app/${currentAppId}/download`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${authToken}`
+                        }
+                    });
+                } catch (error) {
+                    console.error('Track download error:', error);
+                }
+            }
+
+            // Create blob
+            const blob = new Blob([generatedCode], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+
+            // Create download link
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'my-app-' + Date.now() + '.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            alert('✅ App downloaded successfully!');
+        }
+
+        // View code
+        function viewCode() {
+            if (!generatedCode) {
+                alert('No code to view!');
+                return;
+            }
+
+            document.getElementById('codeDisplay').textContent = generatedCode;
+            document.getElementById('codeModal').classList.add('show');
+        }
+
+        // Close code modal
+        function closeCodeModal() {
+            document.getElementById('codeModal').classList.remove('show');
+        }
+
+        // Copy code
+        function copyCode() {
+            navigator.clipboard.writeText(generatedCode).then(() => {
+                alert('✅ Code copied to clipboard!');
+            });
+        }
+
+        // New app
+        function newApp() {
+            if (generatedCode && !confirm('Start a new app? Current app will be lost if not downloaded.')) {
+                return;
+            }
+
+            // Reset
+            document.getElementById('appDescription').value = '';
+            document.getElementById('previewContent').innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-rocket"></i>
+                    <h3>No App Yet</h3>
+                    <p>Describe your app and click "Generate" to see the magic happen!</p>
+                </div>
+            `;
+            generatedCode = '';
+            document.getElementById('btnDownload').disabled = true;
+            document.getElementById('btnViewCode').disabled = true;
+            document.getElementById('previewStatus').textContent = 'Ready to build';
+        }
+
+        // Generate promotional video with VIDZIE
+        async function generatePromoVideo(appDescription, appName) {
+            try {
+                document.getElementById('previewStatus').textContent = 'Generating video...';
+
+                // Get user's video preferences
+                let videoScript = document.getElementById('videoScript').value.trim();
+                const videoVoice = document.getElementById('videoVoice').value;
+
+                // Auto-generate script if not provided
+                if (!videoScript) {
+                    videoScript = `Hi! I'm excited to show you ${appName}. ${appDescription.substring(0, 200)}. This app was built instantly with Glowie AI. Try it out and see how easy it is to create amazing applications!`;
+                }
+
+                // Default avatar image (Z2B branded avatar)
+                const defaultAvatar = 'https://api.dicebear.com/7.x/avataaars/svg?seed=Glowie';
+
+                // Call VIDZIE API
+                const videoResponse = await fetch(`${API_BASE_URL}/vidzie/generate`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        videoName: `${appName} - Demo Video`,
+                        description: `Promotional video for ${appName}`,
+                        videoType: 'marketing',
+                        purpose: 'glowie-app',
+                        sourceImage: defaultAvatar,
+                        script: videoScript,
+                        voiceId: videoVoice,
+                        settings: {
+                            resolution: 'HD'
+                        }
+                    })
+                });
+
+                const videoData = await videoResponse.json();
+
+                if (videoData.success) {
+                    const videoId = videoData.data.videoId;
+
+                    // Show video generation in progress
+                    alert(`✅ App generated!\n🎬 Video is being generated... This will take 10-30 seconds.`);
+
+                    // Poll for video completion
+                    pollVideoCompletion(videoId);
+                } else {
+                    throw new Error(videoData.message || 'Failed to generate video');
+                }
+
+            } catch (error) {
+                console.error('Video generation error:', error);
+                alert(`⚠️ App generated successfully but video generation failed: ${error.message}`);
+            }
+        }
+
+        // Poll for video completion
+        async function pollVideoCompletion(videoId, attempts = 0) {
+            const maxAttempts = 60; // 5 minutes
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/vidzie/video/${videoId}/status`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    const { status, progress, videoUrl } = data.data;
+
+                    document.getElementById('previewStatus').textContent = `Video: ${status} (${progress}%)`;
+
+                    if (status === 'completed' && videoUrl) {
+                        // Video is ready!
+                        alert(`🎥 Video generated successfully!\n\nYou can view it at: ${videoUrl}`);
+
+                        // Add video to preview area
+                        addVideoToPreview(videoUrl);
+
+                        document.getElementById('previewStatus').textContent = 'App & Video Ready!';
+                        return;
+                    }
+
+                    if (status === 'failed') {
+                        alert('⚠️ Video generation failed, but your app is ready!');
+                        return;
+                    }
+
+                    // Continue polling
+                    if (attempts < maxAttempts) {
+                        setTimeout(() => pollVideoCompletion(videoId, attempts + 1), 5000);
+                    } else {
+                        alert('⚠️ Video generation timeout. Check VIDZIE dashboard for status.');
+                    }
+                }
+
+            } catch (error) {
+                console.error('Poll video error:', error);
+            }
+        }
+
+        // Add video to preview area
+        function addVideoToPreview(videoUrl) {
+            const previewContent = document.getElementById('previewContent');
+            const videoSection = document.createElement('div');
+            videoSection.style.cssText = 'background: var(--navy-blue); padding: 1rem; border-radius: 10px; margin-top: 1rem;';
+            videoSection.innerHTML = `
+                <h4 style="color: var(--gold); margin-bottom: 0.5rem;">
+                    <i class="fas fa-video"></i> Promotional Video
+                </h4>
+                <video controls style="width: 100%; border-radius: 5px;">
+                    <source src="${videoUrl}" type="video/mp4">
+                </video>
+                <div style="margin-top: 0.5rem;">
+                    <a href="${videoUrl}" download style="color: var(--gold); text-decoration: none;">
+                        <i class="fas fa-download"></i> Download Video
+                    </a>
+                </div>
+            `;
+            previewContent.appendChild(videoSection);
+        }
+
+    </script>
+
+    <!-- Z2B Ecosystem Integration -->
+    <script src="../js/app-config.js"></script>
+    <script src="../js/ecosystem-footer.js"></script>
+    <!-- Footer -->
+    <footer style="text-align: center; padding: 30px 20px; margin-top: 50px; background: rgba(255,255,255,0.05); border-top: 1px solid rgba(255,255,255,0.1);">
+        <p style="margin: 0; color: rgba(255,255,255,0.7); font-size: 14px;">
+            Built with <i class="fas fa-heart" style="color: #ff6b6b; animation: heartbeat 1.5s infinite;"></i> by <strong style="color: #FFD700;">Z2B Legacy Builders</strong>
+        </p>
+    </footer>
+    <style>
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.1); }
+            50% { transform: scale(1); }
+        }
+    </style>
+
+<!-- Universal App Pricing Button & Modal - Insert before <script src="js/cart-manager.js"></script>\n
+<!-- Floating Cart Icon -->
+<style>
+.floating-cart-icon {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, #00D9FF, #0088cc);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 25px rgba(0, 217, 255, 0.5);
+    cursor: pointer;
+    z-index: 9998;
+    animation: pulse-cart 2s infinite;
+    transition: transform 0.3s;
+}
+.floating-cart-icon:hover {
+    transform: scale(1.1);
+}
+@keyframes pulse-cart {
+    0%, 100% { box-shadow: 0 8px 25px rgba(0, 217, 255, 0.5); }
+    50% { box-shadow: 0 8px 40px rgba(0, 217, 255, 0.8); }
+}
+.floating-cart-icon i {
+    font-size: 2rem;
+    color: #fff;
+}
+.cart-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: linear-gradient(135deg, #FFD700, #FF8C00);
+    color: #000;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: bold;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+</style>
+
+<div class="floating-cart-icon" onclick="window.location.href='cart.html'" title="View Cart">
+    <i class="fas fa-shopping-cart"></i>
+    <span class="cart-badge" style="display: none;">0</span>
+</div>
+
+<script>
+// Update cart badge when cart changes
+if (typeof z2bCart !== 'undefined') {
+    z2bCart.updateCartBadge();
+}
+</script>
+\n</body> -->
+<style>
+.app-buy-fab {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, #FFD700, #FF8C00);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 25px rgba(255, 215, 0, 0.5);
+    cursor: pointer;
+    z-index: 9999;
+    animation: pulse 2s infinite;
+    transition: transform 0.3s;
+}
+.app-buy-fab:hover {
+    transform: scale(1.1);
+}
+@keyframes pulse {
+    0%, 100% { box-shadow: 0 8px 25px rgba(255, 215, 0, 0.5); }
+    50% { box-shadow: 0 8px 40px rgba(255, 215, 0, 0.8); }
+}
+.app-buy-fab i {
+    font-size: 2rem;
+    color: #0A2647;
+}
+</style>
+
+<!-- Floating Buy Button -->
+<div class="app-buy-fab" onclick="showAppPricing()" title="Buy This App">
+    <i class="fas fa-shopping-cart"></i>
+</div>
+
+<!-- Pricing Modal -->
+<div id="appPricingModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); z-index: 10000; padding: 2rem; overflow-y: auto;">
+    <div style="max-width: 800px; margin: 2rem auto; background: linear-gradient(135deg, #0A2647 0%, #051428 100%); border-radius: 20px; border: 3px solid #FFD700; box-shadow: 0 0 50px rgba(255, 215, 0, 0.3); padding: 3rem; position: relative;">
+
+        <!-- Close Button -->
+        <button onclick="closePricingModal()" style="position: absolute; top: 1.5rem; right: 1.5rem; background: none; border: none; color: #999; font-size: 2.5rem; cursor: pointer; width: 50px; height: 50px; line-height: 1; transition: color 0.3s;">&times;</button>
+
+        <!-- Header -->
+        <div style="text-align: center; margin-bottom: 2.5rem;">
+            <h2 style="font-size: 2.5rem; background: linear-gradient(135deg, #FFD700, #FF8C00); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; font-weight: bold;">Get <span class="app-name-display"></span></h2>
+            <p style="font-size: 1.2rem; color: #FFD700;">Choose the best option for you</p>
+        </div>
+
+        <!-- Pricing Options -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+
+            <!-- Standalone Option -->
+            <div style="background: rgba(255, 255, 255, 0.05); border: 2px solid #666; border-radius: 15px; padding: 2rem; text-align: center; transition: all 0.3s;" onmouseover="this.style.borderColor='#FFD700'" onmouseout="this.style.borderColor='#666'">
+                <div style="font-size: 1rem; color: #00D9FF; margin-bottom: 1rem; font-weight: 600;">STANDALONE</div>
+                <div style="font-size: 3rem; font-weight: bold; color: #FFD700; margin-bottom: 0.5rem;">R<span class="app-price-display"></span></div>
+                <div style="font-size: 1rem; color: #ccc; margin-bottom: 1.5rem;">/month</div>
+                <div style="color: #999; font-size: 0.9rem; line-height: 1.6; margin-bottom: 1.5rem;">
+                    <div style="margin-bottom: 0.5rem;">✓ Full access to <span class="app-name-display"></span></div>
+                    <div style="margin-bottom: 0.5rem;">✓ AI Fuel included</div>
+                    <div style="margin-bottom: 0.5rem;">✓ Updates & support</div>
+                    <div style="margin-bottom: 0.5rem;">✓ Cancel anytime</div>
+                </div>
+                <button onclick="buyStandalone()" style="width: 100%; padding: 1rem; background: linear-gradient(135deg, #666, #444); border: 2px solid #FFD700; border-radius: 10px; color: #fff; font-weight: bold; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.background='linear-gradient(135deg, #FFD700, #FF8C00)'; this.style.color='#000'" onmouseout="this.style.background='linear-gradient(135deg, #666, #444)'; this.style.color='#fff'">
+                    Buy Now
+                </button>
+            </div>
+
+            <!-- Z2B Membership Option -->
+            <div style="background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 140, 0, 0.15)); border: 3px solid #FFD700; border-radius: 15px; padding: 2rem; text-align: center; position: relative;">
+                <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #FFD700, #FF8C00); padding: 0.4rem 1.5rem; border-radius: 25px; font-size: 0.85rem; font-weight: bold; color: #000;">⭐ RECOMMENDED</div>
+                <div style="font-size: 1rem; color: #FFD700; margin-bottom: 1rem; font-weight: 600; margin-top: 0.5rem;">Z2B MEMBERSHIP</div>
+                <div style="font-size: 3rem; font-weight: bold; color: #FFD700; margin-bottom: 0.5rem;">R480+</div>
+                <div style="font-size: 1rem; color: #ccc; margin-bottom: 1.5rem;">/month</div>
+                <div style="color: #fff; font-size: 0.9rem; line-height: 1.8; margin-bottom: 1.5rem; text-align: left;">
+                    <div style="margin-bottom: 0.5rem;">✅ <span class="app-name-display"></span> + 10+ Other Apps</div>
+                    <div style="margin-bottom: 0.5rem;">✅ Coach ManLaw (AI Coach)</div>
+                    <div style="margin-bottom: 0.5rem;">✅ Choose Your Apps</div>
+                    <div style="margin-bottom: 0.5rem;">✅ 7 Income Streams</div>
+                    <div style="margin-bottom: 0.5rem;">✅ Up to 30% Commissions</div>
+                    <div style="margin-bottom: 0.5rem;">✅ Daily AI Fuel Credits</div>
+                </div>
+                <button onclick="joinZ2B()" style="width: 100%; padding: 1rem; background: linear-gradient(135deg, #FFD700, #FF8C00); border: none; border-radius: 10px; color: #000; font-weight: bold; cursor: pointer; box-shadow: 0 5px 20px rgba(255, 215, 0, 0.5); transition: all 0.3s;" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 30px rgba(255, 215, 0, 0.7)'" onmouseout="this.style.transform=''; this.style.boxShadow='0 5px 20px rgba(255, 215, 0, 0.5)'">
+                    Join Z2B Membership
+                </button>
+            </div>
+        </div>
+
+        <!-- Tier Breakdown -->
+        <div style="background: rgba(255, 215, 0, 0.05); border: 2px solid #FFD700; border-radius: 15px; padding: 1.5rem; margin-top: 2rem;">
+            <h4 style="color: #FFD700; margin-bottom: 1rem; text-align: center;">Z2B Membership Tiers</h4>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; font-size: 0.85rem; color: #fff;">
+                <div style="text-align: center; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 10px;">
+                    <div style="font-weight: bold; color: #FFD700; margin-bottom: 0.5rem;">Bronze</div>
+                    <div style="color: #ccc;">R480/month</div>
+                    <div style="color: #999; font-size: 0.8rem;">2 Apps</div>
+                </div>
+                <div style="text-align: center; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 10px;">
+                    <div style="font-weight: bold; color: #FFD700; margin-bottom: 0.5rem;">Copper</div>
+                    <div style="color: #ccc;">R980/month</div>
+                    <div style="color: #999; font-size: 0.8rem;">4 Apps</div>
+                </div>
+                <div style="text-align: center; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 10px;">
+                    <div style="font-weight: bold; color: #FFD700; margin-bottom: 0.5rem;">Silver</div>
+                    <div style="color: #ccc;">R1,480/month</div>
+                    <div style="color: #999; font-size: 0.8rem;">7 Apps</div>
+                </div>
+                <div style="text-align: center; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 10px;">
+                    <div style="font-weight: bold; color: #FFD700; margin-bottom: 0.5rem;">Gold</div>
+                    <div style="color: #ccc;">R2,980/month</div>
+                    <div style="color: #999; font-size: 0.8rem;">11 Apps</div>
+                </div>
+                <div style="text-align: center; padding: 1rem; background: rgba(255,255,255,0.1); border-radius: 10px; border: 1px solid #FFD700;">
+                    <div style="font-weight: bold; color: #FFD700; margin-bottom: 0.5rem;">Platinum</div>
+                    <div style="color: #ccc;">R4,980/month</div>
+                    <div style="color: #00ff88; font-size: 0.8rem; font-weight: bold;">ALL Apps</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Configuration - SET THESE FOR EACH APP
+const APP_CONFIG = {
+    name: 'Glowie',  // Replace with: Glowie, Vidzie, etc.
+    price: '397',            // Replace with: 397, 297, 197, etc.
+    paymentUrl: 'glowie-payment.html'  // Replace with payment page URL
+};
+
+// Show pricing modal
+function showAppPricing() {
+    // Update modal with app details
+    document.querySelectorAll('.app-name-display').forEach(el => {
+        el.textContent = APP_CONFIG.name;
+    });
+    document.querySelectorAll('.app-price-display').forEach(el => {
+        el.textContent = APP_CONFIG.price;
+    });
+
+    document.getElementById('appPricingModal').style.display = 'block';
+    document.body.style.overflow = 'hidden';
+}
+
+// Close modal
+function closePricingModal() {
+    document.getElementById('appPricingModal').style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+// Buy standalone
+function buyStandalone() {
+    // Get referral code if available
+    const urlParams = new URLSearchParams(window.location.search);
+    let ref = urlParams.get('ref') || urlParams.get('sponsor') || localStorage.getItem('referralCode') || '';
+
+    // Build payment URL
+    let paymentUrl = APP_CONFIG.paymentUrl + '?amount=' + APP_CONFIG.price;
+    if (ref) paymentUrl += '&ref=' + encodeURIComponent(ref);
+
+    window.location.href = paymentUrl;
+}
+
+
+// Add to cart
+function addToCart() {
+    const result = z2bCart.addToCart({
+        name: APP_CONFIG.name,
+        price: APP_CONFIG.price,
+        icon: 'fa-sparkles',
+        description: ''
+    });
+
+    if (result.success) {
+        // Show success message
+        alert('✓ ' + APP_CONFIG.name + ' added to cart!
+
+You now have ' + result.cart.length + ' item(s) in your cart.
+
+Click OK to continue shopping or visit your cart to checkout.');
+        closePricingModal();
+    } else {
+        alert(result.message);
+    }
+}
+\n\1
+function joinZ2B() {
+    // Get referral code if available
+    const urlParams = new URLSearchParams(window.location.search);
+    let ref = urlParams.get('ref') || urlParams.get('sponsor') || localStorage.getItem('referralCode') || '';
+
+    // Build registration URL
+    let regUrl = 'https://z2blegacybuilders.co.za/register.html?tier=SILVER';
+    if (ref) regUrl += '&ref=' + encodeURIComponent(ref);
+
+    window.location.href = regUrl;
+}
+
+// Close on ESC key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closePricingModal();
+});
+</script>
+
+<script src="js/cart-manager.js"></script>\n
+<!-- Floating Cart Icon -->
+<style>
+.floating-cart-icon {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, #00D9FF, #0088cc);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 25px rgba(0, 217, 255, 0.5);
+    cursor: pointer;
+    z-index: 9998;
+    animation: pulse-cart 2s infinite;
+    transition: transform 0.3s;
+}
+.floating-cart-icon:hover {
+    transform: scale(1.1);
+}
+@keyframes pulse-cart {
+    0%, 100% { box-shadow: 0 8px 25px rgba(0, 217, 255, 0.5); }
+    50% { box-shadow: 0 8px 40px rgba(0, 217, 255, 0.8); }
+}
+.floating-cart-icon i {
+    font-size: 2rem;
+    color: #fff;
+}
+.cart-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: linear-gradient(135deg, #FFD700, #FF8C00);
+    color: #000;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: bold;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+</style>
+
+<div class="floating-cart-icon" onclick="window.location.href='cart.html'" title="View Cart">
+    <i class="fas fa-shopping-cart"></i>
+    <span class="cart-badge" style="display: none;">0</span>
+</div>
+
+<script>
+// Update cart badge when cart changes
+if (typeof z2bCart !== 'undefined') {
+    z2bCart.updateCartBadge();
+}
+</script>
+\n</body>
+</html>

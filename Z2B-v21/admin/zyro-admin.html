@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZYRO Admin - Gamification Hub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="coach-manlaw-admin.html" type="text/css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1400px; margin: 0 auto; }
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h1 {
+            color: #FF6B35;
+            font-size: 32px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .back-btn {
+            padding: 10px 20px;
+            background: #6b7280;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .stat-card h3 { font-size: 36px; color: #FF6B35; margin-bottom: 10px; }
+        .stat-card p { color: #6b7280; font-size: 14px; text-transform: uppercase; }
+        .content-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .section-title {
+            color: #FF6B35;
+            font-size: 24px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        .tab {
+            padding: 12px 24px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            color: #6b7280;
+            font-weight: 600;
+        }
+        .tab.active { color: #FF6B35; border-bottom: 3px solid #FF6B35; margin-bottom: -2px; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        table { width: 100%; border-collapse: collapse; }
+        table th, table td { padding: 12px; text-align: left; border-bottom: 1px solid #e5e7eb; }
+        table th { background: #f9fafb; font-weight: 600; color: #374151; }
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .btn-primary { background: #FF6B35; color: white; }
+        .btn-success { background: #10b981; color: white; }
+        .btn-warning { background: #f59e0b; color: white; }
+        .btn-danger { background: #ef4444; color: white; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-gamepad"></i> ZYRO Admin - Gamification Hub</h1>
+            <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back</a>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>1,247</h3>
+                <p>Active Players</p>
+            </div>
+            <div class="stat-card">
+                <h3>15,892</h3>
+                <p>Games Played</p>
+            </div>
+            <div class="stat-card">
+                <h3>R 45,890</h3>
+                <p>Rewards Earned</p>
+            </div>
+            <div class="stat-card">
+                <h3>89%</h3>
+                <p>Engagement Rate</p>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('challenges')">Challenges</button>
+                <button class="tab" onclick="switchTab('roulette')">Roulette</button>
+                <button class="tab" onclick="switchTab('bingo')">Bingo</button>
+                <button class="tab" onclick="switchTab('leaderboard')">Leaderboard</button>
+                <button class="tab" onclick="switchTab('rewards')">Rewards</button>
+            </div>
+
+            <div class="tab-content active" id="challenges-tab">
+                <h2 class="section-title">Business Challenges</h2>
+                <button class="btn btn-primary" style="margin-bottom: 20px;"><i class="fas fa-plus"></i> Create Challenge</button>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Challenge</th>
+                            <th>Type</th>
+                            <th>Reward</th>
+                            <th>Participants</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>30-Day Sales Sprint</td>
+                            <td>Sales</td>
+                            <td>R500</td>
+                            <td>156</td>
+                            <td><span style="color: #10b981;">Active</span></td>
+                            <td>
+                                <button class="btn btn-warning btn-sm">Edit</button>
+                                <button class="btn btn-danger btn-sm">End</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="tab-content" id="roulette-tab">
+                <h2 class="section-title">Daily Roulette Configuration</h2>
+                <p style="margin-bottom: 20px;">Configure prizes and odds for the daily spin wheel</p>
+                <!-- Roulette config here -->
+            </div>
+
+            <div class="tab-content" id="bingo-tab">
+                <h2 class="section-title">Bingo Games</h2>
+                <!-- Bingo management here -->
+            </div>
+
+            <div class="tab-content" id="leaderboard-tab">
+                <h2 class="section-title">Top Players</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Player</th>
+                            <th>Points</th>
+                            <th>Rewards Earned</th>
+                            <th>Games Won</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>John Doe</td>
+                            <td>15,890</td>
+                            <td>R 2,500</td>
+                            <td>42</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="tab-content" id="rewards-tab">
+                <h2 class="section-title">Rewards Management</h2>
+                <button class="btn btn-primary" style="margin-bottom: 20px;"><i class="fas fa-gift"></i> Add Reward</button>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Reward</th>
+                            <th>Type</th>
+                            <th>Value</th>
+                            <th>Claimed</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Cash Bonus</td>
+                            <td>Cash</td>
+                            <td>R 100</td>
+                            <td>45/100</td>
+                            <td><button class="btn btn-warning btn-sm">Edit</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById(tab + '-tab').classList.add('active');
+        }
+    </script>
+</body>
+</html>

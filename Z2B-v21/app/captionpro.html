@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CaptionPro - AI Video Captions & Auto-Cut to Reels">
+    <title>CaptionPro - AI Video Editor with Multi-Language Captions</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --secondary: #ec4899;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --dark: #0f172a;
+            --gray: #94a3b8;
+            --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --gradient-4: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--dark);
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .app-background {
+            position: fixed;
+            inset: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(236, 72, 153, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(245, 158, 11, 0.1) 0%, transparent 50%);
+            z-index: 0;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+        }
+
+        .logo {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .tagline {
+            font-size: 1.25rem;
+            color: var(--gray);
+            font-weight: 600;
+        }
+
+        /* Steps */
+        .steps {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .step {
+            padding: 1rem 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+        }
+
+        .step.active {
+            background: var(--gradient-1);
+            border-color: transparent;
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+        }
+
+        .step:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Upload Zone */
+        .upload-zone {
+            background: rgba(255, 255, 255, 0.05);
+            border: 3px dashed rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 4rem 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .upload-zone:hover {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .upload-zone.dragover {
+            border-color: var(--success);
+            background: rgba(16, 185, 129, 0.2);
+        }
+
+        .upload-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.7;
+        }
+
+        .upload-zone h2 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-zone p {
+            color: var(--gray);
+            font-size: 1.125rem;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        /* Video Preview */
+        .video-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .video-player {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            border-radius: 16px;
+            background: #000;
+        }
+
+        video {
+            width: 100%;
+            border-radius: 16px;
+        }
+
+        /* Preset Cards */
+        .preset-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .preset-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .preset-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .preset-card.active {
+            background: rgba(99, 102, 241, 0.2);
+            border-color: var(--primary);
+            box-shadow: 0 0 30px rgba(99, 102, 241, 0.3);
+        }
+
+        .preset-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .preset-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .preset-card p {
+            color: var(--gray);
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Language Selectors */
+        .language-selector {
+            margin: 2rem 0;
+        }
+
+        .language-selector label {
+            display: block;
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        select {
+            width: 100%;
+            max-width: 400px;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+        }
+
+        select option {
+            background: var(--dark);
+            color: white;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 1rem 2.5rem;
+            background: var(--gradient-1);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-weight: 700;
+            font-size: 1.125rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(99, 102, 241, 0.5);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: none;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Progress */
+        .progress-container {
+            text-align: center;
+            padding: 3rem 0;
+        }
+
+        .spinner {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 2rem;
+            border: 8px solid rgba(255, 255, 255, 0.1);
+            border-top: 8px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .progress-bar {
+            max-width: 500px;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 2rem auto 1rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient-1);
+            transition: width 0.3s;
+        }
+
+        /* Clips Grid */
+        .clips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .clip-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .clip-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .clip-thumbnail {
+            position: relative;
+            aspect-ratio: 9/16;
+            background: #000;
+        }
+
+        .clip-score {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.5rem 1rem;
+            background: rgba(16, 185, 129, 0.9);
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.875rem;
+        }
+
+        .clip-info {
+            padding: 1.5rem;
+        }
+
+        .clip-info h4 {
+            font-size: 1.125rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .clip-meta {
+            color: var(--gray);
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+
+        .clip-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+
+        .clip-actions button {
+            padding: 0.75rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .preview-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .export-btn {
+            background: var(--gradient-1);
+            color: white;
+        }
+
+        /* Alerts */
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            margin: 1rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            color: var(--success);
+        }
+
+        .alert-info {
+            background: rgba(99, 102, 241, 0.2);
+            border: 1px solid rgba(99, 102, 241, 0.4);
+            color: var(--primary);
+        }
+
+        .alert-warning {
+            background: rgba(245, 158, 11, 0.2);
+            border: 1px solid rgba(245, 158, 11, 0.4);
+            color: var(--accent);
+        }
+
+        /* Hidden */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-top: 4rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--gray);
+            font-size: 0.95rem;
+        }
+
+        .footer .z2b-logo {
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .footer .z2b-logo img {
+            height: 100px;
+            width: auto;
+            max-width: 250px;
+            object-fit: contain;
+            transition: transform 0.3s;
+        }
+
+        .footer .z2b-logo img:hover {
+            transform: scale(1.05);
+        }
+
+        .footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .footer a:hover {
+            color: var(--secondary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .logo {
+                font-size: 2.5rem;
+            }
+
+            .steps {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .preset-grid,
+            .clips-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-background"></div>
+    
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1 class="logo">CaptionPro</h1>
+            <p class="tagline">AI-Powered Video Captions & Auto-Cut to Reels</p>
+        </header>
+
+        <!-- Steps Navigation -->
+        <div class="steps">
+            <div class="step active" data-step="upload">📤 Upload</div>
+            <div class="step" data-step="autocut">✂️ Auto-Cut</div>
+            <div class="step" data-step="captions">💬 Captions</div>
+            <div class="step" data-step="export">💾 Export</div>
+        </div>
+
+        <!-- Main Content -->
+        <main id="mainContent">
+            <!-- Upload Step -->
+            <div id="uploadStep" class="step-content">
+                <div class="upload-zone" id="uploadZone">
+                    <div class="upload-icon">📹</div>
+                    <h2>Drop your video here</h2>
+                    <p>or click to browse (MP4, MOV, AVI, MKV, WebM)</p>
+                    <input type="file" id="fileInput" class="file-input" accept="video/*">
+                </div>
+
+                <div class="alert alert-info" style="margin-top: 2rem;">
+                    ℹ️ <strong>Supported:</strong> All major video formats • Max 500MB • African languages supported!
+                </div>
+            </div>
+
+            <!-- Auto-Cut Step -->
+            <div id="autocutStep" class="step-content hidden">
+                <h2 style="text-align: center; margin-bottom: 2rem;">Auto-Cut to Reels</h2>
+                
+                <div class="video-container">
+                    <div class="video-player">
+                        <video id="previewVideo" controls></video>
+                    </div>
+                </div>
+
+                <div class="preset-grid">
+                    <div class="preset-card" data-preset="auto">
+                        <div class="preset-icon">🤖</div>
+                        <h3>Auto Smart Cuts</h3>
+                        <p>AI finds the best moments</p>
+                        <small>Dynamic clips • Varies</small>
+                    </div>
+                    <div class="preset-card" data-preset="tiktok">
+                        <div class="preset-icon">📱</div>
+                        <h3>TikTok Cuts</h3>
+                        <p>15-30 second viral clips</p>
+                        <small>3-5 clips • 15-30s</small>
+                    </div>
+                    <div class="preset-card" data-preset="reels">
+                        <div class="preset-icon">📸</div>
+                        <h3>Instagram Reels</h3>
+                        <p>30-60 second engaging clips</p>
+                        <small>2-4 clips • 30-60s</small>
+                    </div>
+                    <div class="preset-card" data-preset="shorts">
+                        <div class="preset-icon">🎥</div>
+                        <h3>YouTube Shorts</h3>
+                        <p>60 second max clips</p>
+                        <small>1-3 clips • 60s</small>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin: 2rem 0;">
+                    <button class="btn" id="analyzebtn">✨ Analyze & Cut Video</button>
+                    <button class="btn btn-secondary" id="skipAutoCutBtn" style="margin-left: 1rem;">Skip Auto-Cut →</button>
+                </div>
+
+                <!-- Progress -->
+                <div id="analyzeProgress" class="progress-container hidden">
+                    <div class="spinner"></div>
+                    <h3>AI is analyzing your video...</h3>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                    </div>
+                    <p id="progressText" style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">0%</p>
+                </div>
+
+                <!-- Generated Clips -->
+                <div id="clipsContainer" class="hidden">
+                    <h3 style="margin-bottom: 1.5rem;">✅ <span id="clipCount">0</span> Clips Generated!</h3>
+                    <div class="clips-grid" id="clipsGrid"></div>
+                    <div style="text-align: center; margin: 2rem 0;">
+                        <button class="btn">💾 Export All Clips</button>
+                        <button class="btn btn-secondary" style="margin-left: 1rem;" id="continueBtn">Continue to Captions →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Captions Step -->
+            <div id="captionsStep" class="step-content hidden">
+                <h2 style="text-align: center; margin-bottom: 2rem;">Generate AI Captions</h2>
+
+                <div class="video-container">
+                    <div class="video-player">
+                        <video id="captionVideo" controls></video>
+                    </div>
+                </div>
+
+                <div class="preset-grid">
+                    <div class="preset-card active" data-mode="same">
+                        <div class="preset-icon">🎯</div>
+                        <h3>Same Language</h3>
+                        <p>Zulu video → Zulu captions</p>
+                        <small>Perfect for accessibility</small>
+                    </div>
+                    <div class="preset-card" data-mode="translate">
+                        <div class="preset-icon">🌍</div>
+                        <h3>Translate Captions</h3>
+                        <p>Zulu video → English captions</p>
+                        <small>Reach global audience</small>
+                    </div>
+                </div>
+
+                <div class="language-selector">
+                    <label>🎤 What language is spoken in your video?</label>
+                    <select id="sourceLanguage">
+                        <option value="en">English</option>
+                        <option value="zu">isiZulu (Zulu)</option>
+                        <option value="xh">isiXhosa (Xhosa)</option>
+                        <option value="st">Sesotho (Southern Sotho)</option>
+                        <option value="nso">Sepedi (Northern Sotho)</option>
+                        <option value="tn">Setswana (Tswana)</option>
+                        <option value="ts">Xitsonga (Tsonga)</option>
+                        <option value="ve">Tshivenda (Venda)</option>
+                        <option value="af">Afrikaans</option>
+                        <option value="sw">Swahili</option>
+                    </select>
+                </div>
+
+                <div class="language-selector" id="targetLanguageContainer" style="display: none;">
+                    <label>🌍 What language for captions?</label>
+                    <select id="targetLanguage">
+                        <option value="en">English</option>
+                        <option value="af">Afrikaans</option>
+                        <option value="ar">Arabic</option>
+                        <option value="zh">Chinese</option>
+                        <option value="fr">French</option>
+                        <option value="de">German</option>
+                        <option value="es">Spanish</option>
+                        <option value="pt">Portuguese</option>
+                        <option value="sw">Swahili</option>
+                    </select>
+                </div>
+
+                <div style="text-align: center; margin: 2rem 0;">
+                    <button class="btn" id="generateCaptionsBtn">✨ Generate Captions</button>
+                </div>
+
+                <div class="alert alert-warning">
+                    ⚠️ <strong>Demo Mode:</strong> API integration needed for actual transcription. Add your AssemblyAI and Google API keys to activate.
+                </div>
+            </div>
+
+            <!-- Export Step -->
+            <div id="exportStep" class="step-content hidden">
+                <h2 style="text-align: center; margin-bottom: 2rem;">Export Your Video</h2>
+
+                <div class="video-container">
+                    <div class="video-player">
+                        <video id="exportVideo" controls></video>
+                    </div>
+                </div>
+
+                <div class="alert alert-success">
+                    ✅ <strong>Video Ready!</strong> Your video with captions is ready to export.
+                </div>
+
+                <div style="text-align: center; margin: 2rem 0;">
+                    <button class="btn">💾 Download Video</button>
+                    <button class="btn btn-secondary" style="margin-left: 1rem;">🔄 Start Over</button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="z2b-logo">
+                <img src="z2b-logo.jpg" alt="Z2B Legacy Builders">
+            </div>
+            <p>Built with Love ❤️ by <a href="https://z2blegacybuilders.co.za" target="_blank">Z2B Legacy Builders</a></p>
+        </footer>
+    </div>
+
+    <script>
+        // Global state
+        let currentStep = 'upload';
+        let selectedPreset = 'auto';
+        let selectedMode = 'same';
+        let videoFile = null;
+        let videoURL = null;
+
+        // DOM Elements
+        const steps = document.querySelectorAll('.step');
+        const uploadZone = document.getElementById('uploadZone');
+        const fileInput = document.getElementById('fileInput');
+        const uploadStep = document.getElementById('uploadStep');
+        const autocutStep = document.getElementById('autocutStep');
+        const captionsStep = document.getElementById('captionsStep');
+        const exportStep = document.getElementById('exportStep');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const skipAutoCutBtn = document.getElementById('skipAutoCutBtn');
+        const continueBtn = document.getElementById('continueBtn');
+        const generateCaptionsBtn = document.getElementById('generateCaptionsBtn');
+
+        // Navigation
+        steps.forEach(step => {
+            step.addEventListener('click', () => {
+                const stepName = step.dataset.step;
+                if (stepName === 'upload' || videoFile) {
+                    navigateToStep(stepName);
+                }
+            });
+        });
+
+        function navigateToStep(stepName) {
+            currentStep = stepName;
+            
+            // Update step indicators
+            steps.forEach(s => s.classList.remove('active'));
+            document.querySelector(`[data-step="${stepName}"]`).classList.add('active');
+
+            // Show/hide content
+            uploadStep.classList.add('hidden');
+            autocutStep.classList.add('hidden');
+            captionsStep.classList.add('hidden');
+            exportStep.classList.add('hidden');
+
+            switch(stepName) {
+                case 'upload':
+                    uploadStep.classList.remove('hidden');
+                    break;
+                case 'autocut':
+                    autocutStep.classList.remove('hidden');
+                    if (videoURL) {
+                        document.getElementById('previewVideo').src = videoURL;
+                    }
+                    break;
+                case 'captions':
+                    captionsStep.classList.remove('hidden');
+                    if (videoURL) {
+                        document.getElementById('captionVideo').src = videoURL;
+                    }
+                    break;
+                case 'export':
+                    exportStep.classList.remove('hidden');
+                    if (videoURL) {
+                        document.getElementById('exportVideo').src = videoURL;
+                    }
+                    break;
+            }
+        }
+
+        // File Upload
+        uploadZone.addEventListener('click', () => fileInput.click());
+
+        uploadZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadZone.classList.add('dragover');
+        });
+
+        uploadZone.addEventListener('dragleave', () => {
+            uploadZone.classList.remove('dragover');
+        });
+
+        uploadZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadZone.classList.remove('dragover');
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('video/')) {
+                handleFileUpload(file);
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                handleFileUpload(file);
+            }
+        });
+
+        function handleFileUpload(file) {
+            videoFile = file;
+            videoURL = URL.createObjectURL(file);
+            navigateToStep('autocut');
+        }
+
+        // Preset Selection
+        document.querySelectorAll('.preset-card[data-preset]').forEach(card => {
+            card.addEventListener('click', () => {
+                document.querySelectorAll('.preset-card[data-preset]').forEach(c => c.classList.remove('active'));
+                card.classList.add('active');
+                selectedPreset = card.dataset.preset;
+            });
+        });
+
+        // Caption Mode Selection
+        document.querySelectorAll('.preset-card[data-mode]').forEach(card => {
+            card.addEventListener('click', () => {
+                document.querySelectorAll('.preset-card[data-mode]').forEach(c => c.classList.remove('active'));
+                card.classList.add('active');
+                selectedMode = card.dataset.mode;
+                
+                const targetContainer = document.getElementById('targetLanguageContainer');
+                if (selectedMode === 'translate') {
+                    targetContainer.style.display = 'block';
+                } else {
+                    targetContainer.style.display = 'none';
+                }
+            });
+        });
+
+        // Auto-Cut Analysis
+        if (analyzeBtn) {
+            analyzeBtn.addEventListener('click', async () => {
+                const progressContainer = document.getElementById('analyzeProgress');
+                const progressFill = document.getElementById('progressFill');
+                const progressText = document.getElementById('progressText');
+                const clipsContainer = document.getElementById('clipsContainer');
+
+                // Show progress
+                analyzeBtn.disabled = true;
+                progressContainer.classList.remove('hidden');
+
+                // Simulate AI analysis
+                const steps = [20, 40, 60, 80, 100];
+                for (let i = 0; i < steps.length; i++) {
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                    const progress = steps[i];
+                    progressFill.style.width = progress + '%';
+                    progressText.textContent = progress + '%';
+                }
+
+                // Generate mock clips
+                await new Promise(resolve => setTimeout(resolve, 500));
+                progressContainer.classList.add('hidden');
+                
+                const clipCount = selectedPreset === 'tiktok' ? 5 : selectedPreset === 'reels' ? 3 : selectedPreset === 'shorts' ? 2 : 4;
+                generateClips(clipCount);
+
+                document.getElementById('clipCount').textContent = clipCount;
+                clipsContainer.classList.remove('hidden');
+                analyzeBtn.disabled = false;
+            });
+        }
+
+        function generateClips(count) {
+            const grid = document.getElementById('clipsGrid');
+            grid.innerHTML = '';
+
+            for (let i = 0; i < count; i++) {
+                const duration = selectedPreset === 'tiktok' ? 20 : selectedPreset === 'reels' ? 45 : 60;
+                const score = Math.floor(Math.random() * 30) + 70;
+                
+                const clipCard = `
+                    <div class="clip-card">
+                        <div class="clip-thumbnail">
+                            <video src="${videoURL}" style="width: 100%; height: 100%; object-fit: cover;"></video>
+                            <div class="clip-score">✨ ${score}%</div>
+                        </div>
+                        <div class="clip-info">
+                            <h4>Clip ${i + 1}</h4>
+                            <div class="clip-meta">
+                                ⏱️ ${duration}s • 0:${(i * 30).toString().padStart(2, '0')} - 0:${((i * 30) + duration).toString().padStart(2, '0')}
+                            </div>
+                            <div class="clip-actions">
+                                <button class="preview-btn">▶️ Preview</button>
+                                <button class="export-btn">💾 Export</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                grid.innerHTML += clipCard;
+            }
+        }
+
+        // Navigation Buttons
+        if (skipAutoCutBtn) {
+            skipAutoCutBtn.addEventListener('click', () => navigateToStep('captions'));
+        }
+
+        if (continueBtn) {
+            continueBtn.addEventListener('click', () => navigateToStep('captions'));
+        }
+
+        if (generateCaptionsBtn) {
+            generateCaptionsBtn.addEventListener('click', () => {
+                alert('Demo Mode: Add your API keys to enable caption generation!\n\nAssemblyAI Key: f40b79c943b342e78a5df75a3accc866\nGoogle API Key: Get from console.cloud.google.com');
+                navigateToStep('export');
+            });
+        }
+    </script>
+</body>
+</html>

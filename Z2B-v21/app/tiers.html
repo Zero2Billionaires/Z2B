@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Membership Tiers - Z2B Legacy Builders</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/responsive.css">
+    <style>
+        :root {
+            --navy-blue: #0A2647;
+            --gold: #FFD700;
+            --orange: #FF6B35;
+            --light-gold: #FFF4CC;
+            --dark-navy: #051428;
+            --white: #FFFFFF;
+            --fam: #4CAF50;
+            --bronze: #CD7F32;
+            --copper: #B87333;
+            --silver: #C0C0C0;
+            --platinum: #E5E4E2;
+            --diamond: #B9F2FF;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to bottom, var(--navy-blue), var(--dark-navy));
+            color: var(--white);
+            min-height: 100vh;
+            padding: 2rem 0;
+        }
+
+        .back-btn {
+            color: var(--gold);
+            font-size: 1.1rem;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-block;
+            margin-bottom: 2rem;
+        }
+
+        .back-btn:hover {
+            color: var(--orange);
+            transform: translateX(-5px);
+        }
+
+        .header-section {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .header-section h1 {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: var(--gold);
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .header-section p {
+            font-size: 1.3rem;
+            color: var(--white);
+            opacity: 0.9;
+        }
+
+        .tiers-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .tier-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tier-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: linear-gradient(90deg, var(--tier-color), var(--orange));
+        }
+
+        .tier-card.fam {
+            --tier-color: var(--fam);
+        }
+
+        .tier-card.bronze {
+            --tier-color: var(--bronze);
+        }
+
+        .tier-card.copper {
+            --tier-color: var(--copper);
+        }
+
+        .tier-card.silver {
+            --tier-color: var(--silver);
+        }
+
+        .tier-card.gold {
+            --tier-color: var(--gold);
+            transform: scale(1.05);
+            border: 3px solid var(--gold);
+        }
+
+        .tier-card.platinum {
+            --tier-color: var(--platinum);
+        }
+
+        .tier-card.diamond {
+            --tier-color: var(--diamond);
+        }
+
+        .tier-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .tier-card.gold:hover {
+            transform: scale(1.08) translateY(-10px);
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: linear-gradient(135deg, var(--orange), var(--gold));
+            color: var(--navy-blue);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+        }
+
+        .tier-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--tier-color), var(--orange));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .tier-name {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--navy-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .tier-price {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--tier-color);
+            margin-bottom: 0.3rem;
+        }
+
+        .tier-period {
+            text-align: center;
+            color: var(--dark-navy);
+            opacity: 0.6;
+            margin-bottom: 2rem;
+        }
+
+        .benefits-list {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 2rem;
+        }
+
+        .benefits-list li {
+            padding: 0.8rem 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            color: var(--dark-navy);
+            font-size: 1rem;
+        }
+
+        .benefits-list li i {
+            color: var(--tier-color);
+            margin-right: 10px;
+            font-size: 1.1rem;
+        }
+
+        .commission-badge {
+            background: linear-gradient(135deg, var(--navy-blue), var(--dark-navy));
+            color: var(--gold);
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-weight: bold;
+        }
+
+        .btn-select-tier {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(135deg, var(--tier-color), var(--orange));
+            color: var(--white);
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-select-tier:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .current-tier-badge {
+            width: 100%;
+            padding: 1rem;
+            border: 3px solid var(--tier-color);
+            border-radius: 50px;
+            background: linear-gradient(135deg, var(--tier-color), var(--orange));
+            color: var(--white);
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-align: center;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-downgrade {
+            background: linear-gradient(135deg, #6B7280, #9CA3AF);
+        }
+
+        .btn-upgrade {
+            background: linear-gradient(135deg, var(--gold), var(--orange));
+        }
+
+        .comparison-table {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-top: 3rem;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .comparison-table h2 {
+            color: var(--navy-blue);
+            font-weight: bold;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .comparison-table table {
+            width: 100%;
+            color: var(--dark-navy);
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, var(--navy-blue), var(--dark-navy));
+            color: var(--gold);
+            padding: 1rem;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .comparison-table td {
+            padding: 1rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .check-icon {
+            color: var(--gold);
+            font-size: 1.3rem;
+        }
+
+        @media (max-width: 768px) {
+            .header-section h1 {
+                font-size: 2.5rem;
+            }
+
+            .tiers-container {
+                grid-template-columns: 1fr;
+            }
+
+            .tier-card.gold {
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="dashboard.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+
+        <div class="header-section" data-aos="fade-down">
+            <div style="background: linear-gradient(135deg, var(--gold), var(--orange)); color: var(--navy-blue); padding: 0.6rem 1.5rem; border-radius: 50px; display: inline-block; margin-bottom: 1.5rem; font-weight: bold; font-size: 0.95rem;">
+                <i class="fas fa-rocket"></i> Transforming Employees to Entrepreneurs
+            </div>
+            <h1><i class="fas fa-layer-group"></i> Membership Tiers</h1>
+            <p class="lead" style="color: var(--gold); font-weight: 600; margin-bottom: 0.5rem;">Select the membership level that matches your ambition</p>
+            <p>Choose your tier and unlock powerful tools for building your legacy</p>
+        </div>
+
+        <!-- Pay as You Go Notice -->
+        <div style="background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 107, 53, 0.15)); border: 2px solid var(--gold); border-radius: 15px; padding: 1.5rem; margin-bottom: 2.5rem; max-width: 900px; margin-left: auto; margin-right: auto;" data-aos="zoom-in">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 0.8rem;">
+                <i class="fas fa-gas-pump" style="font-size: 2rem; color: var(--gold);"></i>
+                <h3 style="color: var(--gold); margin: 0; font-size: 1.4rem; text-align: center;">💳 Pay as You Go Refuel - No Monthly Commitments!</h3>
+            </div>
+            <p style="color: var(--white); font-size: 1rem; line-height: 1.6; margin-bottom: 0.5rem; text-align: center;">
+                <strong style="color: var(--gold);">⛽ No Fuel, No App Use.</strong> All our AI apps run on AI Fuel credits. Purchase AI Fuel only when you need it - credits last 3 months with rollover!<br>
+                No monthly subscriptions, no auto-renewals, no commitments. <strong style="color: var(--gold);">You're in complete control.</strong>
+            </p>
+            <p style="color: var(--light-gold); font-size: 0.9rem; margin: 0; text-align: center;">
+                <i class="fas fa-info-circle"></i> <strong>How it works:</strong> Choose your tier → Purchase AI Fuel packages when needed → Use apps as much as you want → Unused fuel rolls over for 3 months
+            </p>
+        </div>
+
+        <div class="tiers-container">
+            <!-- FAM Tier -->
+            <div class="tier-card fam" data-aos="fade-up" data-aos-delay="0">
+                <span class="popular-badge" style="background: linear-gradient(135deg, #4CAF50, #8BC34A);">🆓 FREE START</span>
+                <div class="tier-icon">🌱</div>
+                <h3 class="tier-name">FAM - Free Affiliate</h3>
+                <div class="tier-price">R0</div>
+                <div class="tier-period">FREE for 90 Days</div>
+
+                <ul class="benefits-list">
+                    <li><i class="fas fa-check-circle"></i> FREE Registration</li>
+                    <li><i class="fas fa-check-circle"></i> 3 AI Fuel/Day + 3-Month Rollover</li>
+                    <li><i class="fas fa-check-circle"></i> 12% ISP Commission</li>
+                    <li><i class="fas fa-check-circle"></i> Unique Builder ID & Link</li>
+                    <li><i class="fas fa-check-circle"></i> Sell All Our Apps</li>
+                    <li><i class="fas fa-times-circle" style="color: #ff6b6b;"></i> No PV Points</li>
+                    <li><i class="fas fa-times-circle" style="color: #ff6b6b;"></i> No AI Fuel</li>
+                    <li><i class="fas fa-times-circle" style="color: #ff6b6b;"></i> No TSC</li>
+                    <li><i class="fas fa-times-circle" style="color: #ff6b6b;"></i> No TPB</li>
+                    <li><i class="fas fa-times-circle" style="color: #ff6b6b;"></i> No TLI</li>
+                    <li><i class="fas fa-times-circle" style="color: #ff6b6b;"></i> No AI Apps Access</li>
+                </ul>
+
+                <div style="background: rgba(255, 107, 53, 0.2); padding: 1rem; border-radius: 10px; margin: 1rem 0; border: 2px solid var(--orange);">
+                    <strong style="color: var(--orange); font-size: 0.95rem; display: block; margin-bottom: 0.5rem;">⏰ 90-DAY TRIAL PERIOD</strong>
+                    <span style="line-height: 1.6; color: #000000; font-size: 0.85rem;">
+                    Upgrade to Bronze or higher within 90 days or your account will be deleted. This ensures only serious builders remain in the system.
+                    </span>
+                </div>
+
+                <div style="background: var(--navy-blue); padding: 1rem; border-radius: 10px; margin: 1rem 0; border: 2px solid var(--fam);">
+                    <strong style="color: var(--fam); font-size: 0.95rem; display: block; margin-bottom: 0.5rem;">🚀 ZERO TO BILLIONS STARTS HERE!</strong>
+                    <span style="line-height: 1.6; color: var(--white); font-size: 0.85rem;">
+                    Perfect for serious people with no money. Sign up FREE, get your Builder ID, and start earning 12% commission by selling our apps!
+                    </span>
+                </div>
+
+                <button class="btn-select-tier">Join FREE Now</button>
+            </div>
+
+            <!-- Bronze Tier -->
+            <div class="tier-card bronze" data-aos="fade-up" data-aos-delay="100">
+                <div class="tier-icon">🥉</div>
+                <h3 class="tier-name">Bronze Legacy Builder</h3>
+                <div style="text-align: center; margin-bottom: 0.3rem;">
+                    <div style="text-decoration: line-through; opacity: 0.5; font-size: 1.2rem; color: #666;">R960</div>
+                    <div class="tier-price" style="font-size: 3rem; margin: 0.5rem 0;">R480</div>
+                    <div style="background: linear-gradient(135deg, #FFD700, #FF6B35); color: #0A2647; font-weight: bold; padding: 0.3rem 0.8rem; border-radius: 20px; display: inline-block; font-size: 0.85rem;">🔥 50% OFF BETA</div>
+                </div>
+                <div class="tier-period">Pay as You Go Refuel</div>
+
+                <div class="commission-badge">
+                    18% ISP Commission
+                </div>
+
+                <ul class="benefits-list">
+                    <li><i class="fas fa-check-circle"></i> 24 PV Points</li>
+                    <li><i class="fas fa-check-circle"></i> <strong>2 Apps:</strong> Coach Manlaw + Intro App</li>
+                    <li><i class="fas fa-check-circle"></i> 25 AI Fuel/Day + 3-Month Rollover</li>
+                    <li><i class="fas fa-check-circle"></i> 18% ISP Commission</li>
+                    <li><i class="fas fa-check-circle"></i> Up to 3 Generation TSC (starts G2)</li>
+                    <li><i class="fas fa-check-circle"></i> QPB - First 90 days only</li>
+                    <li><i class="fas fa-check-circle"></i> Marketplace Access</li>
+                    <li><i class="fas fa-check-circle"></i> Basic Training</li>
+                    <li><i class="fas fa-times-circle" style="color: #ff6b6b;"></i> No TLI (Upgrade Required)</li>
+                </ul>
+
+                <button class="btn-select-tier">Choose Bronze</button>
+            </div>
+
+            <!-- Copper Tier -->
+            <div class="tier-card copper" data-aos="fade-up" data-aos-delay="200">
+                <div class="tier-icon">🟤</div>
+                <h3 class="tier-name">Copper Legacy Builder</h3>
+                <div style="text-align: center; margin-bottom: 0.3rem;">
+                    <div style="text-decoration: line-through; opacity: 0.5; font-size: 1.2rem; color: #666;">R1,960</div>
+                    <div class="tier-price" style="font-size: 3rem; margin: 0.5rem 0;">R980</div>
+                    <div style="background: linear-gradient(135deg, #FFD700, #FF6B35); color: #0A2647; font-weight: bold; padding: 0.3rem 0.8rem; border-radius: 20px; display: inline-block; font-size: 0.85rem;">🔥 50% OFF BETA</div>
+                </div>
+                <div class="tier-period">Pay as You Go Refuel</div>
+
+                <div class="commission-badge">
+                    22% ISP Commission
+                </div>
+
+                <ul class="benefits-list">
+                    <li><i class="fas fa-check-circle"></i> 50 PV Points</li>
+                    <li><i class="fas fa-check-circle"></i> <strong>4 Apps:</strong> Bronze + 2 More of Your Choice</li>
+                    <li><i class="fas fa-check-circle"></i> 60 AI Fuel/Day + 3-Month Rollover</li>
+                    <li><i class="fas fa-check-circle"></i> 22% ISP Commission</li>
+                    <li><i class="fas fa-check-circle"></i> Up to 5 Generation TSC (starts G2)</li>
+                    <li><i class="fas fa-check-circle"></i> QPB - First 90 days only</li>
+                    <li><i class="fas fa-check-circle"></i> Marketplace Access</li>
+                    <li><i class="fas fa-check-circle"></i> Advanced Training</li>
+                    <li><i class="fas fa-times-circle" style="color: #ff6b6b;"></i> No TLI (Upgrade Required)</li>
+                </ul>
+
+                <button class="btn-select-tier">Choose Copper</button>
+            </div>
+
+            <!-- Silver Tier -->
+            <div class="tier-card silver" data-aos="fade-up" data-aos-delay="300">
+                <div class="tier-icon">🥈</div>
+                <h3 class="tier-name">Silver Legacy Builder</h3>
+                <div style="text-align: center; margin-bottom: 0.3rem;">
+                    <div style="text-decoration: line-through; opacity: 0.5; font-size: 1.2rem; color: #666;">R2,960</div>
+                    <div class="tier-price" style="font-size: 3rem; margin: 0.5rem 0;">R1,480</div>
+                    <div style="background: linear-gradient(135deg, #FFD700, #FF6B35); color: #0A2647; font-weight: bold; padding: 0.3rem 0.8rem; border-radius: 20px; display: inline-block; font-size: 0.85rem;">🔥 50% OFF BETA</div>
+                </div>
+                <div class="tier-period">Pay as You Go Refuel</div>
+
+                <div class="commission-badge">
+                    25% ISP Commission
+                </div>
+
+                <ul class="benefits-list">
+                    <li><i class="fas fa-check-circle"></i> 74 PV Points</li>
+                    <li><i class="fas fa-check-circle"></i> <strong>7 Apps:</strong> Bronze + 5 More of Your Choice</li>
+                    <li><i class="fas fa-check-circle"></i> 120 AI Fuel/Day + 3-Month Rollover</li>
+                    <li><i class="fas fa-check-circle"></i> 25% ISP Commission</li>
+                    <li><i class="fas fa-check-circle"></i> Up to 7 Generation TSC (starts G2)</li>
+                    <li><i class="fas fa-check-circle"></i> QPB - First 90 days only</li>
+                    <li><i class="fas fa-check-circle"></i> TLI Levels 1-3 (Up to 🌍 SOLID AS EARTH)</li>
+                    <li><i class="fas fa-check-circle"></i> Marketplace Access</li>
+                    <li><i class="fas fa-check-circle"></i> Priority Support</li>
+                </ul>
+
+                <button class="btn-select-tier">Choose Silver</button>
+            </div>
+
+            <!-- Gold Tier (Most Popular) -->
+            <div class="tier-card gold" data-aos="fade-up" data-aos-delay="400">
+                <span class="popular-badge">⭐ MOST POPULAR</span>
+                <div class="tier-icon">🥇</div>
+                <h3 class="tier-name">Gold Legacy Builder</h3>
+                <div style="text-align: center; margin-bottom: 0.3rem;">
+                    <div style="text-decoration: line-through; opacity: 0.5; font-size: 1.2rem; color: #666;">R5,960</div>
+                    <div class="tier-price" style="font-size: 3rem; margin: 0.5rem 0;">R2,980</div>
+                    <div style="background: linear-gradient(135deg, #FFD700, #FF6B35); color: #0A2647; font-weight: bold; padding: 0.3rem 0.8rem; border-radius: 20px; display: inline-block; font-size: 0.85rem;">🔥 50% OFF BETA</div>
+                </div>
+                <div class="tier-period">Pay as You Go Refuel</div>
+
+                <ul class="benefits-list">
+                    <li><i class="fas fa-check-circle"></i> 149 PV Points</li>
+                    <li><i class="fas fa-check-circle"></i> <strong>11 Apps:</strong> Bronze + 9 More of Your Choice</li>
+                    <li><i class="fas fa-check-circle"></i> 250 AI Fuel/Day + 3-Month Rollover</li>
+                    <li><i class="fas fa-check-circle"></i> 28% ISP Commission</li>
+                    <li><i class="fas fa-check-circle"></i> Up to 9 Generation TSC (starts G2)</li>
+                    <li><i class="fas fa-check-circle"></i> QPB - First 90 days only</li>
+                    <li><i class="fas fa-check-circle"></i> TLI Levels 1-5 (Up to 🪐 BIG AS JUPITER)</li>
+                    <li><i class="fas fa-check-circle"></i> Quarterly Gold Profit Sharing Pool</li>
+                    <li><i class="fas fa-check-circle"></i> Sales Funnel</li>
+                    <li><i class="fas fa-check-circle"></i> VIP Support</li>
+                </ul>
+
+                <button class="btn-select-tier">Choose Gold</button>
+            </div>
+
+            <!-- Platinum Tier -->
+            <div class="tier-card platinum" data-aos="fade-up" data-aos-delay="500">
+                <div class="tier-icon">💎</div>
+                <h3 class="tier-name">Platinum Legacy Builder</h3>
+                <div style="text-align: center; margin-bottom: 0.3rem;">
+                    <div style="text-decoration: line-through; opacity: 0.5; font-size: 1.2rem; color: #666;">R9,960</div>
+                    <div class="tier-price" style="font-size: 3rem; margin: 0.5rem 0;">R4,980</div>
+                    <div style="background: linear-gradient(135deg, #FFD700, #FF6B35); color: #0A2647; font-weight: bold; padding: 0.3rem 0.8rem; border-radius: 20px; display: inline-block; font-size: 0.85rem;">🔥 50% OFF BETA</div>
+                </div>
+                <div class="tier-period">Pay as You Go Refuel</div>
+
+                <ul class="benefits-list">
+                    <li><i class="fas fa-check-circle"></i> 249 PV Points</li>
+                    <li><i class="fas fa-check-circle"></i> <strong>All Apps in Z2B Ecosystem</strong></li>
+                    <li><i class="fas fa-check-circle"></i> 500 AI Fuel/Day + 3-Month Rollover</li>
+                    <li><i class="fas fa-check-circle"></i> 30% ISP Commission</li>
+                    <li><i class="fas fa-check-circle"></i> Up to 10 Generation TSC (starts G2)</li>
+                    <li><i class="fas fa-check-circle"></i> QPB - First 90 days only</li>
+                    <li><i class="fas fa-check-circle"></i> All 10 TLI Levels (♾️ ETERNAL AS THE COSMOS)</li>
+                    <li><i class="fas fa-check-circle"></i> Quarterly Platinum Profit Sharing Pool</li>
+                    <li><i class="fas fa-check-circle"></i> Done-For-You Campaigns</li>
+                    <li><i class="fas fa-check-circle"></i> Personal Success Coach</li>
+                </ul>
+
+                <button class="btn-select-tier">Choose Platinum</button>
+            </div>
+
+        </div>
+
+        <!-- Comparison Table -->
+        <div class="comparison-table" data-aos="fade-up">
+            <h2>Feature Comparison</h2>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th style="background: linear-gradient(135deg, #4CAF50, #8BC34A);">FAM</th>
+                            <th>Bronze</th>
+                            <th>Copper</th>
+                            <th>Silver</th>
+                            <th>Gold</th>
+                            <th>Platinum</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Regular Price</strong></td>
+                            <td style="color: #4CAF50; font-weight: bold;">FREE</td>
+                            <td>R960</td>
+                            <td>R1,960</td>
+                            <td>R2,960</td>
+                            <td>R5,960</td>
+                            <td>R9,960</td>
+                        </tr>
+                        <tr style="background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 107, 53, 0.2));">
+                            <td><strong>🔥 Beta Tester (50% OFF)</strong></td>
+                            <td style="color: #4CAF50; font-weight: bold;">FREE</td>
+                            <td style="color: #FF6B35; font-weight: bold;">R480</td>
+                            <td style="color: #FF6B35; font-weight: bold;">R980</td>
+                            <td style="color: #FF6B35; font-weight: bold;">R1,480</td>
+                            <td style="color: #FF6B35; font-weight: bold;">R2,980</td>
+                            <td style="color: #FF6B35; font-weight: bold;">R4,980</td>
+                        </tr>
+                        <tr>
+                            <td><strong>App Access</strong></td>
+                            <td style="color: #ff6b6b; font-weight: bold;">None</td>
+                            <td><strong>2 Apps</strong><br><span style="font-size: 0.85em; opacity: 0.8;">Coach Manlaw + Intro</span></td>
+                            <td><strong>4 Apps</strong><br><span style="font-size: 0.85em; opacity: 0.8;">Bronze + 2 More</span></td>
+                            <td><strong>7 Apps</strong><br><span style="font-size: 0.85em; opacity: 0.8;">Bronze + 5 More</span></td>
+                            <td><strong>11 Apps</strong><br><span style="font-size: 0.85em; opacity: 0.8;">Bronze + 9 More</span></td>
+                            <td><strong>All Apps</strong><br><span style="font-size: 0.85em; opacity: 0.8;">Full Ecosystem</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>ISP Commission</strong></td>
+                            <td style="color: #4CAF50; font-weight: bold;">12%</td>
+                            <td>18%</td>
+                            <td>22%</td>
+                            <td>25%</td>
+                            <td>28%</td>
+                            <td>30%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>PV Points</strong></td>
+                            <td style="color: #ff6b6b; font-weight: bold;">0</td>
+                            <td>24</td>
+                            <td>50</td>
+                            <td>74</td>
+                            <td>149</td>
+                            <td>249</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Daily AI Fuel</strong></td>
+                            <td style="color: #ff6b6b; font-weight: bold;">None</td>
+                            <td>25/day</td>
+                            <td>60/day</td>
+                            <td>120/day</td>
+                            <td>250/day</td>
+                            <td>500/day</td>
+                        </tr>
+                        <tr>
+                            <td><strong>TSC Generations</strong></td>
+                            <td style="color: #ff6b6b; font-weight: bold;">None</td>
+                            <td>Up to 3</td>
+                            <td>Up to 5</td>
+                            <td>Up to 7</td>
+                            <td>Up to 9</td>
+                            <td>Up to 10</td>
+                        </tr>
+                        <tr>
+                            <td><strong>TPB Generations</strong></td>
+                            <td style="color: #ff6b6b; font-weight: bold;">None</td>
+                            <td>Up to 3</td>
+                            <td>Up to 5</td>
+                            <td>Up to 7</td>
+                            <td>Up to 9</td>
+                            <td>Up to 10</td>
+                        </tr>
+                        <tr>
+                            <td><strong>TLI Levels</strong></td>
+                            <td style="color: #ff6b6b; font-weight: bold;">None</td>
+                            <td style="color: #ff6b6b; font-weight: bold;">None</td>
+                            <td style="color: #ff6b6b; font-weight: bold;">None</td>
+                            <td>Levels 1-3<br><span style="font-size: 0.85em; opacity: 0.8;">Solid as Earth</span></td>
+                            <td>Levels 1-5<br><span style="font-size: 0.85em; opacity: 0.8;">Big as Jupiter</span></td>
+                            <td>All 10 Levels<br><span style="font-size: 0.85em; opacity: 0.8;">Eternal as Cosmos</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Quarterly Profit Pool</strong></td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td><i class="fas fa-check check-icon"></i> Gold Pool</td>
+                            <td><i class="fas fa-check check-icon"></i> Platinum Pool</td>
+                        </tr>
+                        <tr>
+                            <td><strong>QPB (Quick Pathfinder Bonus)</strong></td>
+                            <td style="color: #ff6b6b; font-weight: bold;">None</td>
+                            <td><i class="fas fa-check check-icon"></i> First 90 days</td>
+                            <td><i class="fas fa-check check-icon"></i> First 90 days</td>
+                            <td><i class="fas fa-check check-icon"></i> First 90 days</td>
+                            <td><i class="fas fa-check check-icon"></i> First 90 days</td>
+                            <td><i class="fas fa-check check-icon"></i> First 90 days</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Marketplace Access</strong></td>
+                            <td>-</td>
+                            <td><i class="fas fa-check check-icon"></i></td>
+                            <td><i class="fas fa-check check-icon"></i></td>
+                            <td><i class="fas fa-check check-icon"></i></td>
+                            <td><i class="fas fa-check check-icon"></i></td>
+                            <td><i class="fas fa-check check-icon"></i></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Training & Support</strong></td>
+                            <td>Basic</td>
+                            <td>Basic Training</td>
+                            <td>Advanced Training</td>
+                            <td>Priority Support</td>
+                            <td>VIP Support</td>
+                            <td>Personal Coach</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Sales Funnel</strong></td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td><i class="fas fa-check check-icon"></i></td>
+                            <td><i class="fas fa-check check-icon"></i></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Done-For-You Campaigns</strong></td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td><i class="fas fa-check check-icon"></i></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- Payment Frequency Note -->
+                <div style="background: linear-gradient(135deg, var(--gold), var(--orange)); padding: 1.5rem; border-radius: 15px; margin-top: 2rem; box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);">
+                    <p style="color: var(--navy-blue); font-size: 1.1rem; margin-bottom: 0.8rem; font-weight: bold; text-align: center;">
+                        💰 Income Payment Schedule
+                    </p>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; color: var(--navy-blue); font-size: 0.95rem;">
+                        <div style="background: rgba(255,255,255,0.9); padding: 1rem; border-radius: 10px;">
+                            <strong style="display: block; margin-bottom: 0.5rem;">📅 Paid Monthly:</strong>
+                            <span>ISP, QPB & TSC</span>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.9); padding: 1rem; border-radius: 10px;">
+                            <strong style="display: block; margin-bottom: 0.5rem;">📅 Paid Quarterly:</strong>
+                            <span>TPB, TLI & CEO Awards</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAM Tier Explanation -->
+                <div style="background: var(--navy-blue); padding: 2rem; border-radius: 15px; margin-top: 2rem; border: 3px solid #4CAF50; box-shadow: 0 10px 30px rgba(76, 175, 80, 0.3);">
+                    <p style="color: #4CAF50; font-size: 1.2rem; margin-bottom: 1.2rem; font-weight: bold;">
+                        🌱 FAM - Free Affiliate Marketer: ZERO TO BILLIONS STARTS HERE!
+                    </p>
+                    <p style="color: var(--white); font-size: 0.95rem; line-height: 1.8; margin-bottom: 1rem;">
+                        <strong style="color: #4CAF50;">Perfect for Serious People with No Money:</strong> We truly live up to our name "Zero to Billions"! The FAM tier allows anyone with ambition but limited resources to start their journey to financial freedom completely FREE for 90 days.
+                    </p>
+                    <p style="color: var(--white); font-size: 0.95rem; line-height: 1.8; margin-bottom: 1rem;">
+                        <strong style="color: var(--gold);">How It Works:</strong>
+                    </p>
+                    <ul style="color: var(--white); font-size: 0.95rem; line-height: 1.8; margin-bottom: 1rem; padding-left: 2rem;">
+                        <li>Sign up completely <strong style="color: #4CAF50;">FREE</strong> - No credit card required</li>
+                        <li>Receive your unique <strong style="color: var(--orange);">Builder ID and referral link</strong></li>
+                        <li>Start selling all our AI apps and earning <strong style="color: #4CAF50;">20% ISP commission</strong> immediately</li>
+                        <li><strong style="color: var(--orange);">90-day trial period</strong> - Upgrade to Bronze or higher to keep your account</li>
+                    </ul>
+                    <p style="color: var(--white); font-size: 0.95rem; line-height: 1.8; margin-bottom: 1rem;">
+                        <strong style="color: var(--orange);">⏰ Important:</strong> FAM accounts are valid for <strong style="color: var(--orange);">90 days only</strong>. If you don't upgrade to at least Bronze tier within 90 days, your account will be automatically deleted. This ensures only serious builders remain in our system.
+                    </p>
+                    <p style="color: var(--white); font-size: 0.95rem; line-height: 1.8; margin: 0;">
+                        As you earn commissions, upgrade to Bronze or higher tiers to unlock AI apps, team commissions (TSC), leadership incentives (TLI), and permanent account status. This is how <strong style="color: var(--orange);">Zero to Billions</strong> becomes reality for everyone!
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true
+        });
+
+        // Tier mapping to codes (must match backend tier codes)
+        const tierMapping = {
+            'FAM - Free Affiliate': 'FAM',
+            'Bronze Legacy Builder': 'BRONZE',
+            'Copper Legacy Builder': 'COPPER',
+            'Silver Legacy Builder': 'SILVER',
+            'Gold Legacy Builder': 'GOLD',
+            'Platinum Legacy Builder': 'PLATINUM'
+        };
+
+        // Handle tier selection with referral tracking
+        document.querySelectorAll('.btn-select-tier').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const tierCard = this.closest('.tier-card');
+                const tierName = tierCard.querySelector('.tier-name').textContent.trim();
+                const tierCode = tierMapping[tierName] || 'STARTER';
+
+                // Get referrer ID from URL if present
+                const urlParams = new URLSearchParams(window.location.search);
+                const referrerId = urlParams.get('ref');
+
+                // If app access system is loaded and there's a referrer
+                if (window.Z2BAppAccess && referrerId) {
+                    // Track referral conversion
+                    window.Z2BAppAccess.convertReferral(referrerId);
+
+                    // Upgrade user tier and credit referrer
+                    const upgradeResult = window.Z2BAppAccess.upgradeTier(tierCode, referrerId);
+
+                    if (upgradeResult) {
+                        alert(`🎉 Congratulations! You've selected ${tierName}!\\n\\n✓ Your referrer has been credited\\n✓ Tier upgrade processing...\\n\\nRedirecting to payment...`);
+                    } else {
+                        alert(`Great choice! You've selected ${tierName}.\\n\\nNote: Your referrer (${referrerId}) has been recorded.\\n\\nThis will redirect to payment processing.`);
+                    }
+                } else {
+                    // No referrer or app access not loaded
+                    alert(`Great choice! You've selected ${tierName}.\\n\\nThis will redirect to payment processing.`);
+                }
+
+                // Store tier selection for payment tracking
+                localStorage.setItem('z2b_selected_tier', tierCode);
+                localStorage.setItem('z2b_selected_tier_name', tierName);
+                if (referrerId) {
+                    localStorage.setItem('z2b_referrer', referrerId);
+                }
+
+                // Build registration URL with tier and referrer
+                let registerUrl = `register.html?tier=${tierCode}`;
+                if (referrerId) {
+                    registerUrl += `&ref=${referrerId}`;
+                }
+
+                // Redirect to registration page
+                setTimeout(() => {
+                    window.location.href = registerUrl;
+                }, 2000);
+            });
+        });
+
+        // Handle tier downgrade
+        async function handleDowngrade(newTier, user) {
+            const tierNames = {
+                'FAM': 'FAM - Free Affiliate',
+                'BRONZE': 'Bronze Legacy Builder',
+                'COPPER': 'Copper Legacy Builder',
+                'SILVER': 'Silver Legacy Builder',
+                'GOLD': 'Gold Legacy Builder',
+                'PLATINUM': 'Platinum Legacy Builder'
+            };
+
+            const confirmed = confirm(
+                `⚠️ DOWNGRADE CONFIRMATION\n\n` +
+                `Current Tier: ${user.tierName}\n` +
+                `New Tier: ${tierNames[newTier]}\n\n` +
+                `⚠️ You will IMMEDIATELY LOSE:\n` +
+                `• Higher commission rates\n` +
+                `• App access\n` +
+                `• Team bonuses\n` +
+                `• PV points\n\n` +
+                `This action is permanent. Continue?`
+            );
+
+            if (!confirmed) return;
+
+            try {
+                const API_URL = 'https://z2b-production-3cd3.up.railway.app';
+                const token = localStorage.getItem('z2b_token');
+
+                const response = await fetch(`${API_URL}/api/users/${user.id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ tier: newTier })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Update localStorage
+                    user.tier = newTier;
+                    user.tierName = tierNames[newTier];
+                    localStorage.setItem('z2b_current_user', JSON.stringify(user));
+
+                    alert(`✅ Tier downgraded successfully!\n\nYou are now a ${tierNames[newTier]} member.`);
+                    window.location.reload(); // Reload to show new tier
+                } else {
+                    alert('❌ Downgrade failed: ' + (result.message || 'Unknown error'));
+                }
+            } catch (error) {
+                alert('❌ Error processing downgrade. Please try again or contact support.');
+                console.error('Downgrade error:', error);
+            }
+        }
+
+        // Handle tier upgrade
+        function handleUpgrade(newTier, user) {
+            const tierNames = {
+                'FAM': 'FAM - Free Affiliate',
+                'BRONZE': 'Bronze Legacy Builder',
+                'COPPER': 'Copper Legacy Builder',
+                'SILVER': 'Silver Legacy Builder',
+                'GOLD': 'Gold Legacy Builder',
+                'PLATINUM': 'Platinum Legacy Builder'
+            };
+
+            const tierCodes = {
+                'FAM': 'FAM',
+                'BRONZE': 'BLB',
+                'COPPER': 'CLB',
+                'SILVER': 'SLB',
+                'GOLD': 'GLB',
+                'PLATINUM': 'PLB'
+            };
+
+            // Store upgrade intent with tier code for payment page
+            localStorage.setItem('z2b_tier_upgrade', JSON.stringify({
+                action: 'upgrade',
+                fromTier: user.tier,
+                toTier: newTier,
+                tierCode: tierCodes[newTier],
+                userId: user.id,
+                userEmail: user.email,
+                userName: user.name,
+                userPhone: user.phone
+            }));
+
+            // Redirect to new payment options page (not register.html)
+            window.location.href = 'tier-upgrade-payment.html';
+        }
+
+        // Display referral info if coming from referral link
+        window.addEventListener('DOMContentLoaded', function() {
+            // DYNAMIC TIER DETECTION - Replace buttons based on user's current tier
+            const currentUser = JSON.parse(localStorage.getItem('z2b_current_user') || '{}');
+            const currentTier = currentUser.tier || null;
+
+            if (currentTier) {
+                const tierHierarchy = ['FAM', 'BRONZE', 'COPPER', 'SILVER', 'GOLD', 'PLATINUM'];
+                const currentTierIndex = tierHierarchy.indexOf(currentTier);
+
+                document.querySelectorAll('.tier-card').forEach(card => {
+                    const cardClasses = card.className;
+                    let cardTier = null;
+
+                    if (cardClasses.includes('fam')) cardTier = 'FAM';
+                    else if (cardClasses.includes('bronze')) cardTier = 'BRONZE';
+                    else if (cardClasses.includes('copper')) cardTier = 'COPPER';
+                    else if (cardClasses.includes('silver')) cardTier = 'SILVER';
+                    else if (cardClasses.includes('gold')) cardTier = 'GOLD';
+                    else if (cardClasses.includes('platinum')) cardTier = 'PLATINUM';
+
+                    if (!cardTier) return;
+
+                    const cardTierIndex = tierHierarchy.indexOf(cardTier);
+                    const button = card.querySelector('.btn-select-tier');
+
+                    if (cardTierIndex < currentTierIndex) {
+                        // LOWER TIER - Downgrade button
+                        button.textContent = 'Downgrade Your Tier';
+                        button.className = 'btn-select-tier btn-downgrade';
+                        button.onclick = () => handleDowngrade(cardTier, currentUser);
+                    } else if (cardTierIndex === currentTierIndex) {
+                        // CURRENT TIER - Congratulations badge
+                        const tierNames = {
+                            'FAM': 'FAM',
+                            'BRONZE': 'Bronze',
+                            'COPPER': 'Copper',
+                            'SILVER': 'Silver',
+                            'GOLD': 'Gold',
+                            'PLATINUM': 'Platinum'
+                        };
+                        button.outerHTML = `<div class="current-tier-badge">🎉 Congratulations! You are a ${tierNames[cardTier]} member</div>`;
+                    } else {
+                        // HIGHER TIER - Upgrade button
+                        button.textContent = 'Upgrade and Earn More';
+                        button.className = 'btn-select-tier btn-upgrade';
+                        button.onclick = () => handleUpgrade(cardTier, currentUser);
+                    }
+                });
+            }
+
+            // Referral tracking
+            const urlParams = new URLSearchParams(window.location.search);
+            const referrerId = urlParams.get('ref');
+            const referrerName = urlParams.get('ref_name');
+
+            if (referrerId) {
+                // Create referral banner
+                const referralBanner = document.createElement('div');
+                referralBanner.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    background: linear-gradient(135deg, #4CAF50, #8BC34A);
+                    color: var(--white);
+                    padding: 1rem 2rem;
+                    text-align: center;
+                    font-weight: 600;
+                    z-index: 9999;
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+                    animation: slideDown 0.5s ease;
+                `;
+
+                const referrerDisplay = referrerName ? referrerName : `Builder #${referrerId}`;
+                referralBanner.innerHTML = `
+                    <i class="fas fa-user-friends"></i>
+                    You've been invited by <strong>${referrerDisplay}</strong>!
+                    Select any tier below to join their team and start building your legacy together.
+                    <button onclick="this.parentElement.style.display='none'" style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer;">×</button>
+                `;
+
+                document.body.insertBefore(referralBanner, document.body.firstChild);
+                document.body.style.paddingTop = '70px';
+
+                // Store referrer in localStorage for later
+                if (window.Z2BAppAccess) {
+                    window.Z2BAppAccess.setReferrer(referrerId);
+                } else {
+                    // Fallback if app-config.js not loaded yet
+                    localStorage.setItem('z2b_referrer', referrerId);
+                }
+
+                // Add animation
+                const style = document.createElement('style');
+                style.textContent = `
+                    @keyframes slideDown {
+                        from {
+                            transform: translateY(-100%);
+                            opacity: 0;
+                        }
+                        to {
+                            transform: translateY(0);
+                            opacity: 1;
+                        }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coach ManLaw - Button Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 50px;
+            background: linear-gradient(135deg, #0A1F44 0%, #030B1F 100%);
+            color: white;
+        }
+        button {
+            background: linear-gradient(135deg, #FFD700 0%, #FFED4E 100%);
+            border: 2px solid #FFF9C4;
+            color: #030B1F;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 10px;
+            font-weight: bold;
+        }
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+        }
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(255, 215, 0, 0.1);
+            border: 2px solid #FFD700;
+            border-radius: 10px;
+            min-height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Coach ManLaw Button Test</h1>
+    <p>This is a simple test to verify button functionality.</p>
+
+    <h2>Test 1: Inline onclick</h2>
+    <button onclick="testInline()">Click Me (Inline onclick)</button>
+
+    <h2>Test 2: Global window function</h2>
+    <button onclick="window.testGlobal()">Click Me (window.function)</button>
+
+    <h2>Test 3: Event Listener</h2>
+    <button id="testListener">Click Me (Event Listener)</button>
+
+    <div class="result" id="result">
+        <strong>Results will appear here...</strong>
+    </div>
+
+    <script>
+        // Test function defined locally
+        function testInline() {
+            document.getElementById('result').innerHTML += '<br>✅ TEST 1 PASSED: Inline onclick works!';
+            alert('✅ Inline onclick works!');
+        }
+
+        // Expose to global scope
+        window.testGlobal = function() {
+            document.getElementById('result').innerHTML += '<br>✅ TEST 2 PASSED: Window function works!';
+            alert('✅ Window function works!');
+        }
+
+        // Event listener method
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('testListener').addEventListener('click', function() {
+                document.getElementById('result').innerHTML += '<br>✅ TEST 3 PASSED: Event listener works!';
+                alert('✅ Event listener works!');
+            });
+
+            document.getElementById('result').innerHTML = '<strong>✅ Page loaded successfully!</strong><br>Now try clicking the buttons above.';
+        });
+
+        console.log('✅ Test page script loaded');
+        console.log('typeof testInline:', typeof testInline);
+        console.log('typeof window.testGlobal:', typeof window.testGlobal);
+    </script>
+</body>
+</html>

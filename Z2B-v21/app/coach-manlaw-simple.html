@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coach ManLaw - Simple Version | Z2B</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #0B1A2A 0%, #0A2647 100%);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .lesson-card {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #D4AF37;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        .btn-gold {
+            background: linear-gradient(135deg, #D4AF37, #FFE5A0);
+            color: #0B1A2A;
+            border: none;
+            padding: 15px 30px;
+            font-weight: bold;
+            border-radius: 10px;
+            margin: 10px;
+            font-size: 18px;
+        }
+        .btn-gold:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(212, 175, 55, 0.5);
+        }
+        .chat-box {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            min-height: 400px;
+            margin-top: 20px;
+        }
+        .message {
+            background: rgba(212, 175, 55, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid #D4AF37;
+        }
+        h1 {
+            color: #D4AF37;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .day-badge {
+            background: #D4AF37;
+            color: #0B1A2A;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-graduation-cap"></i> Coach ManLaw</h1>
+        <p style="text-align: center; font-size: 20px; color: #D4AF37;">90-Day Legacy Builder Transformation</p>
+
+        <div class="text-center mb-4">
+            <div class="day-badge">
+                <i class="fas fa-calendar-day"></i> Day <span id="currentDay">1</span> of 90
+            </div>
+        </div>
+
+        <!-- Quick Action Buttons -->
+        <div class="text-center">
+            <button class="btn btn-gold" onclick="showLesson()">
+                <i class="fas fa-book-open"></i> 📖 View Today's Lesson
+            </button>
+            <button class="btn btn-gold" onclick="takeAssessment()">
+                <i class="fas fa-clipboard-check"></i> 💡 Take BTSS Assessment
+            </button>
+            <button class="btn btn-gold" onclick="showProgress()">
+                <i class="fas fa-chart-line"></i> 📊 My Progress
+            </button>
+        </div>
+
+        <!-- Lesson Display -->
+        <div id="lessonDisplay" class="lesson-card" style="display: none;">
+            <h2 id="lessonTitle"></h2>
+            <p id="lessonWeek" style="color: #FF6B35;"></p>
+            <div id="lessonContent" style="margin: 20px 0; line-height: 1.8;"></div>
+            <div style="background: rgba(212, 175, 55, 0.1); padding: 15px; border-radius: 10px; margin: 15px 0;">
+                <h4><i class="fas fa-tasks"></i> Today's Activity:</h4>
+                <p id="lessonActivity"></p>
+            </div>
+            <div style="background: rgba(255, 107, 53, 0.1); padding: 15px; border-radius: 10px;">
+                <h4><i class="fas fa-clipboard-list"></i> Your Assignment:</h4>
+                <p id="lessonAssignment"></p>
+            </div>
+            <button class="btn btn-gold mt-3" onclick="completeLesson()">
+                <i class="fas fa-check-circle"></i> Mark as Complete
+            </button>
+            <button class="btn btn-gold mt-3" onclick="hideLesson()" style="background: linear-gradient(135deg, #FF6B35, #FF8A5B);">
+                <i class="fas fa-times"></i> Close
+            </button>
+        </div>
+
+        <!-- Chat Box -->
+        <div class="chat-box">
+            <h3><i class="fas fa-comments"></i> Chat with Coach ManLaw</h3>
+            <div id="chatMessages"></div>
+            <div class="input-group mt-3">
+                <input type="text" id="messageInput" class="form-control" placeholder="Ask Coach ManLaw anything..."
+                       onkeypress="if(event.key==='Enter') sendMessage()">
+                <button class="btn btn-gold" onclick="sendMessage()">
+                    <i class="fas fa-paper-plane"></i> Send
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="coach-manlaw-curriculum.js"></script>
+    <script>
+        // Simple state management
+        let currentDay = parseInt(localStorage.getItem('coach_day')) || 1;
+        let completedLessons = JSON.parse(localStorage.getItem('coach_completed')) || [];
+        let curriculum = window.MANLAW_CURRICULUM;
+
+        // Update day display
+        document.getElementById('currentDay').textContent = currentDay;
+
+        // Show lesson function
+        function showLesson() {
+            alert('Button clicked! Starting to show lesson for day ' + currentDay);
+            console.log('📖 showLesson called for day:', currentDay);
+            console.log('📖 curriculum exists:', !!curriculum);
+
+            if (!curriculum) {
+                alert('⚠️ Curriculum not loaded. Trying to load it now...');
+                if (typeof MANLAW_CURRICULUM !== 'undefined') {
+                    curriculum = MANLAW_CURRICULUM;
+                    alert('✅ Curriculum loaded! Trying again...');
+                } else {
+                    alert('❌ Curriculum still not available. Please refresh the page.');
+                    return;
+                }
+            }
+
+            const lesson = getLessonByDay(currentDay);
+            console.log('📖 lesson found:', lesson);
+
+            if (!lesson) {
+                alert('⚠️ Lesson not found for day ' + currentDay + '. Curriculum may have an issue.');
+                console.error('No lesson for day:', currentDay);
+                return;
+            }
+
+            alert('✅ Lesson found: ' + lesson.title + '. Now displaying it...');
+
+            // Populate lesson content
+            try {
+                document.getElementById('lessonTitle').textContent = lesson.title;
+                document.getElementById('lessonWeek').textContent = `WEEK ${lesson.week} • DAY ${lesson.day}`;
+                document.getElementById('lessonContent').textContent = lesson.content;
+                document.getElementById('lessonActivity').textContent = lesson.activity;
+                document.getElementById('lessonAssignment').textContent = lesson.assignment;
+
+                // Show the lesson
+                const lessonDisplay = document.getElementById('lessonDisplay');
+                lessonDisplay.style.display = 'block';
+                console.log('✅ Lesson display set to block');
+
+                // Scroll to lesson
+                lessonDisplay.scrollIntoView({ behavior: 'smooth' });
+
+                alert('✅ Lesson should now be visible on the page!');
+            } catch (error) {
+                alert('❌ Error displaying lesson: ' + error.message);
+                console.error('Display error:', error);
+            }
+        }
+
+        // Hide lesson
+        function hideLesson() {
+            document.getElementById('lessonDisplay').style.display = 'none';
+        }
+
+        // Complete lesson
+        function completeLesson() {
+            if (!completedLessons.includes(currentDay)) {
+                completedLessons.push(currentDay);
+                localStorage.setItem('coach_completed', JSON.stringify(completedLessons));
+
+                addMessage('coach', `🎉 Congratulations! You completed Day ${currentDay}: "${getLessonByDay(currentDay).title}". Keep building, Legacy Builder!`);
+
+                // Move to next day
+                currentDay++;
+                localStorage.setItem('coach_day', currentDay);
+                document.getElementById('currentDay').textContent = currentDay;
+
+                hideLesson();
+            }
+        }
+
+        // Get lesson by day
+        function getLessonByDay(day) {
+            if (!curriculum) return null;
+
+            const phases = [
+                curriculum.phase1_mindset,
+                curriculum.phase2_money,
+                curriculum.phase3_legacy,
+                curriculum.phase4_momentum,
+                curriculum.finalPhase_integration
+            ];
+
+            for (const phase of phases) {
+                if (!phase.weeks) continue;
+                for (const week of phase.weeks) {
+                    for (const lesson of week.lessons) {
+                        if (lesson.day === day) {
+                            lesson.week = week.week;
+                            return lesson;
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        // Take assessment
+        function takeAssessment() {
+            const mindset = prompt('Rate your MINDSET MYSTERY (0-100):');
+            const money = prompt('Rate your MONEY MOVES (0-100):');
+            const legacy = prompt('Rate your LEGACY MISSIONS (0-100):');
+            const movement = prompt('Rate your MOVEMENT MOMENTUM (0-100):');
+
+            if (mindset && money && legacy && movement) {
+                const overall = Math.round((+mindset + +money + +legacy + +movement) / 4);
+                localStorage.setItem('coach_btss', JSON.stringify({
+                    mindset: +mindset,
+                    money: +money,
+                    legacy: +legacy,
+                    movement: +movement,
+                    overall
+                }));
+
+                addMessage('coach', `📊 Your BTSS Assessment Complete!<br>
+                    Overall Score: ${overall}%<br>
+                    Mindset: ${mindset}% | Money: ${money}% | Legacy: ${legacy}% | Movement: ${movement}%`);
+            }
+        }
+
+        // Show progress
+        function showProgress() {
+            const btss = JSON.parse(localStorage.getItem('coach_btss')) || { overall: 0 };
+            const completed = completedLessons.length;
+            const percentage = Math.round((completed / 90) * 100);
+
+            addMessage('coach', `📊 Your 90-Day Progress:<br>
+                • Current Day: ${currentDay}/90<br>
+                • Lessons Completed: ${completed}/90 (${percentage}%)<br>
+                • Overall BTSS Score: ${btss.overall}%<br>
+                • Keep going! You're building something amazing!`);
+        }
+
+        // Add chat message
+        function addMessage(sender, message) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message';
+            messageDiv.innerHTML = `<strong>${sender === 'coach' ? '🎓 Coach ManLaw' : 'You'}:</strong><br>${message}`;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Send message
+        async function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+
+            if (!message) return;
+
+            addMessage('user', message);
+            input.value = '';
+
+            // Add thinking indicator
+            const chatMessages = document.getElementById('chatMessages');
+            const thinkingDiv = document.createElement('div');
+            thinkingDiv.className = 'message';
+            thinkingDiv.innerHTML = '<strong>🎓 Coach ManLaw:</strong><br>💭 Thinking...';
+            thinkingDiv.id = 'thinking-message';
+            chatMessages.appendChild(thinkingDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            // Simulate realistic thinking time
+            await new Promise(resolve => setTimeout(resolve, 1500));
+
+            // Remove thinking message
+            const thinking = document.getElementById('thinking-message');
+            if (thinking) thinking.remove();
+
+            // Generate contextual response
+            const response = generateCoachResponse(message);
+            addMessage('coach', response);
+        }
+
+        // Generate contextual responses
+        function generateCoachResponse(message) {
+            const msg = message.toLowerCase();
+
+            // Lesson-related questions
+            if (msg.includes('lesson') || msg.includes('today') || msg.includes('what should')) {
+                const lesson = getLessonByDay(currentDay);
+                if (lesson) {
+                    return `📖 Today you're on Day ${currentDay}: "${lesson.title}"<br><br>
+                        This lesson teaches: ${lesson.content.substring(0, 150)}...<br><br>
+                        Click "View Today's Lesson" to see the full content!`;
+                }
+            }
+
+            // Progress questions
+            if (msg.includes('progress') || msg.includes('how am i') || msg.includes('doing')) {
+                const completed = completedLessons.length;
+                const percentage = Math.round((completed / 90) * 100);
+                return `📊 You're on Day ${currentDay} of 90!<br>
+                    • Lessons completed: ${completed}/90 (${percentage}%)<br>
+                    • You're ${percentage < 50 ? 'building momentum' : 'crushing it'}!<br><br>
+                    Keep showing up daily - that's what separates Legacy Builders from dreamers!`;
+            }
+
+            // Motivation requests
+            if (msg.includes('motivate') || msg.includes('encourage') || msg.includes('help')) {
+                const motivations = [
+                    `💎 Listen, Legacy Builder - you're not here by accident. Every billionaire started exactly where you are: Day ${currentDay}. The difference? They kept going when it got hard. So will you.`,
+                    `🔥 Proverbs 23:7 says "As a man thinks, so is he." You're transforming your THINKING first. The money follows the mindset. Trust the process.`,
+                    `⚡ You know what separates the 1% from the 99%? Daily discipline. You're here on Day ${currentDay}. That's leadership. That's legacy. Keep building!`,
+                    `🎯 Your billion-dollar table needs all 4 legs: Mindset, Money, Legacy, Movement. We're building them one day at a time. Day ${currentDay} is a brick in your empire.`,
+                    `💪 Ecclesiastes 4:9 - "Two are better than one." You're not alone on this journey. You have me, you have the community, and you have the vision. Let's build!`
+                ];
+                return motivations[Math.floor(Math.random() * motivations.length)];
+            }
+
+            // BTSS questions
+            if (msg.includes('btss') || msg.includes('score') || msg.includes('assess')) {
+                return `📊 BTSS stands for Business Table Success Score - it measures your strength across the 4 Legs:<br><br>
+                    1️⃣ <strong>Mindset Mystery</strong> - Your thinking & identity<br>
+                    2️⃣ <strong>Money Moves</strong> - Your income & wealth systems<br>
+                    3️⃣ <strong>Legacy Missions</strong> - Your scalable systems<br>
+                    4️⃣ <strong>Movement Momentum</strong> - Your influence & leadership<br><br>
+                    Click "Take BTSS Assessment" to measure where you're at!`;
+            }
+
+            // Questions about the program
+            if (msg.includes('90 day') || msg.includes('program') || msg.includes('how long')) {
+                return `📅 The 90-Day Legacy Builder Transformation is structured in phases:<br><br>
+                    🧠 Days 1-20: Mindset Mystery<br>
+                    💰 Days 21-35: Money Moves<br>
+                    ⚙️ Days 36-50: Legacy Missions<br>
+                    🌍 Days 51-65: Movement Momentum<br>
+                    🏆 Days 66-90: Integration & Mastery<br><br>
+                    You're currently on Day ${currentDay}. Stay consistent and watch your life transform!`;
+            }
+
+            // Default personalized responses
+            const responses = [
+                `I hear you, Legacy Builder. Remember: you're not building a job, you're building an empire. Day ${currentDay} is part of your foundation. What specific challenge are you facing?`,
+                `That's a great question! Here's the truth: transformation happens daily, not overnight. You're on Day ${currentDay} of becoming unstoppable. Keep asking, keep building!`,
+                `💎 Real talk: Most people quit before Day ${currentDay}. You're still here. That makes you different. That makes you a Legacy Builder. What do you need clarity on?`,
+                `Your mindset is changing, your actions are aligning, and your legacy is forming. Day ${currentDay} matters. How can I help you win today?`,
+                `I see you showing up. That's 80% of success right there. Day ${currentDay} - let's make it count. What's your biggest obstacle right now?`
+            ];
+
+            return responses[Math.floor(Math.random() * responses.length)];
+        }
+
+        // Welcome message
+        addMessage('coach', `Welcome, Legacy Builder! 🎓<br>
+            You're on Day ${currentDay} of your 90-day transformation.<br>
+            Click "View Today's Lesson" to get started, or ask me anything!`);
+    </script>
+</body>
+</html>

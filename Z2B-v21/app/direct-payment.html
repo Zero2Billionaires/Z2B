@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Direct Bank Transfer - MAVULA Payment</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --neon-blue: #00f3ff;
+            --neon-purple: #b026ff;
+            --neon-gold: #ffd700;
+            --neon-orange: #ff6b35;
+            --dark-bg: #0a0e27;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0a0e27 100%);
+            min-height: 100vh;
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .payment-container {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+
+        .payment-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 0 40px rgba(0, 243, 255, 0.2);
+        }
+
+        .bank-details-box {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 107, 53, 0.1));
+            border: 2px solid var(--neon-gold);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+        }
+
+        .bank-details-box h3 {
+            color: var(--neon-gold);
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .bank-detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            margin: 10px 0;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border-left: 4px solid var(--neon-blue);
+        }
+
+        .bank-detail-label {
+            font-weight: 600;
+            color: var(--neon-blue);
+            font-size: 16px;
+        }
+
+        .bank-detail-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #fff;
+            letter-spacing: 1px;
+        }
+
+        .copy-btn {
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: all 0.3s;
+        }
+
+        .copy-btn:hover {
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.6);
+            transform: scale(1.05);
+        }
+
+        .steps-box {
+            background: rgba(176, 38, 255, 0.1);
+            border: 2px solid var(--neon-purple);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: start;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+
+        .step-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, var(--neon-gold), var(--neon-orange));
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #000;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .upload-section {
+            background: rgba(0, 243, 255, 0.1);
+            border: 2px dashed var(--neon-blue);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            margin: 30px 0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .upload-section:hover {
+            border-color: var(--neon-gold);
+            background: rgba(255, 215, 0, 0.1);
+        }
+
+        .upload-section input[type="file"] {
+            display: none;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, var(--neon-gold), var(--neon-orange));
+            border: none;
+            color: #000;
+            padding: 15px 50px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-submit:hover {
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.8);
+            transform: translateY(-3px);
+        }
+
+        .alert-info {
+            background: rgba(0, 243, 255, 0.2);
+            border: 1px solid var(--neon-blue);
+            border-radius: 10px;
+            padding: 20px;
+            color: #fff;
+        }
+
+        .whatsapp-box {
+            background: rgba(37, 211, 102, 0.1);
+            border: 2px solid #25D366;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .whatsapp-btn {
+            background: #25D366;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 10px;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+
+        .whatsapp-btn:hover {
+            background: #128C7E;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .amount-display {
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-blue));
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .amount-display h2 {
+            margin: 0;
+            font-size: 48px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="payment-container">
+        <div class="payment-card">
+            <!-- Header -->
+            <div style="text-align: center; margin-bottom: 30px;">
+                <i class="fas fa-university" style="font-size: 64px; color: var(--neon-gold);"></i>
+                <h1 style="background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-top: 20px;">
+                    Direct Bank Transfer
+                </h1>
+                <p style="color: rgba(255,255,255,0.7); font-size: 18px;">Complete your MAVULA purchase via bank transfer</p>
+            </div>
+
+            <!-- Product & Amount -->
+            <div class="amount-display">
+                <p style="margin: 0; opacity: 0.8;">MAVULA - <span id="planDisplay">Monthly Subscription</span></p>
+                <h2 id="amountDisplay">R497</h2>
+            </div>
+
+            <!-- Banking Details -->
+            <div class="bank-details-box">
+                <h3><i class="fas fa-landmark"></i> Banking Details</h3>
+
+                <div class="bank-detail-row">
+                    <div>
+                        <div class="bank-detail-label">Bank Name</div>
+                        <div class="bank-detail-value">NEDBANK</div>
+                    </div>
+                    <button class="copy-btn" onclick="copyToClipboard('NEDBANK', this)">
+                        <i class="fas fa-copy"></i> Copy
+                    </button>
+                </div>
+
+                <div class="bank-detail-row">
+                    <div>
+                        <div class="bank-detail-label">Account Name</div>
+                        <div class="bank-detail-value">Zero2billionaires Amavulandlela</div>
+                    </div>
+                    <button class="copy-btn" onclick="copyToClipboard('Zero2billionaires Amavulandlela', this)">
+                        <i class="fas fa-copy"></i> Copy
+                    </button>
+                </div>
+
+                <div class="bank-detail-row">
+                    <div>
+                        <div class="bank-detail-label">Account Number</div>
+                        <div class="bank-detail-value">1318257727</div>
+                    </div>
+                    <button class="copy-btn" onclick="copyToClipboard('1318257727', this)">
+                        <i class="fas fa-copy"></i> Copy
+                    </button>
+                </div>
+
+                <div class="bank-detail-row">
+                    <div>
+                        <div class="bank-detail-label">Reference</div>
+                        <div class="bank-detail-value">Your Phone Number</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Steps -->
+            <div class="steps-box">
+                <h4 style="color: var(--neon-purple); margin-bottom: 20px;">
+                    <i class="fas fa-list-ol"></i> Payment Steps
+                </h4>
+
+                <div class="step-item">
+                    <div class="step-number">1</div>
+                    <div>
+                        <strong style="color: var(--neon-gold);">Make Payment</strong>
+                        <p style="margin: 5px 0 0 0; opacity: 0.8;">
+                            Transfer <strong id="amountStep">R497</strong> to the banking details above.
+                            Use your <strong>phone number as reference</strong>.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="step-number">2</div>
+                    <div>
+                        <strong style="color: var(--neon-gold);">Upload Proof of Payment</strong>
+                        <p style="margin: 5px 0 0 0; opacity: 0.8;">
+                            Take a clear photo or screenshot of your payment confirmation.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="step-number">3</div>
+                    <div>
+                        <strong style="color: var(--neon-gold);">Send via WhatsApp</strong>
+                        <p style="margin: 5px 0 0 0; opacity: 0.8;">
+                            Send proof of payment to us on WhatsApp for faster processing.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="step-number">4</div>
+                    <div>
+                        <strong style="color: var(--neon-gold);">Wait for Approval</strong>
+                        <p style="margin: 5px 0 0 0; opacity: 0.8;">
+                            Admin will verify payment within 1-24 hours (usually within 2 hours during business hours).
+                        </p>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="step-number">5</div>
+                    <div>
+                        <strong style="color: var(--neon-gold);">Receive Access</strong>
+                        <p style="margin: 5px 0 0 0; opacity: 0.8;">
+                            You'll receive MAVULA login credentials via email and WhatsApp once approved.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upload Section -->
+            <div class="upload-section" id="uploadArea" onclick="document.getElementById('proofUpload').click()">
+                <i class="fas fa-cloud-upload-alt" style="font-size: 48px; color: var(--neon-blue); margin-bottom: 15px;"></i>
+                <h5 style="color: var(--neon-blue);">Upload Proof of Payment (Optional)</h5>
+                <p style="opacity: 0.7; margin-bottom: 0;">Click to select file or send via WhatsApp below</p>
+                <input type="file" id="proofUpload" accept="image/*,.pdf" onchange="handleFileUpload(this)">
+                <p id="fileName" style="margin-top: 15px; color: var(--neon-gold);"></p>
+            </div>
+
+            <!-- WhatsApp Option -->
+            <div class="whatsapp-box">
+                <i class="fab fa-whatsapp" style="font-size: 48px; color: #25D366;"></i>
+                <h5 style="margin-top: 15px;">Send Proof via WhatsApp (Recommended)</h5>
+                <p style="opacity: 0.8; margin-bottom: 0;">For faster processing, send your proof of payment directly to our WhatsApp</p>
+                <a href="https://wa.me/27774901639?text=Hi%2C%20I%20made%20a%20payment%20for%20MAVULA.%20Here%27s%20my%20proof%20of%20payment."
+                   class="whatsapp-btn" target="_blank">
+                    <i class="fab fa-whatsapp"></i> Send to WhatsApp: 077 490 1639
+                </a>
+            </div>
+
+            <!-- Contact Info -->
+            <div class="alert-info">
+                <h6 style="margin-bottom: 10px;"><i class="fas fa-info-circle"></i> Important Information</h6>
+                <ul style="margin: 0; padding-left: 20px;">
+                    <li><strong>Business Hours:</strong> Mon-Fri 9:00 AM - 5:00 PM SAST</li>
+                    <li><strong>After Hours:</strong> Payments made after hours will be processed the next business day</li>
+                    <li><strong>Reference:</strong> Always use your phone number as payment reference</li>
+                    <li><strong>Support:</strong> WhatsApp 077 490 1639 or email support@z2blegacybuilders.co.za</li>
+                </ul>
+            </div>
+
+            <!-- Hidden Form Data -->
+            <input type="hidden" id="productData" value="">
+            <input type="hidden" id="planData" value="">
+            <input type="hidden" id="amountData" value="">
+
+            <!-- Action Buttons -->
+            <div style="margin-top: 30px;">
+                <button class="btn-submit" onclick="confirmPayment()">
+                    <i class="fas fa-check-circle"></i> I Have Made the Payment
+                </button>
+                <div style="text-align: center; margin-top: 15px;">
+                    <a href="mavula-payment.html" style="color: var(--neon-blue); text-decoration: none;">
+                        <i class="fas fa-arrow-left"></i> Back to Payment Options
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer style="text-align: center; padding: 30px 20px; margin-top: 50px; background: rgba(255,255,255,0.05); border-top: 1px solid rgba(255,255,255,0.1);">
+        <p style="margin: 0; color: rgba(255,255,255,0.7); font-size: 14px;">
+            Built with <i class="fas fa-heart" style="color: #ff6b6b; animation: heartbeat 1.5s infinite;"></i> by <strong style="color: #FFD700;">Z2B Legacy Builders</strong>
+        </p>
+    </footer>
+    <style>
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.1); }
+            50% { transform: scale(1); }
+        }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Get URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const product = urlParams.get('product') || 'mavula';
+        const plan = urlParams.get('plan') || 'monthly';
+        const amount = urlParams.get('amount') || '497';
+
+        // Display plan and amount
+        document.addEventListener('DOMContentLoaded', function() {
+            const planDisplay = plan === 'monthly' ? 'Monthly Subscription' : 'Lifetime Access';
+            document.getElementById('planDisplay').textContent = planDisplay;
+            document.getElementById('amountDisplay').textContent = 'R' + amount;
+            document.getElementById('amountStep').textContent = 'R' + amount;
+
+            // Store data
+            document.getElementById('productData').value = product;
+            document.getElementById('planData').value = plan;
+            document.getElementById('amountData').value = amount;
+        });
+
+        function copyToClipboard(text, button) {
+            navigator.clipboard.writeText(text).then(function() {
+                const originalText = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                button.style.background = '#28a745';
+
+                setTimeout(function() {
+                    button.innerHTML = originalText;
+                    button.style.background = '';
+                }, 2000);
+            }, function(err) {
+                alert('Could not copy: ' + err);
+            });
+        }
+
+        function handleFileUpload(input) {
+            if (input.files && input.files[0]) {
+                const fileName = input.files[0].name;
+                const fileSize = (input.files[0].size / 1024 / 1024).toFixed(2);
+                document.getElementById('fileName').innerHTML =
+                    `<i class="fas fa-check-circle"></i> Selected: ${fileName} (${fileSize} MB)`;
+            }
+        }
+
+        function confirmPayment() {
+            const plan = document.getElementById('planData').value;
+            const amount = document.getElementById('amountData').value;
+            const planName = plan === 'monthly' ? 'Monthly Subscription' : 'Lifetime Access';
+
+            alert(`✅ PAYMENT CONFIRMATION RECEIVED\n\nProduct: MAVULA\nPlan: ${planName}\nAmount: R${amount}\n\nWhat happens next:\n1. Admin will verify your payment (1-24 hours)\n2. You'll receive login credentials via:\n   • Email\n   • WhatsApp (077 490 1639)\n3. Start using MAVULA immediately after approval\n\nThank you for your purchase! 🎉\n\nFor faster processing, send proof of payment via WhatsApp.`);
+
+            // Optional: Submit to backend
+            // You can add backend integration here to notify admin
+
+            // Redirect after 3 seconds
+            setTimeout(function() {
+                window.location.href = 'index.html';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

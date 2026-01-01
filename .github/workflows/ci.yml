@@ -1,0 +1,148 @@
+name: Z2B CI/CD Pipeline
+
+on:
+  push:
+    branches: [ master, develop ]
+  pull_request:
+    branches: [ master, develop ]
+
+jobs:
+  # Job 1: Lint and Test Client
+  client-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        cache-dependency-path: client/package-lock.json
+
+    - name: Install client dependencies
+      working-directory: ./client
+      run: npm ci
+
+    - name: Lint client code
+      working-directory: ./client
+      run: npm run lint --if-present
+
+    - name: Run client tests
+      working-directory: ./client
+      run: npm test --if-present
+
+    - name: Build client
+      working-directory: ./client
+      run: npm run build
+
+  # Job 2: Lint and Test Server
+  server-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+        mongodb-version: ['6.0']
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        cache-dependency-path: server/package-lock.json
+
+    - name: Start MongoDB
+      uses: supercharge/mongodb-github-action@1.10.0
+      with:
+        mongodb-version: ${{ matrix.mongodb-version }}
+
+    - name: Install server dependencies
+      working-directory: ./server
+      run: npm ci
+
+    - name: Lint server code
+      working-directory: ./server
+      run: npm run lint --if-present
+
+    - name: Run server tests
+      working-directory: ./server
+      run: npm test --if-present
+      env:
+        MONGODB_URI: mongodb://localhost:27017/z2b-test
+        JWT_SECRET: test-secret-key
+        NODE_ENV: test
+
+  # Job 3: PHP Syntax Check
+  php-check:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '7.4'
+
+    - name: Check PHP syntax
+      run: |
+        find Z2B-v21 -name "*.php" -exec php -l {} \;
+
+  # Job 4: Security Audit
+  security-audit:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18.x'
+
+    - name: Run npm audit for client
+      working-directory: ./client
+      run: npm audit --audit-level=moderate || true
+
+    - name: Run npm audit for server
+      working-directory: ./server
+      run: npm audit --audit-level=moderate || true
+
+  # Job 5: Build and Deploy (only on master branch)
+  deploy:
+    needs: [client-test, server-test, php-check]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18.x'
+
+    - name: Install dependencies
+      run: |
+        cd client && npm ci
+        cd ../server && npm ci
+
+    - name: Build client
+      working-directory: ./client
+      run: npm run build
+
+    - name: Deploy to production
+      run: |
+        echo "Deployment step - configure based on your hosting platform"
+        # Add your deployment commands here
+        # Example for Vercel:
+        # npx vercel --prod --token=${{ secrets.VERCEL_TOKEN }}
+        # Example for Heroku:
+        # git push heroku master

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase Benown - AI Business Tools</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {{
+            --neon-blue: #00f3ff;
+            --neon-purple: #b026ff;
+            --neon-gold: #ffd700;
+            --neon-orange: #ff6b35;
+            --dark-bg: #0a0e27;
+        }}
+
+        body {{
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0a0e27 100%);
+            min-height: 100vh;
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }}
+
+        .payment-container {{
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 20px;
+        }}
+
+        .payment-card {{
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 0 40px rgba(0, 243, 255, 0.2);
+        }}
+
+        .product-header {{
+            text-align: center;
+            margin-bottom: 40px;
+        }}
+
+        .product-header h1 {{
+            font-size: 42px;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }}
+
+        .pricing-box {{
+            background: rgba(255, 215, 0, 0.1);
+            border: 2px solid var(--neon-gold);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+        }}
+
+        .pricing-box .price {{
+            font-size: 56px;
+            font-weight: bold;
+            color: var(--neon-gold);
+            margin: 20px 0;
+        }}
+
+        .pricing-box .badge {{
+            background: var(--neon-gold);
+            color: #000;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }}
+
+        .payment-method {{
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }}
+
+        .payment-method:hover {{
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
+        }}
+
+        .payment-method.selected {{
+            border-color: var(--neon-gold);
+            background: rgba(255, 215, 0, 0.1);
+        }}
+
+        .btn-purchase {{
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            border: none;
+            color: white;
+            padding: 15px 50px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s;
+        }}
+
+        .btn-purchase:hover {{
+            box-shadow: 0 0 40px rgba(0, 243, 255, 0.8);
+            transform: translateY(-3px);
+        }}
+
+        .feature-list {{
+            list-style: none;
+            padding: 0;
+        }}
+
+        .feature-list li {{
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }}
+
+        .feature-list li:last-child {{
+            border-bottom: none;
+        }}
+    </style>
+</head>
+<body>
+    <div class="payment-container">
+        <div class="payment-card">
+            <div class="product-header">
+                <i class="fas fa-building" style="font-size: 64px; color: var(--neon-blue);"></i>
+                <h1>Benown</h1>
+                <p style="color: rgba(255,255,255,0.7); font-size: 18px;">AI Business Tools</p>
+            </div>
+
+            <!-- Pricing -->
+            <div class="pricing-box">
+                <span class="badge">MONTHLY SUBSCRIPTION</span>
+                <div class="price">R700</div>
+                <p style="font-size: 14px; opacity: 0.8;">/month</p>
+                <p>Billed monthly • Cancel anytime</p>
+            </div>
+
+            <!-- What's Included -->
+            <div style="background: rgba(0, 243, 255, 0.1); padding: 20px; border-radius: 15px; margin-bottom: 30px;">
+                <h4 style="color: var(--neon-blue);">What You Get:</h4>
+                <ul class="feature-list">
+                                        <li><i class="fas fa-check" style="color: var(--neon-gold);"></i> Business Plan Generator</li>
+                    <li><i class="fas fa-check" style="color: var(--neon-gold);"></i> Market Research AI</li>
+                    <li><i class="fas fa-check" style="color: var(--neon-gold);"></i> Financial Projections</li>
+                    <li><i class="fas fa-check" style="color: var(--neon-gold);"></i> Competitor Analysis</li>
+                    <li><i class="fas fa-check" style="color: var(--neon-gold);"></i> SWOT Analysis</li>
+                    <li><i class="fas fa-check" style="color: var(--neon-gold);"></i> Pitch Deck Creator</li>
+                    <li><i class="fas fa-check" style="color: var(--neon-gold);"></i> Unlimited AI Fuel Credits</li>
+                    <li><i class="fas fa-check" style="color: var(--neon-gold);"></i> 24/7 Support</li>
+                </ul>
+            </div>
+
+            <!-- Payment Methods -->
+            <h3 style="color: var(--neon-blue); margin-bottom: 20px;">Choose Payment Method</h3>
+            <div class="payment-methods">
+                <!-- Online Payment -->
+                <div class="payment-method" id="onlinePayment" onclick="selectPayment('online')">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5><i class="fas fa-credit-card"></i> Online Payment</h5>
+                            <p style="margin: 0; opacity: 0.7; font-size: 14px;">
+                                Pay with Card, EFT, SnapScan, or Crypto<br>
+                                <strong style="color: var(--neon-gold);">Instant Access</strong>
+                            </p>
+                        </div>
+                        <i class="fas fa-arrow-right" style="font-size: 24px; color: var(--neon-blue);"></i>
+                    </div>
+                </div>
+
+                <!-- Direct Payment -->
+                <div class="payment-method" id="directPayment" onclick="selectPayment('direct')">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5><i class="fas fa-university"></i> Direct Bank Transfer</h5>
+                            <p style="margin: 0; opacity: 0.7; font-size: 14px;">
+                                Pay directly to our bank account<br>
+                                <strong style="color: var(--neon-orange);">Access after admin approval (1-24 hours)</strong>
+                            </p>
+                        </div>
+                        <i class="fas fa-arrow-right" style="font-size: 24px; color: var(--neon-blue);"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Purchase Button -->
+            <button class="btn-purchase" onclick="processPurchase()">
+                <i class="fas fa-lock"></i> Complete Purchase - R700/month
+            </button>
+
+            <p style="text-align: center; margin-top: 20px; opacity: 0.7; font-size: 14px;">
+                <i class="fas fa-shield-alt"></i> Secure payment - Money-back guarantee - 24/7 support
+            </p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let selectedPayment = 'online';
+
+        // Capture referral code from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const referralCode = urlParams.get('ref') || urlParams.get('sponsor') || localStorage.getItem('referralCode') || '';
+        const amount = urlParams.get('amount') || '297';
+
+        function selectPayment(method) {{
+            selectedPayment = method;
+            document.querySelectorAll('.payment-method').forEach(card => {{
+                card.classList.remove('selected');
+            }});
+            document.getElementById(method + 'Payment').classList.add('selected');
+        }}
+
+        function processPurchase() {{
+            const productName = 'Benown';
+            const planName = 'Monthly Subscription';
+
+            if (selectedPayment === 'online') {{
+                // Build payment URL with referral tracking
+                let paymentUrl = 'payment-success-app.html?product=' + productName.toLowerCase() + '&amount=' + amount;
+                if (referralCode) {{
+                    paymentUrl += '&ref=' + encodeURIComponent(referralCode);
+                }}
+
+                // Redirect to payment gateway
+                window.location.href = paymentUrl;
+            }} else {{
+                // Build direct payment URL with referral tracking
+                let directUrl = 'direct-payment.html?product=' + productName.toLowerCase() + '&amount=' + amount;
+                if (referralCode) {{
+                    directUrl += '&ref=' + encodeURIComponent(referralCode);
+                }}
+
+                // Redirect to banking details page
+                window.location.href = directUrl;
+            }}
+        }}
+
+        // Auto-select online payment on load
+        window.onload = function() {{
+            selectPayment('online');
+        }};
+    </script>
+
+    <!-- Footer -->
+    <footer style="text-align: center; padding: 30px 20px; margin-top: 50px; background: rgba(255,255,255,0.05); border-top: 1px solid rgba(255,255,255,0.1);">
+        <p style="margin: 0; color: rgba(255,255,255,0.7); font-size: 14px;">
+            Built with <i class="fas fa-heart" style="color: #ff6b6b; animation: heartbeat 1.5s infinite;"></i> by <strong style="color: #FFD700;">Z2B Legacy Builders</strong>
+        </p>
+    </footer>
+    <style>
+        @keyframes heartbeat {{
+            0%, 100% {{ transform: scale(1); }}
+            25% {{ transform: scale(1.1); }}
+            50% {{ transform: scale(1); }}
+        }}
+    </style>
+</body>
+</html>

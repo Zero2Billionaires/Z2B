@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Z2B Marketplace</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --navy-blue: #0A2647;
+            --gold: #FFD700;
+            --orange: #FF6B35;
+            --light-gold: #FFF4CC;
+            --dark-navy: #051428;
+            --white: #FFFFFF;
+            --primary: #FFD700;
+            --success: #FF6B35;
+            --warning: #FFB800;
+            --danger: #FF6B6B;
+            --dark: #0A2647;
+            --light: #f8f9fa;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(to bottom, var(--navy-blue), var(--dark-navy));
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 1.5rem 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            color: var(--primary);
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .steps {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .step.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .step.completed {
+            background: var(--success);
+            color: white;
+        }
+
+        .step.inactive {
+            background: #e0e0e0;
+            color: #999;
+        }
+
+        .checkout-grid {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 2rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .card h2 {
+            color: #333;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--light);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .cart-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            border: 2px solid #f0f0f0;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .item-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            flex-shrink: 0;
+        }
+
+        .item-details {
+            flex: 1;
+        }
+
+        .item-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.3rem;
+        }
+
+        .item-meta {
+            font-size: 0.85rem;
+            color: #777;
+            margin-bottom: 0.5rem;
+        }
+
+        .item-price {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        .item-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .qty-control {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f9fa;
+            padding: 0.3rem;
+            border-radius: 8px;
+        }
+
+        .qty-btn {
+            width: 30px;
+            height: 30px;
+            border: none;
+            background: white;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .qty-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .qty-value {
+            width: 40px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .btn-remove {
+            background: rgba(255, 107, 107, 0.1);
+            color: var(--danger);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .order-summary {
+            position: sticky;
+            top: 2rem;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .summary-row:last-child {
+            border-bottom: none;
+        }
+
+        .summary-row.total {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+            padding-top: 1.5rem;
+            border-top: 2px solid var(--primary);
+        }
+
+        .payment-methods {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .payment-option {
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .payment-option:hover {
+            border-color: var(--primary);
+            background: rgba(108, 99, 255, 0.05);
+        }
+
+        .payment-option.selected {
+            border-color: var(--primary);
+            background: rgba(108, 99, 255, 0.1);
+        }
+
+        .payment-option input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary);
+        }
+
+        .payment-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .payment-details {
+            flex: 1;
+        }
+
+        .payment-name {
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+        }
+
+        .payment-desc {
+            font-size: 0.85rem;
+            color: #777;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5952d4;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(108, 99, 255, 0.3);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-outline {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .security-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem;
+            background: rgba(0, 255, 136, 0.1);
+            border-radius: 8px;
+            margin-top: 1rem;
+            color: #00AA5B;
+            font-size: 0.9rem;
+        }
+
+        .promo-code {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .promo-code input {
+            flex: 1;
+        }
+
+        .btn-apply {
+            padding: 0.8rem 1.5rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #999;
+        }
+
+        .empty-cart i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        @media (max-width: 968px) {
+            .checkout-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .order-summary {
+                position: static;
+            }
+        }
+
+        /* Floating Questionnaire CTA Banner */
+        .questionnaire-float {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 1200px;
+            background: linear-gradient(135deg, var(--navy-blue) 0%, var(--dark-navy) 100%);
+            border-radius: 15px 15px 0 0;
+            box-shadow: 0 -5px 30px rgba(0, 0, 0, 0.4);
+            padding: 1rem 2rem;
+            z-index: 999;
+            display: none;
+            opacity: 1;
+            transition: all 0.3s ease;
+            border-top: 4px solid var(--primary);
+        }
+
+        .questionnaire-float.hidden {
+            display: none !important;
+        }
+
+        .questionnaire-close {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            right: 15px;
+            background: rgba(255, 215, 0, 0.2);
+            color: var(--primary);
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            line-height: 1;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .questionnaire-close:hover {
+            background: var(--primary);
+            color: var(--dark);
+            transform: translateY(-50%) rotate(90deg);
+        }
+
+        .questionnaire-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+            padding-right: 3rem;
+        }
+
+        .questionnaire-text {
+            flex: 1;
+        }
+
+        .questionnaire-content h3 {
+            color: var(--primary);
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin: 0 0 0.3rem 0;
+            line-height: 1.3;
+        }
+
+        .questionnaire-content p {
+            color: var(--white);
+            font-size: 0.9rem;
+            line-height: 1.4;
+            margin: 0;
+            opacity: 0.9;
+        }
+
+        .questionnaire-btn {
+            background: linear-gradient(135deg, var(--primary), var(--success));
+            color: var(--dark);
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .questionnaire-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.5);
+        }
+
+        @media (max-width: 768px) {
+            .questionnaire-float {
+                padding: 1rem;
+            }
+            .questionnaire-content {
+                flex-direction: column;
+                gap: 1rem;
+                padding-right: 2rem;
+            }
+            .questionnaire-content h3 {
+                font-size: 1rem;
+            }
+            .questionnaire-content p {
+                font-size: 0.8rem;
+            }
+            .questionnaire-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Questionnaire CTA Banner -->
+    <div id="questionnaireFloat" class="questionnaire-float">
+        <button class="questionnaire-close" onclick="closeQuestionnaireFloat()" aria-label="Close">&times;</button>
+        <div class="questionnaire-content">
+            <div class="questionnaire-text">
+                <h3>🎯 Discover Your Entrepreneurial Readiness Score</h3>
+                <p>Take our 5-minute assessment and unlock your personalized transformation roadmap</p>
+            </div>
+            <a href="questionnaire.html" class="questionnaire-btn">
+                <i class="fas fa-clipboard-check"></i> Begin Assessment
+            </a>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>
+                <i class="fas fa-shopping-cart"></i>
+                Checkout
+            </h1>
+            <div class="steps">
+                <div class="step completed">
+                    <i class="fas fa-check"></i>
+                    <span>Cart</span>
+                </div>
+                <div class="step active">
+                    <i class="fas fa-circle"></i>
+                    <span>Checkout</span>
+                </div>
+                <div class="step inactive">
+                    <i class="fas fa-circle"></i>
+                    <span>Payment</span>
+                </div>
+                <div class="step inactive">
+                    <i class="fas fa-circle"></i>
+                    <span>Complete</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="checkout-grid">
+            <!-- Left Column - Forms -->
+            <div>
+                <!-- Cart Items -->
+                <div class="card" id="cartItemsCard">
+                    <h2 id="cartItemsHeader"><i class="fas fa-shopping-bag"></i> Your Cart (3 items)</h2>
+
+                    <div id="cartItemsContainer">
+                    <div class="cart-item">
+                        <div class="item-image">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <div class="item-details">
+                            <div class="item-name">Zyroniq - Pay Intelligence Engine</div>
+                            <div class="item-meta">Digital Product • Software & Apps</div>
+                            <div class="item-price">R 21,500</div>
+                        </div>
+                        <div class="item-actions">
+                            <div class="qty-control">
+                                <button class="qty-btn" onclick="updateQty(1, -1)">-</button>
+                                <span class="qty-value" id="qty-1">1</span>
+                                <button class="qty-btn" onclick="updateQty(1, 1)">+</button>
+                            </div>
+                            <button class="btn-remove" onclick="removeItem(1)">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="cart-item">
+                        <div class="item-image" style="background: var(--success);">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <div class="item-details">
+                            <div class="item-name">MLM Success Blueprint eBook</div>
+                            <div class="item-meta">Digital Product • Courses & Training</div>
+                            <div class="item-price">R 215</div>
+                        </div>
+                        <div class="item-actions">
+                            <div class="qty-control">
+                                <button class="qty-btn" onclick="updateQty(2, -1)">-</button>
+                                <span class="qty-value" id="qty-2">1</span>
+                                <button class="qty-btn" onclick="updateQty(2, 1)">+</button>
+                            </div>
+                            <button class="btn-remove" onclick="removeItem(2)">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="cart-item">
+                        <div class="item-image" style="background: var(--warning);">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="item-details">
+                            <div class="item-name">1-Hour MLM Strategy Consultation</div>
+                            <div class="item-meta">Service • Business Consulting</div>
+                            <div class="item-price">R 1,075</div>
+                        </div>
+                        <div class="item-actions">
+                            <div class="qty-control">
+                                <button class="qty-btn" onclick="updateQty(3, -1)">-</button>
+                                <span class="qty-value" id="qty-3">1</span>
+                                <button class="qty-btn" onclick="updateQty(3, 1)">+</button>
+                            </div>
+                            <button class="btn-remove" onclick="removeItem(3)">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    </div><!-- Close cartItemsContainer -->
+                </div>
+
+                <!-- Billing Information -->
+                <div class="card">
+                    <h2><i class="fas fa-user"></i> Billing Information</h2>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>First Name</label>
+                            <input type="text" class="form-control" id="firstName" value="John">
+                        </div>
+                        <div class="form-group">
+                            <label>Last Name</label>
+                            <input type="text" class="form-control" id="lastName" value="Doe">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" class="form-control" id="email" value="john.doe@example.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="tel" class="form-control" id="phone" value="+27 82 123 4567">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Street Address</label>
+                        <input type="text" class="form-control" id="address" placeholder="123 Main Street">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>City</label>
+                            <input type="text" class="form-control" id="city" placeholder="Johannesburg">
+                        </div>
+                        <div class="form-group">
+                            <label>Postal Code</label>
+                            <input type="text" class="form-control" id="postal" placeholder="2000">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Country</label>
+                        <select class="form-control" id="country">
+                            <option value="ZA" selected>South Africa</option>
+                            <option value="BW">Botswana</option>
+                            <option value="NA">Namibia</option>
+                            <option value="ZW">Zimbabwe</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Payment Method -->
+                <div class="card">
+                    <h2><i class="fas fa-credit-card"></i> Payment Method</h2>
+
+                    <div class="payment-methods">
+                        <label class="payment-option selected">
+                            <input type="radio" name="payment" value="card" checked>
+                            <div class="payment-icon" style="background: rgba(108, 99, 255, 0.2); color: var(--primary);">
+                                <i class="fas fa-credit-card"></i>
+                            </div>
+                            <div class="payment-details">
+                                <div class="payment-name">Credit/Debit Card</div>
+                                <div class="payment-desc">Visa, Mastercard, American Express</div>
+                            </div>
+                        </label>
+
+                        <label class="payment-option">
+                            <input type="radio" name="payment" value="payfast">
+                            <div class="payment-icon" style="background: rgba(255, 184, 0, 0.2); color: var(--warning);">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <div class="payment-details">
+                                <div class="payment-name">PayFast</div>
+                                <div class="payment-desc">Secure payment gateway</div>
+                            </div>
+                        </label>
+
+                        <label class="payment-option">
+                            <input type="radio" name="payment" value="eft">
+                            <div class="payment-icon" style="background: rgba(0, 255, 136, 0.2); color: var(--success);">
+                                <i class="fas fa-university"></i>
+                            </div>
+                            <div class="payment-details">
+                                <div class="payment-name">EFT/Bank Transfer</div>
+                                <div class="payment-desc">Direct bank deposit</div>
+                            </div>
+                        </label>
+
+                        <label class="payment-option">
+                            <input type="radio" name="payment" value="wallet">
+                            <div class="payment-icon" style="background: rgba(108, 99, 255, 0.2); color: var(--primary);">
+                                <i class="fas fa-wallet"></i>
+                            </div>
+                            <div class="payment-details">
+                                <div class="payment-name">Z2B Wallet</div>
+                                <div class="payment-desc">Available: R 15,430.50</div>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div class="security-badge">
+                        <i class="fas fa-lock"></i>
+                        <span>Your payment information is encrypted and secure</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column - Order Summary -->
+            <div>
+                <div class="card order-summary">
+                    <h2><i class="fas fa-receipt"></i> Order Summary</h2>
+
+                    <div class="summary-row">
+                        <span>Subtotal (3 items)</span>
+                        <span id="subtotal">R 22,790</span>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Shipping</span>
+                        <span id="shipping">R 0</span>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Tax (15%)</span>
+                        <span id="tax">R 0</span>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Discount</span>
+                        <span id="discount" style="color: var(--success);">- R 0</span>
+                    </div>
+
+                    <div class="summary-row total">
+                        <span>Total</span>
+                        <span id="total">R 22,790</span>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 1.5rem;">
+                        <label>Promo Code</label>
+                        <div class="promo-code">
+                            <input type="text" class="form-control" id="promoCode" placeholder="Enter code">
+                            <button class="btn-apply" onclick="applyPromo()">Apply</button>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="processPayment()" style="margin-top: 1.5rem;">
+                        <i class="fas fa-lock"></i>
+                        Complete Purchase
+                    </button>
+
+                    <button class="btn btn-outline" onclick="window.location.href='marketplace.html'" style="margin-top: 1rem;">
+                        <i class="fas fa-arrow-left"></i>
+                        Continue Shopping
+                    </button>
+
+                    <!-- What You're Getting -->
+                    <div style="margin-top: 2rem; padding-top: 2rem; border-top: 2px solid #f0f0f0;">
+                        <h3 style="font-size: 1rem; margin-bottom: 1rem; color: #555;">
+                            <i class="fas fa-info-circle"></i> What You're Getting
+                        </h3>
+                        <div style="font-size: 0.85rem; color: #777; line-height: 1.8;">
+                            • <strong>Digital Products:</strong> Instant download access<br>
+                            • <strong>Services:</strong> Booking confirmation via email<br>
+                            • <strong>Support:</strong> Priority customer service<br>
+                            • <strong>Commissions:</strong> Your upline earns automatically
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/cart-system.js"></script>
+    <script>
+        // Global cart reference
+        const cart = window.Z2BCartInstance;
+        let cartData = null;
+
+        // Initialize page
+        window.addEventListener('DOMContentLoaded', function() {
+            // Load cart data
+            cartData = cart.getCart();
+
+            // Check if cart is empty
+            if (cartData.items.length === 0) {
+                alert('Your cart is empty!');
+                window.location.href = 'marketplace.html';
+                return;
+            }
+
+            // Load user data
+            loadUserData();
+
+            // Display cart items
+            displayCartItems();
+
+            // Update totals
+            recalculateTotal();
+        });
+
+        // Load user data into form
+        function loadUserData() {
+            const user = JSON.parse(localStorage.getItem('currentUser') || 'null');
+            if (user) {
+                if (user.firstName) document.getElementById('firstName').value = user.firstName;
+                if (user.lastName) document.getElementById('lastName').value = user.lastName;
+                if (user.email) document.getElementById('email').value = user.email;
+                if (user.phone) document.getElementById('phone').value = user.phone;
+            }
+        }
+
+        // Display cart items dynamically
+        function displayCartItems() {
+            const cartItemsContainer = document.getElementById('cartItemsContainer');
+            const itemCountHeader = document.getElementById('cartItemsHeader');
+
+            if (!cartItemsContainer || !itemCountHeader) {
+                console.error('Cart container elements not found!');
+                return;
+            }
+
+            // Update header
+            itemCountHeader.innerHTML = `<i class="fas fa-shopping-bag"></i> Your Cart (${cartData.items.length} items)`;
+
+            // Clear existing items
+            cartItemsContainer.innerHTML = '';
+
+            // Add cart items
+            cartData.items.forEach((item, index) => {
+                const icon = item.type === 'tier' ? 'fa-crown' : (item.icon || 'fa-rocket');
+                const itemType = item.type === 'tier' ? 'Membership Tier' : 'Z2B App';
+                const showQtyControl = item.type === 'app';
+
+                const cartItemHTML = `
+                    <div class="cart-item">
+                        <div class="item-image">
+                            <i class="fas ${icon}"></i>
+                        </div>
+                        <div class="item-details">
+                            <div class="item-name">${item.name}</div>
+                            <div class="item-meta">${itemType} • ${item.pv} PV Points</div>
+                            <div class="item-price">R ${item.price.toLocaleString()}</div>
+                        </div>
+                        <div class="item-actions">
+                            ${showQtyControl ? `
+                            <div class="qty-control">
+                                <button class="qty-btn" onclick="updateQty(${index}, -1)">-</button>
+                                <span class="qty-value" id="qty-${index}">${item.quantity || 1}</span>
+                                <button class="qty-btn" onclick="updateQty(${index}, 1)">+</button>
+                            </div>
+                            ` : ''}
+                            <button class="btn-remove" onclick="removeItem(${index})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                cartItemsContainer.insertAdjacentHTML('beforeend', cartItemHTML);
+            });
+        }
+
+        // Update quantity
+        function updateQty(itemIndex, change) {
+            const item = cartData.items[itemIndex];
+            if (item && item.type === 'app') {
+                const newQty = Math.max(1, Math.min(10, (item.quantity || 1) + change));
+                cart.updateQuantity(item.type, item.code, newQty);
+
+                // Reload cart data and update display
+                cartData = cart.getCart();
+                document.getElementById(`qty-${itemIndex}`).textContent = newQty;
+                recalculateTotal();
+            }
+        }
+
+        // Remove item
+        function removeItem(itemIndex) {
+            if (confirm('Remove this item from cart?')) {
+                const item = cartData.items[itemIndex];
+                cart.removeItem(item.type, item.code);
+
+                // Reload cart data
+                cartData = cart.getCart();
+
+                // If cart is empty, redirect to marketplace
+                if (cartData.items.length === 0) {
+                    alert('Cart is empty. Redirecting to marketplace...');
+                    window.location.href = 'marketplace.html';
+                    return;
+                }
+
+                // Redisplay items and update totals
+                displayCartItems();
+                recalculateTotal();
+            }
+        }
+
+        // Apply promo code
+        function applyPromo() {
+            const code = document.getElementById('promoCode').value;
+            if (code) {
+                alert('Promo code applied! (Demo)');
+                // Apply discount logic
+                recalculateTotal();
+            }
+        }
+
+        // Recalculate totals
+        function recalculateTotal() {
+            if (!cartData) return;
+
+            // Calculate from cart data
+            const subtotal = cartData.total;
+            const shipping = 0; // Digital products - no shipping
+            const tax = 0; // Included in price
+            const discount = 0; // TODO: Add promo code logic
+            const total = subtotal + shipping + tax - discount;
+
+            // Calculate total PV points
+            const totalPV = cartData.items.reduce((sum, item) =>
+                sum + (item.pv * (item.quantity || 1)), 0
+            );
+
+            // Update display
+            document.getElementById('subtotal').textContent = `R ${subtotal.toLocaleString()}`;
+            document.getElementById('shipping').textContent = shipping > 0 ? `R ${shipping.toLocaleString()}` : 'Free';
+            document.getElementById('tax').textContent = `R ${tax.toLocaleString()}`;
+            document.getElementById('discount').textContent = discount > 0 ? `- R ${discount.toLocaleString()}` : 'R 0';
+            document.getElementById('total').textContent = `R ${total.toLocaleString()}`;
+
+            // Update item count in header
+            const itemCountEl = document.querySelector('.summary-row span');
+            if (itemCountEl) {
+                itemCountEl.textContent = `Subtotal (${cartData.items.length} items)`;
+            }
+        }
+
+        // Process payment
+        async function processPayment() {
+            const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
+            const user = JSON.parse(localStorage.getItem('currentUser') || 'null');
+
+            // Validate user is logged in
+            if (!user) {
+                if (confirm('Please login to proceed with checkout.\n\nGo to login page?')) {
+                    window.location.href = 'register.html';
+                }
+                return;
+            }
+
+            // Validate form
+            const email = document.getElementById('email').value;
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+
+            if (!email || !firstName || !lastName) {
+                alert('Please fill in all required fields');
+                return;
+            }
+
+            // Check cart contents
+            const hasTiers = cartData.items.some(i => i.type === 'tier');
+            const hasApps = cartData.items.some(i => i.type === 'app');
+
+            // For now, prevent mixed purchases
+            if (hasTiers && hasApps) {
+                alert('Please purchase membership tiers and apps separately.\n\nYou can complete this order and then purchase the other items.');
+                return;
+            }
+
+            // Handle tier purchases
+            if (hasTiers) {
+                await processTierPurchase(paymentMethod, user);
+            }
+            // Handle app purchases
+            else if (hasApps) {
+                await processAppPurchase(paymentMethod, user);
+            }
+        }
+
+        // Process tier purchase
+        async function processTierPurchase(paymentMethod, user) {
+            const tierItem = cartData.items.find(i => i.type === 'tier');
+
+            // Show money back guarantee notice
+            if (!confirm('💰 30-DAY MONEY BACK GUARANTEE\n\n✅ Full refund if not satisfied\n✅ No questions asked\n✅ Risk-free trial period\n\nProceed to payment?\n\n(Click OK to continue, Cancel to go back)')) {
+                return;
+            }
+
+            // Proceed with payment
+            alert('Processing payment via ' + paymentMethod + '...');
+
+            try {
+                // Call tier checkout API
+                const response = await fetch('api/create-tier-checkout.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        tier_code: tierItem.code,
+                        user_id: user.userId,
+                        user_email: user.email,
+                        payment_method: paymentMethod
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success && result.redirectUrl) {
+                    // Save cart to localStorage before redirect
+                    localStorage.setItem('pending_checkout', JSON.stringify(cartData));
+
+                    // Redirect to payment gateway
+                    window.location.href = result.redirectUrl;
+                } else {
+                    alert('Payment processing failed: ' + (result.message || 'Unknown error'));
+                }
+            } catch (error) {
+                alert('Payment processing error: ' + error.message);
+            }
+        }
+
+        // Process app purchase
+        async function processAppPurchase(paymentMethod, user) {
+            alert('Processing payment via ' + paymentMethod + '...');
+
+            try {
+                // For multiple apps, we'll process them as a bundle
+                const appCodes = cartData.items.map(i => i.code).join(',');
+                const totalAmount = cartData.total;
+
+                // Call app checkout API
+                const response = await fetch('api/create-app-checkout.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        app_code: appCodes,
+                        user_id: user.userId,
+                        user_email: user.email,
+                        payment_method: paymentMethod,
+                        amount: totalAmount
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success && result.redirectUrl) {
+                    // Save cart to localStorage before redirect
+                    localStorage.setItem('pending_checkout', JSON.stringify(cartData));
+
+                    // Redirect to payment gateway
+                    window.location.href = result.redirectUrl;
+                } else {
+                    alert('Payment processing failed: ' + (result.message || 'Unknown error'));
+                }
+            } catch (error) {
+                alert('Payment processing error: ' + error.message);
+            }
+        }
+
+        // Payment method selection
+        document.querySelectorAll('.payment-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.payment-option').forEach(el => {
+                    el.classList.remove('selected');
+                });
+                this.classList.add('selected');
+            });
+        });
+
+        // Initialize
+        recalculateTotal();
+
+        // Questionnaire Float Functions
+        function closeQuestionnaireFloat() {
+            const floatCard = document.getElementById('questionnaireFloat');
+            if (floatCard) {
+                floatCard.classList.add('hidden');
+                // Use sessionStorage so it reappears on next visit
+                sessionStorage.setItem('z2b_questionnaire_closed', 'true');
+            }
+        }
+
+        // Initialize questionnaire float
+        (function() {
+            const floatCard = document.getElementById('questionnaireFloat');
+            if (!floatCard) return;
+
+            // Check sessionStorage (not localStorage) - resets on new visit
+            const wasClosed = sessionStorage.getItem('z2b_questionnaire_closed');
+            if (wasClosed === 'true') {
+                floatCard.classList.add('hidden');
+                return;
+            }
+
+            // Show card after 1 second
+            setTimeout(function() {
+                floatCard.style.display = 'block';
+                floatCard.style.opacity = '1';
+            }, 1000);
+        })();
+    </script>
+
+    <!-- Z2B Ecosystem Integration -->
+    <script src="../js/app-config.js"></script>
+    <script src="../js/ecosystem-footer.js"></script>
+</body>
+</html>

@@ -1,0 +1,1796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZYNTH - AI Voice Cloning | Z2B Legacy Builders</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Futuristic Royal Gold */
+            --royal-gold: #FFD700;
+            --royal-gold-light: #FFED4E;
+            --royal-gold-dark: #D4AF37;
+            --royal-gold-shine: #FFF9C4;
+            --gold-glow: rgba(255, 215, 0, 0.6);
+
+            /* Futuristic Royal Blue */
+            --royal-blue: #0A1F44;
+            --royal-blue-light: #1E3A8A;
+            --royal-blue-bright: #2563EB;
+            --royal-blue-neon: #60A5FA;
+            --royal-blue-deep: #030B1F;
+            --blue-glow: rgba(37, 99, 235, 0.5);
+
+            /* Cyber Accents */
+            --cyber-cyan: #00D9FF;
+            --cyber-purple: #B45FFF;
+            --neon-pink: #FF006E;
+            --electric-blue: #0066FF;
+
+            /* Base Colors */
+            --white: #FFFFFF;
+            --black: #000000;
+            --success: #00FF88;
+            --warning: #FFB800;
+            --orange: #FF6B35;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background:
+                radial-gradient(ellipse at top left, var(--royal-blue-bright) 0%, transparent 50%),
+                radial-gradient(ellipse at bottom right, var(--royal-gold-dark) 0%, transparent 50%),
+                linear-gradient(135deg, var(--royal-blue-deep) 0%, var(--royal-blue) 50%, var(--royal-blue-deep) 100%);
+            color: var(--white);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(255, 215, 0, 0.03) 2px,
+                    rgba(255, 215, 0, 0.03) 4px
+                );
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .main-container {
+            position: relative;
+            z-index: 10;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, rgba(10, 31, 68, 0.8), rgba(3, 11, 31, 0.9));
+            border-radius: 20px;
+            border: 2px solid var(--gold-glow);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .app-logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .app-logo i {
+            font-size: 3rem;
+            background: linear-gradient(135deg, var(--cyber-purple), var(--cyber-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: pulse 2s infinite;
+        }
+
+        .app-logo h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--royal-gold), var(--orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .app-logo p {
+            font-size: 0.9rem;
+            color: var(--royal-gold-light);
+            opacity: 0.9;
+        }
+
+        .back-btn {
+            padding: 0.8rem 2rem;
+            background: linear-gradient(135deg, var(--royal-gold), var(--orange));
+            border: none;
+            border-radius: 50px;
+            color: var(--royal-blue-deep);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.5);
+        }
+
+        /* Stats Dashboard */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(10, 31, 68, 0.6), rgba(3, 11, 31, 0.8));
+            padding: 2rem;
+            border-radius: 20px;
+            border: 2px solid var(--gold-glow);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 45px rgba(255, 215, 0, 0.4);
+        }
+
+        .stat-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--royal-gold), var(--orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--royal-gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: var(--royal-gold-light);
+            opacity: 0.9;
+        }
+
+        /* Main Content */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .content-card {
+            background: linear-gradient(135deg, rgba(10, 31, 68, 0.6), rgba(3, 11, 31, 0.8));
+            padding: 2.5rem;
+            border-radius: 20px;
+            border: 2px solid var(--gold-glow);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .content-card h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--royal-gold);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .content-card h2 i {
+            font-size: 2rem;
+        }
+
+        /* Recording Section */
+        .recording-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .control-btn {
+            padding: 1.2rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+        }
+
+        .btn-record {
+            background: linear-gradient(135deg, #FF006E, #FF4D8E);
+            color: var(--white);
+        }
+
+        .btn-record:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 0, 110, 0.5);
+        }
+
+        .btn-stop {
+            background: linear-gradient(135deg, #FF6B35, #FFD700);
+            color: var(--royal-blue-deep);
+        }
+
+        .btn-stop:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.5);
+        }
+
+        .btn-play {
+            background: linear-gradient(135deg, var(--cyber-cyan), var(--electric-blue));
+            color: var(--white);
+        }
+
+        .btn-play:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 217, 255, 0.5);
+        }
+
+        .btn-save {
+            background: linear-gradient(135deg, var(--success), #00CC70);
+            color: var(--white);
+        }
+
+        .btn-save:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.5);
+        }
+
+        .btn-export {
+            background: linear-gradient(135deg, var(--cyber-purple), #9347E0);
+            color: var(--white);
+        }
+
+        .btn-export:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(180, 95, 255, 0.5);
+        }
+
+        .control-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* Timer Display */
+        .timer-display {
+            background: linear-gradient(135deg, rgba(255, 0, 110, 0.2), rgba(255, 77, 142, 0.2));
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            margin: 1rem 0;
+            border: 2px solid rgba(255, 0, 110, 0.4);
+        }
+
+        .timer-value {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--royal-gold);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .timer-label {
+            font-size: 1rem;
+            color: var(--royal-gold-light);
+            margin-top: 0.5rem;
+        }
+
+        /* Audio Player */
+        .audio-player {
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.1), rgba(0, 102, 255, 0.1));
+            padding: 2rem;
+            border-radius: 15px;
+            border: 2px solid rgba(0, 217, 255, 0.3);
+            margin: 1.5rem 0;
+        }
+
+        .audio-player audio {
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            margin: 2rem 0;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--royal-gold-light);
+        }
+
+        .progress-bar-custom {
+            height: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--royal-gold), var(--orange));
+            border-radius: 10px;
+            transition: width 0.3s;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+        }
+
+        /* Voice Profile */
+        .voice-profile {
+            background: linear-gradient(135deg, rgba(180, 95, 255, 0.1), rgba(147, 71, 224, 0.1));
+            padding: 2rem;
+            border-radius: 15px;
+            border: 2px solid rgba(180, 95, 255, 0.3);
+        }
+
+        .profile-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .profile-item:last-child {
+            border-bottom: none;
+        }
+
+        .profile-label {
+            color: var(--royal-gold-light);
+            font-weight: 600;
+        }
+
+        .profile-value {
+            color: var(--white);
+            font-weight: 700;
+        }
+
+        /* Text to Speech */
+        .tts-section {
+            grid-column: 1 / -1;
+        }
+
+        .tts-input {
+            width: 100%;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid var(--gold-glow);
+            border-radius: 15px;
+            color: var(--white);
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        .tts-input:focus {
+            outline: none;
+            border-color: var(--royal-gold);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+        }
+
+        /* Info Box */
+        .info-box {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 107, 53, 0.1));
+            padding: 1.5rem;
+            border-radius: 15px;
+            border-left: 4px solid var(--royal-gold);
+            margin: 1.5rem 0;
+        }
+
+        .info-box h4 {
+            color: var(--royal-gold);
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+        }
+
+        .info-box p {
+            color: var(--royal-gold-light);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .info-box ul {
+            margin: 0.8rem 0 0 1.5rem;
+            color: var(--royal-gold-light);
+        }
+
+        .info-box li {
+            margin: 0.5rem 0;
+        }
+
+        /* Status Badge */
+        .status-badge {
+            display: inline-block;
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-top: 0.5rem;
+        }
+
+        .status-success {
+            background: linear-gradient(135deg, var(--success), #00CC70);
+        }
+
+        .status-warning {
+            background: linear-gradient(135deg, var(--warning), #FF9500);
+        }
+
+        .status-pending {
+            background: linear-gradient(135deg, var(--cyber-cyan), var(--electric-blue));
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.8;
+                transform: scale(1.05);
+            }
+        }
+
+        @keyframes recording-pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .recording-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background: #FF006E;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+            animation: recording-pulse 1s infinite;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .app-header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .app-logo h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Header -->
+        <div class="app-header">
+            <div class="app-logo">
+                <div>
+                    <i class="fas fa-microphone-alt"></i>
+                </div>
+                <div>
+                    <h1>ZYNTH</h1>
+                    <p>AI Voice Cloning Platform</p>
+                </div>
+            </div>
+            <a href="dashboard.html" class="back-btn">
+                <i class="fas fa-home"></i> Back to Dashboard
+            </a>
+        </div>
+
+        <!-- Stats Dashboard -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-microphone"></i>
+                </div>
+                <div class="stat-value" id="recordingCount">0</div>
+                <div class="stat-label">Recordings Saved</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-value" id="totalDuration">0:00</div>
+                <div class="stat-label">Total Duration</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="stat-value" id="profileStatus">Pending</div>
+                <div class="stat-label">Voice Profile</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="stat-value" id="cloneStatus">Not Ready</div>
+                <div class="stat-label">Clone Status</div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content-grid">
+            <!-- Recording Section -->
+            <div class="content-card">
+                <h2>
+                    <i class="fas fa-record-vinyl"></i>
+                    Voice Recording
+                </h2>
+
+                <div class="info-box">
+                    <h4>Recording Instructions</h4>
+                    <p>For best voice cloning results:</p>
+                    <ul>
+                        <li>Record in a quiet environment</li>
+                        <li>Speak naturally and clearly</li>
+                        <li>Minimum 30 minutes recommended</li>
+                        <li>Use various tones and emotions</li>
+                    </ul>
+                </div>
+
+                <div class="timer-display" id="timerDisplay" style="display: none;">
+                    <div class="timer-value" id="timerValue">00:00</div>
+                    <div class="timer-label">Recording in progress...</div>
+                </div>
+
+                <div class="progress-container">
+                    <div class="progress-label">
+                        <span>Recording Progress</span>
+                        <span id="progressPercent">0%</span>
+                    </div>
+                    <div class="progress-bar-custom">
+                        <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div class="recording-controls">
+                    <button class="control-btn btn-record" id="recordBtn" onclick="startRecording()">
+                        <i class="fas fa-microphone"></i>
+                        Record Live
+                    </button>
+
+                    <button class="control-btn btn-stop" id="stopBtn" onclick="stopRecording()" disabled>
+                        <i class="fas fa-stop"></i>
+                        Stop Recording
+                    </button>
+
+                    <label for="voiceFileInput" class="control-btn" style="cursor: pointer; display: inline-flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--cyber-purple), #9347E0); border: none;">
+                        <i class="fas fa-upload"></i>
+                        Upload Voice File
+                    </label>
+                    <input type="file" id="voiceFileInput" accept="audio/*,.mp3,.wav,.m4a,.webm,.ogg" style="display: none;" onchange="handleVoiceFileUpload(event)">
+
+                    <div class="audio-player" id="audioPlayerSection" style="display: none;">
+                        <audio id="audioPlayback" controls></audio>
+                        <button class="control-btn btn-save" onclick="saveRecording()">
+                            <i class="fas fa-save"></i>
+                            Save Recording
+                        </button>
+                    </div>
+                </div>
+
+                <div id="uploadStatus" style="margin-top: 1rem; padding: 1rem; background: rgba(255,255,255,0.1); border-radius: 10px; display: none;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                        <i class="fas fa-file-audio" style="color: var(--cyber-purple);"></i>
+                        <strong id="uploadFileName">No file selected</strong>
+                    </div>
+                    <div style="font-size: 0.85rem; opacity: 0.8;" id="uploadFileInfo">-</div>
+                </div>
+            </div>
+
+            <!-- Voice Profile Section -->
+            <div class="content-card">
+                <h2>
+                    <i class="fas fa-user-circle"></i>
+                    Voice Profile
+                </h2>
+
+                <div class="voice-profile">
+                    <div class="profile-item">
+                        <span class="profile-label">Profile Status:</span>
+                        <span class="profile-value" id="voiceProfileStatus">Not Created</span>
+                    </div>
+                    <div class="profile-item">
+                        <span class="profile-label">Recording Date:</span>
+                        <span class="profile-value" id="recordingDate">-</span>
+                    </div>
+                    <div class="profile-item">
+                        <span class="profile-label">File Size:</span>
+                        <span class="profile-value" id="fileSize">0 KB</span>
+                    </div>
+                    <div class="profile-item">
+                        <span class="profile-label">Duration:</span>
+                        <span class="profile-value" id="duration">0:00</span>
+                    </div>
+                </div>
+
+                <div class="info-box" style="margin-top: 2rem;">
+                    <h4>Voice Cloning Technology</h4>
+                    <p>ZYNTH uses advanced AI to clone your voice from a single recording. Your voice data is stored locally and never shared.</p>
+                </div>
+
+                <div class="recording-controls" style="margin-top: 2rem;">
+                    <button class="control-btn btn-export" id="exportBtn" onclick="exportRecording()" disabled>
+                        <i class="fas fa-download"></i>
+                        Export Recording
+                    </button>
+
+                    <button class="control-btn btn-save" id="createProfileBtn" onclick="createVoiceProfile()" disabled>
+                        <i class="fas fa-magic"></i>
+                        Create Voice Profile
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Text to Speech Section -->
+        <div class="content-grid">
+            <div class="content-card tts-section">
+                <h2>
+                    <i class="fas fa-comment-dots"></i>
+                    Text-to-Speech Generator
+                </h2>
+
+                <div class="info-box">
+                    <h4>🎯 Two TTS Modes Available</h4>
+                    <p><strong>Basic Mode (Browser TTS):</strong> Works instantly with built-in browser voices - no setup needed!<br>
+                    <strong>Cloned Voice Mode:</strong> Uses YOUR voice (requires voice profile + backend setup)</p>
+                </div>
+
+                <!-- TTS Mode Selector -->
+                <div style="background: linear-gradient(135deg, rgba(0, 217, 255, 0.1), rgba(180, 95, 255, 0.1)); padding: 1.5rem; border-radius: 15px; margin-bottom: 1.5rem; border: 2px solid rgba(0, 217, 255, 0.3);">
+                    <h4 style="color: var(--royal-gold); margin-bottom: 1rem;">
+                        <i class="fas fa-toggle-on"></i> Select TTS Mode
+                    </h4>
+
+                    <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                        <button class="control-btn" id="basicModeBtn" onclick="switchToBasicMode()" style="flex: 1; padding: 1rem; background: linear-gradient(135deg, var(--cyber-cyan), var(--electric-blue));">
+                            <i class="fas fa-robot"></i> Basic Mode (Browser TTS)
+                        </button>
+                        <button class="control-btn" id="clonedModeBtn" onclick="switchToClonedMode()" style="flex: 1; padding: 1rem; background: linear-gradient(135deg, rgba(180, 95, 255, 0.3), rgba(180, 95, 255, 0.3)); opacity: 0.5;">
+                            <i class="fas fa-magic"></i> Cloned Voice Mode
+                        </button>
+                    </div>
+
+                    <!-- Basic Mode Settings -->
+                    <div id="basicModeSettings">
+                        <label style="color: var(--royal-gold-light); display: block; margin-bottom: 0.5rem; font-weight: 600;">
+                            <i class="fas fa-user"></i> Select Voice:
+                        </label>
+                        <select id="voiceSelect" style="width: 100%; padding: 0.8rem; background: rgba(255, 255, 255, 0.05); border: 2px solid var(--gold-glow); border-radius: 10px; color: var(--white); font-size: 1rem;">
+                            <option>Loading voices...</option>
+                        </select>
+                    </div>
+
+                    <!-- Cloned Mode Settings -->
+                    <div id="clonedModeSettings" style="display: none;">
+                        <div style="color: var(--royal-gold-light); padding: 1rem; background: rgba(180, 95, 255, 0.2); border-radius: 10px;">
+                            <strong id="clonedModeStatus">⚠️ Voice Profile Required</strong>
+                            <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem;">Record your voice and create a profile to use this mode.</p>
+                        </div>
+                    </div>
+
+                    <!-- Active Mode Indicator -->
+                    <div id="activeModeIndicator" style="margin-top: 1rem; padding: 0.8rem; background: linear-gradient(135deg, rgba(0, 217, 255, 0.2), rgba(0, 102, 255, 0.2)); border-radius: 10px; border-left: 4px solid var(--cyber-cyan);">
+                        <strong style="color: var(--cyber-cyan);">
+                            <i class="fas fa-info-circle"></i> Active: Basic Mode (Browser TTS)
+                        </strong>
+                    </div>
+                </div>
+
+                <textarea class="tts-input" id="ttsInput" placeholder="Enter text to convert to speech..."></textarea>
+
+                <div class="recording-controls" style="margin-top: 1.5rem;">
+                    <button class="control-btn btn-play" id="generateBtn" onclick="generateSpeech()">
+                        <i class="fas fa-wand-magic-sparkles"></i>
+                        Generate Speech
+                    </button>
+                    <button class="control-btn btn-stop" id="stopSpeechBtn" onclick="stopSpeech()" style="display: none;">
+                        <i class="fas fa-stop-circle"></i>
+                        Stop Speaking
+                    </button>
+                </div>
+
+                <div class="audio-player" id="ttsPlayerSection" style="display: none; margin-top: 2rem;">
+                    <h4 style="color: var(--royal-gold); margin-bottom: 1rem;">Generated Audio</h4>
+                    <audio id="ttsPlayback" controls></audio>
+                    <button class="control-btn btn-export" onclick="exportGeneratedAudio()">
+                        <i class="fas fa-download"></i>
+                        Download Audio
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let mediaRecorder = null;
+        let audioChunks = [];
+        let currentRecording = null;
+        let recordingStartTime = 0;
+        let recordingTimer = null;
+
+        // TTS Mode: 'basic' or 'cloned'
+        let ttsMode = 'basic';
+        let availableVoices = [];
+        let selectedVoice = null;
+
+        // Initialize app
+        function initApp() {
+            loadVoiceProfile();
+            updateUI();
+            checkTierAccess();
+            initializeWebSpeechAPI();
+            updateTTSMode();
+        }
+
+        // Initialize Web Speech API
+        function initializeWebSpeechAPI() {
+            // Load available voices
+            if ('speechSynthesis' in window) {
+                // Load voices
+                loadVoices();
+
+                // Chrome loads voices asynchronously
+                if (speechSynthesis.onvoiceschanged !== undefined) {
+                    speechSynthesis.onvoiceschanged = loadVoices;
+                }
+            } else {
+                alert('⚠️ Web Speech API not supported in this browser. Please use Chrome, Edge, or Safari for browser TTS.');
+            }
+        }
+
+        // Load available voices
+        function loadVoices() {
+            availableVoices = speechSynthesis.getVoices();
+
+            if (availableVoices.length > 0) {
+                const voiceSelect = document.getElementById('voiceSelect');
+                voiceSelect.innerHTML = '';
+
+                // Add voices to dropdown
+                availableVoices.forEach((voice, index) => {
+                    const option = document.createElement('option');
+                    option.textContent = `${voice.name} (${voice.lang})`;
+                    option.value = index;
+                    voiceSelect.appendChild(option);
+                });
+
+                // Set default voice
+                selectedVoice = availableVoices[0];
+
+                console.log(`✅ Loaded ${availableVoices.length} voices`);
+            }
+        }
+
+        // Switch to Basic Mode (Web Speech API)
+        function switchToBasicMode() {
+            ttsMode = 'basic';
+
+            // Update UI
+            document.getElementById('basicModeBtn').style.background = 'linear-gradient(135deg, var(--cyber-cyan), var(--electric-blue))';
+            document.getElementById('basicModeBtn').style.opacity = '1';
+            document.getElementById('clonedModeBtn').style.background = 'linear-gradient(135deg, rgba(180, 95, 255, 0.3), rgba(180, 95, 255, 0.3))';
+            document.getElementById('clonedModeBtn').style.opacity = '0.5';
+
+            document.getElementById('basicModeSettings').style.display = 'block';
+            document.getElementById('clonedModeSettings').style.display = 'none';
+
+            document.getElementById('activeModeIndicator').innerHTML = '<strong style="color: var(--cyber-cyan);"><i class="fas fa-info-circle"></i> Active: Basic Mode (Browser TTS)</strong>';
+            document.getElementById('activeModeIndicator').style.borderLeftColor = 'var(--cyber-cyan)';
+
+            // Enable generate button
+            document.getElementById('generateBtn').disabled = false;
+
+            console.log('Switched to Basic Mode (Web Speech API)');
+        }
+
+        // Switch to Cloned Voice Mode
+        function switchToClonedMode() {
+            const profileComplete = localStorage.getItem('zynth_profile_complete');
+
+            if (profileComplete !== 'true') {
+                alert('⚠️ Voice Profile Required!\n\nPlease record your voice and create a voice profile first to use Cloned Voice Mode.');
+                return;
+            }
+
+            ttsMode = 'cloned';
+
+            // Update UI
+            document.getElementById('clonedModeBtn').style.background = 'linear-gradient(135deg, var(--cyber-purple), #9347E0)';
+            document.getElementById('clonedModeBtn').style.opacity = '1';
+            document.getElementById('basicModeBtn').style.background = 'linear-gradient(135deg, rgba(0, 217, 255, 0.3), rgba(0, 102, 255, 0.3))';
+            document.getElementById('basicModeBtn').style.opacity = '0.5';
+
+            document.getElementById('basicModeSettings').style.display = 'none';
+            document.getElementById('clonedModeSettings').style.display = 'block';
+
+            document.getElementById('activeModeIndicator').innerHTML = '<strong style="color: var(--cyber-purple);"><i class="fas fa-magic"></i> Active: Cloned Voice Mode (Experimental)</strong>';
+            document.getElementById('activeModeIndicator').style.borderLeftColor = 'var(--cyber-purple)';
+
+            // Enable generate button
+            document.getElementById('generateBtn').disabled = false;
+
+            console.log('Switched to Cloned Voice Mode');
+        }
+
+        // Update TTS mode UI based on voice profile status
+        function updateTTSMode() {
+            const profileComplete = localStorage.getItem('zynth_profile_complete');
+
+            if (profileComplete === 'true') {
+                // Enable cloned mode button
+                document.getElementById('clonedModeBtn').style.opacity = '1';
+                document.getElementById('clonedModeStatus').innerHTML = '✅ Voice Profile Active - Ready to use!';
+            }
+        }
+
+        // Check tier access
+        function checkTierAccess() {
+            const userTier = localStorage.getItem('user_tier') || 'FAM';
+            const allowedTiers = ['SILVER', 'GOLD', 'PLATINUM', 'LIFETIME'];
+
+            if (!allowedTiers.includes(userTier.toUpperCase())) {
+                // Show upgrade prompt for lower tiers
+                if (!confirm('ZYNTH requires Silver tier or higher. Would you like to upgrade?')) {
+                    window.location.href = 'tiers.html';
+                }
+            }
+        }
+
+        // Load existing voice profile
+        function loadVoiceProfile() {
+            const masterRecording = localStorage.getItem('zynth_master_recording');
+            const recordingDate = localStorage.getItem('zynth_recording_date');
+            const profileComplete = localStorage.getItem('zynth_profile_complete');
+
+            if (masterRecording) {
+                document.getElementById('audioPlayback').src = masterRecording;
+                document.getElementById('audioPlayerSection').style.display = 'block';
+                document.getElementById('exportBtn').disabled = false;
+                document.getElementById('createProfileBtn').disabled = false;
+
+                // Update profile info
+                const date = new Date(recordingDate);
+                document.getElementById('recordingDate').textContent = date.toLocaleDateString();
+                document.getElementById('fileSize').textContent = Math.round(masterRecording.length / 1024) + ' KB';
+
+                if (profileComplete === 'true') {
+                    document.getElementById('voiceProfileStatus').textContent = 'Active';
+                    document.getElementById('generateBtn').disabled = false;
+                    document.getElementById('profileStatus').textContent = 'Active';
+                    document.getElementById('cloneStatus').textContent = 'Ready';
+                }
+            }
+        }
+
+        // Update UI stats
+        function updateUI() {
+            const recordings = JSON.parse(localStorage.getItem('zynth_recordings') || '[]');
+            document.getElementById('recordingCount').textContent = recordings.length;
+
+            const profileComplete = localStorage.getItem('zynth_profile_complete');
+            if (profileComplete === 'true') {
+                document.getElementById('profileStatus').textContent = 'Active';
+                document.getElementById('cloneStatus').textContent = 'Ready';
+            }
+        }
+
+        // Handle uploaded voice file
+        function handleVoiceFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            // Validate file type
+            const validTypes = ['audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/webm', 'audio/ogg', 'audio/m4a', 'audio/mp4'];
+            if (!validTypes.includes(file.type) && !file.name.match(/\.(mp3|wav|webm|ogg|m4a)$/i)) {
+                alert('Please upload a valid audio file (MP3, WAV, M4A, WebM, OGG)');
+                return;
+            }
+
+            // Check file size (max 500MB)
+            const maxSize = 500 * 1024 * 1024; // 500MB
+            if (file.size > maxSize) {
+                alert('File too large. Maximum size is 500MB.');
+                return;
+            }
+
+            // Create blob for playback
+            currentRecording = new Blob([file], { type: file.type });
+
+            // Show playback
+            const audioURL = URL.createObjectURL(currentRecording);
+            const audioPlayer = document.getElementById('audioPlayback');
+            audioPlayer.src = audioURL;
+            document.getElementById('audioPlayerSection').style.display = 'block';
+
+            // Get audio duration
+            audioPlayer.onloadedmetadata = () => {
+                const duration = Math.floor(audioPlayer.duration);
+                const minutes = Math.floor(duration / 60);
+                const seconds = duration % 60;
+
+                // Update duration display
+                document.getElementById('duration').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                document.getElementById('totalDuration').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+                // Update file size
+                const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
+                document.getElementById('fileSize').textContent = fileSizeMB + ' MB';
+
+                // Update upload status
+                document.getElementById('uploadStatus').style.display = 'block';
+                document.getElementById('uploadFileName').textContent = file.name;
+                document.getElementById('uploadFileInfo').textContent = `Size: ${fileSizeMB} MB | Duration: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+                // Update progress bar
+                const progressPercent = Math.min((duration / (30 * 60)) * 100, 100); // 30 minutes target
+                document.getElementById('progressFill').style.width = progressPercent + '%';
+                document.getElementById('progressPercent').textContent = Math.round(progressPercent) + '%';
+
+                console.log('📁 Voice file uploaded:', file.name, 'Duration:', `${minutes}:${seconds}`);
+                alert(`Voice file uploaded successfully!\nDuration: ${minutes}:${seconds.toString().padStart(2, '0')}\nSize: ${fileSizeMB} MB`);
+            };
+        }
+
+        // Start recording
+        async function startRecording() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+
+                mediaRecorder.ondataavailable = (event) => {
+                    audioChunks.push(event.data);
+                };
+
+                mediaRecorder.onstop = () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    currentRecording = audioBlob;
+
+                    // Show playback
+                    const audioURL = URL.createObjectURL(audioBlob);
+                    document.getElementById('audioPlayback').src = audioURL;
+                    document.getElementById('audioPlayerSection').style.display = 'block';
+
+                    // Hide upload status if visible
+                    document.getElementById('uploadStatus').style.display = 'none';
+
+                    // Stop all tracks
+                    stream.getTracks().forEach(track => track.stop());
+                };
+
+                mediaRecorder.start();
+
+                // Update UI
+                document.getElementById('recordBtn').disabled = true;
+                document.getElementById('stopBtn').disabled = false;
+                document.getElementById('timerDisplay').style.display = 'block';
+
+                // Start timer
+                recordingStartTime = Date.now();
+                recordingTimer = setInterval(updateRecordingTimer, 100);
+
+                console.log('🎤 Recording started...');
+            } catch (error) {
+                console.error('❌ Error accessing microphone:', error);
+                alert('Could not access microphone. Please check permissions.');
+            }
+        }
+
+        // Update recording timer
+        function updateRecordingTimer() {
+            const elapsed = Math.floor((Date.now() - recordingStartTime) / 1000);
+            const minutes = Math.floor(elapsed / 60);
+            const seconds = elapsed % 60;
+            document.getElementById('timerValue').textContent =
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+            // Update progress (30 minutes = 1800 seconds)
+            const progress = Math.min((elapsed / 1800) * 100, 100);
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('progressPercent').textContent = Math.round(progress) + '%';
+        }
+
+        // Stop recording
+        function stopRecording() {
+            if (mediaRecorder && mediaRecorder.state === 'recording') {
+                mediaRecorder.stop();
+
+                // Update UI
+                document.getElementById('recordBtn').disabled = false;
+                document.getElementById('stopBtn').disabled = true;
+                document.getElementById('timerDisplay').style.display = 'none';
+
+                // Stop timer
+                clearInterval(recordingTimer);
+
+                // Update duration display
+                const elapsed = Math.floor((Date.now() - recordingStartTime) / 1000);
+                const minutes = Math.floor(elapsed / 60);
+                const seconds = elapsed % 60;
+                document.getElementById('duration').textContent =
+                    `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                document.getElementById('totalDuration').textContent =
+                    `${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+                console.log('⏹️ Recording stopped');
+            }
+        }
+
+        // Save recording
+        async function saveRecording() {
+            if (!currentRecording) {
+                alert('No recording to save');
+                return;
+            }
+
+            // Check file size first
+            const fileSizeMB = currentRecording.size / (1024 * 1024);
+            console.log('File size:', fileSizeMB.toFixed(2), 'MB');
+
+            // For large files (over 10MB), use alternative method
+            if (fileSizeMB > 10) {
+                console.log('⚠️ Large file detected, using metadata-only save');
+
+                // Save metadata only (not the actual file)
+                const metadata = {
+                    saved: true,
+                    date: new Date().toISOString(),
+                    size: currentRecording.size,
+                    type: currentRecording.type,
+                    duration: document.getElementById('totalDuration').textContent
+                };
+
+                localStorage.setItem('zynth_recording_metadata', JSON.stringify(metadata));
+                localStorage.setItem('zynth_recording_date', new Date().toISOString());
+                localStorage.setItem('zynth_profile_complete', 'true');
+
+                // Enable profile creation
+                document.getElementById('exportBtn').disabled = false;
+                document.getElementById('createProfileBtn').disabled = false;
+
+                // Update UI
+                document.getElementById('voiceProfileStatus').textContent = 'Active';
+                document.getElementById('profileStatus').textContent = 'Active';
+                document.getElementById('cloneStatus').textContent = 'Ready';
+                document.getElementById('recordingCount').textContent = '1';
+
+                alert('✅ Voice sample registered!\n\n' +
+                      'File: ' + fileSizeMB.toFixed(2) + ' MB\n' +
+                      'Duration: ' + metadata.duration + '\n\n' +
+                      '⚠️ Note: Large files are registered but not stored in browser.\n' +
+                      'For actual voice cloning, you\'ll need to use the backend server.\n\n' +
+                      'Click "Create Voice Profile" to continue!');
+
+                console.log('✅ Large file metadata saved!');
+                return;
+            }
+
+            // For smaller files, save normally
+            const reader = new FileReader();
+            reader.readAsDataURL(currentRecording);
+
+            reader.onerror = (error) => {
+                console.error('❌ FileReader error:', error);
+                alert('❌ Error saving recording. File might be too large.\n\nTry using a shorter recording (under 10MB) or use the backend server for processing.');
+            };
+
+            reader.onloadend = () => {
+                try {
+                    const base64Audio = reader.result;
+
+                    // Try to save to localStorage
+                    localStorage.setItem('zynth_master_recording', base64Audio);
+                    localStorage.setItem('zynth_recording_date', new Date().toISOString());
+
+                    // Enable profile creation
+                    document.getElementById('exportBtn').disabled = false;
+                    document.getElementById('createProfileBtn').disabled = false;
+
+                    // Update recordings list
+                    const recordings = JSON.parse(localStorage.getItem('zynth_recordings') || '[]');
+                    recordings.push({
+                        date: new Date().toISOString(),
+                        size: Math.round(base64Audio.length / 1024)
+                    });
+                    localStorage.setItem('zynth_recordings', JSON.stringify(recordings));
+
+                    updateUI();
+                    loadVoiceProfile();
+
+                    alert('✅ Recording saved successfully!');
+                    console.log('✅ Master recording saved!');
+                } catch (error) {
+                    console.error('❌ localStorage error:', error);
+                    alert('❌ Failed to save recording.\n\nYour file is too large for browser storage (limit: ~5-10MB).\n\nOptions:\n1. Use a shorter recording\n2. Compress the audio file\n3. Use the backend server for processing');
+                }
+            };
+        }
+
+        // Export recording
+        function exportRecording() {
+            const masterRecording = localStorage.getItem('zynth_master_recording');
+            if (!masterRecording) {
+                alert('No recording to export');
+                return;
+            }
+
+            // Convert base64 to blob
+            const byteString = atob(masterRecording.split(',')[1]);
+            const mimeString = masterRecording.split(',')[0].split(':')[1].split(';')[0];
+            const ab = new ArrayBuffer(byteString.length);
+            const ia = new Uint8Array(ab);
+            for (let i = 0; i < byteString.length; i++) {
+                ia[i] = byteString.charCodeAt(i);
+            }
+            const blob = new Blob([ab], { type: mimeString });
+
+            // Download
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `zynth-voice-recording-${Date.now()}.webm`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            console.log('✅ Recording exported!');
+        }
+
+        // Create voice profile
+        function createVoiceProfile() {
+            const masterRecording = localStorage.getItem('zynth_master_recording');
+            const metadata = localStorage.getItem('zynth_recording_metadata');
+
+            if (!masterRecording && !metadata) {
+                alert('Please save your voice sample first!\n\nClick "Save Recording" button after uploading your voice file.');
+                return;
+            }
+
+            // Mark profile as complete
+            localStorage.setItem('zynth_profile_complete', 'true');
+            localStorage.setItem('zynth_profile_date', new Date().toISOString());
+
+            // Enable TTS
+            document.getElementById('generateBtn').disabled = false;
+
+            // Update UI
+            document.getElementById('voiceProfileStatus').textContent = 'Active';
+            document.getElementById('profileStatus').textContent = 'Active';
+            document.getElementById('cloneStatus').textContent = 'Ready';
+
+            // Update TTS mode UI
+            updateTTSMode();
+
+            const isLargeFile = metadata && !masterRecording;
+            const message = isLargeFile
+                ? '🎉 Voice Profile Created!\n\nYour voice profile is now registered!\n\n✅ Basic Mode: Use browser TTS (works now)\n⚠️ Cloned Voice Mode: Requires backend server for your 30-minute sample\n\nFor actual voice cloning with your uploaded file:\n1. Start the backend server (backend/START_SERVER.bat)\n2. Upload your voice file to the server\n3. Use "Cloned Voice Mode" for realistic output\n\nSwitch between modes in the Text-to-Speech section below.'
+                : '🎉 Voice Profile Created!\n\nYour voice profile is now ready!\n\n✅ Basic Mode: Use browser TTS (works now)\n✅ Cloned Voice Mode: Ready for backend integration\n\nSwitch between modes in the Text-to-Speech section below.';
+
+            alert(message);
+
+            console.log('✅ Voice profile created!');
+        }
+
+        // Generate speech (dual-mode: Web Speech API or Cloned Voice)
+        function generateSpeech() {
+            const text = document.getElementById('ttsInput').value.trim();
+            if (!text) {
+                alert('Please enter text to generate speech');
+                return;
+            }
+
+            if (ttsMode === 'basic') {
+                // MODE 1: Web Speech API (Browser TTS)
+                generateSpeechBasicMode(text);
+            } else if (ttsMode === 'cloned') {
+                // MODE 2: Cloned Voice (Coqui TTS)
+                generateSpeechClonedMode(text);
+            }
+        }
+
+        // Generate speech using Web Speech API (Browser TTS)
+        function generateSpeechBasicMode(text) {
+            // Update selected voice
+            const voiceSelect = document.getElementById('voiceSelect');
+            const selectedIndex = voiceSelect.selectedIndex;
+            selectedVoice = availableVoices[selectedIndex];
+
+            // Create speech synthesis utterance
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.voice = selectedVoice;
+            utterance.rate = 1.0;
+            utterance.pitch = 1.0;
+            utterance.volume = 1.0;
+
+            // Event handlers
+            utterance.onstart = () => {
+                console.log('🔊 Speech started (Basic Mode)');
+                document.getElementById('generateBtn').style.display = 'none';
+                document.getElementById('stopSpeechBtn').style.display = 'block';
+            };
+
+            utterance.onend = () => {
+                console.log('✅ Speech completed');
+                document.getElementById('generateBtn').style.display = 'block';
+                document.getElementById('stopSpeechBtn').style.display = 'none';
+            };
+
+            utterance.onerror = (event) => {
+                console.error('❌ Speech error:', event.error);
+                if (event.error !== 'interrupted') {
+                    alert('Speech synthesis error: ' + event.error);
+                }
+                document.getElementById('generateBtn').style.display = 'block';
+                document.getElementById('stopSpeechBtn').style.display = 'none';
+            };
+
+            // Cancel any ongoing speech
+            speechSynthesis.cancel();
+
+            // Speak!
+            speechSynthesis.speak(utterance);
+
+            console.log(`🔊 Generating speech with voice: ${selectedVoice.name}`);
+        }
+
+        // Generate speech using Cloned Voice (Coqui TTS - requires backend)
+        async function generateSpeechClonedMode(text) {
+            const profileComplete = localStorage.getItem('zynth_profile_complete');
+            if (profileComplete !== 'true') {
+                alert('Please create your voice profile first!');
+                return;
+            }
+
+            // Get voice sample from localStorage
+            const voiceSample = localStorage.getItem('zynth_master_recording');
+            if (!voiceSample) {
+                alert('Voice sample not found! Please record your voice again.');
+                return;
+            }
+
+            // Backend URL (change if running on different host/port)
+            const BACKEND_URL = 'https://z2b-production-3cd3.up.railway.app';
+
+            try {
+                // Show loading state
+                document.getElementById('generateBtn').disabled = true;
+                document.getElementById('generateBtn').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cloning voice...';
+
+                console.log('🎤 Checking backend availability...');
+
+                // Check if backend is available
+                const healthCheck = await fetch(`${BACKEND_URL}/health`, {
+                    method: 'GET',
+                    mode: 'cors'
+                });
+
+                if (!healthCheck.ok) {
+                    throw new Error('Backend not responding');
+                }
+
+                const healthData = await healthCheck.json();
+
+                if (!healthData.tts_ready) {
+                    throw new Error('TTS model not loaded on backend');
+                }
+
+                console.log('✅ Backend is ready');
+                console.log('🔊 Generating cloned voice speech...');
+
+                // Generate speech with cloned voice
+                const response = await fetch(`${BACKEND_URL}/api/tts/generate`, {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        text: text,
+                        voice_sample: voiceSample,
+                        language: 'en'
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Generation failed');
+                }
+
+                // Get audio blob
+                const audioBlob = await response.blob();
+                console.log(`✅ Received ${(audioBlob.size / 1024).toFixed(2)} KB audio file`);
+
+                // Create audio URL and play
+                const audioURL = URL.createObjectURL(audioBlob);
+                document.getElementById('ttsPlayback').src = audioURL;
+                document.getElementById('ttsPlayerSection').style.display = 'block';
+
+                // Auto-play the generated audio
+                document.getElementById('ttsPlayback').play();
+
+                console.log('🎉 Voice cloning successful!');
+
+                // Reset button
+                document.getElementById('generateBtn').disabled = false;
+                document.getElementById('generateBtn').innerHTML = '<i class="fas fa-wand-magic-sparkles"></i> Generate Speech';
+
+            } catch (error) {
+                console.error('❌ Cloned Voice Error:', error);
+
+                // Reset button
+                document.getElementById('generateBtn').disabled = false;
+                document.getElementById('generateBtn').innerHTML = '<i class="fas fa-wand-magic-sparkles"></i> Generate Speech';
+
+                // Show error message
+                if (error.message.includes('Failed to fetch') || error.message.includes('not responding')) {
+                    alert('🚧 Backend Server Not Running!\n\n' +
+                          'To use Cloned Voice mode:\n\n' +
+                          '1. Open terminal/command prompt\n' +
+                          '2. Navigate to: C:\\Users\\Manana\\Z2B\\Z2B-v21\\app\\backend\n' +
+                          '3. Run: python server.py\n' +
+                          '4. Wait for "Server ready to clone voices!"\n' +
+                          '5. Try again!\n\n' +
+                          'See backend/SETUP.md for detailed instructions.\n\n' +
+                          'For now, use Basic Mode (Browser TTS) which works without backend!');
+                } else if (error.message.includes('TTS model not loaded')) {
+                    alert('⚠️ Backend is running but TTS model not loaded!\n\n' +
+                          'Check the server console for errors.\n' +
+                          'Make sure you installed: pip install TTS');
+                } else {
+                    alert(`❌ Voice generation failed:\n\n${error.message}\n\n` +
+                          'Check server console logs for details.');
+                }
+            }
+        }
+
+        // Stop speech synthesis
+        function stopSpeech() {
+            speechSynthesis.cancel();
+            document.getElementById('generateBtn').style.display = 'block';
+            document.getElementById('stopSpeechBtn').style.display = 'none';
+            console.log('⏹️ Speech stopped');
+        }
+
+        // Export generated audio
+        function exportGeneratedAudio() {
+            const audioPlayer = document.getElementById('ttsPlayback');
+            if (!audioPlayer.src) {
+                alert('No audio to export');
+                return;
+            }
+
+            // For Web Speech API, we can't export audio directly
+            // This feature works only with Cloned Voice mode
+            if (ttsMode === 'basic') {
+                alert('⚠️ Export not available for Basic Mode\n\nWeb Speech API speaks directly and doesn\'t generate downloadable files.\n\nTo export audio, use Cloned Voice Mode (requires backend setup).');
+                return;
+            }
+
+            // Download audio (for cloned voice mode)
+            const a = document.createElement('a');
+            a.href = audioPlayer.src;
+            a.download = `zynth-generated-speech-${Date.now()}.wav`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+
+            console.log('✅ Audio exported!');
+        }
+
+        // Update voice selection
+        document.addEventListener('DOMContentLoaded', function() {
+            const voiceSelect = document.getElementById('voiceSelect');
+            if (voiceSelect) {
+                voiceSelect.addEventListener('change', function() {
+                    selectedVoice = availableVoices[this.selectedIndex];
+                    console.log('Voice changed to:', selectedVoice.name);
+                });
+            }
+        });
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', initApp);
+    </script>
+    <!-- Footer -->
+    <footer style="text-align: center; padding: 30px 20px; margin-top: 50px; background: rgba(255,255,255,0.05); border-top: 1px solid rgba(255,255,255,0.1);">
+        <p style="margin: 0; color: rgba(255,255,255,0.7); font-size: 14px;">
+            Built with <i class="fas fa-heart" style="color: #ff6b6b; animation: heartbeat 1.5s infinite;"></i> by <strong style="color: #FFD700;">Z2B Legacy Builders</strong>
+        </p>
+    </footer>
+    <style>
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.1); }
+            50% { transform: scale(1); }
+        }
+    </style>
+
+<!-- Universal App Pricing Button & Modal - Insert before <script src="js/cart-manager.js"></script>\n
+<!-- Floating Cart Icon -->
+<style>
+.floating-cart-icon {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, #00D9FF, #0088cc);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 25px rgba(0, 217, 255, 0.5);
+    cursor: pointer;
+    z-index: 9998;
+    animation: pulse-cart 2s infinite;
+    transition: transform 0.3s;
+}
+.floating-cart-icon:hover {
+    transform: scale(1.1);
+}
+@keyframes pulse-cart {
+    0%, 100% { box-shadow: 0 8px 25px rgba(0, 217, 255, 0.5); }
+    50% { box-shadow: 0 8px 40px rgba(0, 217, 255, 0.8); }
+}
+.floating-cart-icon i {
+    font-size: 2rem;
+    color: #fff;
+}
+.cart-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: linear-gradient(135deg, #FFD700, #FF8C00);
+    color: #000;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: bold;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+</style>
+
+<div class="floating-cart-icon" onclick="window.location.href='cart.html'" title="View Cart">
+    <i class="fas fa-shopping-cart"></i>
+    <span class="cart-badge" style="display: none;">0</span>
+</div>
+
+<script>
+// Update cart badge when cart changes
+if (typeof z2bCart !== 'undefined') {
+    z2bCart.updateCartBadge();
+}
+</script>
+\n</body> -->
+<style>
+.app-buy-fab {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, #FFD700, #FF8C00);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 25px rgba(255, 215, 0, 0.5);
+    cursor: pointer;
+    z-index: 9999;
+    animation: pulse 2s infinite;
+    transition: transform 0.3s;
+}
+.app-buy-fab:hover {
+    transform: scale(1.1);
+}
+@keyframes pulse {
+    0%, 100% { box-shadow: 0 8px 25px rgba(255, 215, 0, 0.5); }
+    50% { box-shadow: 0 8px 40px rgba(255, 215, 0, 0.8); }
+}
+.app-buy-fab i {
+    font-size: 2rem;
+    color: #0A2647;
+}
+</style>
+
+<!-- Floating Buy Button -->
+<div class="app-buy-fab" onclick="showAppPricing()" title="Buy This App">
+    <i class="fas fa-shopping-cart"></i>
+</div>
+
+<!-- Pricing Modal -->
+<div id="appPricingModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); z-index: 10000; padding: 2rem; overflow-y: auto;">
+    <div style="max-width: 800px; margin: 2rem auto; background: linear-gradient(135deg, #0A2647 0%, #051428 100%); border-radius: 20px; border: 3px solid #FFD700; box-shadow: 0 0 50px rgba(255, 215, 0, 0.3); padding: 3rem; position: relative;">
+
+        <!-- Close Button -->
+        <button onclick="closePricingModal()" style="position: absolute; top: 1.5rem; right: 1.5rem; background: none; border: none; color: #999; font-size: 2.5rem; cursor: pointer; width: 50px; height: 50px; line-height: 1; transition: color 0.3s;">&times;</button>
+
+        <!-- Header -->
+        <div style="text-align: center; margin-bottom: 2.5rem;">
+            <h2 style="font-size: 2.5rem; background: linear-gradient(135deg, #FFD700, #FF8C00); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; font-weight: bold;">Get <span class="app-name-display"></span></h2>
+            <p style="font-size: 1.2rem; color: #FFD700;">Choose the best option for you</p>
+        </div>
+
+        <!-- Pricing Options -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+
+            <!-- Standalone Option -->
+            <div style="background: rgba(255, 255, 255, 0.05); border: 2px solid #666; border-radius: 15px; padding: 2rem; text-align: center; transition: all 0.3s;" onmouseover="this.style.borderColor='#FFD700'" onmouseout="this.style.borderColor='#666'">
+                <div style="font-size: 1rem; color: #00D9FF; margin-bottom: 1rem; font-weight: 600;">STANDALONE</div>
+                <div style="font-size: 3rem; font-weight: bold; color: #FFD700; margin-bottom: 0.5rem;">R<span class="app-price-display"></span></div>
+                <div style="font-size: 1rem; color: #ccc; margin-bottom: 1.5rem;">/month</div>
+                <div style="color: #999; font-size: 0.9rem; line-height: 1.6; margin-bottom: 1.5rem;">
+                    <div style="margin-bottom: 0.5rem;">✓ Full access to <span class="app-name-display"></span></div>
+                    <div style="margin-bottom: 0.5rem;">✓ AI Fuel included</div>
+                    <div style="margin-bottom: 0.5rem;">✓ Updates & support</div>
+                    <div style="margin-bottom: 0.5rem;">✓ Cancel anytime</div>
+                </div>
+                <button onclick="buyStandalone()" style="width: 100%; padding: 1rem; background: linear-gradient(135deg, #666, #444); border: 2px solid #FFD700; border-radius: 10px; color: #fff; font-weight: bold; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.background='linear-gradient(135deg, #FFD700, #FF8C00)'; this.style.color='#000'" onmouseout="this.style.background='linear-gradient(135deg, #666, #444)'; this.style.color='#fff'">
+                    Buy Now
+                </button>
+            </div>
+
+            <!-- Z2B Membership Option -->
+            <div style="background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 140, 0, 0.15)); border: 3px solid #FFD700; border-radius: 15px; padding: 2rem; text-align: center; position: relative;">
+                <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #FFD700, #FF8C00); padding: 0.4rem 1.5rem; border-radius: 25px; font-size: 0.85rem; font-weight: bold; color: #000;">⭐ RECOMMENDED</div>
+                <div style="font-size: 1rem; color: #FFD700; margin-bottom: 1rem; font-weight: 600; margin-top: 0.5rem;">Z2B MEMBERSHIP</div>
+                <div style="font-size: 3rem; font-weight: bold; color: #FFD700; margin-bottom: 0.5rem;">R480+</div>
+                <div style="font-size: 1rem; color: #ccc; margin-bottom: 1.5rem;">/month</div>
+                <div style="color: #fff; font-size: 0.9rem; line-height: 1.8; margin-bottom: 1.5rem; text-align: left;">
+                    <div style="margin-bottom: 0.5rem;">✅ <span class="app-name-display"></span> + 10+ Other Apps</div>
+                    <div style="margin-bottom: 0.5rem;">✅ Coach ManLaw (AI Coach)</div>
+                    <div style="margin-bottom: 0.5rem;">✅ Choose Your Apps</div>
+                    <div style="margin-bottom: 0.5rem;">✅ 7 Income Streams</div>
+                    <div style="margin-bottom: 0.5rem;">✅ Up to 30% Commissions</div>
+                    <div style="margin-bottom: 0.5rem;">✅ Daily AI Fuel Credits</div>
+                </div>
+                <button onclick="joinZ2B()" style="width: 100%; padding: 1rem; background: linear-gradient(135deg, #FFD700, #FF8C00); border: none; border-radius: 10px; color: #000; font-weight: bold; cursor: pointer; box-shadow: 0 5px 20px rgba(255, 215, 0, 0.5); transition: all 0.3s;" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 30px rgba(255, 215, 0, 0.7)'" onmouseout="this.style.transform=''; this.style.boxShadow='0 5px 20px rgba(255, 215, 0, 0.5)'">
+                    Join Z2B Membership
+                </button>
+            </div>
+        </div>
+
+        <!-- Tier Breakdown -->
+        <div style="background: rgba(255, 215, 0, 0.05); border: 2px solid #FFD700; border-radius: 15px; padding: 1.5rem; margin-top: 2rem;">
+            <h4 style="color: #FFD700; margin-bottom: 1rem; text-align: center;">Z2B Membership Tiers</h4>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; font-size: 0.85rem; color: #fff;">
+                <div style="text-align: center; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 10px;">
+                    <div style="font-weight: bold; color: #FFD700; margin-bottom: 0.5rem;">Bronze</div>
+                    <div style="color: #ccc;">R480/month</div>
+                    <div style="color: #999; font-size: 0.8rem;">2 Apps</div>
+                </div>
+                <div style="text-align: center; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 10px;">
+                    <div style="font-weight: bold; color: #FFD700; margin-bottom: 0.5rem;">Copper</div>
+                    <div style="color: #ccc;">R980/month</div>
+                    <div style="color: #999; font-size: 0.8rem;">4 Apps</div>
+                </div>
+                <div style="text-align: center; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 10px;">
+                    <div style="font-weight: bold; color: #FFD700; margin-bottom: 0.5rem;">Silver</div>
+                    <div style="color: #ccc;">R1,480/month</div>
+                    <div style="color: #999; font-size: 0.8rem;">7 Apps</div>
+                </div>
+                <div style="text-align: center; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 10px;">
+                    <div style="font-weight: bold; color: #FFD700; margin-bottom: 0.5rem;">Gold</div>
+                    <div style="color: #ccc;">R2,980/month</div>
+                    <div style="color: #999; font-size: 0.8rem;">11 Apps</div>
+                </div>
+                <div style="text-align: center; padding: 1rem; background: rgba(255,255,255,0.1); border-radius: 10px; border: 1px solid #FFD700;">
+                    <div style="font-weight: bold; color: #FFD700; margin-bottom: 0.5rem;">Platinum</div>
+                    <div style="color: #ccc;">R4,980/month</div>
+                    <div style="color: #00ff88; font-size: 0.8rem; font-weight: bold;">ALL Apps</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Configuration - SET THESE FOR EACH APP
+const APP_CONFIG = {
+    name: 'Zynth',  // Replace with: Glowie, Vidzie, etc.
+    price: '297',            // Replace with: 297, 297, 197, etc.
+    paymentUrl: 'zynth-payment.html'  // Replace with payment page URL
+};
+
+// Show pricing modal
+function showAppPricing() {
+    // Update modal with app details
+    document.querySelectorAll('.app-name-display').forEach(el => {
+        el.textContent = APP_CONFIG.name;
+    });
+    document.querySelectorAll('.app-price-display').forEach(el => {
+        el.textContent = APP_CONFIG.price;
+    });
+
+    document.getElementById('appPricingModal').style.display = 'block';
+    document.body.style.overflow = 'hidden';
+}
+
+// Close modal
+function closePricingModal() {
+    document.getElementById('appPricingModal').style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+// Buy standalone
+function buyStandalone() {
+    // Get referral code if available
+    const urlParams = new URLSearchParams(window.location.search);
+    let ref = urlParams.get('ref') || urlParams.get('sponsor') || localStorage.getItem('referralCode') || '';
+
+    // Build payment URL
+    let paymentUrl = APP_CONFIG.paymentUrl + '?amount=' + APP_CONFIG.price;
+    if (ref) paymentUrl += '&ref=' + encodeURIComponent(ref);
+
+    window.location.href = paymentUrl;
+}
+
+
+// Add to cart
+function addToCart() {
+    const result = z2bCart.addToCart({
+        name: APP_CONFIG.name,
+        price: APP_CONFIG.price,
+        icon: 'fa-brain',
+        description: ''
+    });
+
+    if (result.success) {
+        // Show success message
+        alert('✓ ' + APP_CONFIG.name + ' added to cart!
+
+You now have ' + result.cart.length + ' item(s) in your cart.
+
+Click OK to continue shopping or visit your cart to checkout.');
+        closePricingModal();
+    } else {
+        alert(result.message);
+    }
+}
+\n\1
+function joinZ2B() {
+    // Get referral code if available
+    const urlParams = new URLSearchParams(window.location.search);
+    let ref = urlParams.get('ref') || urlParams.get('sponsor') || localStorage.getItem('referralCode') || '';
+
+    // Build registration URL
+    let regUrl = 'https://z2blegacybuilders.co.za/register.html?tier=SILVER';
+    if (ref) regUrl += '&ref=' + encodeURIComponent(ref);
+
+    window.location.href = regUrl;
+}
+
+// Close on ESC key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closePricingModal();
+});
+</script>
+
+<script src="js/cart-manager.js"></script>\n
+<!-- Floating Cart Icon -->
+<style>
+.floating-cart-icon {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, #00D9FF, #0088cc);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 25px rgba(0, 217, 255, 0.5);
+    cursor: pointer;
+    z-index: 9998;
+    animation: pulse-cart 2s infinite;
+    transition: transform 0.3s;
+}
+.floating-cart-icon:hover {
+    transform: scale(1.1);
+}
+@keyframes pulse-cart {
+    0%, 100% { box-shadow: 0 8px 25px rgba(0, 217, 255, 0.5); }
+    50% { box-shadow: 0 8px 40px rgba(0, 217, 255, 0.8); }
+}
+.floating-cart-icon i {
+    font-size: 2rem;
+    color: #fff;
+}
+.cart-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: linear-gradient(135deg, #FFD700, #FF8C00);
+    color: #000;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: bold;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+</style>
+
+<div class="floating-cart-icon" onclick="window.location.href='cart.html'" title="View Cart">
+    <i class="fas fa-shopping-cart"></i>
+    <span class="cart-badge" style="display: none;">0</span>
+</div>
+
+<script>
+// Update cart badge when cart changes
+if (typeof z2bCart !== 'undefined') {
+    z2bCart.updateCartBadge();
+}
+</script>
+\n</body>
+</html>

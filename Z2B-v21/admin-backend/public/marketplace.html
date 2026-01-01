@@ -1,0 +1,1616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marketplace - Z2B Legacy Builders</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <style>
+        :root {
+            --navy-blue: #0A2647;
+            --gold: #FFD700;
+            --orange: #FF6B35;
+            --light-gold: #FFF4CC;
+            --dark-navy: #051428;
+            --white: #FFFFFF;
+            --light-bg: #F8F9FA;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--light-bg);
+            color: var(--dark-navy);
+        }
+
+        .top-navbar {
+            background: linear-gradient(135deg, var(--navy-blue), var(--dark-navy));
+            padding: 1.5rem 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            margin-bottom: 2rem;
+        }
+
+        .back-btn {
+            color: var(--gold);
+            font-size: 1.1rem;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            color: var(--orange);
+        }
+
+        /* Floating Cart Icon */
+        .floating-cart {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--gold), var(--orange));
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.5);
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s;
+        }
+
+        .floating-cart:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(255, 215, 0, 0.7);
+        }
+
+        .floating-cart i {
+            font-size: 1.5rem;
+            color: var(--navy-blue);
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #DC3545;
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: bold;
+            border: 2px solid white;
+        }
+
+        .cart-badge.hidden {
+            display: none;
+        }
+
+        .marketplace-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .marketplace-header h1 {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--navy-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .marketplace-header p {
+            font-size: 1.2rem;
+            color: var(--dark-navy);
+            opacity: 0.8;
+        }
+
+        .filter-section {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+        }
+
+        .filter-section h5 {
+            color: var(--navy-blue);
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .category-btn {
+            background: var(--light-gold);
+            border: 2px solid transparent;
+            padding: 0.7rem 1.5rem;
+            border-radius: 50px;
+            color: var(--navy-blue);
+            font-weight: 600;
+            margin: 0.3rem;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .category-btn:hover,
+        .category-btn.active {
+            background: linear-gradient(135deg, var(--gold), var(--orange));
+            border-color: var(--navy-blue);
+            color: var(--white);
+        }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 2px solid var(--light-gold);
+            border-radius: 50px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 1.2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--navy-blue);
+            font-size: 1.2rem;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .product-card {            min-height: 620px;            display: flex;            flex-direction: column;
+            background: var(--white);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.15);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 220px;
+            background: linear-gradient(135deg, var(--navy-blue), var(--dark-navy));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .product-image i {
+            font-size: 5rem;
+            color: var(--gold);
+            opacity: 0.9;
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: linear-gradient(135deg, var(--orange), var(--gold));
+            color: var(--white);
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .product-info {            flex: 1;            display: flex;            flex-direction: column;
+            padding: 1.5rem;
+        }
+
+        .product-creator {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .creator-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold), var(--orange));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--navy-blue);
+            margin-right: 10px;
+            font-size: 0.9rem;
+        }
+
+        .creator-name {
+            color: var(--dark-navy);
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        .product-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--navy-blue);
+            margin-bottom: 0.8rem;
+        }
+
+        .product-description {
+            color: var(--dark-navy);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            opacity: 0.8;
+        }
+
+        .product-stats {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.2rem;
+            font-size: 0.9rem;
+            color: var(--dark-navy);
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .stat-item i {
+            color: var(--gold);
+        }
+
+        .product-footer {            margin-top: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid var(--light-gold);
+        }
+
+        .product-price {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--orange);
+        }
+
+        .btn-buy {
+            background: linear-gradient(135deg, var(--navy-blue), var(--dark-navy));
+            color: var(--gold);
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .btn-buy:hover {
+            background: linear-gradient(135deg, var(--gold), var(--orange));
+            color: var(--navy-blue);
+            transform: scale(1.05);
+        }
+
+        .create-product-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold), var(--orange));
+            border: none;
+            color: var(--navy-blue);
+            font-size: 2rem;
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .create-product-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.6);
+        }
+
+        .stats-banner {
+            background: linear-gradient(135deg, var(--navy-blue), var(--dark-navy));
+            padding: 2rem;
+            border-radius: 20px;
+            color: var(--white);
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .stats-banner h3 {
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-box {
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--gold);
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .marketplace-header h1 {
+                font-size: 2rem;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Cart Icon -->
+    <div class="floating-cart" onclick="viewCart()" title="View Cart">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-badge hidden" id="cartBadge">0</span>
+    </div>
+
+    <div class="top-navbar">
+        <div class="container">
+            <a href="dashboard.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="marketplace-header">
+            <div style="background: linear-gradient(135deg, var(--gold), var(--orange)); color: var(--navy-blue); padding: 0.6rem 1.5rem; border-radius: 50px; display: inline-block; margin-bottom: 1.5rem; font-weight: bold; font-size: 0.95rem;">
+                <i class="fas fa-rocket"></i> Transforming Employees to Entrepreneurs
+            </div>
+            <h1><i class="fas fa-store"></i> Marketplace</h1>
+            <p class="lead" style="color: var(--orange); font-weight: 600; margin-bottom: 0.5rem;">List and Buy Digital Products, Physical Products and Services</p>
+            <p>Discover and sell products created by our thriving community</p>
+        </div>
+
+        <!-- Stats Banner -->
+        <div class="stats-banner">
+            <h3>Marketplace Stats</h3>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-value">247</div>
+                    <div class="stat-label">Products</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">189</div>
+                    <div class="stat-label">Creators</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">5.2K</div>
+                    <div class="stat-label">Total Sales</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">R2.8M</div>
+                    <div class="stat-label">Revenue Generated</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pay as You Go Notice -->
+        <div style="background: linear-gradient(135deg, #FFD700, #FFA500); border: 2px solid var(--navy-blue); border-radius: 15px; padding: 1.5rem; margin-bottom: 2rem; box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4);">
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.8rem;">
+                <i class="fas fa-gas-pump" style="font-size: 2rem; color: var(--navy-blue);"></i>
+                <h3 style="color: var(--navy-blue); margin: 0; font-size: 1.3rem; font-weight: bold;">💳 Pay as You Go Refuel - No Monthly Commitments!</h3>
+            </div>
+            <p style="color: var(--navy-blue); font-size: 1rem; line-height: 1.6; margin-bottom: 0.5rem;">
+                <strong>⛽ No Fuel, No App Use.</strong> All our AI apps run on AI Fuel credits. Purchase AI Fuel only when you need it - credits last 3 months with rollover!
+                No monthly subscriptions, no auto-renewals, no commitments. You're in complete control of your spending.
+            </p>
+            <p style="color: var(--navy-blue); font-size: 0.9rem; margin: 0;">
+                <i class="fas fa-info-circle"></i> <strong>How it works:</strong> Buy any app → Purchase AI Fuel packages (100, 500, 1000, 2000, or 5000 credits + PV Points) → Use apps as much as you want → Refuel when needed → Unused fuel automatically rolls over for 3 months
+            </p>
+        </div>
+
+        <!-- Search & Filter -->
+        <div class="filter-section">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search for courses, ebooks, templates...">
+            </div>
+
+            <h5>Categories</h5>
+            <div class="d-flex flex-wrap">
+                <button class="category-btn active">All Products</button>
+                <button class="category-btn">Courses</button>
+                <button class="category-btn">E-books</button>
+                <button class="category-btn">Templates</button>
+                <button class="category-btn">Marketing Tools</button>
+                <button class="category-btn">Software</button>
+                <button class="category-btn">Coaching</button>
+            </div>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="products-grid">
+            <!-- Z2B App 1: Coach Manlaw -->
+            <div class="product-card">
+                <div class="product-image" style="background: linear-gradient(135deg, #FF6B35, #FFD700);">
+                    <i class="fas fa-graduation-cap" style="color: #0A2647;"></i>
+                    <span class="product-badge">⭐ BESTSELLER</span>
+                </div>
+                <div class="product-info">
+                    <div class="product-creator">
+                        <div class="creator-avatar" style="background: linear-gradient(135deg, #0A2647, #051428); color: #FFD700;">Z2B</div>
+                        <span class="creator-name">Z2B Legacy Builders</span>
+                    </div>
+                    <h3 class="product-title">Coach Manlaw - AI Billionaire Coach</h3>
+                    <p class="product-description">Your 24/7 AI billionaire mindset coach. Master the Four Legs Framework, get personalized coaching, track progress, and transform into a Legacy Builder.</p>
+                    <div style="background: rgba(255, 215, 0, 0.1); padding: 0.8rem; border-radius: 8px; margin: 0.8rem 0; border-left: 3px solid #FFD700;">
+                        <strong style="color: #FF6B35;">✨ Included in Copper, Silver, Gold & Platinum tiers</strong><br>
+                        <span style="font-size: 0.85rem; opacity: 0.9;">Purchase separately for standalone use</span>
+                    </div>
+                    <div class="product-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-star"></i>
+                            <span>4.9 (856)</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-robot"></i>
+                            <span>AI Powered</span>
+                        </div>
+                    </div>
+                    <div class="product-footer">
+                        <div class="product-price" style="color: var(--navy-blue);"><strong>From R700/month</strong><span style="font-size: 0.75rem; display: block; margin-top: 0.3rem; color: #666;">4 Packages Available</span><span style="font-size: 0.7rem; display: block; color: var(--navy-blue);">PRO R1,900 | PREMIUM R3,000 | ULTIMATE R5,000</span></div>
+                        <button class="btn-buy" onclick="showAppPackageModal('coach-manlaw')"><i class="fas fa-layer-group"></i> Choose Package</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Z2B App 2: Glowie -->
+            <div class="product-card">
+                <div class="product-image" style="background: linear-gradient(135deg, #4CAF50, #8BC34A);">
+                    <i class="fas fa-lightbulb" style="color: #FFF;"></i>
+                    <span class="product-badge" style="background: #FFD700; color: #0A2647;">🔥 HOT</span>
+                </div>
+                <div class="product-info">
+                    <div class="product-creator">
+                        <div class="creator-avatar" style="background: linear-gradient(135deg, #0A2647, #051428); color: #FFD700;">Z2B</div>
+                        <span class="creator-name">Z2B Legacy Builders</span>
+                    </div>
+                    <h3 class="product-title">GLOWIE - AI App Builder</h3>
+                    <p class="product-description">Build instant apps with Claude 4.5! No coding required. Generate mobile apps, web apps, tools, and games in minutes with AI.</p>
+                    <div style="background: rgba(76, 175, 80, 0.1); padding: 0.8rem; border-radius: 8px; margin: 0.8rem 0; border-left: 3px solid #4CAF50;">
+                        <strong style="color: #FF6B35;">✨ Included in Copper, Silver, Gold & Platinum tiers</strong><br>
+                        <span style="font-size: 0.85rem; opacity: 0.9;">Purchase separately for standalone use</span>
+                    </div>
+                    <div class="product-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-star"></i>
+                            <span>5.0 (542)</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-code"></i>
+                            <span>No-Code</span>
+                        </div>
+                    </div>
+                    <div class="product-footer">
+                        <div class="product-price" style="color: var(--navy-blue);"><strong>From R700/month</strong><span style="font-size: 0.75rem; display: block; margin-top: 0.3rem; color: #666;">4 Packages Available</span><span style="font-size: 0.7rem; display: block; color: var(--navy-blue);">PRO R1,900 | PREMIUM R3,000 | ULTIMATE R5,000</span></div>
+                        <button class="btn-buy" onclick="showAppPackageModal('glowie')"><i class="fas fa-layer-group"></i> Choose Package</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Z2B App 3: Benown -->
+            <div class="product-card">
+                <div class="product-image" style="background: linear-gradient(135deg, #9C27B0, #E91E63);">
+                    <i class="fas fa-magic" style="color: #FFF;"></i>
+                    <span class="product-badge">NEW</span>
+                </div>
+                <div class="product-info">
+                    <div class="product-creator">
+                        <div class="creator-avatar" style="background: linear-gradient(135deg, #0A2647, #051428); color: #FFD700;">Z2B</div>
+                        <span class="creator-name">Z2B Legacy Builders</span>
+                    </div>
+                    <h3 class="product-title">BENOWN - AI Content Creator</h3>
+                    <p class="product-description">Generate viral content for all platforms! AI-powered content creation for Instagram, Facebook, LinkedIn, TikTok, and more with hashtag optimization.</p>
+                    <div style="background: rgba(156, 39, 176, 0.1); padding: 0.8rem; border-radius: 8px; margin: 0.8rem 0; border-left: 3px solid #9C27B0;">
+                        <strong style="color: #FF6B35;">✨ Included in Silver, Gold & Platinum tiers</strong><br>
+                        <span style="font-size: 0.85rem; opacity: 0.9;">Purchase separately for standalone use</span>
+                    </div>
+                    <div class="product-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-star"></i>
+                            <span>4.8 (423)</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-hashtag"></i>
+                            <span>Multi-Platform</span>
+                        </div>
+                    </div>
+                    <div class="product-footer">
+                        <div class="product-price" style="color: var(--navy-blue);"><strong>From R700/month</strong><span style="font-size: 0.75rem; display: block; margin-top: 0.3rem; color: #666;">4 Packages Available</span><span style="font-size: 0.7rem; display: block; color: var(--navy-blue);">PRO R1,900 | PREMIUM R3,000 | ULTIMATE R5,000</span></div>
+                        <button class="btn-buy" onclick="showAppPackageModal('benown')"><i class="fas fa-layer-group"></i> Choose Package</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Z2B App 4: Zyra -->
+            <div class="product-card">
+                <div class="product-image" style="background: linear-gradient(135deg, #2196F3, #00BCD4);">
+                    <i class="fas fa-user-tie" style="color: #FFF;"></i>
+                    <span class="product-badge" style="background: #4CAF50;">💼 POPULAR</span>
+                </div>
+                <div class="product-info">
+                    <div class="product-creator">
+                        <div class="creator-avatar" style="background: linear-gradient(135deg, #0A2647, #051428); color: #FFD700;">Z2B</div>
+                        <span class="creator-name">Z2B Legacy Builders</span>
+                    </div>
+                    <h3 class="product-title">ZYRA - AI Sales Agent</h3>
+                    <p class="product-description">Close deals 24/7 with your AI sales agent! Automated lead management, intelligent conversations, sales pipeline tracking, and revenue analytics.</p>
+                    <div style="background: rgba(33, 150, 243, 0.1); padding: 0.8rem; border-radius: 8px; margin: 0.8rem 0; border-left: 3px solid #2196F3;">
+                        <strong style="color: #FF6B35;">✨ Included in Silver, Gold & Platinum tiers</strong><br>
+                        <span style="font-size: 0.85rem; opacity: 0.9;">Purchase separately for standalone use</span>
+                    </div>
+                    <div class="product-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-star"></i>
+                            <span>4.9 (678)</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-chart-line"></i>
+                            <span>24/7 Sales</span>
+                        </div>
+                    </div>
+                    <div class="product-footer">
+                        <div class="product-price" style="color: var(--navy-blue);"><strong>From R700/month</strong><span style="font-size: 0.75rem; display: block; margin-top: 0.3rem; color: #666;">4 Packages Available</span><span style="font-size: 0.7rem; display: block; color: var(--navy-blue);">PRO R1,900 | PREMIUM R3,000 | ULTIMATE R5,000</span></div>
+                        <button class="btn-buy" onclick="showAppPackageModal('zyra')"><i class="fas fa-layer-group"></i> Choose Package</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Z2B App 5: ZYNTH - AI Voice Cloning -->
+            <div class="product-card">
+                <div class="product-image" style="background: linear-gradient(135deg, #B45FFF, #00D9FF);">
+                    <i class="fas fa-microphone-alt" style="color: #FFF;"></i>
+                    <span class="product-badge" style="background: linear-gradient(135deg, #FFD700, #FF6B35); color: #0A2647;">🎤 NEW</span>
+                </div>
+                <div class="product-info">
+                    <div class="product-creator">
+                        <div class="creator-avatar" style="background: linear-gradient(135deg, #0A2647, #051428); color: #FFD700;">Z2B</div>
+                        <span class="creator-name">Z2B Legacy Builders</span>
+                    </div>
+                    <h3 class="product-title">ZYNTH - AI Voice Cloning</h3>
+                    <p class="product-description">Clone your voice with AI! Record once, generate unlimited speech in your own voice. Perfect for content creators, coaches, and entrepreneurs.</p>
+                    <div style="background: rgba(180, 95, 255, 0.1); padding: 0.8rem; border-radius: 8px; margin: 0.8rem 0; border-left: 3px solid #B45FFF;">
+                        <strong style="color: #FF6B35;">✨ Included in Silver, Gold & Platinum tiers</strong><br>
+                        <span style="font-size: 0.85rem; opacity: 0.9;">Purchase separately for standalone use</span>
+                    </div>
+                    <div class="product-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-star"></i>
+                            <span>5.0 (128)</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-wand-magic-sparkles"></i>
+                            <span>AI Powered</span>
+                        </div>
+                    </div>
+                    <div class="product-footer">
+                        <div class="product-price" style="color: var(--navy-blue);"><strong>From R700/month</strong><span style="font-size: 0.75rem; display: block; margin-top: 0.3rem; color: #666;">4 Packages Available</span><span style="font-size: 0.7rem; display: block; color: var(--navy-blue);">PRO R1,900 | PREMIUM R3,000 | ULTIMATE R5,000</span></div>
+                        <button class="btn-buy" onclick="window.location.href='zynth.html'">Buy Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Z2B App 7: Vidzie -->
+            <div class="product-card">
+                <div class="product-image" style="background: linear-gradient(135deg, #FF5722, #FF9800);">
+                    <i class="fas fa-video" style="color: #FFF;"></i>
+                    <span class="product-badge" style="background: #FFD700; color: #0A2647;">🎬 TRENDING</span>
+                </div>
+                <div class="product-info">
+                    <div class="product-creator">
+                        <div class="creator-avatar" style="background: linear-gradient(135deg, #0A2647, #051428); color: #FFD700;">Z2B</div>
+                        <span class="creator-name">Z2B Legacy Builders</span>
+                    </div>
+                    <h3 class="product-title">VIDZIE - AI Video Creator</h3>
+                    <p class="product-description">Create professional talking avatar videos with D-ID! Upload a photo, add your script, and generate stunning AI videos in minutes.</p>
+                    <div style="background: rgba(255, 87, 34, 0.1); padding: 0.8rem; border-radius: 8px; margin: 0.8rem 0; border-left: 3px solid #FF5722;">
+                        <strong style="color: #FF6B35;">✨ Included in Gold & Platinum tiers</strong><br>
+                        <span style="font-size: 0.85rem; opacity: 0.9;">Purchase separately for standalone use</span>
+                    </div>
+                    <div class="product-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-star"></i>
+                            <span>4.9 (1,203)</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-film"></i>
+                            <span>D-ID Powered</span>
+                        </div>
+                    </div>
+                    <div class="product-footer">
+                        <div class="product-price" style="color: var(--navy-blue);"><strong>From R700/month</strong><span style="font-size: 0.75rem; display: block; margin-top: 0.3rem; color: #666;">4 Packages Available</span><span style="font-size: 0.7rem; display: block; color: var(--navy-blue);">PRO R1,900 | PREMIUM R3,000 | ULTIMATE R5,000</span></div>
+                        <button class="btn-buy" onclick="showAppPackageModal('vidzie')"><i class="fas fa-layer-group"></i> Choose Package</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Z2B App 7.5: CaptionPro - AI Video Captions -->
+            <div class="product-card">
+                <div class="product-image" style="background: linear-gradient(135deg, #8B5CF6, #EC4899);">
+                    <i class="fas fa-closed-captioning" style="color: #FFF;"></i>
+                    <span class="product-badge">NEW</span>
+                </div>
+                <div class="product-info">
+                    <div class="product-creator">
+                        <div class="creator-avatar" style="background: linear-gradient(135deg, #0A2647, #051428); color: #FFD700;">Z2B</div>
+                        <span class="creator-name">Z2B Legacy Builders</span>
+                    </div>
+                    <h3 class="product-title">CaptionPro - AI Video Captions & Auto-Cut</h3>
+                    <p class="product-description">Transform your videos with AI-powered captions in 50+ languages including African languages (Zulu, Xhosa, Sotho). Auto-Cut long videos into viral TikTok, Instagram Reels, and YouTube Shorts instantly!</p>
+                    <div style="background: rgba(139, 92, 246, 0.1); padding: 0.8rem; border-radius: 8px; margin: 0.8rem 0; border-left: 3px solid #8B5CF6;">
+                        <strong style="color: #FF6B35;">✨ Available as Standalone Purchase</strong><br>
+                        <span style="font-size: 0.85rem; opacity: 0.9;">Perfect for content creators and social media managers</span>
+                    </div>
+                    <div class="product-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-star"></i>
+                            <span>5.0 (NEW)</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-globe"></i>
+                            <span>50+ Languages</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-cut"></i>
+                            <span>Auto-Cut Reels</span>
+                        </div>
+                    </div>
+                    <div class="product-footer">
+                        <div class="product-price" style="color: var(--navy-blue);"><strong>From R700/month</strong><span style="font-size: 0.75rem; display: block; margin-top: 0.3rem; color: #666;">4 Packages Available</span><span style="font-size: 0.7rem; display: block; color: var(--navy-blue);">PRO R1,900 | PREMIUM R3,000 | ULTIMATE R5,000</span></div>
+                        <button class="btn-buy" onclick="buyCaptionPro()">Buy Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Z2B App 8: Zyro -->
+            <div class="product-card">
+                <div class="product-image" style="background: linear-gradient(135deg, #673AB7, #9C27B0);">
+                    <i class="fas fa-gamepad" style="color: #FFF;"></i>
+                    <span class="product-badge" style="background: #4CAF50;">🎮 FUN</span>
+                </div>
+                <div class="product-info">
+                    <div class="product-creator">
+                        <div class="creator-avatar" style="background: linear-gradient(135deg, #0A2647, #051428); color: #FFD700;">Z2B</div>
+                        <span class="creator-name">Z2B Legacy Builders</span>
+                    </div>
+                    <h3 class="product-title">ZYRO - Gamification Hub</h3>
+                    <p class="product-description">Daily challenges, games, and rewards! Idea Roulette, SideGig Bingo, leaderboards, points, and badges to keep you motivated and engaged.</p>
+                    <div style="background: rgba(103, 58, 183, 0.1); padding: 0.8rem; border-radius: 8px; margin: 0.8rem 0; border-left: 3px solid #673AB7;">
+                        <strong style="color: #FF6B35;">✨ Included in Gold & Platinum tiers</strong><br>
+                        <span style="font-size: 0.85rem; opacity: 0.9;">Purchase separately for standalone use</span>
+                    </div>
+                    <div class="product-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-star"></i>
+                            <span>4.7 (892)</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-trophy"></i>
+                            <span>Rewards</span>
+                        </div>
+                    </div>
+                    <div class="product-footer">
+                        <div class="product-price" style="color: var(--navy-blue);"><strong>From R700/month</strong><span style="font-size: 0.75rem; display: block; margin-top: 0.3rem; color: #666;">4 Packages Available</span><span style="font-size: 0.7rem; display: block; color: var(--navy-blue);">PRO R1,900 | PREMIUM R3,000 | ULTIMATE R5,000</span></div>
+                        <button class="btn-buy" onclick="showAppPackageModal('zyro')"><i class="fas fa-layer-group"></i> Choose Package</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Z2B App 9: Zynect -->
+            <div class="product-card">
+                <div class="product-image" style="background: linear-gradient(135deg, #00BCD4, #009688);">
+                    <i class="fas fa-network-wired" style="color: #FFF;"></i>
+                    <span class="product-badge" style="background: #FFD700; color: #0A2647;">🚀 PREMIUM</span>
+                </div>
+                <div class="product-info">
+                    <div class="product-creator">
+                        <div class="creator-avatar" style="background: linear-gradient(135deg, #0A2647, #051428); color: #FFD700;">Z2B</div>
+                        <span class="creator-name">Z2B Legacy Builders</span>
+                    </div>
+                    <h3 class="product-title">ZYNECT - Complete CRM</h3>
+                    <p class="product-description">All-in-one CRM with SMS, WhatsApp & Email! Complete contact management, automated campaigns, multi-channel communication, and analytics.</p>
+                    <div style="background: rgba(0, 188, 212, 0.1); padding: 0.8rem; border-radius: 8px; margin: 0.8rem 0; border-left: 3px solid #00BCD4;">
+                        <strong style="color: #FF6B35;">✨ Included in Gold & Platinum tiers</strong><br>
+                        <span style="font-size: 0.85rem; opacity: 0.9;">Purchase separately for standalone use</span>
+                    </div>
+                    <div class="product-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-star"></i>
+                            <span>4.8 (567)</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-comments"></i>
+                            <span>Multi-Channel</span>
+                        </div>
+                    </div>
+                    <div class="product-footer">
+                        <div class="product-price" style="color: var(--navy-blue);"><strong>From R700/month</strong><span style="font-size: 0.75rem; display: block; margin-top: 0.3rem; color: #666;">4 Packages Available</span><span style="font-size: 0.7rem; display: block; color: var(--navy-blue);">PRO R1,900 | PREMIUM R3,000 | ULTIMATE R5,000</span></div>
+                        <button class="btn-buy" onclick="showAppPackageModal('zynect')"><i class="fas fa-layer-group"></i> Choose Package</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 2 - Video Creator Tools -->
+            <div class="product-card">
+                <div class="product-image" style="background: linear-gradient(135deg, #FFD700, #FF6B35);">
+                    <i class="fas fa-video" style="font-size: 3rem; color: #0A2647;"></i>
+                    <span class="product-badge" style="background: #4CAF50;">🔥 HOT</span>
+                </div>
+                <div class="product-info">
+                    <div class="product-creator">
+                        <div class="creator-avatar" style="background: linear-gradient(135deg, #0A2647, #051428); color: #FFD700;">Z2B</div>
+                        <span class="creator-name">Z2B Legacy Builders</span>
+                    </div>
+                    <h3 class="product-title">Video Creator Tools + 100 AI Fuel</h3>
+                    <p class="product-description">Professional video creation suite with templates, editing tools, and 100 non-expiring AI Fuel credits. Create stunning videos to grow your business!</p>
+                    <div style="background: rgba(255, 215, 0, 0.1); padding: 0.8rem; border-radius: 8px; margin: 0.8rem 0; border-left: 3px solid #FFD700;">
+                        <strong style="color: #FF6B35;">✨ Included in Gold & Platinum tiers</strong><br>
+                        <span style="font-size: 0.85rem; opacity: 0.9;">Purchase separately if you're on Bronze, Copper, or Silver tier</span>
+                    </div>
+                    <div class="product-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-star"></i>
+                            <span>4.9 (342)</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-fire"></i>
+                            <span>100 AI Fuel</span>
+                        </div>
+                    </div>
+                    <div class="product-footer">
+                        <div class="product-price">R399</div>
+                        <button class="btn-buy" style="background: linear-gradient(135deg, #FFD700, #FF6B35);">Buy Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 3 - Zyronic APP Suite (Featured Enterprise Product) -->
+            <div class="product-card" style="border: 3px solid #FFD700; box-shadow: 0 8px 40px rgba(255, 215, 0, 0.4);">
+                <div class="product-image" style="background: linear-gradient(135deg, #0A2647, #144272, #205295); position: relative; overflow: hidden;">
+                    <i class="fas fa-layer-group" style="font-size: 4rem; color: #FFD700; position: relative; z-index: 2;"></i>
+                    <span class="product-badge" style="background: linear-gradient(135deg, #FFD700, #FF6B35); color: #0A2647; font-weight: 900;">👑 ENTERPRISE</span>
+                </div>
+                <div class="product-info">
+                    <div class="product-creator">
+                        <div class="creator-avatar" style="background: linear-gradient(135deg, #FFD700, #FF6B35); color: #0A2647;">Z2B</div>
+                        <span class="creator-name">Z2B Legacy Builders</span>
+                    </div>
+                    <h3 class="product-title" style="background: linear-gradient(135deg, #FFD700, #FF6B35); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">🚀 Zyronic APP Suite - Enterprise Edition</h3>
+                    <p class="product-description">Premium White-Label AI Business Suite with 8 powerful apps: ZYRO, ZYRA, BENOWN, GLOWIE, ZYNECT, VIDZIE, ZYNTH & Coach ManLaw. 100% rebrandable for your company!</p>
+                    <div style="background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 107, 53, 0.1)); padding: 0.8rem; border-radius: 8px; margin: 0.8rem 0; border-left: 3px solid #FFD700;">
+                        <strong style="color: #FF6B35;">🏢 ENTERPRISE WHITE-LABEL PACKAGE</strong><br>
+                        <span style="font-size: 0.85rem; opacity: 0.9;">• Full Branding Rights • Unlimited Users • API Access • Priority Support</span>
+                    </div>
+                    <div style="background: linear-gradient(135deg, #FFD700, #FFA500); padding: 0.8rem; border-radius: 8px; margin: 0.8rem 0; border: 2px solid #0A2647;">
+                        <strong style="color: #0A2647;">📚 Coach ManLaw Customized Training Included</strong><br>
+                        <span style="font-size: 0.85rem; color: #0A2647;">Coach ManLaw's training and coaching will be customized according to your enterprise context, training needs, and desired business outcomes.</span>
+                    </div>
+                    <div class="product-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-layer-group" style="color: #FFD700;"></i>
+                            <span>8 AI Apps</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-palette" style="color: #FF6B35;"></i>
+                            <span>White-Label</span>
+                        </div>
+                    </div>
+                    <div class="product-footer">
+                        <div class="product-price" style="color: #FFD700;">R19,980<span style="font-size: 0.95rem; display: block; margin-top: 0.3rem; color: #0A2647; opacity: 0.8;">Per Month Subscription</span></div>
+                        <button class="btn-buy" onclick="window.location.href='zyronic-suite.html'" style="background: linear-gradient(135deg, #FFD700, #FF6B35); color: #0A2647; font-weight: 900;">View Details</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 4 -->
+            <div class="product-card">
+                <div class="product-image">
+                    <i class="fas fa-book"></i>
+                    <span class="product-badge">New</span>
+                </div>
+                <div class="product-info">
+                    <div class="product-creator">
+                        <div class="creator-avatar">JK</div>
+                        <span class="creator-name">John Khumalo</span>
+                    </div>
+                    <h3 class="product-title">The Billionaire Mindset E-book</h3>
+                    <p class="product-description">Transform your thinking with this comprehensive guide to developing a wealth-building mindset.</p>
+                    <div class="product-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-star"></i>
+                            <span>5.0 (89)</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>215 sales</span>
+                        </div>
+                    </div>
+                    <div class="product-footer">
+                        <div class="product-price">R147</div>
+                        <button class="btn-buy">Buy Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 4 -->
+            <div class="product-card">
+                <div class="product-image">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <div class="product-info">
+                    <div class="product-creator">
+                        <div class="creator-avatar">TN</div>
+                        <span class="creator-name">Thandi Nkosi</span>
+                    </div>
+                    <h3 class="product-title">Sales Funnel Templates</h3>
+                    <p class="product-description">Done-for-you funnel templates that convert prospects into team members automatically.</p>
+                    <div class="product-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-star"></i>
+                            <span>4.8 (156)</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>298 sales</span>
+                        </div>
+                    </div>
+                    <div class="product-footer">
+                        <div class="product-price">R297</div>
+                        <button class="btn-buy">Buy Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 5 -->
+            <div class="product-card">
+                <div class="product-image">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span class="product-badge">Popular</span>
+                </div>
+                <div class="product-info">
+                    <div class="product-creator">
+                        <div class="creator-avatar">MP</div>
+                        <span class="creator-name">Michael Power</span>
+                    </div>
+                    <h3 class="product-title">Marketing Mastery Masterclass</h3>
+                    <p class="product-description">Master the art of marketing and create compelling campaigns that sell your products and invite team members effortlessly.</p>
+                    <div class="product-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-star"></i>
+                            <span>4.9 (203)</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>412 sales</span>
+                        </div>
+                    </div>
+                    <div class="product-footer">
+                        <div class="product-price">R697</div>
+                        <button class="btn-buy">Buy Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 5 -->
+            <div class="product-card">
+                <div class="product-image">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="product-info">
+                    <div class="product-creator">
+                        <div class="creator-avatar">LM</div>
+                        <span class="creator-name">Lisa Mabena</span>
+                    </div>
+                    <h3 class="product-title">Financial Freedom Blueprint</h3>
+                    <p class="product-description">Step-by-step system to manage money, invest wisely, and build generational wealth.</p>
+                    <div class="product-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-star"></i>
+                            <span>5.0 (178)</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>389 sales</span>
+                        </div>
+                    </div>
+                    <div class="product-footer">
+                        <div class="product-price">R397</div>
+                        <button class="btn-buy">Buy Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 6 -->
+            <div class="product-card">
+                <div class="product-image">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="product-info">
+                    <div class="product-creator">
+                        <div class="creator-avatar">DM</div>
+                        <span class="creator-name">David Matshego</span>
+                    </div>
+                    <h3 class="product-title">Team Building Accelerator</h3>
+                    <p class="product-description">Proven strategies to invite, train, and lead a high-performing MLM team that duplicates success.</p>
+                    <div class="product-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-star"></i>
+                            <span>4.9 (145)</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>267 sales</span>
+                        </div>
+                    </div>
+                    <div class="product-footer">
+                        <div class="product-price">R547</div>
+                        <button class="btn-buy">Buy Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MAVULA - AI Prospecting Automation (STANDALONE) -->
+            <div class="product-card" id="mavula" style="border: 2px solid #00f3ff; box-shadow: 0 0 30px rgba(0,243,255,0.4);">
+                <div class="product-image" style="background: linear-gradient(135deg, #00f3ff, #b026ff);">
+                    <i class="fas fa-robot" style="color: #FFF; font-size: 3rem;"></i>
+                    <span class="product-badge" style="background: linear-gradient(135deg, #FFD700, #FF8C00);">🚀 STANDALONE</span>
+                </div>
+                <div class="product-info">
+                    <div class="product-creator">
+                        <div class="creator-avatar" style="background: linear-gradient(135deg, #00f3ff, #b026ff); color: #FFF;">AI</div>
+                        <span class="creator-name">Z2B Legacy Builders</span>
+                    </div>
+                    <h3 class="product-title">MAVULA - AI Prospecting Automation</h3>
+                    <p class="product-description">Automate your network marketing prospecting! AI-powered conversations, automated follow-ups, lead scoring, WhatsApp integration, and social media import. Perfect for network marketers!</p>
+                    <div style="background: rgba(0, 243, 255, 0.1); padding: 0.8rem; border-radius: 8px; margin: 0.8rem 0; border-left: 3px solid #00f3ff;">
+                        <strong style="color: #00f3ff;">💎 Available as Standalone Product</strong><br>
+                        <span style="font-size: 0.85rem; opacity: 0.9;">No membership required - Buy and use immediately!</span>
+                    </div>
+                    <div class="product-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-star" style="color: #FFD700;"></i>
+                            <span>NEW</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-robot" style="color: #00f3ff;"></i>
+                            <span>AI Powered</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fab fa-whatsapp" style="color: #25D366;"></i>
+                            <span>WhatsApp</span>
+                        </div>
+                    </div>
+                    <div class="product-footer">
+                        <div class="product-price" style="color: var(--navy-blue);"><strong>From R700/month</strong><span style="font-size: 0.75rem; display: block; margin-top: 0.3rem; color: #666;">4 Packages Available</span><span style="font-size: 0.7rem; display: block; color: var(--navy-blue);">PRO R1,900 | PREMIUM R3,000 | ULTIMATE R5,000</span></div>
+                        <button class="btn-buy" onclick="showAppPackageModal('mavula')"><i class="fas fa-layer-group"></i> Choose Package</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SHEPHERD STAFF - AI Church Management System (STANDALONE) -->
+            <div class="product-card" id="shepherd-staff" style="border: 2px solid #22c55e; box-shadow: 0 0 30px rgba(34,197,94,0.4);">
+                <div class="product-image" style="background: linear-gradient(135deg, #22c55e, #16a34a);">
+                    <i class="fas fa-cross" style="color: #FFF; font-size: 3rem;"></i>
+                    <span class="product-badge" style="background: #fbbf24; color: #000;">🐑 LAUNCH SPECIAL</span>
+                </div>
+                <div class="product-info">
+                    <div class="product-creator">
+                        <div class="creator-avatar" style="background: linear-gradient(135deg, #22c55e, #16a34a); color: #FFF;">⛪</div>
+                        <span class="creator-name">Z2B Legacy Builders</span>
+                    </div>
+                    <h3 class="product-title">The Shepherd Staff - AI Church Management 🐑</h3>
+                    <p class="product-description">Complete AI-powered church management system. Track visitors, disciples, prayer requests, giving, events, and more. "Your rod and your staff, they comfort me" - Psalm 23:4</p>
+                    <div style="background: rgba(34, 197, 94, 0.1); padding: 0.8rem; border-radius: 8px; margin: 0.8rem 0; border-left: 3px solid #22c55e;">
+                        <strong style="color: #22c55e;">🎉 FIRST 100 CHURCHES GET 50% OFF FULL YEAR!</strong><br>
+                        <span style="font-size: 0.85rem; opacity: 0.9;">• Starter: R900/month (was R1,800) • Growth: R1,800/month (was R3,600) • Professional: R3,600/month (was R7,200)</span>
+                    </div>
+                    <div style="background: linear-gradient(135deg, #f0fdf4, #dcfce7); padding: 0.8rem; border-radius: 8px; margin: 0.8rem 0; border-left: 3px solid #15803d;">
+                        <strong style="color: #15803d;">🌱 Transformation Results:</strong><br>
+                        <span style="font-size: 0.85rem; color: #374151;">+40% membership growth • 1→23 disciple multiplication • 85% member retention • 3-5 souls saved monthly</span>
+                    </div>
+                    <div class="product-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-users" style="color: #22c55e;"></i>
+                            <span>Church Growth</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-pray" style="color: #22c55e;"></i>
+                            <span>AI-Powered</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-chart-line" style="color: #22c55e;"></i>
+                            <span>Analytics</span>
+                        </div>
+                    </div>
+                    <div class="product-footer">
+                        <div class="product-price" style="color: #22c55e;">
+                            <div style="text-decoration: line-through; opacity: 0.6; font-size: 0.9rem; color: #6b7280;">From R1,800/month</div>
+                            <div style="font-size: 1.4rem; font-weight: 700;">From R900/month</div>
+                            <div style="font-size: 0.8rem; opacity: 0.7; margin-top: 0.3rem;">50% OFF - First 100 Churches</div>
+                    <div class="product-footer">
+                        <div class="product-price" style="color: var(--navy-blue);"><strong>From R700/month</strong><span style="font-size: 0.75rem; display: block; margin-top: 0.3rem; color: #666;">4 Packages Available</span><span style="font-size: 0.7rem; display: block; color: var(--navy-blue);">PRO R1,900 | PREMIUM R3,000 | ULTIMATE R5,000</span></div>
+                        <button class="btn-buy" onclick="showAppPackageModal('shepherd-staff')"><i class="fas fa-layer-group"></i> Choose Package</button>
+                    </div>
+                    <i class="fas fa-video" style="color: #FFF; font-size: 3rem;"></i>
+                    <span class="product-badge" style="background: linear-gradient(135deg, #FFD700, #FF8C00);">🎬 AI CLONING</span>
+                </div>
+                <div class="product-info">
+                    <div class="product-creator">
+                        <div class="creator-avatar" style="background: linear-gradient(135deg, #9D4EDD, #FF006E); color: #FFF;">AI</div>
+                        <span class="creator-name">Z2B Legacy Builders</span>
+                    </div>
+                    <h3 class="product-title">MyDigitalTwin - Clone Yourself. Go Viral.</h3>
+                    <p class="product-description">Create AI-powered videos with your face and voice in minutes! Roast videos, hype messages, birthday shoutouts, comedy skits, and more. No filming, no editing required!</p>
+
+                    <div style="background: rgba(157, 78, 221, 0.1); padding: 0.8rem; border-radius: 8px; margin: 0.8rem 0; border-left: 3px solid #9D4EDD;">
+                        <strong style="color: #9D4EDD;">💎 Available as Standalone Product</strong><br>
+                        <span style="font-size: 0.85rem; opacity: 0.9;">3 tiers available - Choose what fits your needs!</span>
+                    </div>
+
+                    <div class="product-footer">
+                        <div class="product-price" style="color: var(--navy-blue);"><strong>From R700/month</strong><span style="font-size: 0.75rem; display: block; margin-top: 0.3rem; color: #666;">4 Packages Available</span><span style="font-size: 0.7rem; display: block; color: var(--navy-blue);">PRO R1,900 | PREMIUM R3,000 | ULTIMATE R5,000</span></div>
+                        <button class="btn-buy" onclick="showAppPackageModal('mydigitaltwin')"><i class="fas fa-layer-group"></i> Choose Package</button>
+                    </div>
+        </div>
+
+        <!-- Your Products Section -->
+        <div class="stats-banner" style="margin-top: 3rem;">
+            <h3><i class="fas fa-box"></i> Your Products</h3>
+            <p style="text-align: center; opacity: 0.8; margin-bottom: 1.5rem;">
+                You have 2 products listed in the marketplace
+            </p>
+            <div class="text-center">
+                <button class="btn-buy" style="padding: 1rem 2rem; font-size: 1.1rem;">
+                    <i class="fas fa-eye"></i> View My Products
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Product Button -->
+    <button class="create-product-btn" title="Create New Product">
+        <i class="fas fa-plus"></i>
+    </button>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/cart-system.js"></script>
+    <script>
+        // Category filtering
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Buy button handler
+        document.querySelectorAll('.btn-buy').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const card = this.closest('.product-card');
+                const title = card.querySelector('.product-title').textContent;
+
+                // Check if this is a Z2B app product
+                if (window.Z2BAppAccess) {
+                    // Try to match product to app
+                    const appMap = {
+                        'ZYRO': 'zyro',
+                        'Coach Manlaw': 'coach-manlaw',
+                        'GLOWIE': 'glowie',
+                        'ZYRA': 'zyra',
+                        'BENOWN': 'benown',
+                        'VIDZIE': 'vidzie',
+                        'ZYNECT': 'zynect'
+                    };
+
+                    let matchedAppId = null;
+                    for (const [appName, appId] of Object.entries(appMap)) {
+                        if (title.toLowerCase().includes(appName.toLowerCase())) {
+                            matchedAppId = appId;
+                            break;
+                        }
+                    }
+
+                    if (matchedAppId) {
+                        // Check if user has access to this app
+                        const hasAccess = window.Z2BAppAccess.hasAppAccess(matchedAppId);
+                        if (hasAccess) {
+                            alert(`✓ You already have access to this app!\\n\\nThis is included in your current tier.\\n\\nRedirecting to the app...`);
+                            const app = window.Z2B_APPS[matchedAppId];
+                            if (app) {
+                                window.location.href = app.url;
+                            }
+                            return;
+                        } else {
+                            // Show upgrade prompt
+                            const tierComparison = window.Z2BAppAccess.getTierComparison(matchedAppId);
+                            if (tierComparison && tierComparison.length > 0) {
+                                const tiersText = tierComparison.map(t => `${t.tierName} (${t.price})`).join('\\n');
+                                if (confirm(`🔒 This app is locked in your current tier.\\n\\nUpgrade to unlock this app:\\n\\n${tiersText}\\n\\nGo to Tiers page to upgrade?`)) {
+                                    window.location.href = 'tiers.html';
+                                }
+                                return;
+                            }
+                        }
+                    }
+                }
+
+                // Show general upsell for all apps
+                showGeneralAppUpsell(title, 700); // R700 base retail price
+            });
+        });
+
+        // Create product button
+        document.querySelector('.create-product-btn').addEventListener('click', function() {
+            alert('Opening product creation form...');
+        });
+
+        // Add tier comparison badges to Z2B app products when app-config loads
+        window.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                if (window.Z2BAppAccess && window.Z2B_APPS) {
+                    addTierComparisonBadges();
+                }
+            }, 200);
+        });
+
+        function addTierComparisonBadges() {
+            const appAccess = window.Z2BAppAccess;
+            const appProducts = {
+                'zyro': 'ZYRO',
+                'coach-manlaw': 'Coach Manlaw',
+                'glowie': 'GLOWIE',
+                'zyra': 'ZYRA',
+                'benown': 'BENOWN'
+            };
+
+            // Loop through all product cards
+            document.querySelectorAll('.product-card').forEach(card => {
+                const title = card.querySelector('.product-title')?.textContent || '';
+
+                // Check if this product matches a Z2B app
+                for (const [appId, appName] of Object.entries(appProducts)) {
+                    if (title.toLowerCase().includes(appName.toLowerCase())) {
+                        // Add tier comparison badge
+                        const tierComparison = appAccess.getTierComparison(appId);
+                        const hasAccess = appAccess.hasAppAccess(appId);
+
+                        // Check if badge already exists
+                        if (card.querySelector('.tier-comparison-badge')) {
+                            continue;
+                        }
+
+                        const badge = document.createElement('div');
+                        badge.className = 'tier-comparison-badge';
+                        badge.style.cssText = `
+                            background: ${hasAccess ? 'rgba(76, 205, 196, 0.1)' : 'rgba(255, 215, 0, 0.1)'};
+                            padding: 0.8rem;
+                            border-radius: 8px;
+                            margin: 0.8rem 0;
+                            border-left: 3px solid ${hasAccess ? '#4ECDC4' : '#FFD700'};
+                        `;
+
+                        if (hasAccess) {
+                            const accessLevel = appAccess.getAppAccessLevel(appId);
+                            badge.innerHTML = `
+                                <strong style="color: #4ECDC4;">✓ You have access!</strong><br>
+                                <span style="font-size: 0.85rem; opacity: 0.9;">
+                                    ${accessLevel === 'demo' ? 'Demo access included in your tier' : 'Full access included in your tier'}
+                                </span>
+                            `;
+                        } else {
+                            if (tierComparison && tierComparison.length > 0) {
+                                const tiersText = tierComparison.map(t => t.tierName).join(', ');
+                                badge.innerHTML = `
+                                    <strong style="color: #FF6B35;">🔒 Upgrade to unlock</strong><br>
+                                    <span style="font-size: 0.85rem; opacity: 0.9;">
+                                        Available in: ${tiersText}
+                                    </span>
+                                `;
+                            } else {
+                                badge.innerHTML = `
+                                    <strong style="color: #FFD700;">✨ Available for purchase</strong><br>
+                                    <span style="font-size: 0.85rem; opacity: 0.9;">
+                                        Not included in any tier
+                                    </span>
+                                `;
+                            }
+                        }
+
+                        // Insert badge before product stats
+                        const productStats = card.querySelector('.product-stats');
+                        if (productStats) {
+                            productStats.parentNode.insertBefore(badge, productStats);
+                        }
+
+                        // Update button text if user has access
+                        if (hasAccess) {
+                            const buyBtn = card.querySelector('.btn-buy');
+                            if (buyBtn) {
+                                buyBtn.textContent = 'Launch App';
+                                buyBtn.style.background = 'linear-gradient(135deg, #4ECDC4, #44A08D)';
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // CaptionPro purchase function - NEW CART SYSTEM
+        function buyCaptionPro() {
+            // Check if user already owns CaptionPro
+            const user = JSON.parse(localStorage.getItem('currentUser') || 'null');
+            if (user) {
+                const ownedApps = JSON.parse(localStorage.getItem(`${user.userId}_ownedApps`) || '[]');
+                if (ownedApps.includes('captionpro')) {
+                    if (confirm('✅ You already own CaptionPro!\n\nWould you like to launch the app now?')) {
+                        window.location.href = 'captionpro/index.html';
+                    }
+                    return;
+                }
+            }
+
+            // Add CaptionPro to cart
+            addToCart({
+                type: 'app',
+                code: 'captionpro',
+                name: 'CaptionPro - AI Video Captions & Auto-Cut',
+                price: 299,
+                pv: 15,
+                description: 'AI captions in 50+ languages + Auto-cut to Reels/Shorts',
+                icon: 'fa-closed-captioning',
+                quantity: 1
+            });
+        }
+    </script>
+
+    <!-- MyDigitalTwin Payment & Upsell Functions -->
+    <script>
+        function showMyDigitalTwinUpsell(tierName, tierPrice) {
+            const message = `
+                <div style="background: white; border-radius: 15px; padding: 20px; max-width: 550px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+                    <div style="text-align: center; margin-bottom: 15px;">
+                        <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #9D4EDD, #FF006E); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px auto;">
+                            <i class="fas fa-video" style="font-size: 1.8rem; color: white;"></i>
+                        </div>
+                        <h2 style="color: #0A2647; font-size: 1.5rem; margin-bottom: 5px;">💡 SMART TIP!</h2>
+                        <p style="color: #6b7280; font-size: 0.95rem;">Get more value with Z2B Membership</p>
+                    </div>
+
+                    <div style="background: linear-gradient(135deg, #fef3c7, #fde68a); padding: 15px; border-radius: 10px; margin-bottom: 15px; border-left: 4px solid #f59e0b;">
+                        <h3 style="color: #92400e; margin-bottom: 8px; font-size: 1.1rem;">You're about to buy:</h3>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <strong style="color: #0A2647; font-size: 1rem;">MyDigitalTwin ${tierName}</strong>
+                            <span style="color: #FF6B35; font-size: 1.3rem; font-weight: bold;">R${tierPrice}/month</span>
+                        </div>
+                    </div>
+
+                    <div style="background: #f0fdf4; padding: 15px; border-radius: 10px; margin-bottom: 15px; border: 2px solid #22c55e;">
+                        <h3 style="color: #15803d; margin-bottom: 10px; font-size: 1.1rem;"><i class="fas fa-star"></i> Better Option: Z2B Membership</h3>
+                        <div style="margin-bottom: 8px;">
+                            <div style="display: flex; justify-content: space-between; padding: 8px; background: white; border-radius: 6px; margin-bottom: 6px; font-size: 0.9rem;">
+                                <span><strong>Bronze (R480):</strong> 2 apps + MyDigitalTwin</span>
+                                <span style="color: #22c55e; font-weight: 600;">✓</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; padding: 8px; background: white; border-radius: 6px; margin-bottom: 6px; font-size: 0.9rem;">
+                                <span><strong>Copper (R980):</strong> 4 apps + MyDigitalTwin</span>
+                                <span style="color: #22c55e; font-weight: 600;">✓✓</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; padding: 8px; background: white; border-radius: 6px; margin-bottom: 6px; font-size: 0.9rem;">
+                                <span><strong>Silver (R1,480):</strong> 7 apps + MyDigitalTwin</span>
+                                <span style="color: #22c55e; font-weight: 600;">✓✓✓</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; padding: 8px; background: white; border-radius: 6px; margin-bottom: 6px; font-size: 0.9rem;">
+                                <span><strong>Gold (R2,490):</strong> 11 apps + MyDigitalTwin</span>
+                                <span style="color: #22c55e; font-weight: 600;">✓✓✓✓</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; padding: 8px; background: linear-gradient(135deg, #FFD700, #FFA500); border-radius: 6px; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3); font-size: 0.9rem;">
+                                <span style="color: #0A2647;"><strong>Platinum (R3,490):</strong> ALL 12 apps + MyDigitalTwin</span>
+                                <span style="color: #0A2647; font-weight: 900;">★ BEST</span>
+                            </div>
+                        </div>
+                        <p style="color: #15803d; font-weight: 600; text-align: center; margin-top: 8px; font-size: 0.85rem;">
+                            🎁 Plus: 30-days Moneyback Guarantee + Income + Team support!
+                        </p>
+                    </div>
+
+                    <div style="display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap;">
+                        <button id="buyOnlyBtn" style="flex: 1; min-width: 140px; background: #9ca3af; color: white; border: none; padding: 12px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: all 0.3s; font-size: 0.85rem;">
+                            <i class="fas fa-credit-card"></i> Card/Yoco
+                        </button>
+                        <button id="directDepositBtn" style="flex: 1; min-width: 140px; background: #22c55e; color: white; border: none; padding: 12px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: all 0.3s; font-size: 0.85rem;">
+                            <i class="fas fa-university"></i> Direct Deposit
+                        </button>
+                        <button onclick="window.location.href='register.html'" style="flex: 1; min-width: 140px; background: linear-gradient(135deg, #FFD700, #FF6B35); color: #0A2647; border: none; padding: 12px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: all 0.3s; box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3); font-size: 0.85rem;">
+                            <i class="fas fa-rocket"></i> Join Z2B
+                        </button>
+                    </div>
+
+                    <p style="text-align: center; margin: 0; color: #6b7280; font-size: 0.8rem;">
+                        ⏰ Limited Time: 50% OFF Beta Pricing
+                    </p>
+                </div>
+            `;
+
+            const modal = document.createElement('div');
+            modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 10000; padding: 20px; overflow-y: auto;';
+            modal.innerHTML = message;
+
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    document.body.removeChild(modal);
+                }
+            });
+
+            document.body.appendChild(modal);
+
+            // Handle payment buttons
+            setTimeout(() => {
+                const buyBtn = document.getElementById('buyOnlyBtn');
+                if (buyBtn) {
+                    buyBtn.addEventListener('click', async function() {
+                        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+                        this.disabled = true;
+
+                        // TODO: Implement Yoco payment for MyDigitalTwin tiers
+                        // For now, show alert
+                        alert('Yoco payment integration coming soon! Contact support@z2blegacybuilders.co.za');
+                        this.innerHTML = '<i class="fas fa-credit-card"></i> Card/Yoco';
+                        this.disabled = false;
+                    });
+                }
+
+                const depositBtn = document.getElementById('directDepositBtn');
+                if (depositBtn) {
+                    depositBtn.addEventListener('click', function() {
+                        showDirectDepositModal(tierName, tierPrice);
+                    });
+                }
+            }, 100);
+        }
+
+        // General upsell for all apps showing 5-tier membership
+        function showGeneralAppUpsell(appName, appPrice) {
+            const message = `
+                <div style="background: white; border-radius: 15px; padding: 20px; max-width: 550px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+                    <div style="text-align: center; margin-bottom: 15px;">
+                        <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #FFD700, #FF6B35); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px auto;">
+                            <i class="fas fa-gift" style="font-size: 1.8rem; color: white;"></i>
+                        </div>
+                        <h2 style="color: #0A2647; font-size: 1.5rem; margin-bottom: 5px;">💡 SMART TIP!</h2>
+                        <p style="color: #6b7280; font-size: 0.95rem;">Get more value with Z2B Membership</p>
+                    </div>
+
+                    <div style="background: linear-gradient(135deg, #fef3c7, #fde68a); padding: 15px; border-radius: 10px; margin-bottom: 15px; border-left: 4px solid #f59e0b;">
+                        <h3 style="color: #92400e; margin-bottom: 8px; font-size: 1.1rem;">You're about to buy:</h3>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <strong style="color: #0A2647; font-size: 1rem;">${appName}</strong>
+                            <span style="color: #FF6B35; font-size: 1.3rem; font-weight: bold;">R${appPrice}/month</span>
+                        </div>
+                        <p style="color: #92400e; margin-top: 5px; font-size: 0.85rem;">Retail price - non-members only</p>
+                    </div>
+
+                    <div style="background: #f0fdf4; padding: 15px; border-radius: 10px; margin-bottom: 15px; border: 2px solid #22c55e;">
+                        <h3 style="color: #15803d; margin-bottom: 10px; font-size: 1.1rem;"><i class="fas fa-star"></i> Better Option: Z2B Membership (Wholesale)</h3>
+                        <div style="margin-bottom: 8px;">
+                            <div style="display: flex; justify-content: space-between; padding: 8px; background: white; border-radius: 6px; margin-bottom: 6px; font-size: 0.9rem;">
+                                <span><strong>Bronze (R480):</strong> 2 apps of your choice</span>
+                                <span style="color: #22c55e; font-weight: 600;">✓</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; padding: 8px; background: white; border-radius: 6px; margin-bottom: 6px; font-size: 0.9rem;">
+                                <span><strong>Copper (R980):</strong> 4 apps of your choice</span>
+                                <span style="color: #22c55e; font-weight: 600;">✓✓</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; padding: 8px; background: white; border-radius: 6px; margin-bottom: 6px; font-size: 0.9rem;">
+                                <span><strong>Silver (R1,480):</strong> 7 apps of your choice</span>
+                                <span style="color: #22c55e; font-weight: 600;">✓✓✓</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; padding: 8px; background: white; border-radius: 6px; margin-bottom: 6px; font-size: 0.9rem;">
+                                <span><strong>Gold (R2,490):</strong> 11 apps of your choice</span>
+                                <span style="color: #22c55e; font-weight: 600;">✓✓✓✓</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; padding: 8px; background: linear-gradient(135deg, #FFD700, #FFA500); border-radius: 6px; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3); font-size: 0.9rem;">
+                                <span style="color: #0A2647;"><strong>Platinum (R3,490):</strong> ALL 12 apps</span>
+                                <span style="color: #0A2647; font-weight: 900;">★ BEST</span>
+                            </div>
+                        </div>
+                        <p style="color: #15803d; font-weight: 600; text-align: center; margin-top: 8px; font-size: 0.85rem;">
+                            🎁 Plus: 30-days Moneyback Guarantee + Income + Team support!
+                        </p>
+                    </div>
+
+                    <div style="display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap;">
+                        <button id="buyAppRetailBtn" style="flex: 1; min-width: 140px; background: #9ca3af; color: white; border: none; padding: 12px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: all 0.3s; font-size: 0.85rem;">
+                            <i class="fas fa-shopping-cart"></i> Buy Retail (R${appPrice})
+                        </button>
+                        <button onclick="window.location.href='register.html'" style="flex: 1; min-width: 140px; background: linear-gradient(135deg, #FFD700, #FF6B35); color: #0A2647; border: none; padding: 12px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: all 0.3s; box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3); font-size: 0.85rem;">
+                            <i class="fas fa-rocket"></i> Join Z2B Wholesale
+                        </button>
+                    </div>
+
+                    <p style="text-align: center; margin: 0; color: #6b7280; font-size: 0.8rem;">
+                        💰 Members buy wholesale, non-members pay retail
+                    </p>
+                </div>
+            `;
+
+            const modal = document.createElement('div');
+            modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 10000; padding: 20px; overflow-y: auto;';
+            modal.innerHTML = message;
+
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    document.body.removeChild(modal);
+                }
+            });
+
+            document.body.appendChild(modal);
+
+            // Handle buy retail button
+            setTimeout(() => {
+                const buyBtn = document.getElementById('buyAppRetailBtn');
+                if (buyBtn) {
+                    buyBtn.addEventListener('click', function() {
+                        document.body.removeChild(modal);
+                        alert(`Retail purchase for ${appName}\\n\\nContact: support@z2blegacybuilders.co.za\\n\\nOr join Z2B Membership to save money!`);
+                    });
+                }
+            }, 100);
+        }
+
+        function showDirectDepositModal(tierName, tierPrice) {
+            const message = `
+                <div style="background: white; border-radius: 15px; padding: 25px; max-width: 500px; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+                    <h2 style="color: #0A2647; text-align: center; margin-bottom: 20px;">
+                        <i class="fas fa-university" style="color: #22c55e;"></i> Direct Bank Deposit
+                    </h2>
+
+                    <div style="background: #f0fdf4; padding: 15px; border-radius: 10px; margin-bottom: 15px; border: 2px solid #22c55e;">
+                        <h3 style="color: #15803d; margin-bottom: 10px;">Bank Details:</h3>
+                        <p style="margin: 5px 0; color: #0A2647;"><strong>Bank:</strong> NEDBANK</p>
+                        <p style="margin: 5px 0; color: #0A2647;"><strong>Account Name:</strong> Zero2billionaires Amavulandlela</p>
+                        <p style="margin: 5px 0; color: #0A2647; font-size: 1.2rem;"><strong>Account Number:</strong> <span style="color: #22c55e; font-weight: 900;">1318257727</span></p>
+                        <p style="margin: 5px 0; color: #0A2647;"><strong>Amount:</strong> <span style="color: #FF6B35; font-weight: bold; font-size: 1.3rem;">R${tierPrice}</span></p>
+                    </div>
+
+                    <div style="background: #fef3c7; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                        <h3 style="color: #92400e; margin-bottom: 10px;">Payment Reference:</h3>
+                        <p style="margin: 5px 0; color: #0A2647;">Use your <strong>WhatsApp number</strong> as the payment reference.</p>
+                    </div>
+
+                    <div style="background: #e0f2fe; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                        <h3 style="color: #075985; margin-bottom: 10px;">After Payment:</h3>
+                        <p style="margin: 5px 0; color: #0A2647;">1. Send payment proof to: <strong>support@z2blegacybuilders.co.za</strong></p>
+                        <p style="margin: 5px 0; color: #0A2647;">2. Include your WhatsApp number</p>
+                        <p style="margin: 5px 0; color: #0A2647;">3. We'll activate your ${tierName} within 24 hours</p>
+                    </div>
+
+                    <button onclick="this.parentElement.parentElement.remove()" style="width: 100%; background: #22c55e; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1rem;">
+                        <i class="fas fa-check"></i> Got It!
+                    </button>
+                </div>
+            `;
+
+            const modal = document.createElement('div');
+            modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 10001; padding: 20px;';
+            modal.innerHTML = message;
+
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    document.body.removeChild(modal);
+                }
+            });
+
+            document.body.appendChild(modal);
+        }
+
+        function showThankYouModal() {
+            const message = `
+                <div style="background: white; border-radius: 15px; padding: 30px; max-width: 500px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+                    <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #22c55e, #16a34a); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto;">
+                        <i class="fas fa-check" style="font-size: 3rem; color: white;"></i>
+                    </div>
+
+                    <h2 style="color: #0A2647; margin-bottom: 15px;">🎉 Welcome to MyDigitalTwin!</h2>
+                    <p style="color: #6b7280; font-size: 1.1rem; margin-bottom: 20px;">
+                        Thank you for choosing MyDigitalTwin! Your AI video journey starts now.
+                    </p>
+
+                    <div style="background: linear-gradient(135deg, #fef3c7, #fde68a); padding: 20px; border-radius: 10px; margin: 20px 0;">
+                        <h3 style="color: #92400e; margin-bottom: 10px;">💪 Challenge Time!</h3>
+                        <p style="color: #0A2647; margin: 0;">
+                            Create your first AI video and share it with the world! Tag us and inspire others to join the AI revolution.
+                        </p>
+                    </div>
+
+                    <div style="display: flex; gap: 10px; margin-top: 20px;">
+                        <button onclick="window.location.href='https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(window.location.href)" style="flex: 1; background: #1877f2; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer;">
+                            <i class="fab fa-facebook"></i> Share on Facebook
+                        </button>
+                        <button onclick="window.location.href='https://twitter.com/intent/tweet?text=' + encodeURIComponent('I just joined MyDigitalTwin! Create AI videos with your own face and voice. Check it out: ') + encodeURIComponent(window.location.href)" style="flex: 1; background: #1da1f2; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer;">
+                            <i class="fab fa-twitter"></i> Share on Twitter
+                        </button>
+                    </div>
+
+                    <button onclick="this.parentElement.parentElement.remove()" style="width: 100%; background: linear-gradient(135deg, #9D4EDD, #FF006E); color: white; border: none; padding: 15px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 15px; font-size: 1rem;">
+                        <i class="fas fa-video"></i> Start Creating Videos!
+                    </button>
+                </div>
+            `;
+
+            const modal = document.createElement('div');
+            modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: flex; align-items: center; justify-content: center; z-index: 10002; padding: 20px;';
+            modal.innerHTML = message;
+
+            document.body.appendChild(modal);
+        }
+    </script>
+
+    <!-- Footer -->
+    <footer style="text-align: center; padding: 30px 20px; margin-top: 50px; background: rgba(255,255,255,0.05); border-top: 1px solid rgba(255,255,255,0.1);">
+        <p style="margin: 0; color: rgba(255,255,255,0.7); font-size: 14px;">
+            Built with <i class="fas fa-heart" style="color: #ff6b6b; animation: heartbeat 1.5s infinite;"></i> by <strong style="color: #FFD700;">Z2B Legacy Builders</strong>
+        </p>
+    </footer>
+    <style>
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.1); }
+            50% { transform: scale(1); }
+        }
+    </style>
+<!-- Load App Package Configuration -->    <script src="js/z2b-app-tiers-config.js"></script>    <!-- Package Selection Modal Functions -->    <script>        function showAppPackageModal(appCode) {            if (typeof Z2B_APP_PACKAGES === "undefined") {                alert("Package configuration not loaded. Please refresh the page.");                return;            }            const appData = Z2B_APP_PACKAGES[appCode];            if (!appData) {                alert("App configuration not found: " + appCode);                return;            }            const modalHTML = `<div class="app-tier-modal" id="packageModal"><div class="app-tier-modal-backdrop" onclick="closePackageModal()"></div><div class="app-tier-modal-content"><button class="app-tier-modal-close" onclick="closePackageModal()"><i class="fas fa-times"></i></button><div class="app-tier-modal-header"><i class="${appData.icon}" style="font-size: 3rem; color: var(--gold); margin-bottom: 1rem;"></i><h2>${appData.name}</h2><p style="opacity: 0.8; margin-bottom: 2rem;">${appData.description}</p></div><div class="tier-cards-grid">${generatePackageCard(appData.packages.package1, appCode, 1)}${generatePackageCard(appData.packages.package2, appCode, 2)}${generatePackageCard(appData.packages.package3, appCode, 3)}${generatePackageCard(appData.packages.package4, appCode, 4)}</div></div></div>`;            document.body.insertAdjacentHTML("beforeend", modalHTML);            document.body.style.overflow = "hidden";        }        function generatePackageCard(pkg, appCode, packageNum) {            const isPopular = pkg.popular || false;            const isPremium = packageNum === 3;            const isUltimate = packageNum === 4;            let cardClass = "tier-option-card";            if (isPopular) cardClass += " popular";            if (isPremium) cardClass += " premium";            if (isUltimate) cardClass += " ultimate";            const features = pkg.features.map(feature => {                const isProfit = feature.includes("ISP COMMISSION") || feature.includes("PROFIT SHARING");                return `<li class="${isProfit ? "profit-sharing" : ""}">${feature}</li>`;            }).join("");            const excluded = pkg.excluded && pkg.excluded.length > 0 ? `<div class="tier-excluded"><strong>Not Included:</strong><ul>${pkg.excluded.map(item => `<li>${item}</li>`).join("")}</ul></div>` : "";            return `<div class="${cardClass}">${isPopular ? "<div class="popular-badge">MOST POPULAR</div>" : ""}<div class="tier-badge">${pkg.badge}</div><div class="tier-name">${pkg.name}</div><div class="tier-price"><span class="currency">R</span>${pkg.price.toLocaleString()}<span class="period">/month</span></div><div class="tier-pv">${pkg.pv} PV Points</div><ul class="tier-features-list">${features}</ul>${excluded}<button class="tier-select-btn" onclick="selectPackage('${appCode}', ${packageNum}, ${pkg.price}, '${pkg.name}')"><i class="fas fa-check-circle"></i> Select ${pkg.badge.split(" ")[0]}</button></div>`;        }        function closePackageModal() {            const modal = document.getElementById("packageModal");            if (modal) { modal.remove(); document.body.style.overflow = ""; }        }        function selectPackage(appCode, packageNum, price, packageName) {            closePackageModal();            if (confirm(`You selected: ${packageName}
+
+Price: R${price.toLocaleString()}/month
+
+Proceed to payment?`)) {                localStorage.setItem("selectedPackage", JSON.stringify({ appCode: appCode, packageNum: packageNum, price: price, name: packageName }));                showMembershipTip(packageName, price, appCode);            }        }    </script>
+</body>
+</html>

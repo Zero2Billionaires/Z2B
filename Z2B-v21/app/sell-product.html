@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sell Your Product - Z2B Marketplace</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --navy-blue: #0A2647;
+            --gold: #17a2b8;
+            --orange: #FF6B35;
+            --light-gold: #d4edda;
+            --dark-navy: #051428;
+            --white: #FFFFFF;
+            --primary: #17a2b8;
+            --success: #FF6B35;
+            --warning: #9B59B6;
+            --danger: #FF6B6B;
+            --dark: #0A2647;
+            --light: #f8f9fa;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(to bottom, var(--navy-blue), var(--dark-navy));
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            color: var(--primary);
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .info-banner {
+            background: rgba(255, 255, 255, 0.95);
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .info-banner h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-item {
+            color: #333;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-item i {
+            color: var(--success);
+        }
+
+        .form-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+        }
+
+        .form-card h2 {
+            color: #333;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--light);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group label .required {
+            color: var(--danger);
+        }
+
+        .form-group .help-text {
+            font-size: 0.85rem;
+            color: #888;
+            margin-top: 0.3rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .type-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        .type-option {
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .type-option:hover {
+            border-color: var(--primary);
+            background: rgba(108, 99, 255, 0.05);
+        }
+
+        .type-option.selected {
+            border-color: var(--primary);
+            background: rgba(108, 99, 255, 0.1);
+        }
+
+        .type-option i {
+            font-size: 2.5rem;
+            margin-bottom: 0.8rem;
+            display: block;
+        }
+
+        .type-option.digital i {
+            color: var(--primary);
+        }
+
+        .type-option.physical i {
+            color: var(--success);
+        }
+
+        .type-option.service i {
+            color: var(--warning);
+        }
+
+        .type-option .type-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .type-option .type-desc {
+            font-size: 0.85rem;
+            color: #777;
+        }
+
+        .pricing-calculator {
+            background: linear-gradient(135deg, rgba(108, 99, 255, 0.1), rgba(0, 255, 136, 0.1));
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            padding: 2rem;
+        }
+
+        .pricing-calculator h3 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .income-input-wrapper {
+            margin-bottom: 2rem;
+        }
+
+        .income-input {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .income-input .currency {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .income-input input {
+            flex: 1;
+            border: none;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .income-input input:focus {
+            outline: none;
+        }
+
+        .breakdown-table {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .breakdown-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .breakdown-row:last-child {
+            border-bottom: none;
+        }
+
+        .breakdown-row.total {
+            background: var(--primary);
+            color: white;
+            font-weight: 700;
+            font-size: 1.3rem;
+        }
+
+        .breakdown-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .breakdown-value {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .example-box {
+            background: #f8f9fa;
+            border-left: 4px solid var(--success);
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 8px;
+        }
+
+        .example-box strong {
+            color: var(--primary);
+        }
+
+        .file-upload {
+            border: 2px dashed #e0e0e0;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .file-upload:hover {
+            border-color: var(--primary);
+            background: rgba(108, 99, 255, 0.05);
+        }
+
+        .file-upload i {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5952d4;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(108, 99, 255, 0.3);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-outline {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .form-actions .btn {
+            flex: 1;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .type-selector {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>
+                <i class="fas fa-store-alt"></i>
+                Sell Your Product on Z2B Marketplace
+            </h1>
+            <p>Create your listing and start earning! Members purchase, you profit, and your upline earns commissions.</p>
+        </div>
+
+        <!-- Info Banner -->
+        <div class="info-banner">
+            <h3><i class="fas fa-lightbulb"></i> How It Works</h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>You set your desired income</span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>100% MLM markup added automatically</span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>7.5% platform fee calculated</span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>You get paid after delivery</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vendor Payment Info -->
+        <div class="info-banner" style="background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(108, 99, 255, 0.1)); border-color: var(--success);">
+            <h3><i class="fas fa-wallet"></i> How & When You Get Paid</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
+                <div style="background: white; padding: 1.5rem; border-radius: 10px; border-left: 4px solid #17a2b8;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.8rem;">
+                        <i class="fas fa-download" style="color: var(--primary); font-size: 1.5rem;"></i>
+                        <strong style="color: var(--primary);">Digital Products</strong>
+                    </div>
+                    <div style="color: #555; font-size: 0.9rem; line-height: 1.6;">
+                        Paid within <strong>24 hours</strong> after customer downloads your file. Instant delivery = instant payment!
+                    </div>
+                </div>
+                <div style="background: white; padding: 1.5rem; border-radius: 10px; border-left: 4px solid #FF6B35;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.8rem;">
+                        <i class="fas fa-box" style="color: var(--success); font-size: 1.5rem;"></i>
+                        <strong style="color: var(--success);">Physical Products</strong>
+                    </div>
+                    <div style="color: #555; font-size: 0.9rem; line-height: 1.6;">
+                        Paid <strong>7 days</strong> after delivery confirmation. Provide tracking number to speed up process.
+                    </div>
+                </div>
+                <div style="background: white; padding: 1.5rem; border-radius: 10px; border-left: 4px solid #9B59B6;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.8rem;">
+                        <i class="fas fa-handshake" style="color: var(--warning); font-size: 1.5rem;"></i>
+                        <strong style="color: var(--warning);">Services</strong>
+                    </div>
+                    <div style="color: #555; font-size: 0.9rem; line-height: 1.6;">
+                        Paid <strong>3 days</strong> after marking service complete. Customer dispute period ensures quality.
+                    </div>
+                </div>
+            </div>
+            <div style="margin-top: 1.5rem; padding: 1rem; background: white; border-radius: 8px; border: 2px solid var(--primary);">
+                <strong style="color: var(--primary);"><i class="fas fa-info-circle"></i> Payment Methods:</strong>
+                <div style="margin-top: 0.5rem; color: #555;">
+                    • <strong>Z2B Wallet</strong> (instant) - Withdraw anytime (min R50)
+                    <br>• <strong>Bank Transfer</strong> - Processed Monday & Thursday (no fees over R1,000)
+                    <br>• <strong>Reinvest</strong> - Use earnings to upgrade tier or buy products (no fees)
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Type Selection -->
+        <div class="form-card">
+            <h2><i class="fas fa-box-open"></i> Choose Product Type</h2>
+            <div class="type-selector">
+                <div class="type-option digital" onclick="selectType('digital')">
+                    <i class="fas fa-laptop-code"></i>
+                    <div class="type-name">Digital Product</div>
+                    <div class="type-desc">eBooks, software, courses, templates</div>
+                </div>
+                <div class="type-option physical" onclick="selectType('physical')">
+                    <i class="fas fa-box"></i>
+                    <div class="type-name">Physical Product</div>
+                    <div class="type-desc">Tangible goods requiring shipping</div>
+                </div>
+                <div class="type-option service" onclick="selectType('service')">
+                    <i class="fas fa-handshake"></i>
+                    <div class="type-name">Service</div>
+                    <div class="type-desc">Consulting, coaching, freelance</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Form -->
+        <form id="productForm">
+            <input type="hidden" id="productType" value="">
+
+            <!-- Basic Information -->
+            <div class="form-card">
+                <h2><i class="fas fa-info-circle"></i> Basic Information</h2>
+
+                <div class="form-group">
+                    <label>Product Name <span class="required">*</span></label>
+                    <input type="text" class="form-control" id="productName" placeholder="e.g., MLM Success Blueprint eBook" required>
+                    <div class="help-text">Choose a clear, descriptive name that buyers will search for</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Category <span class="required">*</span></label>
+                    <select class="form-control" id="productCategory" required>
+                        <option value="">Select a category...</option>
+                        <option value="1">Digital Products</option>
+                        <option value="4">Software & Apps</option>
+                        <option value="5">Courses & Training</option>
+                        <option value="6">Marketing Tools</option>
+                        <option value="7">Business Services</option>
+                        <option value="8">Health & Wellness</option>
+                        <option value="9">Fashion & Apparel</option>
+                        <option value="10">Home & Living</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Short Description <span class="required">*</span></label>
+                    <textarea class="form-control" id="productDescription" rows="3"
+                              placeholder="Brief overview of your product (will appear in marketplace listings)"
+                              required></textarea>
+                    <div class="help-text">Keep it concise - focus on the main benefit</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Full Description <span class="required">*</span></label>
+                    <textarea class="form-control" id="productLongDescription" rows="6"
+                              placeholder="Detailed description of features, benefits, what's included, etc."
+                              required></textarea>
+                </div>
+            </div>
+
+            <!-- Pricing Calculator -->
+            <div class="form-card">
+                <div class="pricing-calculator">
+                    <h3><i class="fas fa-calculator"></i> Set Your Pricing</h3>
+
+                    <div class="income-input-wrapper">
+                        <label style="font-weight: 600; margin-bottom: 1rem; display: block;">
+                            How much do YOU want to earn per sale? <span class="required">*</span>
+                        </label>
+                        <div class="income-input">
+                            <span class="currency">R</span>
+                            <input type="number" id="memberIncome" min="1" step="0.01"
+                                   placeholder="100" onchange="calculatePricing()" required>
+                        </div>
+                        <div class="help-text">Enter the amount you want to keep from each sale</div>
+                    </div>
+
+                    <div class="breakdown-table">
+                        <div class="breakdown-row">
+                            <div class="breakdown-label">
+                                <i class="fas fa-user" style="color: var(--primary);"></i>
+                                <span>Your Income</span>
+                            </div>
+                            <div class="breakdown-value" id="displayMemberIncome">R 0.00</div>
+                        </div>
+                        <div class="breakdown-row">
+                            <div class="breakdown-label">
+                                <i class="fas fa-users" style="color: var(--success);"></i>
+                                <span>MLM Commission Pool (100%)</span>
+                            </div>
+                            <div class="breakdown-value" id="displayCommissionPool">R 0.00</div>
+                        </div>
+                        <div class="breakdown-row">
+                            <div class="breakdown-label">
+                                <i class="fas fa-cog" style="color: var(--warning);"></i>
+                                <span>Z2B Platform Fee (7.5%)</span>
+                            </div>
+                            <div class="breakdown-value" id="displayPlatformFee">R 0.00</div>
+                        </div>
+                        <div class="breakdown-row total">
+                            <div class="breakdown-label">
+                                <i class="fas fa-tag"></i>
+                                <span>Final Retail Price</span>
+                            </div>
+                            <div class="breakdown-value" id="displayRetailPrice">R 0.00</div>
+                        </div>
+                    </div>
+
+                    <div class="example-box">
+                        <strong>💡 Example Breakdown:</strong> If you want to earn <strong>R100</strong> per sale:
+                        <div style="margin-top: 0.8rem; line-height: 1.8;">
+                            • <strong>Customer Pays:</strong> R215 (retail price)<br>
+                            • <strong>You Receive:</strong> R100 (your desired income) 💰<br>
+                            • <strong>MLM Commissions:</strong> R100 (distributed to your upline) 👥<br>
+                            • <strong>Platform Fee:</strong> R15 (payment processing, hosting, support) ⚙️
+                        </div>
+                        <div style="margin-top: 0.8rem; padding: 0.8rem; background: rgba(0,255,136,0.1); border-radius: 6px; border-left: 3px solid var(--success);">
+                            <strong style="color: var(--success);">When do I get my R100?</strong><br>
+                            <span style="font-size: 0.9rem;">Digital: 24 hours | Physical: 7 days after delivery | Service: 3 days after completion</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hidden fields for form submission -->
+                <input type="hidden" id="mlmCommissionPool">
+                <input type="hidden" id="platformFee">
+                <input type="hidden" id="finalRetailPrice">
+            </div>
+
+            <!-- Product Media -->
+            <div class="form-card">
+                <h2><i class="fas fa-images"></i> Product Media</h2>
+
+                <div class="form-group">
+                    <label>Product Image <span class="required">*</span></label>
+                    <div class="file-upload" onclick="document.getElementById('imageUpload').click()">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <div>Click to upload product image</div>
+                        <div style="font-size: 0.85rem; color: #999; margin-top: 0.5rem;">
+                            JPG, PNG or GIF (max 2MB)
+                        </div>
+                    </div>
+                    <input type="file" id="imageUpload" accept="image/*" style="display: none;">
+                </div>
+
+                <div class="form-group">
+                    <label>Video URL (Optional)</label>
+                    <input type="url" class="form-control" id="videoUrl"
+                           placeholder="https://youtube.com/watch?v=...">
+                    <div class="help-text">YouTube or Vimeo link showcasing your product</div>
+                </div>
+            </div>
+
+            <!-- Type-Specific Fields -->
+
+            <!-- Digital Product Fields -->
+            <div class="form-card hidden" id="digitalFields">
+                <h2><i class="fas fa-download"></i> Digital Product Details</h2>
+
+                <div class="form-group">
+                    <label>Upload Your Files <span class="required">*</span></label>
+                    <div class="file-upload" onclick="document.getElementById('digitalFileUpload').click()">
+                        <i class="fas fa-file-upload"></i>
+                        <div>Click to upload your digital files</div>
+                        <div style="font-size: 0.85rem; color: #999; margin-top: 0.5rem;">
+                            PDF, ZIP, MP4, or any file format (max 100MB)
+                        </div>
+                    </div>
+                    <input type="file" id="digitalFileUpload" multiple style="display: none;">
+                    <div class="help-text">Buyers will receive download links after purchase</div>
+                </div>
+
+                <div class="form-group">
+                    <label>License Type</label>
+                    <select class="form-control" id="licenseType">
+                        <option value="single">Single User License</option>
+                        <option value="multi">Multi-User License</option>
+                        <option value="unlimited">Unlimited License</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Physical Product Fields -->
+            <div class="form-card hidden" id="physicalFields">
+                <h2><i class="fas fa-truck"></i> Physical Product Details</h2>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Stock Quantity <span class="required">*</span></label>
+                        <input type="number" class="form-control" id="stockQuantity" min="0" placeholder="10">
+                        <div class="help-text">How many units do you have available?</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Weight (kg)</label>
+                        <input type="number" class="form-control" id="productWeight" min="0" step="0.01" placeholder="0.5">
+                        <div class="help-text">For shipping calculation</div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Shipping Cost <span class="required">*</span></label>
+                        <input type="number" class="form-control" id="shippingCost" min="0" step="0.01" placeholder="50.00">
+                        <div class="help-text">Standard shipping fee</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Delivery Time (days)</label>
+                        <input type="number" class="form-control" id="deliveryTime" min="1" placeholder="5">
+                        <div class="help-text">Estimated delivery timeframe</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Service Fields -->
+            <div class="form-card hidden" id="serviceFields">
+                <h2><i class="fas fa-calendar-check"></i> Service Details</h2>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Service Type <span class="required">*</span></label>
+                        <select class="form-control" id="serviceType">
+                            <option value="one_time">One-Time Service</option>
+                            <option value="recurring">Recurring Service</option>
+                            <option value="hourly">Hourly Service</option>
+                            <option value="session">Session-Based</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Duration (minutes)</label>
+                        <input type="number" class="form-control" id="serviceDuration" min="15" step="15" placeholder="60">
+                        <div class="help-text">How long does each session take?</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="bookingRequired">
+                        Requires booking/scheduling
+                    </label>
+                    <div class="help-text">Buyers will need to schedule a time slot</div>
+                </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="form-card">
+                <div class="form-actions">
+                    <button type="button" class="btn btn-outline" onclick="saveDraft()">
+                        <i class="fas fa-save"></i> Save as Draft
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="submitProduct()">
+                        <i class="fas fa-rocket"></i> Submit for Review
+                    </button>
+                </div>
+                <div style="text-align: center; margin-top: 1rem; color: #888; font-size: 0.9rem;">
+                    Your product will be reviewed by Z2B admins before going live (usually within 24 hours)
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        let selectedType = null;
+
+        function selectType(type) {
+            selectedType = type;
+            document.getElementById('productType').value = type;
+
+            // Update visual selection
+            document.querySelectorAll('.type-option').forEach(el => {
+                el.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+
+            // Show/hide type-specific fields
+            document.getElementById('digitalFields').classList.add('hidden');
+            document.getElementById('physicalFields').classList.add('hidden');
+            document.getElementById('serviceFields').classList.add('hidden');
+
+            if (type === 'digital') {
+                document.getElementById('digitalFields').classList.remove('hidden');
+            } else if (type === 'physical') {
+                document.getElementById('physicalFields').classList.remove('hidden');
+            } else if (type === 'service') {
+                document.getElementById('serviceFields').classList.remove('hidden');
+            }
+        }
+
+        function calculatePricing() {
+            const memberIncome = parseFloat(document.getElementById('memberIncome').value) || 0;
+
+            // Formula: Member Income + MLM Pool (100%) + Platform Fee (7.5%)
+            const mlmPool = memberIncome; // 100% markup
+            const platformFee = (memberIncome + mlmPool) * 0.075; // 7.5% of subtotal
+            const retailPrice = memberIncome + mlmPool + platformFee;
+
+            // Update display
+            document.getElementById('displayMemberIncome').textContent = `R ${memberIncome.toFixed(2)}`;
+            document.getElementById('displayCommissionPool').textContent = `R ${mlmPool.toFixed(2)}`;
+            document.getElementById('displayPlatformFee').textContent = `R ${platformFee.toFixed(2)}`;
+            document.getElementById('displayRetailPrice').textContent = `R ${retailPrice.toFixed(2)}`;
+
+            // Update hidden fields
+            document.getElementById('mlmCommissionPool').value = mlmPool.toFixed(2);
+            document.getElementById('platformFee').value = platformFee.toFixed(2);
+            document.getElementById('finalRetailPrice').value = retailPrice.toFixed(2);
+        }
+
+        function saveDraft() {
+            if (!validateForm()) return;
+
+            const productData = collectFormData();
+            productData.status = 'draft';
+
+            console.log('Saving draft:', productData);
+            alert('✅ Product saved as draft! You can continue editing later.');
+
+            // In production: Send to API
+            // fetch('/api/marketplace/products', { method: 'POST', body: JSON.stringify(productData) })
+        }
+
+        function submitProduct() {
+            if (!validateForm()) return;
+
+            const productData = collectFormData();
+            productData.status = 'pending_review';
+
+            console.log('Submitting for review:', productData);
+            alert('🎉 Product submitted for review! You\'ll be notified once it\'s approved (usually within 24 hours).');
+
+            // In production: Send to API then redirect to "My Products" page
+            // window.location.href = 'my-products.html';
+        }
+
+        function validateForm() {
+            if (!selectedType) {
+                alert('⚠️ Please select a product type');
+                return false;
+            }
+
+            const memberIncome = parseFloat(document.getElementById('memberIncome').value);
+            if (!memberIncome || memberIncome <= 0) {
+                alert('⚠️ Please set your desired income amount');
+                return false;
+            }
+
+            // Add more validation as needed
+            return true;
+        }
+
+        function collectFormData() {
+            return {
+                type: document.getElementById('productType').value,
+                name: document.getElementById('productName').value,
+                category_id: document.getElementById('productCategory').value,
+                description: document.getElementById('productDescription').value,
+                long_description: document.getElementById('productLongDescription').value,
+                member_desired_income: document.getElementById('memberIncome').value,
+                mlm_commission_pool: document.getElementById('mlmCommissionPool').value,
+                platform_fee: document.getElementById('platformFee').value,
+                final_retail_price: document.getElementById('finalRetailPrice').value,
+                video_url: document.getElementById('videoUrl').value,
+                // Add type-specific fields
+                // Add uploaded files
+                // etc.
+            };
+        }
+
+        // Initialize with example
+        document.getElementById('memberIncome').value = 100;
+        calculatePricing();
+    </script>
+
+    <!-- Z2B Ecosystem Integration -->
+    <script src="../js/app-config.js"></script>
+    <script src="../js/ecosystem-footer.js"></script>
+    <!-- Footer -->
+    <footer style="text-align: center; padding: 30px 20px; margin-top: 50px; background: rgba(255,255,255,0.05); border-top: 1px solid rgba(255,255,255,0.1);">
+        <p style="margin: 0; color: rgba(255,255,255,0.7); font-size: 14px;">
+            Built with <i class="fas fa-heart" style="color: #ff6b6b; animation: heartbeat 1.5s infinite;"></i> by <strong style="color: #FFD700;">Z2B Legacy Builders</strong>
+        </p>
+    </footer>
+    <style>
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.1); }
+            50% { transform: scale(1); }
+        }
+    </style>
+</body>
+</html>

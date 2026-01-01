@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shepherd Staff - Church Management System | Z2B Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --royal-gold: #FFD700;
+            --royal-gold-light: #FFED4E;
+            --royal-gold-dark: #D4AF37;
+            --royal-blue: #0A1F44;
+            --royal-blue-light: #1E3A8A;
+            --royal-blue-deep: #030B1F;
+            --church-green: #22c55e;
+            --church-green-light: #4ade80;
+            --white: #FFFFFF;
+            --success: #00FF88;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--royal-blue-deep) 0%, var(--royal-blue) 50%, var(--royal-blue-deep) 100%);
+            color: var(--white);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            width: 280px;
+            background: rgba(10, 31, 68, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem 0;
+            border-right: 2px solid var(--church-green);
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .sidebar-brand {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 0 1.5rem 2rem;
+            border-bottom: 3px solid var(--church-green);
+        }
+
+        .sidebar-brand h2 {
+            color: var(--church-green-light);
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-brand p {
+            color: var(--royal-gold-light);
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            color: var(--white);
+            text-decoration: none;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+        }
+
+        .sidebar-nav a:hover,
+        .sidebar-nav a.active {
+            background: rgba(34, 197, 94, 0.1);
+            border-left-color: var(--church-green);
+        }
+
+        .sidebar-nav a i {
+            margin-right: 1rem;
+            color: var(--church-green-light);
+            font-size: 1.2rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(10, 31, 68, 0.8));
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 2px solid var(--church-green);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: var(--church-green-light);
+            margin-bottom: 0.5rem;
+            font-weight: 800;
+        }
+
+        .header p {
+            color: var(--royal-gold-light);
+            font-size: 1rem;
+        }
+
+        /* Cards */
+        .card-custom {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(34, 197, 94, 0.2);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: all 0.3s;
+        }
+
+        .card-custom:hover {
+            border-color: var(--church-green);
+            box-shadow: 0 8px 32px rgba(34, 197, 94, 0.2);
+        }
+
+        .card-custom h3 {
+            color: var(--church-green-light);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            color: var(--royal-gold-light);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="date"],
+        input[type="number"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(34, 197, 94, 0.3);
+            border-radius: 10px;
+            color: var(--white);
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--church-green);
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* Buttons */
+        .btn-primary-custom {
+            background: linear-gradient(135deg, var(--church-green), var(--church-green-light));
+            color: var(--white);
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(34, 197, 94, 0.4);
+        }
+
+        .btn-secondary-custom {
+            background: rgba(34, 197, 94, 0.1);
+            color: var(--church-green-light);
+            padding: 0.75rem 2rem;
+            border: 2px solid var(--church-green);
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-secondary-custom:hover {
+            background: rgba(34, 197, 94, 0.2);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(34, 197, 94, 0.1);
+            border: 2px solid rgba(34, 197, 94, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--church-green-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--royal-gold-light);
+            font-size: 0.9rem;
+        }
+
+        /* Table */
+        .table-custom {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .table-custom thead {
+            background: rgba(34, 197, 94, 0.2);
+        }
+
+        .table-custom th {
+            padding: 1rem;
+            color: var(--church-green-light);
+            font-weight: 700;
+            text-align: left;
+            border-bottom: 2px solid var(--church-green);
+        }
+
+        .table-custom td {
+            padding: 1rem;
+            color: var(--white);
+            border-bottom: 1px solid rgba(34, 197, 94, 0.1);
+        }
+
+        .table-custom tr:hover {
+            background: rgba(34, 197, 94, 0.05);
+        }
+
+        /* Features List */
+        .features-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .features-list li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(34, 197, 94, 0.1);
+            display: flex;
+            align-items: center;
+        }
+
+        .features-list li i {
+            color: var(--church-green-light);
+            margin-right: 1rem;
+            font-size: 1.2rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            <h2><i class="fas fa-church"></i> Shepherd Staff</h2>
+            <p>Church Management System</p>
+        </div>
+
+        <ul class="sidebar-nav">
+            <li><a href="#" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="#"><i class="fas fa-users"></i> Members</a></li>
+            <li><a href="#"><i class="fas fa-calendar-check"></i> Attendance</a></li>
+            <li><a href="#"><i class="fas fa-hand-holding-heart"></i> Donations</a></li>
+            <li><a href="#"><i class="fas fa-calendar-alt"></i> Events</a></li>
+            <li><a href="#"><i class="fas fa-comments"></i> Communications</a></li>
+            <li><a href="#"><i class="fas fa-chart-bar"></i> Reports</a></li>
+            <li><a href="#"><i class="fas fa-users-cog"></i> Groups</a></li>
+            <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+            <li><a href="dashboard.html"><i class="fas fa-arrow-left"></i> Back to Dashboard</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="header">
+            <h1><i class="fas fa-dove"></i> Welcome to Shepherd Staff</h1>
+            <p>"Feed my sheep" - John 21:17 | Comprehensive church management at your fingertips</p>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">0</div>
+                <div class="stat-label">Total Members</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">0</div>
+                <div class="stat-label">Active Groups</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">R0</div>
+                <div class="stat-label">This Month Donations</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">0</div>
+                <div class="stat-label">Upcoming Events</div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="card-custom">
+            <h3><i class="fas fa-bolt"></i> Quick Actions</h3>
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                <button class="btn-primary-custom">
+                    <i class="fas fa-user-plus"></i> Add New Member
+                </button>
+                <button class="btn-primary-custom">
+                    <i class="fas fa-calendar-plus"></i> Create Event
+                </button>
+                <button class="btn-primary-custom">
+                    <i class="fas fa-envelope"></i> Send Message
+                </button>
+                <button class="btn-primary-custom">
+                    <i class="fas fa-dollar-sign"></i> Record Donation
+                </button>
+            </div>
+        </div>
+
+        <!-- Add New Member -->
+        <div class="card-custom">
+            <h3><i class="fas fa-user-plus"></i> Add New Member</h3>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label><i class="fas fa-user"></i> First Name</label>
+                        <input type="text" placeholder="John">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label><i class="fas fa-user"></i> Last Name</label>
+                        <input type="text" placeholder="Doe">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label><i class="fas fa-envelope"></i> Email</label>
+                        <input type="email" placeholder="john@example.com">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label><i class="fas fa-phone"></i> Phone Number</label>
+                        <input type="tel" placeholder="+27 123 456 789">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label><i class="fas fa-birthday-cake"></i> Date of Birth</label>
+                        <input type="date">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar-check"></i> Membership Date</label>
+                        <input type="date">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-users"></i> Assign to Group</label>
+                <select>
+                    <option>None</option>
+                    <option>Youth Group</option>
+                    <option>Women's Ministry</option>
+                    <option>Men's Fellowship</option>
+                    <option>Choir</option>
+                    <option>Elders</option>
+                    <option>Deacons</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-home"></i> Address</label>
+                <textarea placeholder="Home address"></textarea>
+            </div>
+
+            <button class="btn-primary-custom" onclick="alert('✅ Member added successfully!')">
+                <i class="fas fa-save"></i> Save Member
+            </button>
+        </div>
+
+        <!-- Recent Members -->
+        <div class="card-custom">
+            <h3><i class="fas fa-users"></i> Recent Members</h3>
+
+            <table class="table-custom">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Group</th>
+                        <th>Joined</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 2rem; color: var(--royal-gold-light);">
+                            <i class="fas fa-users" style="font-size: 3rem; margin-bottom: 1rem; display: block;"></i>
+                            No members added yet. Add your first member above.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Record Attendance -->
+        <div class="card-custom">
+            <h3><i class="fas fa-calendar-check"></i> Record Attendance</h3>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar"></i> Service Date</label>
+                        <input type="date">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label><i class="fas fa-church"></i> Service Type</label>
+                        <select>
+                            <option>Sunday Morning Service</option>
+                            <option>Sunday Evening Service</option>
+                            <option>Wednesday Prayer</option>
+                            <option>Friday Night Service</option>
+                            <option>Special Event</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-users"></i> Number of Attendees</label>
+                <input type="number" placeholder="Enter total attendance count">
+            </div>
+
+            <button class="btn-primary-custom" onclick="alert('✅ Attendance recorded successfully!')">
+                <i class="fas fa-check"></i> Record Attendance
+            </button>
+        </div>
+
+        <!-- Record Donation -->
+        <div class="card-custom">
+            <h3><i class="fas fa-hand-holding-heart"></i> Record Donation/Tithe</h3>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label><i class="fas fa-user"></i> Member Name (Optional)</label>
+                        <input type="text" placeholder="Anonymous if not specified">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar"></i> Date</label>
+                        <input type="date">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label><i class="fas fa-dollar-sign"></i> Amount (R)</label>
+                        <input type="number" placeholder="0.00" step="0.01">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label><i class="fas fa-tag"></i> Category</label>
+                        <select>
+                            <option>Tithe</option>
+                            <option>Offering</option>
+                            <option>Building Fund</option>
+                            <option>Missions</option>
+                            <option>Special Project</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-credit-card"></i> Payment Method</label>
+                <select>
+                    <option>Cash</option>
+                    <option>Bank Transfer</option>
+                    <option>Card</option>
+                    <option>Mobile Money</option>
+                </select>
+            </div>
+
+            <button class="btn-primary-custom" onclick="alert('✅ Donation recorded successfully! Receipt will be generated.')">
+                <i class="fas fa-save"></i> Record Donation
+            </button>
+        </div>
+
+        <!-- Features -->
+        <div class="card-custom">
+            <h3><i class="fas fa-star"></i> Shepherd Staff Features</h3>
+            <ul class="features-list">
+                <li><i class="fas fa-check-circle"></i> <strong>Member Management</strong> - Complete database of church members with profiles</li>
+                <li><i class="fas fa-check-circle"></i> <strong>Attendance Tracking</strong> - Record and analyze service attendance</li>
+                <li><i class="fas fa-check-circle"></i> <strong>Donation Management</strong> - Track tithes, offerings, and donations</li>
+                <li><i class="fas fa-check-circle"></i> <strong>Event Planning</strong> - Schedule and manage church events</li>
+                <li><i class="fas fa-check-circle"></i> <strong>Group Management</strong> - Organize youth groups, ministries, and committees</li>
+                <li><i class="fas fa-check-circle"></i> <strong>SMS & Email</strong> - Bulk messaging to members and groups</li>
+                <li><i class="fas fa-check-circle"></i> <strong>Reports & Analytics</strong> - Financial and attendance reports</li>
+                <li><i class="fas fa-check-circle"></i> <strong>Birthday Reminders</strong> - Automatic birthday notifications</li>
+                <li><i class="fas fa-check-circle"></i> <strong>Visitor Tracking</strong> - Follow up with first-time visitors</li>
+                <li><i class="fas fa-check-circle"></i> <strong>Mobile Access</strong> - Access from any device</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

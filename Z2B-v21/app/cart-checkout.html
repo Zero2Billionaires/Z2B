@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Z2B Legacy Builders</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --neon-blue: #00f3ff;
+            --neon-purple: #b026ff;
+            --neon-gold: #ffd700;
+            --neon-orange: #ff6b35;
+            --dark-bg: #0a0e27;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0a0e27 100%);
+            min-height: 100vh;
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .checkout-container {
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+
+        .checkout-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 0 40px rgba(0, 243, 255, 0.2);
+        }
+
+        .checkout-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .checkout-header h1 {
+            font-size: 42px;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .order-summary {
+            background: rgba(0, 243, 255, 0.1);
+            border: 2px solid var(--neon-blue);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .order-item:last-child {
+            border-bottom: none;
+        }
+
+        .order-total {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px 0;
+            margin-top: 15px;
+            border-top: 2px solid var(--neon-gold);
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .payment-method {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .payment-method:hover {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
+        }
+
+        .payment-method.selected {
+            border-color: var(--neon-gold);
+            background: rgba(255, 215, 0, 0.1);
+        }
+
+        .btn-purchase {
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            border: none;
+            color: white;
+            padding: 18px 50px;
+            border-radius: 10px;
+            font-size: 20px;
+            font-weight: bold;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+        }
+
+        .btn-purchase:hover {
+            box-shadow: 0 0 40px rgba(0, 243, 255, 0.8);
+            transform: translateY(-3px);
+        }
+
+        .back-to-cart {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-to-cart a {
+            color: var(--neon-blue);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .back-to-cart a:hover {
+            color: var(--neon-gold);
+        }
+    </style>
+</head>
+<body>
+    <div class="checkout-container">
+        <div class="checkout-card">
+            <div class="checkout-header">
+                <i class="fas fa-shopping-cart" style="font-size: 56px; color: var(--neon-blue);"></i>
+                <h1>Checkout</h1>
+                <p style="color: rgba(255,255,255,0.7); font-size: 18px;">Complete your purchase</p>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="order-summary">
+                <h3 style="color: var(--neon-blue); margin-bottom: 20px;">
+                    <i class="fas fa-receipt"></i> Order Summary
+                </h3>
+                <div id="orderItems">
+                    <!-- Items will be inserted here -->
+                </div>
+                <div class="order-total">
+                    <span>Total/Month</span>
+                    <span style="color: var(--neon-gold);" id="orderTotal">R0</span>
+                </div>
+            </div>
+
+            <!-- Payment Methods -->
+            <h3 style="color: var(--neon-blue); margin-bottom: 20px;">Choose Payment Method</h3>
+            <div class="payment-methods">
+                <!-- Online Payment -->
+                <div class="payment-method" id="onlinePayment" onclick="selectPayment('online')">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5><i class="fas fa-credit-card"></i> Online Payment</h5>
+                            <p style="margin: 0; opacity: 0.7; font-size: 14px;">
+                                Pay with Card, EFT, SnapScan, or Crypto<br>
+                                <strong style="color: var(--neon-gold);">Instant Access to All Apps</strong>
+                            </p>
+                        </div>
+                        <i class="fas fa-arrow-right" style="font-size: 24px; color: var(--neon-blue);"></i>
+                    </div>
+                </div>
+
+                <!-- Direct Payment -->
+                <div class="payment-method" id="directPayment" onclick="selectPayment('direct')">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5><i class="fas fa-university"></i> Direct Bank Transfer</h5>
+                            <p style="margin: 0; opacity: 0.7; font-size: 14px;">
+                                Pay directly to our bank account<br>
+                                <strong style="color: var(--neon-orange);">Access after admin approval (1-24 hours)</strong>
+                            </p>
+                        </div>
+                        <i class="fas fa-arrow-right" style="font-size: 24px; color: var(--neon-blue);"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Purchase Button -->
+            <button class="btn-purchase" onclick="completePurchase()">
+                <i class="fas fa-lock"></i> Complete Purchase - <span id="btnTotal">R0</span>/month
+            </button>
+
+            <p style="text-align: center; margin-top: 20px; opacity: 0.7; font-size: 14px;">
+                <i class="fas fa-shield-alt"></i> Secure payment - Money-back guarantee - 24/7 support
+            </p>
+
+            <div class="back-to-cart">
+                <a href="cart.html"><i class="fas fa-arrow-left"></i> Back to Cart</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/cart-manager.js"></script>
+    <script>
+        let selectedPayment = 'online';
+
+        // Get checkout data
+        const urlParams = new URLSearchParams(window.location.search);
+        const items = urlParams.get('items') ? urlParams.get('items').split(',') : [];
+        const total = parseFloat(urlParams.get('total')) || 0;
+        const count = parseInt(urlParams.get('count')) || 0;
+        const referralCode = urlParams.get('ref') || '';
+
+        function renderOrder() {
+            // Get cart data for full item details
+            const cart = z2bCart.getCart();
+            const orderItems = document.getElementById('orderItems');
+
+            if (cart.length === 0) {
+                window.location.href = 'cart.html';
+                return;
+            }
+
+            // Render items
+            let itemsHTML = '';
+            cart.forEach(item => {
+                itemsHTML += `
+                    <div class="order-item">
+                        <div>
+                            <i class="fas ${item.icon}" style="color: var(--neon-gold); margin-right: 10px;"></i>
+                            <strong>${item.name}</strong>
+                        </div>
+                        <span>R${item.price}/mo</span>
+                    </div>
+                `;
+            });
+
+            orderItems.innerHTML = itemsHTML;
+
+            // Update total
+            const cartTotal = z2bCart.getCartTotal();
+            document.getElementById('orderTotal').textContent = 'R' + cartTotal;
+            document.getElementById('btnTotal').textContent = 'R' + cartTotal;
+        }
+
+        function selectPayment(method) {
+            selectedPayment = method;
+            document.querySelectorAll('.payment-method').forEach(card => {
+                card.classList.remove('selected');
+            });
+            document.getElementById(method + 'Payment').classList.add('selected');
+        }
+
+        function completePurchase() {
+            const cart = z2bCart.getCart();
+            const total = z2bCart.getCartTotal();
+
+            if (cart.length === 0) {
+                alert('Your cart is empty!');
+                window.location.href = 'cart.html';
+                return;
+            }
+
+            const itemNames = cart.map(item => item.name).join(', ');
+
+            if (selectedPayment === 'online') {
+                // Build payment URL
+                let paymentUrl = 'payment-success-app.html?product=bundle&items=' + encodeURIComponent(itemNames) + '&amount=' + total;
+                if (referralCode) {
+                    paymentUrl += '&ref=' + encodeURIComponent(referralCode);
+                }
+
+                // Clear cart and redirect
+                z2bCart.clearCart();
+                window.location.href = paymentUrl;
+            } else {
+                // Build direct payment URL
+                let directUrl = 'direct-payment.html?product=bundle&items=' + encodeURIComponent(itemNames) + '&amount=' + total;
+                if (referralCode) {
+                    directUrl += '&ref=' + encodeURIComponent(referralCode);
+                }
+
+                // Clear cart and redirect
+                z2bCart.clearCart();
+                window.location.href = directUrl;
+            }
+        }
+
+        // Auto-select online payment and render order
+        window.onload = function() {
+            selectPayment('online');
+            renderOrder();
+        };
+    </script>
+
+    <!-- Footer -->
+    <footer style="text-align: center; padding: 30px 20px; margin-top: 50px; background: rgba(255,255,255,0.05); border-top: 1px solid rgba(255,255,255,0.1);">
+        <p style="margin: 0; color: rgba(255,255,255,0.7); font-size: 14px;">
+            Built with <i class="fas fa-heart" style="color: #ff6b6b; animation: heartbeat 1.5s infinite;"></i> by <strong style="color: #FFD700;">Z2B Legacy Builders</strong>
+        </p>
+    </footer>
+    <style>
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.1); }
+            50% { transform: scale(1); }
+        }
+    </style>
+</body>
+</html>

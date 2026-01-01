@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CEO Competitions - Z2B Legacy Builders</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #6b7280;
+            font-size: 18px;
+        }
+
+        .competitions-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .section-title h2 {
+            color: #667eea;
+            font-size: 24px;
+            margin: 0;
+        }
+
+        .section-title .badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .competitions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 25px;
+        }
+
+        .competition-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .competition-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+
+        .competition-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .competition-status {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #10b981;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .competition-card h3 {
+            color: #667eea;
+            font-size: 22px;
+            margin-bottom: 10px;
+            padding-right: 100px;
+        }
+
+        .competition-card p {
+            color: #6b7280;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .competition-meta {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+            padding: 15px;
+            background: #f9fafb;
+            border-radius: 10px;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #374151;
+            font-size: 14px;
+        }
+
+        .meta-item i {
+            color: #667eea;
+            width: 20px;
+        }
+
+        .prizes-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-radius: 10px;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .prizes-section h4 {
+            color: #92400e;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .prize-item {
+            padding: 8px;
+            background: white;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #374151;
+        }
+
+        .prize-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .progress-section {
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e5e7eb;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .leaderboard-preview {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f9fafb;
+            border-radius: 10px;
+        }
+
+        .leaderboard-preview h5 {
+            color: #374151;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: white;
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+
+        .leaderboard-rank {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .rank-number {
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .rank-number.gold {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+        }
+
+        .rank-number.silver {
+            background: linear-gradient(135deg, #e5e7eb 0%, #9ca3af 100%);
+        }
+
+        .rank-number.bronze {
+            background: linear-gradient(135deg, #d97706 0%, #92400e 100%);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .empty-state {
+            background: white;
+            border-radius: 15px;
+            padding: 60px 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .empty-state i {
+            font-size: 64px;
+            color: #d1d5db;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h3 {
+            color: #374151;
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            color: #6b7280;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 15px;
+        }
+
+        .loading i {
+            font-size: 48px;
+            color: #667eea;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .countdown {
+            display: inline-flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .countdown-item {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .countdown-item span {
+            display: block;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .countdown-item small {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .competitions-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .competition-meta {
+                grid-template-columns: 1fr;
+            }
+
+            .countdown {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-trophy"></i> CEO Competitions</h1>
+            <p>Compete, Win, and Build Your Legacy</p>
+        </div>
+
+        <!-- Active Competitions -->
+        <div class="competitions-section">
+            <div class="section-title">
+                <h2><i class="fas fa-fire"></i> Active Competitions</h2>
+                <span class="badge" id="activeCount">0</span>
+            </div>
+            <div id="activeCompetitions">
+                <div class="loading">
+                    <i class="fas fa-spinner"></i>
+                    <p style="color: #6b7280; margin-top: 15px;">Loading competitions...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upcoming Competitions -->
+        <div class="competitions-section">
+            <div class="section-title">
+                <h2><i class="fas fa-calendar-alt"></i> Upcoming Competitions</h2>
+                <span class="badge" id="upcomingCount">0</span>
+            </div>
+            <div id="upcomingCompetitions"></div>
+        </div>
+
+        <!-- Past Competitions -->
+        <div class="competitions-section">
+            <div class="section-title">
+                <h2><i class="fas fa-history"></i> Past Competitions</h2>
+                <span class="badge" id="completedCount">0</span>
+            </div>
+            <div id="completedCompetitions"></div>
+        </div>
+    </div>
+
+    <script src="../js/app-config.js"></script>
+    <script>
+        const currentMember = JSON.parse(localStorage.getItem('currentMember') || '{}');
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadCompetitions();
+            // Refresh every minute to update countdowns
+            setInterval(loadCompetitions, 60000);
+        });
+
+        async function loadCompetitions() {
+            try {
+                const response = await fetch(`${API_CONFIG.BASE_URL}/ceo-competitions`);
+                const data = await response.json();
+
+                if (data.success) {
+                    const now = new Date();
+                    const active = data.competitions.filter(c => c.status === 'active');
+                    const published = data.competitions.filter(c => c.status === 'published');
+                    const completed = data.competitions.filter(c => c.status === 'completed');
+
+                    displayCompetitions(active, 'activeCompetitions', 'active');
+                    displayCompetitions(published, 'upcomingCompetitions', 'upcoming');
+                    displayCompetitions(completed, 'completedCompetitions', 'completed');
+
+                    document.getElementById('activeCount').textContent = active.length;
+                    document.getElementById('upcomingCount').textContent = published.length;
+                    document.getElementById('completedCount').textContent = completed.length;
+                }
+            } catch (error) {
+                console.error('Error loading competitions:', error);
+            }
+        }
+
+        function displayCompetitions(competitions, containerId, type) {
+            const container = document.getElementById(containerId);
+
+            if (competitions.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-trophy"></i>
+                        <h3>No ${type} competitions</h3>
+                        <p>Check back later for new opportunities!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="competitions-grid">
+                    ${competitions.map(comp => renderCompetitionCard(comp, type)).join('')}
+                </div>
+            `;
+
+            // Start countdown timers
+            if (type === 'active') {
+                competitions.forEach(comp => {
+                    updateCountdown(comp._id, comp.endDate);
+                    setInterval(() => updateCountdown(comp._id, comp.endDate), 1000);
+                });
+            }
+        }
+
+        function renderCompetitionCard(comp, type) {
+            const myProgress = comp.participants?.find(p => p.memberId === currentMember._id);
+            const leaderboard = comp.participants?.sort((a, b) => b.currentProgress - a.currentProgress).slice(0, 5) || [];
+            const myRank = comp.participants?.findIndex(p => p.memberId === currentMember._id) + 1 || 0;
+
+            return `
+                <div class="competition-card">
+                    <span class="competition-status">${type === 'completed' ? 'Completed' : type === 'upcoming' ? 'Coming Soon' : 'Active'}</span>
+                    <h3>${comp.title}</h3>
+                    <p>${comp.description}</p>
+
+                    <div class="competition-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-calendar"></i>
+                            <span>${comp.quarter} ${comp.year}</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-clock"></i>
+                            <span>${formatDateRange(comp.startDate, comp.endDate)}</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-bullseye"></i>
+                            <span>${comp.targetDescription}</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-users"></i>
+                            <span>${comp.participants?.length || 0} Participants</span>
+                        </div>
+                    </div>
+
+                    ${type === 'active' ? `
+                        <div style="text-align: center; margin: 15px 0;">
+                            <div style="color: #6b7280; font-size: 14px; margin-bottom: 5px;">Time Remaining</div>
+                            <div class="countdown" id="countdown-${comp._id}"></div>
+                        </div>
+                    ` : ''}
+
+                    <div class="prizes-section">
+                        <h4><i class="fas fa-gift"></i> Prizes</h4>
+                        ${comp.prizes?.first ? `
+                            <div class="prize-item">
+                                <strong>🥇 1st Place:</strong> R${comp.prizes.first.amount.toLocaleString()} ${comp.prizes.first.description ? '- ' + comp.prizes.first.description : ''}
+                            </div>
+                        ` : ''}
+                        ${comp.prizes?.second ? `
+                            <div class="prize-item">
+                                <strong>🥈 2nd Place:</strong> R${comp.prizes.second.amount.toLocaleString()} ${comp.prizes.second.description ? '- ' + comp.prizes.second.description : ''}
+                            </div>
+                        ` : ''}
+                        ${comp.prizes?.third ? `
+                            <div class="prize-item">
+                                <strong>🥉 3rd Place:</strong> R${comp.prizes.third.amount.toLocaleString()} ${comp.prizes.third.description ? '- ' + comp.prizes.third.description : ''}
+                            </div>
+                        ` : ''}
+                        <div style="text-align: center; margin-top: 10px; font-weight: 600; color: #92400e;">
+                            Total Prize Pool: R${comp.totalPrizePool.toLocaleString()}
+                        </div>
+                    </div>
+
+                    ${myProgress && type === 'active' ? `
+                        <div class="progress-section">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                                <span style="color: #374151; font-weight: 600;">Your Progress</span>
+                                <span style="color: #667eea; font-weight: 700;">Rank #${myRank}</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${Math.min((myProgress.currentProgress / comp.targetValue) * 100, 100)}%">
+                                    ${myProgress.currentProgress} / ${comp.targetValue} (${((myProgress.currentProgress / comp.targetValue) * 100).toFixed(1)}%)
+                                </div>
+                            </div>
+                        </div>
+                    ` : ''}
+
+                    ${type === 'completed' && comp.winners && comp.winners.length > 0 ? `
+                        <div class="leaderboard-preview">
+                            <h5><i class="fas fa-crown"></i> Winners</h5>
+                            ${comp.winners.slice(0, 3).map(w => `
+                                <div class="leaderboard-item">
+                                    <div class="leaderboard-rank">
+                                        <div class="rank-number ${w.position === 1 ? 'gold' : w.position === 2 ? 'silver' : 'bronze'}">
+                                            ${w.position}
+                                        </div>
+                                        <div>
+                                            <div style="font-weight: 600; color: #374151;">${w.memberName}</div>
+                                            <div style="font-size: 12px; color: #6b7280;">${w.membershipNumber}</div>
+                                        </div>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <div style="font-weight: 700; color: #667eea;">R${w.prizeAmount.toLocaleString()}</div>
+                                        <div style="font-size: 12px; color: #6b7280;">Score: ${w.finalScore}</div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : leaderboard.length > 0 ? `
+                        <div class="leaderboard-preview">
+                            <h5><i class="fas fa-chart-line"></i> Top 5 Leaderboard</h5>
+                            ${leaderboard.map((p, index) => `
+                                <div class="leaderboard-item">
+                                    <div class="leaderboard-rank">
+                                        <div class="rank-number ${index === 0 ? 'gold' : index === 1 ? 'silver' : index === 2 ? 'bronze' : ''}">
+                                            ${index + 1}
+                                        </div>
+                                        <div>
+                                            <div style="font-weight: 600; color: #374151;">${p.memberName}</div>
+                                            <div style="font-size: 12px; color: #6b7280;">${p.tier}</div>
+                                        </div>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <div style="font-weight: 700; color: #667eea;">${p.currentProgress}</div>
+                                        <div style="font-size: 12px; color: #6b7280;">${((p.currentProgress / comp.targetValue) * 100).toFixed(1)}%</div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+
+                    ${type === 'active' && !myProgress ? `
+                        <button class="btn btn-primary" onclick="enrollInCompetition('${comp._id}')">
+                            <i class="fas fa-trophy"></i> Join Competition
+                        </button>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        function updateCountdown(compId, endDate) {
+            const end = new Date(endDate);
+            const now = new Date();
+            const diff = end - now;
+
+            if (diff <= 0) {
+                const element = document.getElementById(`countdown-${compId}`);
+                if (element) {
+                    element.innerHTML = '<div class="countdown-item" style="width: 100%;"><span>Competition Ended</span></div>';
+                }
+                return;
+            }
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            const element = document.getElementById(`countdown-${compId}`);
+            if (element) {
+                element.innerHTML = `
+                    <div class="countdown-item">
+                        <span>${days}</span>
+                        <small>Days</small>
+                    </div>
+                    <div class="countdown-item">
+                        <span>${hours}</span>
+                        <small>Hours</small>
+                    </div>
+                    <div class="countdown-item">
+                        <span>${minutes}</span>
+                        <small>Mins</small>
+                    </div>
+                    <div class="countdown-item">
+                        <span>${seconds}</span>
+                        <small>Secs</small>
+                    </div>
+                `;
+            }
+        }
+
+        function formatDateRange(start, end) {
+            const startDate = new Date(start);
+            const endDate = new Date(end);
+            const startStr = startDate.toLocaleDateString('en-ZA', { month: 'short', day: 'numeric' });
+            const endStr = endDate.toLocaleDateString('en-ZA', { month: 'short', day: 'numeric', year: 'numeric' });
+            return `${startStr} - ${endStr}`;
+        }
+
+        function enrollInCompetition(compId) {
+            if (!currentMember._id) {
+                alert('Please log in to join competitions');
+                return;
+            }
+
+            alert('You have been automatically enrolled in this competition! Your progress will be tracked automatically based on your sales and activities.');
+            loadCompetitions();
+        }
+    </script>
+</body>
+</html>

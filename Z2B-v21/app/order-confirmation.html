@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation - Z2B Marketplace</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --navy-blue: #0A2647;
+            --gold: #FFD700;
+            --orange: #FF6B35;
+            --light-gold: #FFF4CC;
+            --dark-navy: #051428;
+            --white: #FFFFFF;
+            --primary: #FFD700;
+            --success: #FF6B35;
+            --warning: #FFB800;
+            --danger: #FF6B6B;
+            --dark: #0A2647;
+            --light: #f8f9fa;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(to bottom, var(--navy-blue), var(--dark-navy));
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .success-header {
+            background: linear-gradient(135deg, var(--success), var(--primary));
+            color: white;
+            padding: 3rem 2rem;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 40px rgba(0, 255, 136, 0.3);
+        }
+
+        .success-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            animation: scaleIn 0.5s ease-out;
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0); }
+            to { transform: scale(1); }
+        }
+
+        .success-header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .order-number {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .card h2 {
+            color: #333;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .download-item {
+            border: 2px solid #f0f0f0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .download-item:hover {
+            border-color: var(--primary);
+            box-shadow: 0 5px 20px rgba(108, 99, 255, 0.1);
+        }
+
+        .product-name {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #333;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .license-section {
+            background: linear-gradient(135deg, rgba(108, 99, 255, 0.1), rgba(0, 255, 136, 0.1));
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .license-label {
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 0.5rem;
+        }
+
+        .license-key {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-align: center;
+            letter-spacing: 2px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-copy {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-copy:hover {
+            background: #5952d4;
+        }
+
+        .download-info {
+            display: flex;
+            gap: 2rem;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+            color: #777;
+        }
+
+        .download-info div {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            text-decoration: none;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5952d4;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(108, 99, 255, 0.3);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-outline {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-block {
+            width: 100%;
+        }
+
+        .info-box {
+            background: #fff3cd;
+            border-left: 4px solid var(--warning);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+        }
+
+        .info-box h3 {
+            color: #856404;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-box ul {
+            margin-left: 1.5rem;
+            color: #856404;
+        }
+
+        .order-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #555;
+            font-size: 0.9rem;
+        }
+
+        .detail-value {
+            color: #333;
+            font-size: 1.1rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 0.5rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--success));
+            transition: width 0.3s;
+        }
+
+        .service-booking {
+            background: rgba(255, 184, 0, 0.1);
+            border: 2px solid var(--warning);
+            padding: 1.5rem;
+            border-radius: 12px;
+        }
+
+        .service-booking h3 {
+            color: #CC9300;
+            margin-bottom: 1rem;
+        }
+
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .order-details {
+                grid-template-columns: 1fr;
+            }
+
+            .actions-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .download-info {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Success Header -->
+        <div class="success-header">
+            <div class="success-icon">🎉</div>
+            <h1>Order Confirmed!</h1>
+            <p class="order-number">Order #Z2B-20260111-0001</p>
+            <p style="margin-top: 1rem; opacity: 0.9;">Thank you for your purchase! Your order is ready.</p>
+        </div>
+
+        <!-- Order Details -->
+        <div class="card">
+            <h2><i class="fas fa-info-circle"></i> Order Details</h2>
+            <div class="order-details">
+                <div class="detail-item">
+                    <div class="detail-label">Order Date</div>
+                    <div class="detail-value">January 11, 2026</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Order Total</div>
+                    <div class="detail-value" style="color: var(--primary);">R 22,790</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Payment Method</div>
+                    <div class="detail-value">Credit Card (****1234)</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Email</div>
+                    <div class="detail-value">john.doe@example.com</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Digital Downloads -->
+        <div class="card">
+            <h2><i class="fas fa-download"></i> Your Digital Products</h2>
+
+            <div class="download-item">
+                <div class="product-name">
+                    <i class="fas fa-rocket" style="color: var(--primary);"></i>
+                    Zyroniq - Pay Intelligence Engine
+                </div>
+
+                <div class="license-section">
+                    <div class="license-label">🔑 Your License Key</div>
+                    <div class="license-key">
+                        <span id="license-1">Z2B-A7F2-B8E3-C4D5-E6F7</span>
+                        <button class="btn-copy" onclick="copyLicense('license-1')">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                </div>
+
+                <div class="download-info">
+                    <div>
+                        <i class="fas fa-clock" style="color: var(--warning);"></i>
+                        <span>Expires: Jan 14, 2026</span>
+                    </div>
+                    <div>
+                        <i class="fas fa-download" style="color: var(--success);"></i>
+                        <span>5 downloads remaining</span>
+                    </div>
+                    <div>
+                        <i class="fas fa-file-archive" style="color: var(--primary);"></i>
+                        <span>Size: 250 MB</span>
+                    </div>
+                </div>
+
+                <button class="btn btn-success btn-block" onclick="downloadProduct(1)">
+                    <i class="fas fa-download"></i>
+                    Download Now
+                </button>
+            </div>
+
+            <div class="download-item">
+                <div class="product-name">
+                    <i class="fas fa-book" style="color: var(--success);"></i>
+                    MLM Success Blueprint eBook
+                </div>
+
+                <div class="license-section">
+                    <div class="license-label">🔑 Your License Key</div>
+                    <div class="license-key">
+                        <span id="license-2">Z2B-X9Y8-Z7W6-V5U4-T3S2</span>
+                        <button class="btn-copy" onclick="copyLicense('license-2')">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                </div>
+
+                <div class="download-info">
+                    <div>
+                        <i class="fas fa-clock" style="color: var(--warning);"></i>
+                        <span>Expires: Jan 14, 2026</span>
+                    </div>
+                    <div>
+                        <i class="fas fa-download" style="color: var(--success);"></i>
+                        <span>5 downloads remaining</span>
+                    </div>
+                    <div>
+                        <i class="fas fa-file-pdf" style="color: var(--primary);"></i>
+                        <span>Size: 12 MB</span>
+                    </div>
+                </div>
+
+                <button class="btn btn-success btn-block" onclick="downloadProduct(2)">
+                    <i class="fas fa-download"></i>
+                    Download Now
+                </button>
+            </div>
+        </div>
+
+        <!-- Service Booking -->
+        <div class="card">
+            <h2><i class="fas fa-calendar-check"></i> Your Services</h2>
+
+            <div class="service-booking">
+                <h3>📅 1-Hour MLM Strategy Consultation</h3>
+                <p style="margin-bottom: 1rem; color: #856404;">
+                    Please schedule your consultation session using the button below.
+                </p>
+                <button class="btn btn-primary btn-block" onclick="window.location.href='book-service.html?service=3'">
+                    <i class="fas fa-calendar"></i>
+                    Schedule Appointment
+                </button>
+            </div>
+        </div>
+
+        <!-- Important Information -->
+        <div class="card">
+            <div class="info-box">
+                <h3>⚠️ Important Information</h3>
+                <ul>
+                    <li><strong>Save your license keys</strong> - You'll need them to activate your products</li>
+                    <li><strong>Download links expire</strong> - in 72 hours. Download your files now!</li>
+                    <li><strong>Email sent</strong> - Check your inbox for a copy of this information</li>
+                    <li><strong>Need help?</strong> Contact support@z2blegacybuilders.co.za</li>
+                    <li><strong>Extend downloads</strong> - Contact us if you need more time</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Commission Info -->
+        <div class="card" style="background: linear-gradient(135deg, rgba(108, 99, 255, 0.1), rgba(0, 255, 136, 0.1)); border: 2px solid var(--success);">
+            <h2><i class="fas fa-chart-line"></i> Commission Distribution</h2>
+            <p style="margin-bottom: 1.5rem; color: #555;">
+                Your purchase has triggered commissions throughout the Z2B network! Here's how the R22,790 was distributed:
+            </p>
+
+            <div style="margin-bottom: 1rem;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.3rem;">
+                    <span>Sellers Earned</span>
+                    <strong>R 11,395 (50%)</strong>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 50%;"></div>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 1rem;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.3rem;">
+                    <span>MLM Commissions (Your Upline)</span>
+                    <strong>R 10,185 (44.7%)</strong>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 44.7%;"></div>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 1rem;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.3rem;">
+                    <span>Platform Fee</span>
+                    <strong>R 1,210 (5.3%)</strong>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 5.3%;"></div>
+                </div>
+            </div>
+
+            <p style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 2px solid rgba(0, 0, 0, 0.1); color: #555; font-size: 0.9rem;">
+                <i class="fas fa-info-circle" style="color: var(--primary);"></i>
+                Your sponsor and upline have automatically received their commissions. Thank you for supporting the Z2B community!
+            </p>
+        </div>
+
+        <!-- Actions -->
+        <div class="card">
+            <div class="actions-grid">
+                <button class="btn btn-primary" onclick="window.location.href='dashboard.html'">
+                    <i class="fas fa-home"></i>
+                    Go to Dashboard
+                </button>
+                <button class="btn btn-outline" onclick="window.location.href='marketplace.html'">
+                    <i class="fas fa-store"></i>
+                    Continue Shopping
+                </button>
+                <button class="btn btn-outline" onclick="window.print()">
+                    <i class="fas fa-print"></i>
+                    Print Receipt
+                </button>
+                <button class="btn btn-outline" onclick="emailReceipt()">
+                    <i class="fas fa-envelope"></i>
+                    Email Receipt
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Copy license key
+        function copyLicense(elementId) {
+            const text = document.getElementById(elementId).textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                alert('✅ License key copied to clipboard!');
+            });
+        }
+
+        // Download product
+        function downloadProduct(productId) {
+            // Show download progress
+            alert('🚀 Starting download...\n\nYour download will begin shortly.');
+
+            // In production: Redirect to secure download endpoint
+            // window.location.href = `/api/download/${downloadToken}`;
+
+            // Simulate download
+            console.log(`Downloading product ${productId}`);
+        }
+
+        // Email receipt
+        function emailReceipt() {
+            alert('📧 Receipt sent to your email!\n\njohn.doe@example.com');
+        }
+
+        // Auto-scroll to top on load
+        window.onload = function() {
+            window.scrollTo(0, 0);
+        };
+    </script>
+
+    <!-- Z2B Ecosystem Integration -->
+    <script src="../js/app-config.js"></script>
+    <script src="../js/ecosystem-footer.js"></script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+# ZYNTH Voice Cloning Backend Requirements
+# Self-Hosted Coqui TTS - No Third-Party APIs
+
+# Core Dependencies
+Flask==3.0.0
+flask-cors==4.0.0
+TTS
+
+# Audio Processing (optional but recommended)
+# Uncomment if you have ffmpeg installed for better audio conversion
+# pydub==0.25.1
+
+# Performance (optional)
+# For GPU acceleration - requires NVIDIA GPU
+# torch==2.1.0+cu121 -f https://download.pytorch.org/whl/torch_stable.html
+
+# Development Tools (optional)
+# gunicorn==21.2.0  # For production deployment

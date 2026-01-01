@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marketplace Products Management - Z2B Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --navy-blue: #0A2647;
+            --gold: #17a2b8;
+            --royal-gold: #17a2b8;
+            --orange: #FF6B35;
+            --dark-navy: #051428;
+            --primary: #0A2647;
+            --success: #27ae60;
+            --warning: #9B59B6;
+            --danger: #FF6B6B;
+            --dark: #0A2647;
+            --light: #f8f9fa;
+            --border: #dee2e6;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0A2647 0%, #051428 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+
+        .admin-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            background: white;
+            padding: 1.5rem 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            color: var(--primary);
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5952d4;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(108, 99, 255, 0.3);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .stat-card .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card .stat-change {
+            font-size: 0.85rem;
+            color: var(--success);
+        }
+
+        .filters-section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .form-control {
+            padding: 0.7rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.95rem;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .products-table-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 1.5rem;
+            border-bottom: 2px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-header h2 {
+            color: #333;
+            font-size: 1.3rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #f8f9fa;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            font-weight: 600;
+            color: #555;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .product-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .product-image {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .product-details .product-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.2rem;
+        }
+
+        .product-details .product-meta {
+            font-size: 0.85rem;
+            color: #777;
+        }
+
+        .badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .badge-success {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00AA5B;
+        }
+
+        .badge-warning {
+            background: rgba(255, 184, 0, 0.2);
+            color: #CC9300;
+        }
+
+        .badge-danger {
+            background: rgba(255, 107, 107, 0.2);
+            color: #CC5555;
+        }
+
+        .badge-info {
+            background: rgba(108, 99, 255, 0.2);
+            color: var(--primary);
+        }
+
+        .badge-secondary {
+            background: rgba(0, 0, 0, 0.1);
+            color: #555;
+        }
+
+        .type-icon {
+            width: 35px;
+            height: 35px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .type-digital {
+            background: rgba(108, 99, 255, 0.2);
+            color: var(--primary);
+        }
+
+        .type-physical {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00AA5B;
+        }
+
+        .type-service {
+            background: rgba(255, 184, 0, 0.2);
+            color: #CC9300;
+        }
+
+        .actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-icon {
+            width: 35px;
+            height: 35px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .btn-icon:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-edit {
+            background: rgba(108, 99, 255, 0.2);
+            color: var(--primary);
+        }
+
+        .btn-delete {
+            background: rgba(255, 107, 107, 0.2);
+            color: var(--danger);
+        }
+
+        .btn-approve {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00AA5B;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 2px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        .btn-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .pricing-calculator {
+            background: linear-gradient(135deg, rgba(108, 99, 255, 0.1), rgba(0, 255, 136, 0.1));
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            border: 2px solid var(--primary);
+        }
+
+        .pricing-calculator h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .pricing-breakdown {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .price-row.total {
+            background: var(--primary);
+            color: white;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .price-label {
+            font-weight: 600;
+        }
+
+        .price-value {
+            font-size: 1.1rem;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #999;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Header -->
+        <div class="header">
+            <div>
+                <h1>
+                    <i class="fas fa-gem" style="color: var(--gold);"></i> Z2B LEGACY BUILDERS
+                </h1>
+                <small style="font-size: 0.7rem; text-transform: uppercase; color: var(--gold); display: block; margin-top: 0.3rem;">Transforming Employees to Entrepreneurs</small>
+                <div style="margin-top: 0.8rem; font-size: 1.1rem; color: var(--primary); font-weight: 600;">
+                    <i class="fas fa-store"></i> Marketplace Products Management
+                </div>
+            </div>
+            <button class="btn btn-primary" onclick="openAddProductModal()">
+                <i class="fas fa-plus"></i> Add New Product
+            </button>
+        </div>
+
+        <!-- Statistics -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Total Products</div>
+                <div class="stat-value" style="color: var(--primary);">127</div>
+                <div class="stat-change"><i class="fas fa-arrow-up"></i> +12 this month</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Active Listings</div>
+                <div class="stat-value" style="color: var(--success);">98</div>
+                <div class="stat-change">85% approval rate</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Pending Review</div>
+                <div class="stat-value" style="color: var(--warning);">15</div>
+                <div class="stat-change">Requires attention</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Total Sales</div>
+                <div class="stat-value" style="color: var(--primary);">R 1.2M</div>
+                <div class="stat-change"><i class="fas fa-arrow-up"></i> +23% vs last month</div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters-section">
+            <div class="filters-grid">
+                <div class="form-group">
+                    <label>Search Products</label>
+                    <input type="text" class="form-control" placeholder="Search by name, SKU..." id="searchInput">
+                </div>
+                <div class="form-group">
+                    <label>Product Type</label>
+                    <select class="form-control" id="filterType">
+                        <option value="">All Types</option>
+                        <option value="digital">Digital</option>
+                        <option value="physical">Physical</option>
+                        <option value="service">Service</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Seller Type</label>
+                    <select class="form-control" id="filterSeller">
+                        <option value="">All Sellers</option>
+                        <option value="admin">Z2B Official</option>
+                        <option value="member">Member Created</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select class="form-control" id="filterStatus">
+                        <option value="">All Statuses</option>
+                        <option value="active">Active</option>
+                        <option value="pending_review">Pending Review</option>
+                        <option value="draft">Draft</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Products Table -->
+        <div class="products-table-container">
+            <div class="table-header">
+                <h2>All Products</h2>
+                <div>
+                    <button class="btn btn-sm" onclick="exportProducts()">
+                        <i class="fas fa-download"></i> Export CSV
+                    </button>
+                </div>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Type</th>
+                        <th>Seller</th>
+                        <th>Pricing</th>
+                        <th>Status</th>
+                        <th>Sales</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="productsTableBody">
+                    <!-- Sample Row - Will be populated dynamically -->
+                    <tr>
+                        <td>
+                            <div class="product-info">
+                                <div class="product-image">
+                                    <i class="fas fa-rocket"></i>
+                                </div>
+                                <div class="product-details">
+                                    <div class="product-name">Zyroniq - Pay Intelligence Engine</div>
+                                    <div class="product-meta">SKU: Z2B-ZYRONIQ-001</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="type-icon type-digital">
+                                <i class="fas fa-laptop-code"></i>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="product-details">
+                                <div class="product-name">Z2B Legacy Builders</div>
+                                <div class="product-meta"><span class="badge badge-info">Admin</span></div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="product-details">
+                                <div class="product-name">R21,500</div>
+                                <div class="product-meta">Vendor gets: R10K | MLM Pool: R10K</div>
+                            </div>
+                        </td>
+                        <td><span class="badge badge-success">Active</span></td>
+                        <td>
+                            <div class="product-details">
+                                <div class="product-name">12 sales</div>
+                                <div class="product-meta">R258,000 revenue</div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="actions">
+                                <button class="btn-icon btn-edit" onclick="editProduct(1)" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-icon btn-delete" onclick="deleteProduct(1)" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- More sample rows -->
+                    <tr>
+                        <td>
+                            <div class="product-info">
+                                <div class="product-image" style="background: var(--success);">
+                                    <i class="fas fa-book"></i>
+                                </div>
+                                <div class="product-details">
+                                    <div class="product-name">MLM Success Blueprint eBook</div>
+                                    <div class="product-meta">SKU: MEMBER-001-EBOOK</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="type-icon type-digital">
+                                <i class="fas fa-file-pdf"></i>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="product-details">
+                                <div class="product-name">John Doe</div>
+                                <div class="product-meta"><span class="badge badge-secondary">Member</span></div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="product-details">
+                                <div class="product-name">R215</div>
+                                <div class="product-meta">Vendor gets: R100 | MLM Pool: R100</div>
+                            </div>
+                        </td>
+                        <td><span class="badge badge-warning">Pending Review</span></td>
+                        <td>
+                            <div class="product-details">
+                                <div class="product-name">0 sales</div>
+                                <div class="product-meta">R0 revenue</div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="actions">
+                                <button class="btn-icon btn-approve" onclick="approveProduct(2)" title="Approve">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                                <button class="btn-icon btn-edit" onclick="editProduct(2)" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-icon btn-delete" onclick="deleteProduct(2)" title="Reject">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Add/Edit Product Modal -->
+    <div class="modal" id="productModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-box"></i> <span id="modalTitle">Add New Product</span></h2>
+                <button class="btn-close" onclick="closeProductModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="productForm">
+                    <!-- Basic Info -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Product Name *</label>
+                            <input type="text" class="form-control" id="productName" required>
+                        </div>
+                        <div class="form-group">
+                            <label>SKU *</label>
+                            <input type="text" class="form-control" id="productSku" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Product Type *</label>
+                            <select class="form-control" id="productType" onchange="updateTypeFields()" required>
+                                <option value="">Select Type</option>
+                                <option value="digital">Digital Product</option>
+                                <option value="physical">Physical Product</option>
+                                <option value="service">Service</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Category *</label>
+                            <select class="form-control" id="productCategory" required>
+                                <option value="">Select Category</option>
+                                <option value="1">Digital Products</option>
+                                <option value="2">Physical Products</option>
+                                <option value="3">Services</option>
+                                <option value="4">Software & Apps</option>
+                                <option value="5">Courses & Training</option>
+                                <option value="6">Marketing Tools</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Seller Type *</label>
+                            <select class="form-control" id="sellerType" required>
+                                <option value="admin">Z2B Official (Admin)</option>
+                                <option value="member">Member Created</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Seller Name *</label>
+                            <input type="text" class="form-control" id="sellerName" value="Z2B Legacy Builders" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Short Description *</label>
+                        <textarea class="form-control" id="productDescription" rows="3" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Long Description</label>
+                        <textarea class="form-control" id="productLongDescription" rows="5"></textarea>
+                    </div>
+
+                    <!-- Pricing Calculator -->
+                    <div class="pricing-calculator">
+                        <h3><i class="fas fa-calculator"></i> Dynamic Pricing Calculator</h3>
+                        <div class="form-group">
+                            <label>Vendor Desired Income (What vendor wants to earn) *</label>
+                            <input type="number" class="form-control" id="memberIncome" min="0" step="0.01"
+                                   onchange="calculatePricing()" required>
+                            <small style="color: #666; margin-top: 0.3rem; display: block;">
+                                This is how much the vendor will receive per sale
+                            </small>
+                        </div>
+                        <div class="pricing-breakdown" id="pricingBreakdown">
+                            <div class="price-row">
+                                <span class="price-label">💰 Vendor Receives:</span>
+                                <span class="price-value" id="displayMemberIncome">R 0.00</span>
+                            </div>
+                            <div class="price-row">
+                                <span class="price-label">👥 MLM Commission Pool (100%):</span>
+                                <span class="price-value" id="displayCommissionPool">R 0.00</span>
+                            </div>
+                            <div class="price-row">
+                                <span class="price-label">⚙️ Z2B Platform Fee (7.5%):</span>
+                                <span class="price-value" id="displayPlatformFee">R 0.00</span>
+                            </div>
+                            <div class="price-row total">
+                                <span class="price-label">🏷️ Customer Pays (Retail Price):</span>
+                                <span class="price-value" id="displayRetailPrice">R 0.00</span>
+                            </div>
+                        </div>
+                        <div style="margin-top: 1rem; padding: 1rem; background: rgba(0,255,136,0.1); border-radius: 8px; border-left: 3px solid #00AA5B;">
+                            <strong style="color: #00AA5B;">📅 Vendor Payment Schedule:</strong>
+                            <div style="margin-top: 0.5rem; font-size: 0.9rem; color: #555; line-height: 1.6;">
+                                • <strong>Digital:</strong> 24 hours after download<br>
+                                • <strong>Physical:</strong> 7 days after delivery confirmation<br>
+                                • <strong>Service:</strong> 3 days after completion
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hidden pricing fields -->
+                    <input type="hidden" id="mlmCommissionPool">
+                    <input type="hidden" id="platformFee">
+                    <input type="hidden" id="finalRetailPrice">
+
+                    <!-- Media -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Product Image URL</label>
+                            <input type="text" class="form-control" id="productImage">
+                        </div>
+                        <div class="form-group">
+                            <label>Video URL (Optional)</label>
+                            <input type="text" class="form-control" id="productVideo">
+                        </div>
+                    </div>
+
+                    <!-- Type-Specific Fields -->
+                    <div id="digitalFields" style="display: none;">
+                        <h3 style="margin: 1.5rem 0 1rem; color: var(--primary);">Digital Product Settings</h3>
+                        <div class="form-group">
+                            <label>Download File Path</label>
+                            <input type="text" class="form-control" id="digitalFilePath">
+                        </div>
+                    </div>
+
+                    <div id="physicalFields" style="display: none;">
+                        <h3 style="margin: 1.5rem 0 1rem; color: var(--primary);">Physical Product Settings</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Stock Quantity</label>
+                                <input type="number" class="form-control" id="physicalStock" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label>Shipping Cost</label>
+                                <input type="number" class="form-control" id="physicalShipping" min="0" step="0.01">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="serviceFields" style="display: none;">
+                        <h3 style="margin: 1.5rem 0 1rem; color: var(--primary);">Service Settings</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Service Type</label>
+                                <select class="form-control" id="serviceType">
+                                    <option value="one_time">One-Time Service</option>
+                                    <option value="recurring">Recurring Service</option>
+                                    <option value="hourly">Hourly Service</option>
+                                    <option value="session">Session-Based</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Duration (minutes)</label>
+                                <input type="number" class="form-control" id="serviceDuration" min="0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Status -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select class="form-control" id="productStatus">
+                                <option value="draft">Draft</option>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Featured Product</label>
+                            <select class="form-control" id="productFeatured">
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                        <button type="button" class="btn btn-primary" style="flex: 1;" onclick="saveProduct()">
+                            <i class="fas fa-save"></i> Save Product
+                        </button>
+                        <button type="button" class="btn" style="flex: 1; background: #ddd;" onclick="closeProductModal()">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Calculate Dynamic Pricing
+        function calculatePricing() {
+            const memberIncome = parseFloat(document.getElementById('memberIncome').value) || 0;
+
+            // Formula: Member Income + MLM Pool (100%) + Platform Fee (7.5%)
+            const mlmPool = memberIncome; // 100% of member income
+            const platformFee = (memberIncome + mlmPool) * 0.075; // 7.5% of subtotal
+            const retailPrice = memberIncome + mlmPool + platformFee;
+
+            // Update display
+            document.getElementById('displayMemberIncome').textContent = `R ${memberIncome.toFixed(2)}`;
+            document.getElementById('displayCommissionPool').textContent = `R ${mlmPool.toFixed(2)}`;
+            document.getElementById('displayPlatformFee').textContent = `R ${platformFee.toFixed(2)}`;
+            document.getElementById('displayRetailPrice').textContent = `R ${retailPrice.toFixed(2)}`;
+
+            // Update hidden fields
+            document.getElementById('mlmCommissionPool').value = mlmPool.toFixed(2);
+            document.getElementById('platformFee').value = platformFee.toFixed(2);
+            document.getElementById('finalRetailPrice').value = retailPrice.toFixed(2);
+        }
+
+        // Update form based on product type
+        function updateTypeFields() {
+            const type = document.getElementById('productType').value;
+
+            // Hide all type-specific fields
+            document.getElementById('digitalFields').style.display = 'none';
+            document.getElementById('physicalFields').style.display = 'none';
+            document.getElementById('serviceFields').style.display = 'none';
+
+            // Show relevant fields
+            if (type === 'digital') {
+                document.getElementById('digitalFields').style.display = 'block';
+            } else if (type === 'physical') {
+                document.getElementById('physicalFields').style.display = 'block';
+            } else if (type === 'service') {
+                document.getElementById('serviceFields').style.display = 'block';
+            }
+        }
+
+        // Modal Management
+        function openAddProductModal() {
+            document.getElementById('modalTitle').textContent = 'Add New Product';
+            document.getElementById('productForm').reset();
+            document.getElementById('productModal').classList.add('active');
+            calculatePricing(); // Initialize pricing display
+        }
+
+        function closeProductModal() {
+            document.getElementById('productModal').classList.remove('active');
+        }
+
+        function editProduct(id) {
+            document.getElementById('modalTitle').textContent = 'Edit Product';
+            // Load product data here
+            document.getElementById('productModal').classList.add('active');
+        }
+
+        // CRUD Operations
+        function saveProduct() {
+            // Collect form data
+            const productData = {
+                name: document.getElementById('productName').value,
+                sku: document.getElementById('productSku').value,
+                type: document.getElementById('productType').value,
+                category_id: document.getElementById('productCategory').value,
+                seller_type: document.getElementById('sellerType').value,
+                seller_name: document.getElementById('sellerName').value,
+                description: document.getElementById('productDescription').value,
+                long_description: document.getElementById('productLongDescription').value,
+                member_desired_income: document.getElementById('memberIncome').value,
+                mlm_commission_pool: document.getElementById('mlmCommissionPool').value,
+                platform_fee: document.getElementById('platformFee').value,
+                final_retail_price: document.getElementById('finalRetailPrice').value,
+                status: document.getElementById('productStatus').value,
+                featured: document.getElementById('productFeatured').value
+            };
+
+            // Send to backend API
+            console.log('Saving product:', productData);
+
+            // Show success message
+            alert('Product saved successfully!');
+            closeProductModal();
+
+            // Reload products table
+            // loadProducts();
+        }
+
+        function deleteProduct(id) {
+            if (confirm('Are you sure you want to delete this product?')) {
+                console.log('Deleting product:', id);
+                alert('Product deleted successfully!');
+                // Reload products table
+            }
+        }
+
+        function approveProduct(id) {
+            if (confirm('Approve this product for marketplace listing?')) {
+                console.log('Approving product:', id);
+                alert('Product approved!');
+                // Reload products table
+            }
+        }
+
+        function exportProducts() {
+            console.log('Exporting products to CSV...');
+            alert('Export functionality will be implemented in backend.');
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('productModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeProductModal();
+            }
+        });
+
+        // Example: Member income input
+        document.getElementById('memberIncome').value = 100;
+        calculatePricing();
+    </script>
+</body>
+</html>

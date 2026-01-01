@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Complete - Z2B Legacy Builders</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --navy-blue: #0A2647;
+            --gold: #FFD700;
+            --orange: #FF6B35;
+            --dark-navy: #051428;
+            --white: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--navy-blue), var(--dark-navy));
+            color: var(--white);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .success-container {
+            background: var(--white);
+            border-radius: 30px;
+            padding: 3rem;
+            max-width: 700px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .success-icon {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            animation: scaleIn 0.5s ease-out;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+
+        .success-icon i {
+            font-size: 4rem;
+            color: white;
+        }
+
+        h1 {
+            color: var(--navy-blue);
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .welcome-box {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 107, 53, 0.15));
+            border: 2px solid var(--gold);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: left;
+        }
+
+        .welcome-box h3 {
+            color: var(--orange);
+            margin-bottom: 1.5rem;
+        }
+
+        .info-item {
+            background: white;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: var(--dark-navy);
+        }
+
+        .info-value {
+            color: var(--orange);
+            font-weight: bold;
+        }
+
+        .alert-success-custom {
+            background: rgba(76, 175, 80, 0.1);
+            border: 2px solid #4CAF50;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            color: var(--navy-blue);
+        }
+
+        .btn-dashboard {
+            background: linear-gradient(135deg, var(--gold), var(--orange));
+            color: var(--navy-blue);
+            border: none;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-top: 1rem;
+            transition: all 0.3s;
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-dashboard:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.6);
+            color: var(--white);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--navy-blue);
+        }
+    </style>
+</head>
+<body>
+    <div class="success-container">
+        <div class="success-icon">
+            <i class="fas fa-check"></i>
+        </div>
+
+        <h1>Welcome to Z2B!</h1>
+        <p style="color: var(--dark-navy); font-size: 1.2rem; margin-bottom: 1rem;">
+            🎉 Your payment was successful and your account is now active!
+        </p>
+
+        <div class="welcome-box">
+            <h3><i class="fas fa-user-check"></i> Registration Complete</h3>
+
+            <div class="info-item">
+                <span class="info-label"><i class="fas fa-crown"></i> Your Tier:</span>
+                <span class="info-value" id="tierName">Loading...</span>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label"><i class="fas fa-hashtag"></i> Payment Reference:</span>
+                <span class="info-value" id="paymentRef">Loading...</span>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label"><i class="fas fa-id-card"></i> Your Member ID:</span>
+                <span class="info-value" id="memberId">Loading...</span>
+            </div>
+
+            <div class="info-item" style="flex-direction: column; align-items: flex-start;">
+                <span class="info-label" style="margin-bottom: 0.5rem;">
+                    <i class="fas fa-link"></i> Your Referral Link:
+                </span>
+                <div style="display: flex; width: 100%; gap: 10px;">
+                    <input type="text" id="referralLink" readonly
+                           style="flex: 1; padding: 0.5rem; border: 2px solid var(--gold); border-radius: 8px; background: #f8f9fa; font-size: 0.9rem;"
+                           value="Loading...">
+                    <button onclick="copyReferralLink()"
+                            style="background: var(--gold); color: var(--navy-blue); border: none; padding: 0.5rem 1rem; border-radius: 8px; font-weight: bold; cursor: pointer;">
+                        <i class="fas fa-copy"></i> Copy
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div style="background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 107, 53, 0.2)); border: 2px dashed var(--orange); border-radius: 15px; padding: 1.5rem; margin: 1.5rem 0;">
+            <h5 style="color: var(--navy-blue); margin-bottom: 1rem;">
+                <i class="fas fa-lightbulb"></i> <strong>IMPORTANT TIP!</strong>
+            </h5>
+            <p style="color: var(--dark-navy); margin: 0; font-size: 1.05rem; line-height: 1.6;">
+                📋 <strong>Copy your Member ID and Referral Link NOW!</strong><br>
+                Share them with prospects to invite new members and earn commissions.<br>
+                💡 Your Member ID is: <strong id="memberIdCopy">Loading...</strong>
+            </p>
+        </div>
+
+        <div class="alert-success-custom">
+            <h5 style="margin-bottom: 1rem;"><i class="fas fa-envelope"></i> Check Your Email!</h5>
+            <p style="margin: 0; font-size: 1rem;">
+                We've sent you a welcome email with:
+            </p>
+            <ul style="text-align: left; margin-top: 1rem; padding-left: 2rem;">
+                <li>Your login credentials</li>
+                <li>Your unique Member ID and referral code</li>
+                <li>Your personal referral link to earn commissions</li>
+                <li>Getting started guide</li>
+            </ul>
+        </div>
+
+        <div style="background: rgba(255, 215, 0, 0.1); padding: 1.5rem; border-radius: 15px; margin: 1.5rem 0;">
+            <h5 style="color: var(--navy-blue); margin-bottom: 1rem;">
+                <i class="fas fa-rocket"></i> What's Next?
+            </h5>
+            <ol style="color: var(--dark-navy); text-align: left; padding-left: 2rem; margin: 0;">
+                <li>Log in to your dashboard using your email and password</li>
+                <li>Complete your profile and banking details</li>
+                <li>Access your AI apps and training materials</li>
+                <li>Share your referral link to start earning commissions</li>
+                <li>Build your team and achieve financial freedom!</li>
+            </ol>
+        </div>
+
+        <a href="dashboard.html" class="btn-dashboard">
+            <i class="fas fa-sign-in-alt"></i> Login to Dashboard
+        </a>
+
+        <p style="margin-top: 1.5rem; color: var(--dark-navy);">
+            <small>Need help? Contact us on WhatsApp: <strong>077 490 1639</strong></small>
+        </p>
+    </div>
+
+    <script>
+        // API Configuration
+        const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? 'http://localhost:5000'
+            : 'https://z2b-production-3cd3.up.railway.app';
+
+        // Get parameters from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const paymentRef = urlParams.get('ref');
+        const userId = urlParams.get('userId');
+        const tier = urlParams.get('tier');
+
+        // Display payment reference and tier
+        if (paymentRef) {
+            document.getElementById('paymentRef').textContent = paymentRef;
+        }
+
+        if (tier) {
+            const tierNames = {
+                'FAM': 'FAM - Free Affiliate',
+                'BRONZE': 'Bronze Legacy Builder',
+                'COPPER': 'Copper Legacy Builder',
+                'SILVER': 'Silver Legacy Builder',
+                'GOLD': 'Gold Legacy Builder',
+                'PLATINUM': 'Platinum Legacy Builder',
+                'LIFETIME': 'Lifetime Legacy Builder'
+            };
+            document.getElementById('tierName').textContent = tierNames[tier] || tier;
+        }
+
+        // Update payment status on backend
+        if (userId && paymentRef) {
+            fetch(`${API_BASE_URL}/api/auth/verify-payment`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    userId: userId,
+                    paymentReference: paymentRef,
+                    status: 'COMPLETED'
+                })
+            }).then(response => response.json())
+              .then(data => {
+                  console.log('Payment status updated:', data);
+
+                  // Display member ID and referral link if available
+                  if (data.data && data.data.referralCode) {
+                      const memberId = data.data.referralCode;
+                      const frontendURL = window.location.origin;
+                      const referralLink = `${frontendURL}/register.html?ref=${memberId}`;
+
+                      document.getElementById('memberId').textContent = memberId;
+                      document.getElementById('memberIdCopy').textContent = memberId;
+                      document.getElementById('referralLink').value = referralLink;
+                  }
+              })
+              .catch(error => {
+                  console.error('Error updating payment status:', error);
+              });
+        }
+
+        // Fetch user data to get referral info if not from payment flow
+        if (userId && !paymentRef) {
+            fetch(`${API_BASE_URL}/api/users/${userId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.data) {
+                        const memberId = data.data.referralCode;
+                        const frontendURL = window.location.origin;
+                        const referralLink = `${frontendURL}/register.html?ref=${memberId}`;
+
+                        document.getElementById('memberId').textContent = memberId;
+                        document.getElementById('memberIdCopy').textContent = memberId;
+                        document.getElementById('referralLink').value = referralLink;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching user data:', error);
+                });
+        }
+
+        // Copy referral link function
+        function copyReferralLink() {
+            const linkInput = document.getElementById('referralLink');
+            linkInput.select();
+            linkInput.setSelectionRange(0, 99999); // For mobile devices
+
+            navigator.clipboard.writeText(linkInput.value).then(() => {
+                alert('✅ Referral link copied! Share it with your prospects to start earning.');
+            }).catch(err => {
+                // Fallback for older browsers
+                document.execCommand('copy');
+                alert('✅ Referral link copied! Share it with your prospects to start earning.');
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,155 @@
+========================================
+MongoDB Atlas Setup - Step by Step
+========================================
+
+STEP 1: Create Account
+-----------------------
+1. Go to: https://www.mongodb.com/cloud/atlas/register
+2. Sign up with:
+   - Email address
+   - OR click "Sign up with Google"
+3. Fill in your details
+4. Click "Create your Atlas account"
+
+STEP 2: Create FREE Cluster (3-5 minutes)
+------------------------------------------
+After login, you'll see "Deploy a cloud database":
+
+1. Choose: "M0 FREE" (Forever Free tier)
+   - Shows: "Shared RAM, 512 MB Storage"
+   - Cost: FREE
+
+2. Provider: Choose "AWS"
+
+3. Region: Choose closest to you:
+   - Africa: "Cape Town (af-south-1)"
+   - OR Europe: "Frankfurt (eu-central-1)"
+
+4. Cluster Name: "z2b-cluster" (or leave default)
+
+5. Click: "Create Deployment"
+
+6. WAIT: 3-5 minutes for cluster creation
+   - You'll see a progress bar
+   - Don't close the browser!
+
+STEP 3: Create Database User
+-----------------------------
+A popup will appear "Security Quickstart":
+
+1. Authentication Method: "Username and Password" (default)
+
+2. Username: z2badmin
+
+3. Password: Click "Autogenerate Secure Password"
+   - COPY THIS PASSWORD NOW!
+   - Save it somewhere safe!
+   - Example: K7mP2nQ9xR4vB6wL
+
+4. Click: "Create Database User"
+
+STEP 4: Whitelist IP Address
+-----------------------------
+Still in the same popup:
+
+1. Where would you like to connect from?
+   - Choose: "My Local Environment"
+
+2. Click: "Add My Current IP Address"
+   - OR click "Allow Access from Anywhere" (easier)
+   - This adds: 0.0.0.0/0
+
+3. Click: "Finish and Close"
+
+4. Click: "Go to Databases" (or "Go to Overview")
+
+STEP 5: Get Connection String
+------------------------------
+1. You'll see your cluster "z2b-cluster"
+   - Status should be green/active
+
+2. Click: "Connect" button
+
+3. Choose: "Drivers"
+
+4. Driver: "Node.js"
+   Version: "4.1 or later"
+
+5. COPY the connection string (looks like this):
+
+   mongodb+srv://z2badmin:<password>@z2b-cluster.xxxxx.mongodb.net/?retryWrites=true&w=majority
+
+6. IMPORTANT: Replace <password> with your actual password from Step 3
+
+   Example if your password is K7mP2nQ9xR4vB6wL:
+   mongodb+srv://z2badmin:K7mP2nQ9xR4vB6wL@z2b-cluster.xxxxx.mongodb.net/?retryWrites=true&w=majority
+
+7. ADD database name before the "?":
+
+   mongodb+srv://z2badmin:K7mP2nQ9xR4vB6wL@z2b-cluster.xxxxx.mongodb.net/z2b_legacy_builders?retryWrites=true&w=majority
+                                                                                          ^^^^^^^^^^^^^^^^^^^^
+                                                                                          Add this!
+
+STEP 6: Update Your .env File
+------------------------------
+1. Open file: C:\Users\Manana\Z2B\Z2B-v21\backend\.env
+
+2. Find line 17 (around there):
+   MONGODB_URI=mongodb://localhost:27017/z2b_legacy_builders
+
+3. Replace with YOUR connection string from Step 5
+
+4. Save the file
+
+STEP 7: Start Backend Server
+-----------------------------
+Open PowerShell or Command Prompt:
+
+cd C:\Users\Manana\Z2B\Z2B-v21\backend
+npm start
+
+You should see:
+✅ MongoDB Connected Successfully
+🚀 Z2B Admin Backend Server running on port 5000
+
+STEP 8: Access Admin Panel
+---------------------------
+1. Open browser: http://localhost/dashboard.html
+
+2. Scroll to bottom footer
+
+3. Click "Z2B Legacy Builders" text 5 TIMES (quickly, within 3 seconds)
+
+4. You'll be redirected to admin login page
+
+5. Login:
+   Username: admin
+   Password: Admin@Z2B2024!
+
+========================================
+TROUBLESHOOTING
+========================================
+
+❌ "Authentication failed"
+   - Check password in connection string matches Step 3
+   - Make sure no < > symbols in the string
+   - Password should not have spaces
+
+❌ "Network error"
+   - Check IP whitelist includes 0.0.0.0/0
+   - Cluster status is green/active
+
+❌ "Cannot connect to localhost:5000"
+   - Make sure backend is running (npm start)
+   - Check port 5000 is not in use
+
+========================================
+SAVE THIS INFORMATION
+========================================
+
+MongoDB Cluster Name: z2b-cluster
+Database Username: z2badmin
+Database Password: [THE PASSWORD YOU COPIED]
+Connection String: [YOUR FULL CONNECTION STRING]
+
+========================================

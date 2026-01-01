@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Fuel Top-Up - Z2B Legacy Builders</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --navy-blue: #0A2647;
+            --gold: #FFD700;
+            --orange: #FF6B35;
+            --light-gold: #FFF4CC;
+            --dark-navy: #051428;
+            --white: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--navy-blue), var(--dark-navy));
+            color: var(--white);
+            min-height: 100vh;
+            padding: 2rem 0;
+        }
+
+        .container {
+            max-width: 1200px;
+        }
+
+        .back-btn {
+            color: var(--gold);
+            font-size: 1.1rem;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-block;
+            margin-bottom: 2rem;
+        }
+
+        .back-btn:hover {
+            color: var(--orange);
+            transform: translateX(-5px);
+        }
+
+        .header-section {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .header-section h1 {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--gold);
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .header-section p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .fuel-info-banner {
+            background: rgba(255, 215, 0, 0.1);
+            border: 2px solid var(--gold);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .fuel-info-banner h3 {
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+
+        .fuel-info-banner ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .fuel-info-banner li {
+            padding: 0.5rem 0;
+            color: var(--white);
+        }
+
+        .fuel-info-banner li i {
+            color: var(--gold);
+            margin-right: 10px;
+        }
+
+        .packages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .fuel-package {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .fuel-package::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: linear-gradient(90deg, var(--package-color), var(--orange));
+        }
+
+        .fuel-package.starter {
+            --package-color: #4CAF50;
+        }
+
+        .fuel-package.pro {
+            --package-color: var(--gold);
+            transform: scale(1.05);
+            border: 3px solid var(--gold);
+        }
+
+        .fuel-package.elite {
+            --package-color: #9C27B0;
+        }
+
+        .fuel-package:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .fuel-package.pro:hover {
+            transform: scale(1.08) translateY(-10px);
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: linear-gradient(135deg, var(--orange), var(--gold));
+            color: var(--navy-blue);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+        }
+
+        .fuel-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--package-color), var(--orange));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .package-name {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--navy-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .fuel-amount {
+            text-align: center;
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--package-color);
+            margin-bottom: 0.3rem;
+        }
+
+        .fuel-amount span {
+            font-size: 1.2rem;
+            color: var(--dark-navy);
+            opacity: 0.6;
+        }
+
+        .package-price {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--orange);
+            margin-bottom: 1rem;
+        }
+
+        .validity-badge {
+            background: rgba(76, 175, 80, 0.2);
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            padding: 0.8rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: var(--navy-blue);
+            font-weight: bold;
+        }
+
+        .benefits-list {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 2rem;
+        }
+
+        .benefits-list li {
+            padding: 0.8rem 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            color: var(--dark-navy);
+            font-size: 1rem;
+        }
+
+        .benefits-list li i {
+            color: var(--package-color);
+            margin-right: 10px;
+            font-size: 1.1rem;
+        }
+
+        .btn-purchase {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(135deg, var(--package-color), var(--orange));
+            color: var(--white);
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-purchase:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .commission-info {
+            background: linear-gradient(135deg, var(--navy-blue), var(--dark-navy));
+            border-radius: 20px;
+            padding: 2rem;
+            margin-top: 3rem;
+            border: 2px solid var(--gold);
+        }
+
+        .commission-info h3 {
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .commission-info p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .commission-info .highlight {
+            color: var(--gold);
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="dashboard.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+
+        <div class="header-section">
+            <div style="background: linear-gradient(135deg, var(--gold), var(--orange)); color: var(--navy-blue); padding: 0.6rem 1.5rem; border-radius: 50px; display: inline-block; margin-bottom: 1.5rem; font-weight: bold; font-size: 0.95rem;">
+                <i class="fas fa-fire"></i> Power Your AI Apps
+            </div>
+            <h1><i class="fas fa-gas-pump"></i> AI Fuel Top-Up</h1>
+            <p>Out of AI Fuel? Top up instantly and keep building your legacy!</p>
+        </div>
+
+        <!-- Fuel Info Banner -->
+        <div class="fuel-info-banner">
+            <h3><i class="fas fa-info-circle"></i> What is AI Fuel?</h3>
+            <ul>
+                <li><i class="fas fa-check-circle"></i> AI Fuel powers all your Z2B AI apps (Coach Manlaw, Glowie, Zyra, Benown, Vidzie, Zyro, Zynect)</li>
+                <li><i class="fas fa-check-circle"></i> Each AI interaction or generation uses fuel based on complexity</li>
+                <li><i class="fas fa-check-circle"></i> Top-up fuel is valid for 3 months from purchase date</li>
+                <li><i class="fas fa-check-circle"></i> Your upline earns commissions when you top up (supporting your success!)</li>
+                <li><i class="fas fa-check-circle"></i> No need to wait for month-end tier renewal - top up anytime!</li>
+            </ul>
+        </div>
+
+        <!-- Fuel Packages -->
+        <div class="packages-grid">
+            <!-- Starter Package -->
+            <div class="fuel-package starter">
+                <div class="fuel-icon">🔋</div>
+                <h3 class="package-name">Starter Boost</h3>
+                <div class="fuel-amount">100 <span>AI Fuel</span></div>
+                <div class="package-price">R125</div>
+                <div class="validity-badge">
+                    <i class="fas fa-calendar-check"></i> Valid for 3 Months
+                </div>
+
+                <ul class="benefits-list">
+                    <li><i class="fas fa-check-circle"></i> Perfect for light usage</li>
+                    <li><i class="fas fa-check-circle"></i> ~20-30 AI interactions</li>
+                    <li><i class="fas fa-check-circle"></i> Works across all apps</li>
+                    <li><i class="fas fa-check-circle"></i> Instant activation</li>
+                    <li><i class="fas fa-check-circle"></i> R1.25 per fuel unit</li>
+                </ul>
+
+                <button class="btn-purchase" onclick="purchaseFuel(100, 125)">
+                    <i class="fas fa-shopping-cart"></i> Purchase Now
+                </button>
+            </div>
+
+            <!-- Pro Package (Most Popular) -->
+            <div class="fuel-package pro">
+                <span class="popular-badge">⭐ BEST VALUE</span>
+                <div class="fuel-icon">⚡</div>
+                <h3 class="package-name">Pro Power</h3>
+                <div class="fuel-amount">500 <span>AI Fuel</span></div>
+                <div class="package-price">R625</div>
+                <div class="validity-badge">
+                    <i class="fas fa-calendar-check"></i> Valid for 3 Months
+                </div>
+
+                <ul class="benefits-list">
+                    <li><i class="fas fa-check-circle"></i> Most popular choice</li>
+                    <li><i class="fas fa-check-circle"></i> ~100-150 AI interactions</li>
+                    <li><i class="fas fa-check-circle"></i> Works across all apps</li>
+                    <li><i class="fas fa-check-circle"></i> Instant activation</li>
+                    <li><i class="fas fa-check-circle"></i> R1.25 per fuel unit</li>
+                    <li><i class="fas fa-check-circle"></i> Best for regular users</li>
+                </ul>
+
+                <button class="btn-purchase" onclick="purchaseFuel(500, 625)">
+                    <i class="fas fa-shopping-cart"></i> Purchase Now
+                </button>
+            </div>
+
+            <!-- Elite Package -->
+            <div class="fuel-package elite">
+                <div class="fuel-icon">🚀</div>
+                <h3 class="package-name">Elite Unlimited</h3>
+                <div class="fuel-amount">1,000 <span>AI Fuel</span></div>
+                <div class="package-price">R1,250</div>
+                <div class="validity-badge">
+                    <i class="fas fa-calendar-check"></i> Valid for 3 Months
+                </div>
+
+                <ul class="benefits-list">
+                    <li><i class="fas fa-check-circle"></i> For power users</li>
+                    <li><i class="fas fa-check-circle"></i> ~200-300 AI interactions</li>
+                    <li><i class="fas fa-check-circle"></i> Works across all apps</li>
+                    <li><i class="fas fa-check-circle"></i> Instant activation</li>
+                    <li><i class="fas fa-check-circle"></i> R1.25 per fuel unit</li>
+                    <li><i class="fas fa-check-circle"></i> Maximum value package</li>
+                </ul>
+
+                <button class="btn-purchase" onclick="purchaseFuel(1000, 1250)">
+                    <i class="fas fa-shopping-cart"></i> Purchase Now
+                </button>
+            </div>
+        </div>
+
+        <!-- Commission Info -->
+        <div class="commission-info">
+            <h3><i class="fas fa-users"></i> Team Commission Structure</h3>
+            <p>
+                When you purchase AI Fuel top-ups, your upline earns commissions based on your tier level.
+                This is part of our community support system where we help each other succeed!
+            </p>
+            <p>
+                <span class="highlight">💰 Commission Benefits:</span> Your upline receives a percentage of your
+                top-up purchase, encouraging them to support your success. The more you use the platform,
+                the more everyone in the team benefits!
+            </p>
+            <p>
+                <span class="highlight">🔄 How It Works:</span> Purchase is processed through secure payment →
+                AI Fuel instantly added to your account → Commission credited to your upline →
+                Everyone wins!
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Get auth token
+        const authToken = localStorage.getItem('authToken');
+
+        function purchaseFuel(amount, price) {
+            // Check authentication
+            if (!authToken) {
+                alert('Please log in to purchase AI Fuel');
+                window.location.href = '/quick-login.html?return=' + encodeURIComponent('app/ai-refuel.html');
+                return;
+            }
+
+            // Store purchase details
+            localStorage.setItem('z2b_fuel_purchase', JSON.stringify({
+                amount: amount,
+                price: price,
+                timestamp: new Date().toISOString()
+            }));
+
+            // Show confirmation
+            if (confirm(`Purchase ${amount} AI Fuel for R${price}?\n\nThis fuel will be valid for 3 months and can be used across all Z2B AI apps.\n\nYour upline will earn commissions on this purchase.`)) {
+                // In production, this would redirect to Yoco payment page
+                // For now, we'll simulate the purchase
+                processAIFuelPurchase(amount, price);
+            }
+        }
+
+        async function processAIFuelPurchase(amount, price) {
+            try {
+                // Show loading state
+                document.body.style.cursor = 'wait';
+
+                // Create Yoco checkout session
+                const response = await fetch('http://localhost:8000/Z2B-v21/api/yoco-ai-fuel-payment.php/create-checkout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({
+                        fuelAmount: amount,
+                        price: price
+                    })
+                });
+
+                const data = await response.json();
+
+                // Reset cursor
+                document.body.style.cursor = 'default';
+
+                if (data.success) {
+                    // Redirect to Yoco payment page
+                    window.location.href = data.checkoutUrl;
+                } else {
+                    alert('❌ Checkout creation failed: ' + (data.message || 'Unknown error'));
+                }
+            } catch (error) {
+                document.body.style.cursor = 'default';
+                console.error('Checkout error:', error);
+                alert('❌ Failed to create checkout. Please try again.');
+            }
+        }
+
+        // Check if user is authenticated
+        if (!authToken) {
+            alert('Please log in to access AI Fuel top-up');
+            setTimeout(() => {
+                window.location.href = '/quick-login.html?return=' + encodeURIComponent('app/ai-refuel.html');
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

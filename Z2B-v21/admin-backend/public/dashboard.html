@@ -1,0 +1,2441 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Z2B Legacy Builders</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <style>
+        :root {
+            /* Royal Gold - Main Brand Colors */
+            --royal-gold: #D4AF37;
+            --royal-gold-light: #F4E4C1;
+            --royal-gold-dark: #B8960D;
+            --royal-gold-shine: #FFE5A0;
+            --royal-gold-deep: #9B7E0D;
+
+            /* Supporting Colors */
+            --navy-blue: #0A2647;
+            --dark-navy: #051428;
+            --accent-orange: #FF6B35;
+            --white: #FFFFFF;
+            --light-bg: #FAF8F3;
+
+            /* Legacy aliases for gradual transition */
+            --gold: var(--royal-gold);
+            --light-gold: var(--royal-gold-light);
+            --orange: var(--accent-orange);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--light-bg);
+            color: var(--dark-navy);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 280px;
+            background: linear-gradient(180deg, var(--navy-blue) 0%, var(--dark-navy) 100%);
+            padding: 2rem 0;
+            overflow-y: auto;
+            z-index: 1000;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .sidebar-brand {
+            padding: 0 1.5rem 2rem;
+            border-bottom: 3px solid var(--royal-gold);
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(184, 150, 13, 0.05));
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+        }
+
+        .sidebar-brand h3 {
+            color: var(--royal-gold-shine);
+            font-weight: 900;
+            font-size: 1.6rem;
+            text-shadow:
+                0 0 20px rgba(212, 175, 55, 0.8),
+                0 0 30px rgba(255, 229, 160, 0.5),
+                0 2px 4px rgba(0, 0, 0, 0.3);
+            letter-spacing: 1.5px;
+        }
+
+        .sidebar-brand p {
+            color: var(--royal-gold-light);
+            font-size: 0.85rem;
+            margin: 0;
+            font-weight: 600;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-item {
+            padding: 0.8rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 215, 0, 0.1);
+            border-left-color: var(--gold);
+        }
+
+        .nav-item.active {
+            background: rgba(255, 215, 0, 0.2);
+            border-left-color: var(--orange);
+        }
+
+        .nav-item i {
+            color: var(--gold);
+            margin-right: 15px;
+            font-size: 1.2rem;
+            width: 25px;
+        }
+
+        .nav-item span {
+            color: var(--white);
+            font-size: 1rem;
+        }
+
+        /* Tooltip */
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-item .tooltip-text {
+            visibility: hidden;
+            opacity: 0;
+            position: fixed;
+            left: 295px;
+            transform: translateY(-50%) translateX(-10px);
+            background: linear-gradient(135deg, var(--navy-blue), var(--dark-navy));
+            color: var(--white);
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            white-space: normal;
+            min-width: 280px;
+            max-width: 320px;
+            z-index: 10000;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s ease;
+            font-weight: 500;
+            border: 2px solid var(--gold);
+            pointer-events: none;
+        }
+
+        .nav-item .tooltip-text::before {
+            content: '';
+            position: absolute;
+            right: 100%;
+            top: 50%;
+            transform: translateY(-50%);
+            border: 12px solid transparent;
+            border-right-color: var(--dark-navy);
+            filter: drop-shadow(-2px 0 2px rgba(0, 0, 0, 0.2));
+        }
+
+        .nav-item:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+            transform: translateY(-50%) translateX(0);
+        }
+
+        /* Secret Admin Door */
+        .sidebar-brand {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .admin-door-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .admin-door-modal.show {
+            display: flex;
+        }
+
+        .admin-door-content {
+            background: linear-gradient(135deg, var(--navy-blue), var(--dark-navy));
+            padding: 3rem;
+            border-radius: 20px;
+            border: 3px solid var(--gold);
+            box-shadow: 0 20px 60px rgba(255, 215, 0, 0.4);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .admin-door-content h3 {
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+
+        .admin-door-content input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--gold);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .admin-door-content input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .admin-door-content input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .admin-door-btns {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-admin-enter {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(135deg, var(--gold), var(--orange));
+            color: var(--navy-blue);
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-admin-enter:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+        }
+
+        .btn-admin-cancel {
+            flex: 1;
+            padding: 1rem;
+            border: 2px solid var(--gold);
+            border-radius: 50px;
+            background: transparent;
+            color: var(--gold);
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-admin-cancel:hover {
+            background: rgba(255, 215, 0, 0.1);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            background: var(--white);
+            padding: 1.5rem 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .welcome-text h2 {
+            color: var(--navy-blue);
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .welcome-text p {
+            color: var(--dark-navy);
+            margin: 0;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .profile-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold), var(--orange));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--navy-blue);
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(145deg, var(--white), var(--light-gold));
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid var(--gold);
+            transition: all 0.3s;
+            position: relative;
+            cursor: help;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.15);
+            border-left-color: var(--orange);
+        }
+
+        /* Dashboard Feature Tooltips */
+        .feature-tooltip {
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            bottom: calc(100% + 15px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, var(--navy-blue), var(--dark-navy));
+            color: var(--white);
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            white-space: normal;
+            width: 280px;
+            z-index: 10000;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s ease;
+            pointer-events: none;
+            border: 2px solid var(--gold);
+        }
+
+        .feature-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 12px solid transparent;
+            border-top-color: var(--dark-navy);
+            filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.2));
+        }
+
+        .stat-card:hover .feature-tooltip,
+        .quick-action-btn:hover .feature-tooltip {
+            visibility: visible;
+            opacity: 1;
+            bottom: calc(100% + 20px);
+        }
+
+        /* Ensure parent containers have proper positioning */
+        .stats-grid {
+            position: relative;
+        }
+
+        .quick-actions {
+            position: relative;
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--navy-blue), var(--dark-navy));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon i {
+            font-size: 1.8rem;
+            color: var(--gold);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--navy-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--dark-navy);
+            font-size: 0.95rem;
+            opacity: 0.8;
+        }
+
+        /* Upgrade Motivator */
+        .upgrade-motivator {
+            background: linear-gradient(135deg, var(--navy-blue), var(--dark-navy));
+            padding: 2rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            border: 3px solid var(--gold);
+            box-shadow: 0 10px 40px rgba(255, 215, 0, 0.3);
+            animation: pulse-border 2s infinite;
+        }
+
+        @keyframes pulse-border {
+
+            0%,
+            100% {
+                border-color: var(--gold);
+            }
+
+            50% {
+                border-color: var(--orange);
+            }
+        }
+
+        .motivator-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .motivator-title {
+            color: var(--gold);
+            font-size: 1.3rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .upgrade-deadline {
+            background: rgba(255, 107, 53, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            border: 2px solid var(--orange);
+            color: var(--white);
+            font-weight: bold;
+        }
+
+        .countdown-timer {
+            color: var(--orange);
+            font-size: 1.2rem;
+        }
+
+        .missed-earnings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .missed-item {
+            background: rgba(255, 107, 53, 0.1);
+            padding: 1rem;
+            border-radius: 10px;
+            border-left: 4px solid var(--orange);
+        }
+
+        .missed-item-label {
+            color: var(--gold);
+            font-size: 0.85rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .missed-item-value {
+            color: var(--white);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .spillover-warning {
+            background: rgba(255, 107, 53, 0.2);
+            border: 2px solid var(--orange);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .warning-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .spillover-warning h4 {
+            color: var(--orange);
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .spillover-warning p {
+            color: var(--white);
+            line-height: 1.7;
+            margin-bottom: 0.5rem;
+        }
+
+        .upgrade-benefits {
+            background: rgba(76, 175, 80, 0.1);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .upgrade-benefits h4 {
+            color: #4CAF50;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .upgrade-benefits ul {
+            color: var(--white);
+            line-height: 1.8;
+        }
+
+        .btn-upgrade-now {
+            background: linear-gradient(135deg, var(--gold), var(--orange));
+            color: var(--navy-blue);
+            border: none;
+            padding: 1rem 2.5rem;
+            font-weight: bold;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            margin-top: 1.5rem;
+            transition: all 0.3s;
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+            animation: pulse-button 1.5s infinite;
+        }
+
+        @keyframes pulse-button {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .btn-upgrade-now:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.6);
+        }
+
+        /* Coach Manlaw Widget */
+        .coach-widget {
+            background: linear-gradient(135deg, var(--orange), var(--gold));
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(255, 107, 53, 0.3);
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .coach-widget::before {
+            content: '🎯';
+            position: absolute;
+            font-size: 15rem;
+            opacity: 0.1;
+            right: -5%;
+            top: -20%;
+        }
+
+        .coach-widget-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .coach-widget h3 {
+            color: var(--navy-blue);
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .coach-message {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--navy-blue);
+        }
+
+        .coach-message p {
+            margin: 0;
+            color: var(--dark-navy);
+            font-size: 1.05rem;
+            line-height: 1.6;
+        }
+
+        .btn-chat-coach {
+            background: var(--navy-blue);
+            color: var(--gold);
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .btn-chat-coach:hover {
+            background: var(--dark-navy);
+            color: var(--white);
+            transform: translateY(-2px);
+        }
+
+        /* Activity Cards */
+        .card-section {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+        }
+
+        .card-section h4 {
+            color: var(--navy-blue);
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--light-gold);
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s;
+        }
+
+        .activity-item:hover {
+            background: var(--light-gold);
+        }
+
+        .activity-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold), var(--orange));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+        }
+
+        .activity-icon i {
+            color: var(--navy-blue);
+            font-size: 1.2rem;
+        }
+
+        .activity-details {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-weight: 600;
+            color: var(--navy-blue);
+            margin-bottom: 0.3rem;
+        }
+
+        .activity-time {
+            font-size: 0.85rem;
+            color: var(--dark-navy);
+            opacity: 0.6;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .quick-action-btn {
+            background: linear-gradient(145deg, var(--white), var(--light-gold));
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 2px solid transparent;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            position: relative;
+        }
+
+        .quick-action-btn:hover {
+            border-color: var(--gold);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .quick-action-btn i {
+            font-size: 2.5rem;
+            color: var(--orange);
+            margin-bottom: 0.8rem;
+        }
+
+        .quick-action-btn span {
+            display: block;
+            color: var(--navy-blue);
+            font-weight: 600;
+        }
+
+        /* Tier Badge */
+        .tier-badge {
+            background: linear-gradient(135deg, var(--gold), var(--orange));
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            color: var(--navy-blue);
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: inline-block;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold), var(--orange));
+            border: none;
+            color: var(--navy-blue);
+            font-size: 1.5rem;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            z-index: 1001;
+        }
+
+        /* Star of the Show - Coach Manlaw Special Styling */
+        .nav-item.star-coach {
+            background: linear-gradient(90deg, rgba(255, 107, 53, 0.15), rgba(255, 215, 0, 0.15), rgba(255, 107, 53, 0.15));
+            border-left: 5px solid var(--orange) !important;
+            animation: glow-pulse 2s ease-in-out infinite;
+            margin: 0.5rem 0;
+            position: relative;
+        }
+
+        .nav-item.star-coach:hover {
+            background: linear-gradient(90deg, rgba(255, 107, 53, 0.25), rgba(255, 215, 0, 0.25), rgba(255, 107, 53, 0.25));
+            transform: translateX(5px);
+        }
+
+        @keyframes glow-pulse {
+            0%, 100% {
+                box-shadow: 0 0 10px rgba(255, 107, 53, 0.3), 0 0 20px rgba(255, 215, 0, 0.2);
+            }
+            50% {
+                box-shadow: 0 0 20px rgba(255, 107, 53, 0.6), 0 0 30px rgba(255, 215, 0, 0.4);
+            }
+        }
+
+        .star-coach .meet-splash {
+            font-size: 0.65rem;
+            color: var(--orange);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 0.1rem;
+            animation: sparkle 1.5s ease-in-out infinite;
+        }
+
+        @keyframes sparkle {
+            0%, 100% {
+                opacity: 0.7;
+                text-shadow: 0 0 5px rgba(255, 107, 53, 0.5);
+            }
+            50% {
+                opacity: 1;
+                text-shadow: 0 0 10px rgba(255, 107, 53, 0.8), 0 0 15px rgba(255, 215, 0, 0.6);
+            }
+        }
+
+        .star-coach .coach-name {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--gold);
+            text-shadow:
+                0 0 10px rgba(255, 215, 0, 0.8),
+                0 0 20px rgba(255, 107, 53, 0.6),
+                0 0 30px rgba(255, 215, 0, 0.4);
+            animation: text-glow 2s ease-in-out infinite;
+        }
+
+        @keyframes text-glow {
+            0%, 100% {
+                text-shadow:
+                    0 0 10px rgba(255, 215, 0, 0.8),
+                    0 0 20px rgba(255, 107, 53, 0.6);
+            }
+            50% {
+                text-shadow:
+                    0 0 15px rgba(255, 215, 0, 1),
+                    0 0 25px rgba(255, 107, 53, 0.8),
+                    0 0 35px rgba(255, 215, 0, 0.6);
+            }
+        }
+
+        .star-coach i {
+            color: var(--orange);
+            animation: icon-bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes icon-bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-3px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-brand" onclick="openAdminDoor()" title="Click 3 times for Admin Access">
+            <h3><i class="fas fa-gem"></i> Z2B LEGACY</h3>
+            <p
+                style="font-size: 0.7rem; margin-top: 0.5rem; color: var(--gold); font-weight: 600; letter-spacing: 0.5px;">
+                Transforming Employees to Entrepreneurs</p>
+        </div>
+
+        <div class="nav-item active">
+            <i class="fas fa-home"></i>
+            <span>Dashboard</span>
+            <div class="tooltip-text">🏠 Your command center for legacy building. View your stats, earnings, team
+                progress, and get personalized coaching insights all in one place!</div>
+        </div>
+        <div class="nav-item" onclick="window.location.href='tiers.html'">
+            <i class="fas fa-layer-group"></i>
+            <span>Membership Tiers</span>
+            <div class="tooltip-text">⬆️ Select the membership level that matches your ambition. Higher tiers unlock
+                more AI apps, deeper TSC generations, TLI access, and increased earning potential!</div>
+        </div>
+        <div class="nav-item" onclick="window.location.href='income.html'">
+            <i class="fas fa-chart-line"></i>
+            <span>Income Streams</span>
+            <div class="tooltip-text">💰 Discover multiple ways to build your billion-dollar legacy! Earn through ISP
+                (Individual Sales Profit), TSC (Team Sales Commission), TLI (Team Leadership Incentive), and marketplace
+                sales.</div>
+        </div>
+        <div class="nav-item" onclick="window.location.href='zyro.html'">
+            <i class="fas fa-gamepad"></i>
+            <span>ZYRO</span>
+            <div class="tooltip-text">🎮 Gamification Hub - Engage and compete with team members through challenges,
+                roulette, and bingo games. Earn rewards while building your legacy in a fun way!</div>
+        </div>
+        <div class="nav-item star-coach" onclick="window.location.href='coach-manlaw.html'">
+            <i class="fas fa-robot"></i>
+            <span>
+                <span class="meet-splash">Meet</span>
+                <span class="coach-name">Coach Manlaw</span>
+            </span>
+            <div class="tooltip-text">🤖 Your AI billionaire coach available 24/7 to guide your success. Get
+                personalized strategies, mindset coaching, and master the 4 Legs of a Billionaire Table: MINDSET MYSTERY, MONEY MOVES, LEGACY MISSION, and MOMENTUM MOVEMENT with expert AI guidance!
+            </div>
+        </div>
+        <div class="nav-item" onclick="window.location.href='glowie.html'">
+            <i class="fas fa-mobile-alt"></i>
+            <span>Glowie</span>
+            <div class="tooltip-text">📱 Your Instant App Builder - Create professional mobile and web apps in minutes
+                without coding! Build custom solutions for your business and sell them in the marketplace.</div>
+        </div>
+        <div class="nav-item" onclick="window.location.href='vidzie.html'">
+            <i class="fas fa-video"></i>
+            <span>VIDZIE</span>
+            <div class="tooltip-text">🎥 AI Video Generation - Create professional videos powered by AI. Generate talking head videos, presentations, and marketing content powered by AI!</div>
+        </div>
+        <div class="nav-item" onclick="window.location.href='marketplace.html'">
+            <i class="fas fa-store"></i>
+            <span>Marketplace</span>
+            <div class="tooltip-text">🛒 List and buy digital products, physical products, and services. Earn additional
+                income by selling your own creations or find tools to accelerate your legacy building journey!</div>
+        </div>
+        <div class="nav-item" onclick="window.location.href='zyra.html'">
+            <i class="fas fa-headset"></i>
+            <span>Zyra</span>
+            <div class="tooltip-text">📞 Your Automated AI Sales Agent - Close deals while you sleep! ZYRA handles
+                customer conversations, answers questions, and converts prospects into paying customers 24/7.</div>
+        </div>
+        <div class="nav-item" onclick="window.location.href='benown.html'">
+            <i class="fas fa-magic"></i>
+            <span>Benown</span>
+            <div class="tooltip-text">✨ Your Automated Content Creator - Generate engaging social media posts, blog
+                articles, emails, and marketing content effortlessly using AI. Never run out of content ideas again!
+            </div>
+        </div>
+        <div class="nav-item" onclick="window.location.href='zynth.html'">
+            <i class="fas fa-microphone-alt"></i>
+            <span>ZYNTH</span>
+            <div class="tooltip-text">🎤 AI Voice Cloning - Clone your voice with advanced AI! Record once and generate unlimited speech in your own voice. Perfect for content creators, coaches, and entrepreneurs!</div>
+        </div>
+        <div class="nav-item" onclick="window.location.href='zynect.html'">
+            <i class="fas fa-network-wired"></i>
+            <span>ZYNECT</span>
+            <div class="tooltip-text">📞 Complete CRM - All-in-one customer relationship management with SMS, WhatsApp & Email!
+                Manage contacts, automate campaigns, and communicate across multiple channels with powerful analytics.</div>
+        </div>
+        <div class="nav-item" onclick="window.location.href='ai-refuel.html'" style="background: rgba(255, 215, 0, 0.15); border-left: 4px solid var(--orange) !important;">
+            <i class="fas fa-gas-pump"></i>
+            <span>⚡ AI Fuel Top-Up</span>
+            <div class="tooltip-text">🔋 Power Your AI Apps - Out of AI Fuel? Top up instantly with 3-month validity!
+                Choose from 100, 500, or 1000 AI Fuel packages. Your upline earns commissions when you top up!</div>
+        </div>
+        <div class="nav-item" onclick="window.location.href='team.html'">
+            <i class="fas fa-users"></i>
+            <span>My Team</span>
+            <div class="tooltip-text">👥 Together Everyone Achieves More! View your team structure, track member
+                progress, celebrate achievements, and grow your organization. Your team's success is your success!</div>
+        </div>
+        <div class="nav-item" onclick="window.location.href='achievements.html'">
+            <i class="fas fa-trophy"></i>
+            <span>Achievements</span>
+            <div class="tooltip-text">🏆 Job Well Done, You Mean Business! Track your milestones, earn badges, unlock
+                rewards, and celebrate your journey from employee to entrepreneur. Every achievement counts!</div>
+        </div>
+        <div class="nav-item" onclick="window.location.href='compensation-opportunities.html'">
+            <i class="fas fa-hand-holding-usd"></i>
+            <span>Compensation Opportunities</span>
+            <div class="tooltip-text">💎 Exclusive targets and rewards from Z2B Leadership! View active compensation opportunities, check your eligibility, and work towards earning exclusive bonuses by achieving specific goals!</div>
+        </div>
+        <div class="nav-item" onclick="window.location.href='settings.html'">
+            <i class="fas fa-cog"></i>
+            <span>Settings</span>
+            <div class="tooltip-text">⚙️ Customize your account and preferences. Update your profile, payment methods,
+                notification settings, and personalize your Z2B experience to match your workflow!</div>
+        </div>
+        <div class="nav-item" onclick="handleLogout()">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+            <div class="tooltip-text">👋 Sign out securely from your account. Your progress is always saved, and you can
+                return anytime to continue building your billion-dollar legacy!</div>
+        </div>
+    </div>
+
+    <!-- Secret Admin Door Modal -->
+    <div class="admin-door-modal" id="adminDoorModal">
+        <div class="admin-door-content">
+            <h3><i class="fas fa-shield-alt"></i> Admin Access</h3>
+            <p style="color: var(--white); margin-bottom: 1.5rem;">Enter admin credentials to continue</p>
+            <input type="text" id="adminUsername" placeholder="Username" autocomplete="off">
+            <input type="password" id="adminPassword" placeholder="Password" autocomplete="off">
+            <div class="admin-door-btns">
+                <button class="btn-admin-cancel" onclick="closeAdminDoor()">Cancel</button>
+                <button class="btn-admin-enter" onclick="verifyAdmin()">Enter</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+    <!-- Mobile Menu Button -->
+    <button class="mobile-menu-btn" id="mobileMenuBtn" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div class="welcome-text">
+                <h2>Welcome back, Legacy Builder! 👋</h2>
+                <p>Let's continue building your billion-dollar empire</p>
+            </div>
+            <div class="user-profile">
+                <div>
+                    <div style="text-align: right;">
+                        <strong style="color: var(--navy-blue);" id="userName">Mokoro Manana</strong>
+                        <div class="tier-badge" id="userTierBadge">Loading...</div>
+                    </div>
+                </div>
+                <div class="profile-avatar" id="userAvatar">MM</div>
+            </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="feature-tooltip">
+                    💰 Your total commission earnings this month from ISP (Individual Sales Profit), TSC (Team Sales
+                    Commission), and other income streams. Track your progress toward your financial goals!
+                </div>
+                <div class="stat-icon">
+                    <i class="fas fa-dollar-sign"></i>
+                </div>
+                <div class="stat-value">R12,450</div>
+                <div class="stat-label">Total Earnings (This Month)</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="feature-tooltip">
+                    👥 The total number of builders in your team across all generations. Grow your team to increase your
+                    earnings and unlock deeper TSC and TLI levels!
+                </div>
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-value">47</div>
+                <div class="stat-label">Team Members</div>
+            </div>
+
+            <div class="stat-card" style="background: linear-gradient(145deg, #FFF4CC, #FFE5A0); border-left-color: var(--orange); cursor: pointer;" onclick="window.location.href='ai-refuel.html'">
+                <div class="feature-tooltip">
+                    🔥 AI Fuel powers your AI apps like Coach Manlaw, ZYRA, BENOWN, and GLOWIE. Each AI interaction
+                    consumes fuel. Click to top up instantly with 3-month validity packages!
+                </div>
+                <div class="stat-icon" style="background: linear-gradient(135deg, var(--orange), var(--gold));">
+                    <i class="fas fa-fire"></i>
+                </div>
+                <div class="stat-value" style="color: var(--orange);">600</div>
+                <div class="stat-label">AI Fuel Remaining</div>
+                <button onclick="event.stopPropagation(); window.location.href='ai-refuel.html'" style="width: 100%; padding: 0.6rem; margin-top: 0.8rem; background: linear-gradient(135deg, var(--gold), var(--orange)); color: var(--navy-blue); border: none; border-radius: 50px; font-weight: bold; cursor: pointer; transition: all 0.3s; font-size: 0.9rem;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 15px rgba(255, 107, 53, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                    <i class="fas fa-gas-pump"></i> Top Up Now
+                </button>
+            </div>
+
+            <div class="stat-card">
+                <div class="feature-tooltip">
+                    📊 The deepest generation level in your team structure. Higher tiers unlock more TSC generations,
+                    allowing you to earn commissions from deeper levels in your organization!
+                </div>
+                <div class="stat-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="stat-value">Level 7</div>
+                <div class="stat-label">Current Depth</div>
+            </div>
+        </div>
+
+        <!-- My Referral Link Section -->
+        <div class="card-section" style="background: linear-gradient(135deg, var(--gold), var(--orange)); border: 3px solid var(--navy-blue); padding: 2rem; margin-bottom: 2rem;">
+            <h4 style="color: var(--navy-blue); font-weight: bold; font-size: 1.5rem; margin-bottom: 1.5rem; text-align: center;">
+                <i class="fas fa-share-alt"></i> My Referral Link
+            </h4>
+            <div style="background: rgba(255, 255, 255, 0.95); border-radius: 15px; padding: 2rem;">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label style="color: var(--navy-blue); font-weight: 600; margin-bottom: 0.5rem; display: block;">
+                            <i class="fas fa-id-card"></i> Your Membership Number
+                        </label>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <input type="text" id="membershipNumber" readonly value="Loading..." style="flex: 1; padding: 0.8rem; border: 2px solid var(--gold); border-radius: 10px; font-size: 1.1rem; font-weight: bold; color: var(--navy-blue); background: var(--light-bg);">
+                            <button onclick="copyMembershipNumber()" style="padding: 0.8rem 1.5rem; background: var(--navy-blue); color: var(--gold); border: none; border-radius: 10px; font-weight: bold; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.background='var(--dark-navy)'" onmouseout="this.style.background='var(--navy-blue)'">
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label style="color: var(--navy-blue); font-weight: 600; margin-bottom: 0.5rem; display: block;">
+                            <i class="fas fa-link"></i> Your Referral Link
+                        </label>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <input type="text" id="referralLink" readonly value="Loading..." style="flex: 1; padding: 0.8rem; border: 2px solid var(--gold); border-radius: 10px; font-size: 1rem; color: var(--navy-blue); background: var(--light-bg);">
+                            <button onclick="copyReferralLink()" style="padding: 0.8rem 1.5rem; background: var(--navy-blue); color: var(--gold); border: none; border-radius: 10px; font-weight: bold; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.background='var(--dark-navy)'" onmouseout="this.style.background='var(--navy-blue)'">
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 1.5rem;">
+                    <p style="color: var(--dark-navy); margin-bottom: 1rem;">
+                        <i class="fas fa-users"></i> Share your link and start building your team!
+                    </p>
+                    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                        <button onclick="shareViaWhatsApp()" style="padding: 0.8rem 1.5rem; background: #25D366; color: white; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(37, 211, 102, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(37, 211, 102, 0.3)'">
+                            <i class="fab fa-whatsapp"></i> Share on WhatsApp
+                        </button>
+                        <button onclick="shareViaEmail()" style="padding: 0.8rem 1.5rem; background: var(--navy-blue); color: var(--gold); border: none; border-radius: 50px; font-weight: bold; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 15px rgba(10, 38, 71, 0.3);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(10, 38, 71, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(10, 38, 71, 0.3)'">
+                            <i class="fas fa-envelope"></i> Share via Email
+                        </button>
+                        <button onclick="window.location.href='team.html'" style="padding: 0.8rem 1.5rem; background: linear-gradient(135deg, var(--gold), var(--orange)); color: var(--navy-blue); border: none; border-radius: 50px; font-weight: bold; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(255, 215, 0, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(255, 215, 0, 0.3)'">
+                            <i class="fas fa-chart-line"></i> View My Team
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tier Upgrade Motivator (Dynamic based on current tier) -->
+        <div id="upgradeMotivator" class="upgrade-motivator">
+            <!-- This will be populated by JavaScript based on user's current tier -->
+        </div>
+
+        <!-- Coach Manlaw Widget -->
+        <div class="coach-widget">
+            <div class="coach-widget-content">
+                <h3><i class="fas fa-robot"></i> Daily Message from Coach Manlaw</h3>
+                <div class="coach-message">
+                    <p>🎯 <strong>Good morning, Champion!</strong> Today is Day 47 of your legacy journey. I've been
+                        analyzing your progress, and you're crushing it! Your team grew by 3 members this week. Now
+                        let's focus on mastering the LEGACY MISSION of your 4 Legs of a Billionaire Table. Ready to level up your social media
+                        game? Let's dive in!</p>
+                </div>
+                <button class="btn btn-chat-coach" onclick="window.location.href='coach-manlaw.html'">
+                    <i class="fas fa-comments"></i> Chat with Coach Manlaw
+                </button>
+            </div>
+        </div>
+
+        <!-- Apps We've Built Showcase -->
+        <div class="card-section" style="background: linear-gradient(135deg, var(--navy-blue), var(--dark-navy)); border: 3px solid var(--gold); padding: 2.5rem;">
+            <h4 style="color: var(--gold); font-size: 1.8rem; text-align: center; margin-bottom: 0.5rem;">
+                <i class="fas fa-rocket"></i> Z2B AI-Powered Apps Ecosystem
+            </h4>
+            <p style="color: var(--white); text-align: center; margin-bottom: 2rem; font-size: 1.05rem;">
+                Transform your business with our suite of cutting-edge AI applications
+            </p>
+
+            <div class="row g-4">
+                <!-- Coach ManLaw -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="app-showcase-card" style="background: linear-gradient(145deg, var(--white), var(--light-gold)); border-radius: 20px; padding: 2rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); transition: all 0.3s; border: 2px solid transparent; height: 100%;" onmouseover="this.style.transform='translateY(-10px)'; this.style.borderColor='var(--gold)'; this.style.boxShadow='0 15px 40px rgba(255, 215, 0, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='transparent'; this.style.boxShadow='0 10px 30px rgba(0, 0, 0, 0.2)';">
+                        <div style="text-align: center; margin-bottom: 1.5rem;">
+                            <div style="width: 80px; height: 80px; margin: 0 auto 1rem; background: linear-gradient(135deg, var(--orange), var(--gold)); border-radius: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);">
+                                <i class="fas fa-robot" style="font-size: 2.5rem; color: var(--navy-blue);"></i>
+                            </div>
+                            <h5 style="color: var(--navy-blue); font-weight: bold; font-size: 1.3rem; margin-bottom: 0.5rem;">Coach ManLaw</h5>
+                            <span style="background: linear-gradient(135deg, #4ECDC4, #44A08D); color: white; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">LIVE</span>
+                        </div>
+                        <p style="color: var(--dark-navy); line-height: 1.7; margin-bottom: 1.5rem; min-height: 80px;">
+                            Your AI Billionaire Coach available 24/7. Get personalized guidance, master the 4 Legs of a Billionaire Table: MINDSET MYSTERY, MONEY MOVES, LEGACY MISSION, and MOMENTUM MOVEMENT with 90-day curriculum.
+                        </p>
+                        <ul style="color: var(--dark-navy); font-size: 0.9rem; margin-bottom: 1.5rem; padding-left: 1.2rem; min-height: 100px;">
+                            <li>✅ 90-Day Billionaire Curriculum</li>
+                            <li>✅ Real-Time AI Coaching Chat</li>
+                            <li>✅ BTSS Assessment System</li>
+                            <li>✅ Scripture-Based Guidance</li>
+                        </ul>
+                        <button onclick="window.location.href='coach-manlaw.html'" style="width: 100%; padding: 0.8rem; background: linear-gradient(135deg, var(--navy-blue), var(--dark-navy)); color: var(--gold); border: none; border-radius: 50px; font-weight: bold; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(10, 38, 71, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                            <i class="fas fa-play-circle"></i> Launch Coach
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Glowie -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="app-showcase-card" style="background: linear-gradient(145deg, var(--white), var(--light-gold)); border-radius: 20px; padding: 2rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); transition: all 0.3s; border: 2px solid transparent; height: 100%;" onmouseover="this.style.transform='translateY(-10px)'; this.style.borderColor='var(--gold)'; this.style.boxShadow='0 15px 40px rgba(255, 215, 0, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='transparent'; this.style.boxShadow='0 10px 30px rgba(0, 0, 0, 0.2)';">
+                        <div style="text-align: center; margin-bottom: 1.5rem;">
+                            <div style="width: 80px; height: 80px; margin: 0 auto 1rem; background: linear-gradient(135deg, #9B59B6, #8E44AD); border-radius: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(155, 89, 182, 0.4);">
+                                <i class="fas fa-mobile-alt" style="font-size: 2.5rem; color: white;"></i>
+                            </div>
+                            <h5 style="color: var(--navy-blue); font-weight: bold; font-size: 1.3rem; margin-bottom: 0.5rem;">Glowie</h5>
+                            <span style="background: linear-gradient(135deg, #4ECDC4, #44A08D); color: white; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">LIVE</span>
+                        </div>
+                        <p style="color: var(--dark-navy); line-height: 1.7; margin-bottom: 1.5rem; min-height: 80px;">
+                            No-Code AI App Builder. Create professional mobile and web applications in minutes without coding. Perfect for entrepreneurs and creators.
+                        </p>
+                        <ul style="color: var(--dark-navy); font-size: 0.9rem; margin-bottom: 1.5rem; padding-left: 1.2rem; min-height: 100px;">
+                            <li>✅ Claude-Powered AI Generation</li>
+                            <li>✅ Instant App Deployment</li>
+                            <li>✅ No Coding Required</li>
+                            <li>✅ Marketplace Integration</li>
+                        </ul>
+                        <button onclick="window.location.href='glowie.html'" style="width: 100%; padding: 0.8rem; background: linear-gradient(135deg, #9B59B6, #8E44AD); color: white; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(155, 89, 182, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                            <i class="fas fa-play-circle"></i> Launch Glowie
+                        </button>
+                    </div>
+                </div>
+
+                <!-- VIDZIE -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="app-showcase-card" style="background: linear-gradient(145deg, var(--white), var(--light-gold)); border-radius: 20px; padding: 2rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); transition: all 0.3s; border: 2px solid transparent; height: 100%;" onmouseover="this.style.transform='translateY(-10px)'; this.style.borderColor='var(--gold)'; this.style.boxShadow='0 15px 40px rgba(255, 215, 0, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='transparent'; this.style.boxShadow='0 10px 30px rgba(0, 0, 0, 0.2)';">
+                        <div style="text-align: center; margin-bottom: 1.5rem;">
+                            <div style="width: 80px; height: 80px; margin: 0 auto 1rem; background: linear-gradient(135deg, #E74C3C, #C0392B); border-radius: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);">
+                                <i class="fas fa-video" style="font-size: 2.5rem; color: white;"></i>
+                            </div>
+                            <h5 style="color: var(--navy-blue); font-weight: bold; font-size: 1.3rem; margin-bottom: 0.5rem;">VIDZIE</h5>
+                            <span style="background: linear-gradient(135deg, #4ECDC4, #44A08D); color: white; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">LIVE</span>
+                        </div>
+                        <p style="color: var(--dark-navy); line-height: 1.7; margin-bottom: 1.5rem; min-height: 80px;">
+                            AI Video Generation Platform. Create stunning talking head videos, presentations, and marketing content with professional AI avatars.
+                        </p>
+                        <ul style="color: var(--dark-navy); font-size: 0.9rem; margin-bottom: 1.5rem; padding-left: 1.2rem; min-height: 100px;">
+                            <li>✅ Advanced AI Video Technology</li>
+                            <li>✅ Talking Head Avatars</li>
+                            <li>✅ Text-to-Video Generation</li>
+                            <li>✅ Professional Presentations</li>
+                        </ul>
+                        <button onclick="window.location.href='vidzie.html'" style="width: 100%; padding: 0.8rem; background: linear-gradient(135deg, #E74C3C, #C0392B); color: white; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(231, 76, 60, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                            <i class="fas fa-play-circle"></i> Launch VIDZIE
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ZYRA -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="app-showcase-card" style="background: linear-gradient(145deg, var(--white), var(--light-gold)); border-radius: 20px; padding: 2rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); transition: all 0.3s; border: 2px solid transparent; height: 100%;" onmouseover="this.style.transform='translateY(-10px)'; this.style.borderColor='var(--gold)'; this.style.boxShadow='0 15px 40px rgba(255, 215, 0, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='transparent'; this.style.boxShadow='0 10px 30px rgba(0, 0, 0, 0.2)';">
+                        <div style="text-align: center; margin-bottom: 1.5rem;">
+                            <div style="width: 80px; height: 80px; margin: 0 auto 1rem; background: linear-gradient(135deg, #3498DB, #2980B9); border-radius: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);">
+                                <i class="fas fa-headset" style="font-size: 2.5rem; color: white;"></i>
+                            </div>
+                            <h5 style="color: var(--navy-blue); font-weight: bold; font-size: 1.3rem; margin-bottom: 0.5rem;">ZYRA</h5>
+                            <span style="background: linear-gradient(135deg, #F39C12, #E67E22); color: white; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">COMING SOON</span>
+                        </div>
+                        <p style="color: var(--dark-navy); line-height: 1.7; margin-bottom: 1.5rem; min-height: 80px;">
+                            AI Sales Agent that never sleeps. Automate customer conversations, answer questions, and convert prospects into customers 24/7.
+                        </p>
+                        <ul style="color: var(--dark-navy); font-size: 0.9rem; margin-bottom: 1.5rem; padding-left: 1.2rem; min-height: 100px;">
+                            <li>🔄 Automated Sales Conversations</li>
+                            <li>🔄 24/7 Customer Support</li>
+                            <li>🔄 Lead Qualification</li>
+                            <li>🔄 CRM Integration</li>
+                        </ul>
+                        <button onclick="window.location.href='zyra.html'" style="width: 100%; padding: 0.8rem; background: linear-gradient(135deg, #3498DB, #2980B9); color: white; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(52, 152, 219, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                            <i class="fas fa-info-circle"></i> Learn More
+                        </button>
+                    </div>
+                </div>
+
+                <!-- BENOWN -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="app-showcase-card" style="background: linear-gradient(145deg, var(--white), var(--light-gold)); border-radius: 20px; padding: 2rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); transition: all 0.3s; border: 2px solid transparent; height: 100%;" onmouseover="this.style.transform='translateY(-10px)'; this.style.borderColor='var(--gold)'; this.style.boxShadow='0 15px 40px rgba(255, 215, 0, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='transparent'; this.style.boxShadow='0 10px 30px rgba(0, 0, 0, 0.2)';">
+                        <div style="text-align: center; margin-bottom: 1.5rem;">
+                            <div style="width: 80px; height: 80px; margin: 0 auto 1rem; background: linear-gradient(135deg, #16A085, #138D75); border-radius: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(22, 160, 133, 0.4);">
+                                <i class="fas fa-magic" style="font-size: 2.5rem; color: white;"></i>
+                            </div>
+                            <h5 style="color: var(--navy-blue); font-weight: bold; font-size: 1.3rem; margin-bottom: 0.5rem;">BENOWN</h5>
+                            <span style="background: linear-gradient(135deg, #F39C12, #E67E22); color: white; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">COMING SOON</span>
+                        </div>
+                        <p style="color: var(--dark-navy); line-height: 1.7; margin-bottom: 1.5rem; min-height: 80px;">
+                            AI Content Creator. Generate engaging social media posts, blog articles, emails, and marketing content effortlessly using advanced AI.
+                        </p>
+                        <ul style="color: var(--dark-navy); font-size: 0.9rem; margin-bottom: 1.5rem; padding-left: 1.2rem; min-height: 100px;">
+                            <li>🔄 Social Media Posts</li>
+                            <li>🔄 Blog Articles & SEO</li>
+                            <li>🔄 Email Campaigns</li>
+                            <li>🔄 Marketing Copy</li>
+                        </ul>
+                        <button onclick="window.location.href='benown.html'" style="width: 100%; padding: 0.8rem; background: linear-gradient(135deg, #16A085, #138D75); color: white; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(22, 160, 133, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                            <i class="fas fa-info-circle"></i> Learn More
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ZYNTH -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="app-showcase-card" style="background: linear-gradient(145deg, var(--white), var(--light-gold)); border-radius: 20px; padding: 2rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); transition: all 0.3s; border: 2px solid transparent; height: 100%;" onmouseover="this.style.transform='translateY(-10px)'; this.style.borderColor='var(--gold)'; this.style.boxShadow='0 15px 40px rgba(255, 215, 0, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='transparent'; this.style.boxShadow='0 10px 30px rgba(0, 0, 0, 0.2)';">
+                        <div style="text-align: center; margin-bottom: 1.5rem;">
+                            <div style="width: 80px; height: 80px; margin: 0 auto 1rem; background: linear-gradient(135deg, #B45FFF, #00D9FF); border-radius: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(180, 95, 255, 0.4);">
+                                <i class="fas fa-microphone-alt" style="font-size: 2.5rem; color: white;"></i>
+                            </div>
+                            <h5 style="color: var(--navy-blue); font-weight: bold; font-size: 1.3rem; margin-bottom: 0.5rem;">ZYNTH</h5>
+                            <span style="background: linear-gradient(135deg, #4ECDC4, #44A08D); color: white; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">LIVE</span>
+                        </div>
+                        <p style="color: var(--dark-navy); line-height: 1.7; margin-bottom: 1.5rem; min-height: 80px;">
+                            AI Voice Cloning. Clone your voice with AI! Record once and generate unlimited speech in your own voice. Perfect for content creators and coaches.
+                        </p>
+                        <ul style="color: var(--dark-navy); font-size: 0.9rem; margin-bottom: 1.5rem; padding-left: 1.2rem; min-height: 100px;">
+                            <li>✅ Voice Recording</li>
+                            <li>✅ AI Voice Profile</li>
+                            <li>✅ Text-to-Speech</li>
+                            <li>✅ Export Audio</li>
+                        </ul>
+                        <button onclick="window.location.href='zynth.html'" style="width: 100%; padding: 0.8rem; background: linear-gradient(135deg, #B45FFF, #00D9FF); color: white; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(180, 95, 255, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                            <i class="fas fa-play-circle"></i> Launch ZYNTH
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ZYRO -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="app-showcase-card" style="background: linear-gradient(145deg, var(--white), var(--light-gold)); border-radius: 20px; padding: 2rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); transition: all 0.3s; border: 2px solid transparent; height: 100%;" onmouseover="this.style.transform='translateY(-10px)'; this.style.borderColor='var(--gold)'; this.style.boxShadow='0 15px 40px rgba(255, 215, 0, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='transparent'; this.style.boxShadow='0 10px 30px rgba(0, 0, 0, 0.2)';">
+                        <div style="text-align: center; margin-bottom: 1.5rem;">
+                            <div style="width: 80px; height: 80px; margin: 0 auto 1rem; background: linear-gradient(135deg, var(--orange), var(--gold)); border-radius: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);">
+                                <i class="fas fa-gamepad" style="font-size: 2.5rem; color: var(--navy-blue);"></i>
+                            </div>
+                            <h5 style="color: var(--navy-blue); font-weight: bold; font-size: 1.3rem; margin-bottom: 0.5rem;">ZYRO</h5>
+                            <span style="background: linear-gradient(135deg, #4ECDC4, #44A08D); color: white; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">LIVE</span>
+                        </div>
+                        <p style="color: var(--dark-navy); line-height: 1.7; margin-bottom: 1.5rem; min-height: 80px;">
+                            Gamification Hub. Engage and compete with team members through challenges, roulette, and bingo games. Earn rewards while building your legacy.
+                        </p>
+                        <ul style="color: var(--dark-navy); font-size: 0.9rem; margin-bottom: 1.5rem; padding-left: 1.2rem; min-height: 100px;">
+                            <li>✅ Challenge Games</li>
+                            <li>✅ Roulette Rewards</li>
+                            <li>✅ Bingo Events</li>
+                            <li>✅ Team Leaderboards</li>
+                        </ul>
+                        <button onclick="window.location.href='zyro.html'" style="width: 100%; padding: 0.8rem; background: linear-gradient(135deg, var(--orange), var(--gold)); color: var(--navy-blue); border: none; border-radius: 50px; font-weight: bold; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(255, 107, 53, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                            <i class="fas fa-play-circle"></i> Launch ZYRO
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ZYNECT -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="app-showcase-card" style="background: linear-gradient(145deg, var(--white), var(--light-gold)); border-radius: 20px; padding: 2rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); transition: all 0.3s; border: 2px solid transparent; height: 100%;" onmouseover="this.style.transform='translateY(-10px)'; this.style.borderColor='var(--gold)'; this.style.boxShadow='0 15px 40px rgba(255, 215, 0, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='transparent'; this.style.boxShadow='0 10px 30px rgba(0, 0, 0, 0.2)';">
+                        <div style="text-align: center; margin-bottom: 1.5rem;">
+                            <div style="width: 80px; height: 80px; margin: 0 auto 1rem; background: linear-gradient(135deg, #00BCD4, #009688); border-radius: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(0, 188, 212, 0.4);">
+                                <i class="fas fa-network-wired" style="font-size: 2.5rem; color: white;"></i>
+                            </div>
+                            <h5 style="color: var(--navy-blue); font-weight: bold; font-size: 1.3rem; margin-bottom: 0.5rem;">ZYNECT</h5>
+                            <span style="background: linear-gradient(135deg, #4ECDC4, #44A08D); color: white; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">LIVE</span>
+                        </div>
+                        <p style="color: var(--dark-navy); line-height: 1.7; margin-bottom: 1.5rem; min-height: 80px;">
+                            Complete CRM with SMS, WhatsApp & Email. Manage contacts, automate campaigns, and communicate across multiple channels with powerful analytics.
+                        </p>
+                        <ul style="color: var(--dark-navy); font-size: 0.9rem; margin-bottom: 1.5rem; padding-left: 1.2rem; min-height: 100px;">
+                            <li>✅ Contact Management</li>
+                            <li>✅ SMS & WhatsApp Campaigns</li>
+                            <li>✅ Email Marketing</li>
+                            <li>✅ Analytics & Reporting</li>
+                        </ul>
+                        <button onclick="window.location.href='zynect.html'" style="width: 100%; padding: 0.8rem; background: linear-gradient(135deg, #00BCD4, #009688); color: white; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(0, 188, 212, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                            <i class="fas fa-play-circle"></i> Launch ZYNECT
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ZYNTH -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="app-showcase-card" style="background: linear-gradient(145deg, var(--white), var(--light-gold)); border-radius: 20px; padding: 2rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); transition: all 0.3s; border: 2px solid transparent; height: 100%;" onmouseover="this.style.transform='translateY(-10px)'; this.style.borderColor='var(--gold)'; this.style.boxShadow='0 15px 40px rgba(255, 215, 0, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='transparent'; this.style.boxShadow='0 10px 30px rgba(0, 0, 0, 0.2)';">
+                        <div style="text-align: center; margin-bottom: 1.5rem;">
+                            <div style="width: 80px; height: 80px; margin: 0 auto 1rem; background: linear-gradient(135deg, #B45FFF, #9347E0); border-radius: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(180, 95, 255, 0.4);">
+                                <i class="fas fa-microphone-alt" style="font-size: 2.5rem; color: white;"></i>
+                            </div>
+                            <h5 style="color: var(--navy-blue); font-weight: bold; font-size: 1.3rem; margin-bottom: 0.5rem;">ZYNTH</h5>
+                            <span style="background: linear-gradient(135deg, #4ECDC4, #44A08D); color: white; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">🎤 NEW</span>
+                        </div>
+                        <p style="color: var(--dark-navy); line-height: 1.7; margin-bottom: 1.5rem; min-height: 80px;">
+                            AI Voice Cloning Platform. Clone your voice with a single recording and generate unlimited speech in your own voice. Perfect for content creators, coaches, and entrepreneurs.
+                        </p>
+                        <ul style="color: var(--dark-navy); font-size: 0.9rem; margin-bottom: 1.5rem; padding-left: 1.2rem; min-height: 100px;">
+                            <li>✅ Voice Recording & Upload</li>
+                            <li>✅ AI Voice Cloning</li>
+                            <li>✅ Text-to-Speech Generation</li>
+                            <li>✅ Export Audio Files</li>
+                        </ul>
+                        <button onclick="window.location.href='zynth.html'" style="width: 100%; padding: 0.8rem; background: linear-gradient(135deg, #B45FFF, #9347E0); color: white; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(180, 95, 255, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                            <i class="fas fa-play-circle"></i> Launch ZYNTH
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 2px solid rgba(255, 215, 0, 0.3);">
+                <p style="color: var(--light-gold); font-size: 1.1rem; margin-bottom: 1rem;">
+                    <i class="fas fa-store"></i> All apps available in the <strong>Z2B Marketplace</strong>
+                </p>
+                <button onclick="window.location.href='marketplace.html'" style="padding: 1rem 2.5rem; background: linear-gradient(135deg, var(--gold), var(--orange)); color: var(--navy-blue); border: none; border-radius: 50px; font-weight: bold; font-size: 1.1rem; cursor: pointer; transition: all 0.3s; box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);" onmouseover="this.style.transform='translateY(-3px) scale(1.05)'; this.style.boxShadow='0 10px 30px rgba(255, 215, 0, 0.6)';" onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='0 6px 20px rgba(255, 215, 0, 0.4)';">
+                    <i class="fas fa-shopping-cart"></i> Visit Marketplace
+                </button>
+            </div>
+        </div>
+
+        <!-- Two Column Layout -->
+        <div class="row">
+            <!-- Recent Activity -->
+            <div class="col-lg-6">
+                <div class="card-section">
+                    <h4><i class="fas fa-bell"></i> Recent Activity</h4>
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <div class="activity-details">
+                            <div class="activity-title">New Team Member Joined</div>
+                            <div class="activity-time">Sarah Johnson joined your team - 2 hours ago</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="activity-details">
+                            <div class="activity-title">Commission Earned</div>
+                            <div class="activity-time">R480 ISP Commission - 5 hours ago</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <div class="activity-details">
+                            <div class="activity-title">Training Completed</div>
+                            <div class="activity-time">Finished "Marketing Mastery 101" - Yesterday</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <div class="activity-details">
+                            <div class="activity-title">Achievement Unlocked</div>
+                            <div class="activity-time">"Team Builder" badge earned - 2 days ago</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="col-lg-6">
+                <div class="card-section">
+                    <h4><i class="fas fa-bolt"></i> Quick Actions</h4>
+                    <div class="quick-actions">
+                        <div class="quick-action-btn" onclick="window.location.href='coach-manlaw.html'">
+                            <div class="feature-tooltip">
+                                🤖 Get personalized guidance from Coach Manlaw, your AI billionaire coach. Available
+                                24/7 to answer questions, create strategies, and help you master the 4M Billionaire
+                                Table!
+                            </div>
+                            <i class="fas fa-robot"></i>
+                            <span>Chat with Coach</span>
+                        </div>
+                        <div class="quick-action-btn">
+                            <div class="feature-tooltip">
+                                📨 Generate your unique referral link and invite new builders to join your team. Earn
+                                ISP commissions instantly and build your legacy organization!
+                            </div>
+                            <i class="fas fa-user-plus"></i>
+                            <span>Invite Builder</span>
+                        </div>
+                        <div class="quick-action-btn" onclick="window.location.href='marketplace.html'">
+                            <div class="feature-tooltip">
+                                🛒 Explore the marketplace to buy courses, ebooks, templates, and tools created by
+                                fellow builders. Or list your own products to earn additional income!
+                            </div>
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>Browse Market</span>
+                        </div>
+                        <div class="quick-action-btn">
+                            <div class="feature-tooltip">
+                                🎥 Access our extensive library of training videos covering mindset, money, marketing,
+                                and management. Learn the skills you need to build a billion-dollar legacy!
+                            </div>
+                            <i class="fas fa-video"></i>
+                            <span>Watch Training</span>
+                        </div>
+                        <div class="quick-action-btn" onclick="window.location.href='coach-manlaw.html?mode=listen'">
+                            <div class="feature-tooltip">
+                                🎧 Listen to Coach Manlaw lessons hands-free! Perfect for multitasking - listen while
+                                driving, exercising, or working. Audio narration brings the 90-day curriculum to life!
+                            </div>
+                            <i class="fas fa-headphones"></i>
+                            <span>Listen to Lesson</span>
+                        </div>
+                        <div class="quick-action-btn" onclick="window.location.href='tiers.html'">
+                            <div class="feature-tooltip">
+                                ⬆️ Unlock more features, AI apps, deeper TSC generations, and TLI levels by upgrading
+                                your membership tier. Higher tiers = higher earnings potential!
+                            </div>
+                            <i class="fas fa-arrow-up"></i>
+                            <span>Upgrade Tier</span>
+                        </div>
+                        <div class="quick-action-btn" onclick="window.location.href='ai-refuel.html'" style="background: linear-gradient(145deg, #FFF4CC, #FFE5A0); border: 2px solid var(--gold);">
+                            <div class="feature-tooltip">
+                                ⚡ Out of AI Fuel? Top up instantly! Choose from 100, 500, or 1000 AI Fuel packages with 3-month validity.
+                                Your upline earns commissions when you top up - supporting each other's success!
+                            </div>
+                            <i class="fas fa-gas-pump" style="color: var(--orange);"></i>
+                            <span>AI Fuel Top-Up</span>
+                        </div>
+                        <div class="quick-action-btn">
+                            <div class="feature-tooltip">
+                                🔗 Share your referral link on social media, via email, or with prospects. Track your
+                                referrals and watch your team grow!
+                            </div>
+                            <i class="fas fa-share-alt"></i>
+                            <span>Share Link</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4M Progress Section -->
+        <div class="card-section">
+            <h4><i class="fas fa-chart-bar"></i> Your 4M Billionaire Table Progress</h4>
+            <div class="row">
+                <div class="col-md-3 mb-3">
+                    <div class="text-center">
+                        <h5 style="color: var(--navy-blue);">🧠 Mindset Mystery</h5>
+                        <div class="progress" style="height: 25px;">
+                            <div class="progress-bar" role="progressbar"
+                                style="width: 75%; background: linear-gradient(90deg, var(--gold), var(--orange));"
+                                aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">75%</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="text-center">
+                        <h5 style="color: var(--navy-blue);">💰 Money Moves</h5>
+                        <div class="progress" style="height: 25px;">
+                            <div class="progress-bar" role="progressbar"
+                                style="width: 60%; background: linear-gradient(90deg, var(--gold), var(--orange));"
+                                aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">60%</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="text-center">
+                        <h5 style="color: var(--navy-blue);">⚙️ Legacy Missions</h5>
+                        <div class="progress" style="height: 25px;">
+                            <div class="progress-bar" role="progressbar"
+                                style="width: 55%; background: linear-gradient(90deg, var(--gold), var(--orange));"
+                                aria-valuenow="55" aria-valuemin="0" aria-valuemax="100">55%</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="text-center">
+                        <h5 style="color: var(--navy-blue);">🌍 Momentum Movement</h5>
+                        <div class="progress" style="height: 25px;">
+                            <div class="progress-bar" role="progressbar"
+                                style="width: 50%; background: linear-gradient(90deg, var(--gold), var(--orange));"
+                                aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">50%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-3">
+                <p style="color: var(--navy-blue); font-weight: 600;">Overall Progress: 60% - Keep pushing, you're
+                    building something incredible!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Menu Button -->
+    <button class="mobile-menu-btn" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Mobile Sidebar Toggle Function
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            const menuBtn = document.getElementById('mobileMenuBtn');
+
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+
+            // Change icon based on sidebar state
+            if (sidebar.classList.contains('active')) {
+                menuBtn.innerHTML = '<i class="fas fa-times"></i>';
+            } else {
+                menuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            }
+        }
+
+        // Initialize user as LIFETIME tier (Premium Legacy Builder) on page load
+        function initializeUser() {
+            // Check if user exists, if not create LIFETIME tier user
+            const storedUser = localStorage.getItem('z2b_current_user');
+            if (!storedUser || JSON.parse(storedUser).tier !== 'PLATINUM') {
+                // Set Mokoro Manana as PLATINUM tier user (Platinum Legacy Builder)
+                const platinumUser = {
+                    id: 'user_mokoro_manana',
+                    name: 'Mokoro Manana',
+                    email: 'mokoro.manana@z2b.co.za',
+                    phone: '+27 77 490 1639',
+                    tier: 'PLATINUM',
+                    tierName: 'Platinum Legacy Builder',
+                    aiFuel: 999999, // Unlimited AI Fuel for testing
+                    aiFuelDaily: 165, // 165 AI Fuel per day
+                    pvPoints: 249, // 249 PV Points
+                    ispCommission: 45, // 45% ISP Commission
+                    joinDate: new Date().toISOString(),
+                    isDemo: false,
+                    legacyBuilder: true, // Premium Legacy Builder status
+                    features: {
+                        allApps: true,
+                        unlimitedAiFuel: true,
+                        tscGenerations: 10,
+                        tpbGenerations: 10,
+                        tliGenerations: 10,
+                        qpbEligible: true,
+                        ceoEligible: true,
+                        marketplaceSales: true
+                    }
+                };
+                localStorage.setItem('z2b_current_user', JSON.stringify(platinumUser));
+
+                // Reload Z2BAppAccess to pick up new user
+                if (window.Z2BAppAccess) {
+                    window.Z2BAppAccess.currentUser = platinumUser;
+                }
+            }
+        }
+
+        // Update top bar with tier from Z2BAppAccess
+        function updateTopBar() {
+            // Wait for Z2BAppAccess to be available
+            if (!window.Z2BAppAccess) {
+                setTimeout(updateTopBar, 100);
+                return;
+            }
+
+            const user = window.Z2BAppAccess.currentUser;
+
+            // Update user name
+            const userNameEl = document.getElementById('userName');
+            if (userNameEl) {
+                userNameEl.textContent = user.name;
+            }
+
+            // Update tier badge - use tierName from user object
+            const tierBadgeEl = document.getElementById('userTierBadge');
+            if (tierBadgeEl) {
+                if (user.tierName) {
+                    tierBadgeEl.textContent = user.tierName;
+                } else {
+                    // Fallback tier names
+                    const tierNames = {
+                        'FAM': 'FAM - Free Affiliate',
+                        'BRONZE': 'Bronze Legacy Builder',
+                        'COPPER': 'Copper Legacy Builder',
+                        'SILVER': 'Silver Legacy Builder',
+                        'GOLD': 'Gold Legacy Builder',
+                        'PLATINUM': 'Platinum Legacy Builder',
+                        'LIFETIME': 'Platinum Legacy Builder'
+                    };
+                    tierBadgeEl.textContent = tierNames[user.tier] || user.tier;
+                }
+            }
+
+            // Update avatar initials
+            const avatarEl = document.getElementById('userAvatar');
+            if (avatarEl && user.name) {
+                const nameParts = user.name.split(' ');
+                const initials = nameParts.map(part => part[0]).join('');
+                avatarEl.textContent = initials.toUpperCase();
+            }
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+        }
+
+        // MASTER INITIALIZATION - Consolidate all initialization in correct order
+        document.addEventListener('DOMContentLoaded', function () {
+            // Wait for app-config.js to load, then initialize everything in sequence
+            function masterInit() {
+                if (!window.Z2BAppAccess || !window.Z2B_TIERS || !window.Z2B_APPS) {
+                    setTimeout(masterInit, 50);
+                    return;
+                }
+
+                // Step 1: Initialize user as LIFETIME tier (Premium Legacy Builder)
+                initializeUser();
+
+                // Step 2: Force reload Z2BAppAccess to pick up the LIFETIME user
+                if (window.Z2BAppAccess) {
+                    const lifetimeUser = JSON.parse(localStorage.getItem('z2b_current_user'));
+                    if (lifetimeUser) {
+                        window.Z2BAppAccess.currentUser = lifetimeUser;
+                    }
+                }
+
+                // Step 3: Update top bar
+                updateTopBar();
+
+                // Step 4: Initialize upgrade motivator
+                initializeUpgradeMotivator();
+
+                // Step 5: Update navigation with access badges
+                setTimeout(() => {
+                    if (window.Z2BAppAccess) {
+                        updateNavigationWithAccess();
+                    }
+                }, 100);
+            }
+
+            // Start master initialization
+            masterInit();
+
+            // Dynamic Tooltip Positioning
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                item.addEventListener('mouseenter', function () {
+                    const tooltip = this.querySelector('.tooltip-text');
+                    if (tooltip) {
+                        const rect = this.getBoundingClientRect();
+                        tooltip.style.top = (rect.top + rect.height / 2) + 'px';
+                    }
+                });
+            });
+        });
+
+        // Secret Admin Door
+        let adminClickCount = 0;
+        let adminClickTimer = null;
+
+        function openAdminDoor() {
+            adminClickCount++;
+
+            if (adminClickTimer) {
+                clearTimeout(adminClickTimer);
+            }
+
+            if (adminClickCount === 3) {
+                document.getElementById('adminDoorModal').classList.add('show');
+                adminClickCount = 0;
+            }
+
+            adminClickTimer = setTimeout(() => {
+                adminClickCount = 0;
+            }, 2000);
+        }
+
+        function closeAdminDoor() {
+            document.getElementById('adminDoorModal').classList.remove('show');
+            document.getElementById('adminUsername').value = '';
+            document.getElementById('adminPassword').value = '';
+        }
+
+        function verifyAdmin() {
+            const username = document.getElementById('adminUsername').value;
+            const password = document.getElementById('adminPassword').value;
+
+            // Simple client-side check (in production, this should be server-side)
+            if (username === 'admin' && password === 'Z2BAdmin2024!') {
+                // Redirect to admin panel
+                window.location.href = '../admin/index.html';
+            } else {
+                alert('Invalid credentials. Access denied.');
+                document.getElementById('adminPassword').value = '';
+            }
+        }
+
+        // Tier Upgrade Motivator Logic
+        function initializeUpgradeMotivator() {
+            // Get current user tier from Z2BAppAccess
+            const userTierCode = window.Z2BAppAccess.currentUser.tier; // e.g., 'GOLD'
+            const tierData = window.Z2B_TIERS[userTierCode];
+
+            // Map tier codes to motivator display names
+            const tierDisplayMap = {
+                'FREE': 'FAM',
+                'STARTER': 'Bronze',
+                'PRO': 'Copper',
+                'SILVER': 'Silver',
+                'GOLD': 'Gold',
+                'PLATINUM': 'Platinum',
+                'LIFETIME': 'Platinum' // Lifetime maps to Platinum (max tier)
+            };
+
+            const currentUserTier = tierDisplayMap[userTierCode] || 'FAM';
+            const monthlyTeamSales = 8500; // Example: R8,500 in team sales this month
+            const newBuildersThisMonth = 5; // Number of new builders invited this month
+
+            const motivatorContainer = document.getElementById('upgradeMotivator');
+
+            // Calculate upgrade deadline (3rd of next month)
+            const now = new Date();
+            const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 3);
+            const daysLeft = Math.ceil((nextMonth - now) / (1000 * 60 * 60 * 24));
+
+            // Tier-specific motivator content
+            const motivatorData = {
+                'FAM': {
+                    nextTier: 'Bronze',
+                    nextTierCost: 'R480/month',
+                    missedTSC: calculateMissedTSC(monthlyTeamSales, 0, 3), // FAM has 0 TSC, Bronze has 3 gen
+                    missedTLI: 'R0 (No TLI Access)',
+                    missedAIFuel: '100 AI Fuel',
+                    missedPV: '100 PV Points',
+                    spilloverWarning: true,
+                    newBuildersCount: newBuildersThisMonth
+                },
+                'Bronze': {
+                    nextTier: 'Copper',
+                    nextTierCost: 'R980/month',
+                    missedTSC: calculateMissedTSC(monthlyTeamSales, 3, 5), // Bronze 3 gen, Copper 5 gen
+                    missedTLI: 'R0 (No TLI Access)',
+                    missedAIFuel: '100 AI Fuel (200 total)',
+                    missedPV: '100 PV Points (200 total)',
+                    missedApps: 'Glowie - App Builder'
+                },
+                'Copper': {
+                    nextTier: 'Silver',
+                    nextTierCost: 'R1,480/month',
+                    missedTSC: calculateMissedTSC(monthlyTeamSales, 5, 7),
+                    missedTLI: 'TLI Access (Up to Level 6)',
+                    missedAIFuel: '100 AI Fuel (300 total)',
+                    missedPV: '100 PV Points (300 total)',
+                    missedApps: 'Zyra + Benown (Complete 4 AI Apps)'
+                },
+                'Silver': {
+                    nextTier: 'Gold',
+                    nextTierCost: 'R2,980/month',
+                    missedTSC: calculateMissedTSC(monthlyTeamSales, 7, 9),
+                    missedTLI: '2 More TLI Levels (Up to L8 - Sapphire)',
+                    missedAIFuel: '300 AI Fuel (600 total)',
+                    missedPV: '300 PV Points (600 total)',
+                    missedBenefit: 'Quarterly Profit Pool + Sales Funnel'
+                },
+                'Gold': {
+                    nextTier: 'Platinum',
+                    nextTierCost: 'R4,980/month',
+                    missedTSC: calculateMissedTSC(monthlyTeamSales, 9, 10),
+                    missedTLI: '2 More TLI Levels (All 10 - Infinite Legacy)',
+                    missedAIFuel: '400 AI Fuel (1000 total)',
+                    missedPV: '400 PV Points (1000 total)',
+                    missedBenefit: 'Done-For-You Campaigns + Personal Coach'
+                }
+            };
+
+            const data = motivatorData[currentUserTier];
+            if (!data || currentUserTier === 'Platinum') {
+                motivatorContainer.style.display = 'none';
+                return; // No motivator for Platinum (max tier) or invalid tier
+            }
+
+            motivatorContainer.innerHTML = `
+                <div class="motivator-header">
+                    <div class="motivator-title">
+                        <i class="fas fa-chart-line"></i>
+                        What You're Missing Out On This Month
+                    </div>
+                    <div class="upgrade-deadline">
+                        ⏰ Upgrade Deadline: <span class="countdown-timer">${daysLeft} days left</span> (by 3rd)
+                    </div>
+                </div>
+
+                <div class="missed-earnings-grid">
+                    <div class="missed-item">
+                        <div class="missed-item-label">Missed TSC This Month</div>
+                        <div class="missed-item-value">${data.missedTSC}</div>
+                    </div>
+                    <div class="missed-item">
+                        <div class="missed-item-label">Missed TLI Potential</div>
+                        <div class="missed-item-value">${data.missedTLI}</div>
+                    </div>
+                    ${data.missedAIFuel ? `
+                    <div class="missed-item">
+                        <div class="missed-item-label">AI Fuel You're Missing</div>
+                        <div class="missed-item-value">${data.missedAIFuel}</div>
+                    </div>
+                    ` : ''}
+                    ${data.missedPV ? `
+                    <div class="missed-item">
+                        <div class="missed-item-label">PV Points Lost</div>
+                        <div class="missed-item-value">${data.missedPV}</div>
+                    </div>
+                    ` : ''}
+                </div>
+
+                ${data.spilloverWarning ? `
+                <div class="spillover-warning">
+                    <div class="warning-icon">⚠️</div>
+                    <h4>CRITICAL: Your New Builders Are At Risk!</h4>
+                    <p><strong>You invited ${data.newBuildersCount} new builders this month.</strong> If you don't upgrade to at least Bronze by the 3rd of next month, <strong style="color: var(--orange);">they will be LOST to you FOREVER!</strong></p>
+                    <p>They will be allocated as <strong>spillovers to active builders</strong> who ARE qualified. You'll only keep the one-time 20% ISP commission from this month.</p>
+                    <p><strong style="color: var(--gold);">Upgrade now to secure them in your team and start earning TSC, TLI, and build your legacy!</strong></p>
+                </div>
+                ` : ''}
+
+                <div class="upgrade-benefits">
+                    <h4>✨ What You'll Unlock with ${data.nextTier}:</h4>
+                    <ul>
+                        ${data.missedApps ? `<li><strong>${data.missedApps}</strong> - AI-powered tools</li>` : ''}
+                        ${data.missedBenefit ? `<li><strong>${data.missedBenefit}</strong></li>` : ''}
+                        <li><strong>Higher TSC Generations</strong> - Earn from deeper team levels</li>
+                        <li><strong>More AI Fuel & PV Points</strong> - Power your business growth</li>
+                        ${data.nextTier === 'Silver' ? '<li><strong>Unlock TLI</strong> - Team Leadership Incentives start at Silver!</li>' : ''}
+                        <li><strong>Build & Keep Your Team</strong> - No more spillover losses</li>
+                    </ul>
+                </div>
+
+                <div style="text-align: center;">
+                    <button class="btn-upgrade-now" onclick="window.location.href='tiers.html'">
+                        <i class="fas fa-rocket"></i> Upgrade to ${data.nextTier} Now - ${data.nextTierCost}
+                    </button>
+                </div>
+            `;
+        }
+
+        function calculateMissedTSC(teamSales, currentGens, nextTierGens) {
+            // Simplified TSC calculation: assume 5% TSC per generation
+            const currentTSC = teamSales * 0.05 * currentGens;
+            const potentialTSC = teamSales * 0.05 * nextTierGens;
+            const missed = potentialTSC - currentTSC;
+            return `R${missed.toFixed(0)}`;
+        }
+
+        function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                // Clear session and redirect to landing page
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Allow Enter key to submit admin form
+        document.addEventListener('DOMContentLoaded', function () {
+            const adminPassword = document.getElementById('adminPassword');
+            if (adminPassword) {
+                adminPassword.addEventListener('keypress', function (e) {
+                    if (e.key === 'Enter') {
+                        verifyAdmin();
+                    }
+                });
+            }
+        });
+
+        function updateNavigationWithAccess() {
+            const appAccess = window.Z2BAppAccess;
+            const availableApps = appAccess.getAvailableApps();
+            const lockedApps = appAccess.getLockedApps();
+
+            // Map nav items to app IDs (updated indices after adding ZYRO)
+            const navAppMapping = {
+                'zyro': { navIndex: 3, element: null },
+                'coach-manlaw': { navIndex: 4, element: null },
+                'glowie': { navIndex: 5, element: null },
+                'zyra': { navIndex: 7, element: null },
+                'benown': { navIndex: 8, element: null }
+            };
+
+            // Get all nav items
+            const navItems = document.querySelectorAll('.nav-item');
+
+            // Store nav elements
+            navAppMapping['zyro'].element = navItems[3];
+            navAppMapping['coach-manlaw'].element = navItems[4];
+            navAppMapping['glowie'].element = navItems[5];
+            navAppMapping['zyra'].element = navItems[7];
+            navAppMapping['benown'].element = navItems[8];
+
+            // Check each app and update nav accordingly
+            Object.keys(navAppMapping).forEach(appId => {
+                const navData = navAppMapping[appId];
+                const navElement = navData.element;
+
+                if (!navElement) return;
+
+                const hasAccess = appAccess.hasAppAccess(appId);
+                const accessLevel = appAccess.getAppAccessLevel(appId);
+
+                if (hasAccess) {
+                    // User has access - show access badge
+                    const accessBadge = document.createElement('span');
+                    accessBadge.style.cssText = `
+                        position: absolute;
+                        right: 1rem;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        background: ${accessLevel === 'demo' ? '#FF6B35' : '#4ECDC4'};
+                        color: white;
+                        padding: 0.2rem 0.6rem;
+                        border-radius: 10px;
+                        font-size: 0.7rem;
+                        font-weight: 600;
+                    `;
+                    accessBadge.textContent = accessLevel === 'demo' ? 'DEMO' : '✓';
+                    navElement.style.position = 'relative';
+                    navElement.appendChild(accessBadge);
+                } else {
+                    // User doesn't have access - add locked indicator
+                    navElement.style.opacity = '0.5';
+
+                    // Add lock icon
+                    const lockIcon = document.createElement('span');
+                    lockIcon.style.cssText = `
+                        position: absolute;
+                        right: 1rem;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        color: #FFD700;
+                        font-size: 1rem;
+                    `;
+                    lockIcon.innerHTML = '🔒';
+                    navElement.style.position = 'relative';
+                    navElement.appendChild(lockIcon);
+
+                    // Update tooltip
+                    const tooltip = navElement.querySelector('.tooltip-text');
+                    if (tooltip) {
+                        const app = window.Z2B_APPS[appId];
+                        const tierComparison = appAccess.getTierComparison(appId);
+                        if (tierComparison && tierComparison.length > 0) {
+                            const firstAvailableTier = tierComparison[0];
+                            tooltip.textContent = `🔒 Upgrade to ${firstAvailableTier.tierName} to unlock this app`;
+                            tooltip.style.background = 'linear-gradient(135deg, #FF6B35, #FFD700)';
+                        }
+                    }
+
+                    // Remove onclick, add upgrade prompt instead
+                    navElement.onclick = function (e) {
+                        e.preventDefault();
+                        const app = window.Z2B_APPS[appId];
+                        const tierComparison = appAccess.getTierComparison(appId);
+                        if (tierComparison && tierComparison.length > 0) {
+                            const tiersText = tierComparison.map(t => t.tierName).join(', ');
+                            if (confirm(`🔒 ${app.name} is locked.\\n\\nUpgrade to one of these tiers to unlock:\\n${tiersText}\\n\\nGo to Tiers page now?`)) {
+                                window.location.href = 'tiers.html';
+                            }
+                        }
+                    };
+                }
+            });
+
+            // Update quick action buttons for locked apps
+            updateQuickActions(appAccess);
+        }
+
+        function updateQuickActions(appAccess) {
+            const quickActions = document.querySelectorAll('.quick-action-btn');
+
+            // Chat with Coach (index 0) - coach-manlaw app
+            if (quickActions[0] && !appAccess.hasAppAccess('coach-manlaw')) {
+                quickActions[0].style.opacity = '0.5';
+                quickActions[0].innerHTML = `
+                    <i class="fas fa-robot"></i>
+                    <span>Chat with Coach 🔒</span>
+                `;
+                quickActions[0].onclick = function () {
+                    if (confirm('🔒 Coach Manlaw is locked.\\n\\nUpgrade to unlock your AI Coach!\\n\\nGo to Tiers page?')) {
+                        window.location.href = 'tiers.html';
+                    }
+                };
+            }
+        }
+
+        // Referral Link Functions
+        async function loadReferralInfo() {
+            const API_BASE_URL = 'https://z2b-admin-backend-production.up.railway.app/api';
+            const token = localStorage.getItem('z2b_auth_token') || localStorage.getItem('authToken');
+
+            if (!token) {
+                console.log('No auth token found, using demo data');
+                // Show demo data
+                document.getElementById('membershipNumber').value = 'Z2B0000001';
+                document.getElementById('referralLink').value = 'https://z2blegacybuilders.co.za/join?ref=Z2B0000001';
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/me`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success && data.user) {
+                    const membershipNumber = data.user.membershipNumber || 'Z2B0000001';
+                    const referralLink = data.user.referralStats?.referralLink ||
+                                       `https://z2blegacybuilders.co.za/join?ref=${membershipNumber}`;
+
+                    document.getElementById('membershipNumber').value = membershipNumber;
+                    document.getElementById('referralLink').value = referralLink;
+                } else {
+                    // Fallback to demo data
+                    document.getElementById('membershipNumber').value = 'Z2B0000001';
+                    document.getElementById('referralLink').value = 'https://z2blegacybuilders.co.za/join?ref=Z2B0000001';
+                }
+            } catch (error) {
+                console.error('Error loading referral info:', error);
+                // Fallback to demo data
+                document.getElementById('membershipNumber').value = 'Z2B0000001';
+                document.getElementById('referralLink').value = 'https://z2blegacybuilders.co.za/join?ref=Z2B0000001';
+            }
+        }
+
+        function copyMembershipNumber() {
+            const input = document.getElementById('membershipNumber');
+            input.select();
+            input.setSelectionRange(0, 99999); // For mobile
+            navigator.clipboard.writeText(input.value).then(() => {
+                alert('✅ Membership Number copied to clipboard!');
+            }).catch(err => {
+                console.error('Copy failed:', err);
+            });
+        }
+
+        function copyReferralLink() {
+            const input = document.getElementById('referralLink');
+            input.select();
+            input.setSelectionRange(0, 99999); // For mobile
+            navigator.clipboard.writeText(input.value).then(() => {
+                alert('✅ Referral Link copied to clipboard!');
+            }).catch(err => {
+                console.error('Copy failed:', err);
+            });
+        }
+
+        function shareViaWhatsApp() {
+            const referralLink = document.getElementById('referralLink').value;
+            const membershipNumber = document.getElementById('membershipNumber').value;
+            const message = `🚀 Join me on the Zero to Billionaires journey!\\n\\n` +
+                          `I'm transforming from employee to entrepreneur using Z2B's AI-powered platform.\\n\\n` +
+                          `✨ 7 Income Streams\\n` +
+                          `🤖 AI Coach & Tools\\n` +
+                          `💰 Build Legacy Wealth\\n\\n` +
+                          `Use my referral code: ${membershipNumber}\\n` +
+                          `Sign up here: ${referralLink}\\n\\n` +
+                          `Let's build our billion-dollar legacies together!`;
+
+            const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        }
+
+        function shareViaEmail() {
+            const referralLink = document.getElementById('referralLink').value;
+            const membershipNumber = document.getElementById('membershipNumber').value;
+            const subject = 'Join Me on Zero to Billionaires!';
+            const body = `Hi there,\\n\\n` +
+                       `I'm excited to invite you to join the Zero to Billionaires platform!\\n\\n` +
+                       `Z2B is transforming employees into entrepreneurs with:\\n` +
+                       `✨ 7 generous income streams\\n` +
+                       `🤖 AI-powered coaching and business tools\\n` +
+                       `💰 Multiple ways to build wealth and legacy\\n\\n` +
+                       `Use my referral code: ${membershipNumber}\\n` +
+                       `Sign up here: ${referralLink}\\n\\n` +
+                       `Let's build our billion-dollar legacies together!\\n\\n` +
+                       `To your success,\\n` +
+                       `Your Z2B Partner`;
+
+            const mailtoUrl = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            window.location.href = mailtoUrl;
+        }
+
+        // Load referral info when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load referral info after a short delay to ensure other scripts have loaded
+            setTimeout(loadReferralInfo, 500);
+        });
+    </script>
+
+    <!-- Admin Login Modal -->
+    <div id="adminLoginModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; align-items: center; justify-content: center;">
+        <div style="background: linear-gradient(135deg, var(--navy-blue), var(--dark-navy)); padding: 3rem; border-radius: 20px; max-width: 450px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.5); border: 2px solid var(--royal-gold);">
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <i class="fas fa-shield-alt" style="font-size: 3rem; color: var(--royal-gold); margin-bottom: 1rem;"></i>
+                <h2 style="color: var(--royal-gold-shine); margin: 0; font-size: 1.8rem; text-shadow: 0 0 20px rgba(212,175,55,0.5);">Admin Access</h2>
+                <p style="color: var(--royal-gold-light); margin: 0.5rem 0 0 0; font-size: 0.9rem;">Secure Authentication Required</p>
+            </div>
+
+            <form id="adminLoginForm" onsubmit="return false;">
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; color: var(--royal-gold-light); margin-bottom: 0.5rem; font-weight: 600;">
+                        <i class="fas fa-user"></i> Username
+                    </label>
+                    <input type="text" id="adminUsername" required style="width: 100%; padding: 0.8rem; border: 2px solid var(--royal-gold); border-radius: 10px; background: rgba(255,255,255,0.1); color: white; font-size: 1rem;">
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; color: var(--royal-gold-light); margin-bottom: 0.5rem; font-weight: 600;">
+                        <i class="fas fa-lock"></i> Password
+                    </label>
+                    <input type="password" id="adminPassword" required style="width: 100%; padding: 0.8rem; border: 2px solid var(--royal-gold); border-radius: 10px; background: rgba(255,255,255,0.1); color: white; font-size: 1rem;">
+                </div>
+
+                <div id="adminLoginError" style="display: none; background: rgba(255,0,0,0.2); border: 1px solid #ff4444; color: #ff6666; padding: 0.8rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.9rem;">
+                </div>
+
+                <button type="submit" onclick="handleAdminLogin()" style="width: 100%; padding: 1rem; background: linear-gradient(135deg, var(--royal-gold), var(--royal-gold-dark)); border: none; border-radius: 10px; color: var(--navy-blue); font-weight: 700; font-size: 1.1rem; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 15px rgba(212,175,55,0.4);">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+
+                <button type="button" onclick="closeAdminLoginModal()" style="width: 100%; padding: 0.8rem; background: transparent; border: 2px solid rgba(255,255,255,0.2); border-radius: 10px; color: rgba(255,255,255,0.6); font-weight: 600; font-size: 1rem; cursor: pointer; margin-top: 1rem; transition: all 0.3s;">
+                    Cancel
+                </button>
+            </form>
+
+            <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center;">
+                <p style="color: rgba(255,255,255,0.4); font-size: 0.75rem; margin: 0;">
+                    🔒 Secure Admin Portal • Z2B Legacy Builders
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Login Script -->
+    <script>
+        // Secret access trigger - Triple click on logo in sidebar
+        let clickCount = 0;
+        let clickTimer = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebarBrand = document.querySelector('.sidebar-brand');
+            if (sidebarBrand) {
+                sidebarBrand.addEventListener('click', function() {
+                    clickCount++;
+
+                    if (clickTimer) clearTimeout(clickTimer);
+
+                    if (clickCount === 3) {
+                        // Triple click detected - check if already logged in
+                        const adminToken = localStorage.getItem('adminToken');
+                        if (adminToken) {
+                            // Already logged in, go directly to admin panel
+                            window.location.href = '/admin/index.html';
+                        } else {
+                            // Not logged in, show login modal
+                            showAdminLoginModal();
+                        }
+                        clickCount = 0;
+                    }
+
+                    clickTimer = setTimeout(() => {
+                        clickCount = 0;
+                    }, 500);
+                });
+
+                // Add visual hint (very subtle)
+                sidebarBrand.style.cursor = 'pointer';
+                sidebarBrand.setAttribute('title', 'Z2B Legacy Builders');
+            }
+
+            // Check if already authenticated and add admin indicator
+            checkAdminAuth();
+        });
+
+        function showAdminLoginModal() {
+            const modal = document.getElementById('adminLoginModal');
+            modal.style.display = 'flex';
+            document.getElementById('adminUsername').focus();
+        }
+
+        function closeAdminLoginModal() {
+            const modal = document.getElementById('adminLoginModal');
+            modal.style.display = 'none';
+            document.getElementById('adminUsername').value = '';
+            document.getElementById('adminPassword').value = '';
+            hideAdminLoginError();
+        }
+
+        function showAdminLoginError(message) {
+            const errorDiv = document.getElementById('adminLoginError');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+
+        function hideAdminLoginError() {
+            const errorDiv = document.getElementById('adminLoginError');
+            errorDiv.style.display = 'none';
+        }
+
+        async function handleAdminLogin() {
+            const username = document.getElementById('adminUsername').value;
+            const password = document.getElementById('adminPassword').value;
+
+            if (!username || !password) {
+                showAdminLoginError('Please enter both username and password');
+                return false;
+            }
+
+            hideAdminLoginError();
+
+            // Show loading state
+            const submitBtn = event.target;
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Authenticating...';
+            submitBtn.disabled = true;
+
+            try {
+                const response = await fetch('/api/admin-auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    // Store token
+                    localStorage.setItem('adminToken', data.token);
+                    localStorage.setItem('adminUser', JSON.stringify(data.admin));
+
+                    // Success message
+                    submitBtn.innerHTML = '<i class="fas fa-check"></i> Success!';
+                    submitBtn.style.background = 'linear-gradient(135deg, #4ECDC4, #44A08D)';
+
+                    // Redirect to admin panel
+                    setTimeout(() => {
+                        window.location.href = '/admin/index.html';
+                    }, 500);
+                } else {
+                    // Show error
+                    showAdminLoginError(data.error || 'Login failed. Please try again.');
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showAdminLoginError('Connection error. Please check your network and try again.');
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+
+            return false;
+        }
+
+        async function checkAdminAuth() {
+            const adminToken = localStorage.getItem('adminToken');
+            if (adminToken) {
+                try {
+                    const response = await fetch('/api/admin-auth/verify', {
+                        headers: {
+                            'Authorization': `Bearer ${adminToken}`
+                        }
+                    });
+
+                    if (response.ok) {
+                        // Admin is authenticated, add indicator
+                        addAdminIndicator();
+                    } else {
+                        // Token invalid, clear it
+                        localStorage.removeItem('adminToken');
+                        localStorage.removeItem('adminUser');
+                    }
+                } catch (error) {
+                    console.error('Auth check error:', error);
+                }
+            }
+        }
+
+        function addAdminIndicator() {
+            const sidebarBrand = document.querySelector('.sidebar-brand');
+            if (sidebarBrand && !document.getElementById('adminIndicator')) {
+                const indicator = document.createElement('div');
+                indicator.id = 'adminIndicator';
+                indicator.style.cssText = `
+                    position: absolute;
+                    top: 10px;
+                    right: 10px;
+                    background: linear-gradient(135deg, var(--royal-gold), var(--royal-gold-dark));
+                    color: var(--navy-blue);
+                    padding: 0.3rem 0.7rem;
+                    border-radius: 15px;
+                    font-size: 0.7rem;
+                    font-weight: 700;
+                    box-shadow: 0 2px 10px rgba(212,175,55,0.5);
+                    cursor: pointer;
+                `;
+                indicator.innerHTML = '<i class="fas fa-shield-alt"></i> ADMIN';
+                indicator.title = 'Click to access admin panel';
+                indicator.onclick = () => window.location.href = '/admin/index.html';
+
+                sidebarBrand.style.position = 'relative';
+                sidebarBrand.appendChild(indicator);
+            }
+        }
+
+        // Allow Enter key to submit
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const modal = document.getElementById('adminLoginModal');
+                if (modal && modal.style.display === 'flex') {
+                    handleAdminLogin();
+                }
+            }
+        });
+
+        // Close modal on ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeAdminLoginModal();
+            }
+        });
+    </script>
+
+    <!-- Footer with Secret Admin Access -->
+    <footer style="background: var(--navy-blue); padding: 1.5rem; text-align: center; color: var(--white); margin-top: 3rem;">
+        <p style="margin: 0; font-size: 0.9rem; opacity: 0.8;">
+            © 2025 <span id="secretAdminTrigger" style="cursor: default; user-select: none;">Z2B Legacy Builders</span>. All Rights Reserved.
+        </p>
+    </footer>
+
+    <!-- Secret Admin Trigger Script -->
+    <script>
+        (function() {
+            let clickCount = 0;
+            let clickTimer = null;
+            const trigger = document.getElementById('secretAdminTrigger');
+
+            trigger.addEventListener('click', function() {
+                clickCount++;
+
+                // Reset after 3 seconds of inactivity
+                clearTimeout(clickTimer);
+                clickTimer = setTimeout(() => {
+                    clickCount = 0;
+                }, 3000);
+
+                // After 5 clicks, redirect to admin panel
+                if (clickCount === 5) {
+                    window.location.href = 'admin.html';
+                }
+            });
+        })();
+    </script>
+
+    <!-- Z2B Ecosystem Integration -->
+    <script src="../js/app-config.js"></script>
+    <script src="../js/ecosystem-footer.js"></script>
+</body>
+
+</html>

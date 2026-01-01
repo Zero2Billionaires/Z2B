@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Z2B Admin Panel - Legacy Builders Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --navy-blue: #0A2647;
+            --gold: #FFD700;
+            --royal-gold: #D4AF37;
+            --orange: #FF6B35;
+            --dark-navy: #051428;
+            --z2b-primary: #0A2647;
+            --z2b-secondary: #051428;
+            --z2b-success: #27ae60;
+            --z2b-warning: #FF6B35;
+            --z2b-danger: #e74c3c;
+            --z2b-info: #FFD700;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0A2647 0%, #051428 100%);
+            min-height: 100vh;
+        }
+
+        .admin-container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: var(--z2b-primary);
+            color: white;
+            overflow-y: auto;
+            transition: all 0.3s;
+        }
+
+        .sidebar.collapsed {
+            width: 80px;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            background: var(--z2b-secondary);
+            text-align: center;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar-menu li {
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background: rgba(255,255,255,0.1);
+            padding-left: 25px;
+        }
+
+        .sidebar-menu i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            background: #f8f9fa;
+        }
+
+        .top-navbar {
+            background: white;
+            padding: 15px 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .content-area {
+            padding: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+            margin-bottom: 20px;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+
+        .stat-card .icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .stat-card.primary .icon { background: var(--z2b-info); }
+        .stat-card.success .icon { background: var(--z2b-success); }
+        .stat-card.warning .icon { background: var(--z2b-warning); }
+        .stat-card.danger .icon { background: var(--z2b-danger); }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--z2b-primary);
+        }
+
+        .stat-label {
+            color: #6c757d;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .data-table {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .badge-tier {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+
+        .badge-bronze { background: #CD7F32; color: white; }
+        .badge-silver { background: #C0C0C0; color: #333; }
+        .badge-gold { background: #FFD700; color: #333; }
+        .badge-pearl { background: #F8F8FF; color: #333; }
+        .badge-platinum { background: #E5E4E2; color: #333; }
+
+        .chart-container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .quick-action-btn {
+            padding: 20px;
+            border-radius: 10px;
+            border: none;
+            color: white;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .quick-action-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .search-bar {
+            position: relative;
+            max-width: 400px;
+        }
+
+        .search-bar input {
+            padding-right: 40px;
+        }
+
+        .search-bar i {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--z2b-danger);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .modal-header {
+            background: var(--z2b-primary);
+            color: white;
+        }
+
+        .loading-spinner {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 9999;
+        }
+
+        .loading-spinner.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h4><i class="fas fa-gem" style="color: var(--gold);"></i> Z2B LEGACY BUILDERS</h4>
+                <small style="font-size: 0.65rem; text-transform: uppercase; color: var(--gold);">Transforming Employees to Entrepreneurs</small>
+                <div style="margin-top: 8px; font-size: 0.7rem; opacity: 0.8;">Admin Panel v21</div>
+            </div>
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="#" class="menu-item active" data-tab="dashboard">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="membership-management.html" class="menu-item">
+                        <i class="fas fa-users"></i>
+                        <span>Members</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="menu-item" data-tab="marketplace">
+                        <i class="fas fa-store"></i>
+                        <span>Marketplace</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="commission-tracking.html" class="menu-item">
+                        <i class="fas fa-dollar-sign"></i>
+                        <span>Commissions</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="membership-management.html" class="menu-item">
+                        <i class="fas fa-sync"></i>
+                        <span>Tier Subscriptions</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#app-admin-section" class="menu-item" onclick="scrollToAppAdmins(event)">
+                        <i class="fas fa-apps"></i>
+                        <span>App Management</span>
+                    </a>
+                </li>
+                <li style="padding: 10px 20px; color: var(--gold); font-size: 12px; text-transform: uppercase; font-weight: 700; letter-spacing: 1px;">
+                    MLM Management
+                </li>
+                <li>
+                    <a href="compensation-config.html" class="menu-item">
+                        <i class="fas fa-percentage"></i>
+                        <span>Compensation Plan</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="commission-tracking.html" class="menu-item">
+                        <i class="fas fa-coins"></i>
+                        <span>Commission Tracking</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="genealogy-viewer.html" class="menu-item">
+                        <i class="fas fa-sitemap"></i>
+                        <span>Genealogy Viewer</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="payout-management.html" class="menu-item">
+                        <i class="fas fa-money-check-alt"></i>
+                        <span>Payout Management</span>
+                    </a>
+                </li>
+                <li style="padding: 10px 20px; color: var(--gold); font-size: 12px; text-transform: uppercase; font-weight: 700; letter-spacing: 1px;">
+                    App Admins
+                </li>
+                <li>
+                    <a href="coach-manlaw-admin.html" class="menu-item">
+                        <i class="fas fa-graduation-cap"></i>
+                        <span>Coach ManLaw</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="zyro-admin.html" class="menu-item">
+                        <i class="fas fa-gamepad"></i>
+                        <span>ZYRO Games</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="glowie-admin.html" class="menu-item">
+                        <i class="fas fa-lightbulb"></i>
+                        <span>GLOWIE AI</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="zyra-admin.html" class="menu-item">
+                        <i class="fas fa-user-tie"></i>
+                        <span>ZYRA Sales</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="benown-admin.html" class="menu-item">
+                        <i class="fas fa-magic"></i>
+                        <span>BENOWN Content</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="zynect-admin.html" class="menu-item">
+                        <i class="fas fa-network-wired"></i>
+                        <span>ZYNECT Network</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="vidzie-dashboard.html" class="menu-item">
+                        <i class="fas fa-video"></i>
+                        <span>VIDZIE Videos</span>
+                    </a>
+                </li>
+                <li style="padding: 10px 20px; color: var(--gold); font-size: 12px; text-transform: uppercase; font-weight: 700; letter-spacing: 1px;">
+                    System Management
+                </li>
+                <li>
+                    <a href="ceo-competitions.html" class="menu-item">
+                        <i class="fas fa-trophy"></i>
+                        <span>CEO Competitions</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="ceo-targets.html" class="menu-item">
+                        <i class="fas fa-bullseye"></i>
+                        <span>CEO Sales Targets</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="ceo-compensation-targets.html" class="menu-item">
+                        <i class="fas fa-hand-holding-usd"></i>
+                        <span>Compensation Targets</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="marketplace-products.html" class="menu-item">
+                        <i class="fas fa-store-alt"></i>
+                        <span>Marketplace Products</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="menu-item" data-tab="reports">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Reports</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="menu-item" data-tab="settings">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Navbar -->
+            <div class="top-navbar">
+                <button class="btn btn-link text-dark" id="sidebarToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                <div class="search-bar">
+                    <input type="text" class="form-control" placeholder="Search members, orders, products...">
+                    <i class="fas fa-search"></i>
+                </div>
+
+                <div class="d-flex align-items-center gap-3">
+                    <div class="position-relative">
+                        <i class="fas fa-bell fa-lg"></i>
+                        <span class="notification-badge">5</span>
+                    </div>
+                    <div class="dropdown">
+                        <button class="btn btn-link text-dark dropdown-toggle" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle fa-lg"></i> Admin
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#">Profile</a></li>
+                            <li><a class="dropdown-item" href="#">Activity Log</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#">Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="content-area">
+                <!-- Dashboard Tab -->
+                <div class="tab-content active" id="dashboard-tab">
+                    <h2 class="mb-4">Dashboard Overview</h2>
+
+                    <!-- Quick Actions -->
+                    <div class="quick-actions">
+                        <button class="quick-action-btn bg-primary">
+                            <i class="fas fa-user-plus"></i>
+                            Add Member
+                        </button>
+                        <button class="quick-action-btn bg-success">
+                            <i class="fas fa-box"></i>
+                            Approve Products
+                        </button>
+                        <button class="quick-action-btn bg-warning">
+                            <i class="fas fa-hand-holding-usd"></i>
+                            Process Payouts
+                        </button>
+                        <button class="quick-action-btn bg-info">
+                            <i class="fas fa-broadcast-tower"></i>
+                            Send Broadcast
+                        </button>
+                    </div>
+
+                    <!-- Statistics Cards -->
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="stat-card primary">
+                                <div class="icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <div class="stat-value" id="totalMembers">0</div>
+                                <div class="stat-label">Total Members</div>
+                                <small class="text-success">+12% this month</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card success">
+                                <div class="icon">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <div class="stat-value" id="monthlyRevenue">R0</div>
+                                <div class="stat-label">Monthly Revenue</div>
+                                <small class="text-success">+25% vs last month</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card warning">
+                                <div class="icon">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </div>
+                                <div class="stat-value" id="activeProducts">0</div>
+                                <div class="stat-label">Active Products</div>
+                                <small class="text-info">15 pending approval</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card danger">
+                                <div class="icon">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </div>
+                                <div class="stat-value" id="pendingPayouts">0</div>
+                                <div class="stat-label">Pending Payouts</div>
+                                <small class="text-danger">Requires attention</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts Row -->
+                    <div class="row mt-4">
+                        <div class="col-md-8">
+                            <div class="chart-container">
+                                <h5>Revenue Trend</h5>
+                                <canvas id="revenueChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="chart-container">
+                                <h5>Member Distribution</h5>
+                                <canvas id="memberDistChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activities -->
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <div class="data-table">
+                                <h5 class="mb-3">Recent Members</h5>
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Tier</th>
+                                            <th>Joined</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recentMembersTable">
+                                        <!-- Dynamic content -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="data-table">
+                                <h5 class="mb-3">Recent Orders</h5>
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Order #</th>
+                                            <th>Amount</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recentOrdersTable">
+                                        <!-- Dynamic content -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Members Tab -->
+                <div class="tab-content" id="members-tab">
+                    <h2 class="mb-4">Member Management</h2>
+
+                    <div class="data-table">
+                        <div class="d-flex justify-content-between mb-3">
+                            <div>
+                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addMemberModal">
+                                    <i class="fas fa-plus"></i> Add New Member
+                                </button>
+                                <button class="btn btn-success ms-2">
+                                    <i class="fas fa-file-export"></i> Export CSV
+                                </button>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <select class="form-select" id="tierFilter">
+                                    <option value="">All Tiers</option>
+                                    <option value="1">Bronze</option>
+                                    <option value="2">Silver</option>
+                                    <option value="3">Gold</option>
+                                    <option value="4">Pearl</option>
+                                    <option value="5">Platinum</option>
+                                </select>
+                                <input type="text" class="form-control" placeholder="Search members...">
+                            </div>
+                        </div>
+
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Tier</th>
+                                    <th>Sponsor</th>
+                                    <th>Earnings</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="membersTable">
+                                <!-- Dynamic content -->
+                            </tbody>
+                        </table>
+
+                        <nav>
+                            <ul class="pagination justify-content-center" id="membersPagination">
+                                <!-- Dynamic pagination -->
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+
+                <!-- Marketplace Tab -->
+                <div class="tab-content" id="marketplace-tab">
+                    <h2 class="mb-4">Marketplace Management</h2>
+
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <div class="stat-value" id="totalProducts">0</div>
+                                <div class="stat-label">Total Products</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <div class="stat-value" id="pendingApproval">0</div>
+                                <div class="stat-label">Pending Approval</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <div class="stat-value" id="totalSales">R0</div>
+                                <div class="stat-label">Total Sales</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <div class="stat-value" id="avgRating">0.0</div>
+                                <div class="stat-label">Avg Rating</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="data-table">
+                        <h5 class="mb-3">Product Listings</h5>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Product</th>
+                                    <th>Seller</th>
+                                    <th>Type</th>
+                                    <th>Price</th>
+                                    <th>Sales</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="productsTable">
+                                <!-- Dynamic content -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- App Management Tab -->
+                <div class="tab-content" id="app-management-tab">
+                    <h2 class="mb-4">App Access Management</h2>
+
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i> Configure which apps are available for each membership tier. Changes are saved to the Z2B App Config system.
+                    </div>
+
+                    <!-- App × Tier Access Matrix -->
+                    <div class="data-table mb-4">
+                        <h5 class="mb-3">Tier × App Access Matrix</h5>
+                        <div class="table-responsive">
+                            <table class="table table-bordered text-center">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th style="width: 200px;">App</th>
+                                        <th>FREE</th>
+                                        <th>STARTER</th>
+                                        <th>PRO</th>
+                                        <th>ELITE</th>
+                                        <th>LIFETIME</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="appAccessMatrix">
+                                    <!-- Row for ZYRO -->
+                                    <tr>
+                                        <td class="text-start">
+                                            <i class="fas fa-gamepad" style="color: #FFD700; margin-right: 8px;"></i>
+                                            <strong>ZYRO</strong>
+                                            <br><small class="text-muted">Gamification Hub</small>
+                                        </td>
+                                        <td>
+                                            <select class="form-select form-select-sm" data-app="zyro" data-tier="FREE">
+                                                <option value="none">🔒 Locked</option>
+                                                <option value="demo" selected>📱 Demo</option>
+                                                <option value="basic">✓ Basic</option>
+                                                <option value="full">✓✓ Full</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="form-select form-select-sm" data-app="zyro" data-tier="STARTER">
+                                                <option value="none">🔒 Locked</option>
+                                                <option value="demo">📱 Demo</option>
+                                                <option value="basic">✓ Basic</option>
+                                                <option value="full" selected>✓✓ Full</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="form-select form-select-sm" data-app="zyro" data-tier="PRO">
+                                                <option value="none">🔒 Locked</option>
+                                                <option value="demo">📱 Demo</option>
+                                                <option value="basic">✓ Basic</option>
+                                                <option value="full" selected>✓✓ Full</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="form-select form-select-sm" data-app="zyro" data-tier="ELITE">
+                                                <option value="none">🔒 Locked</option>
+                                                <option value="demo">📱 Demo</option>
+                                                <option value="basic">✓ Basic</option>
+                                                <option value="full" selected>✓✓ Full</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="form-select form-select-sm" data-app="zyro" data-tier="LIFETIME">
+                                                <option value="none">🔒 Locked</option>
+                                                <option value="demo">📱 Demo</option>
+                                                <option value="basic">✓ Basic</option>
+                                                <option value="full" selected>✓✓ Full</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Row for Coach Manlaw -->
+                                    <tr>
+                                        <td class="text-start">
+                                            <i class="fas fa-graduation-cap" style="color: #FFD700; margin-right: 8px;"></i>
+                                            <strong>Coach Manlaw</strong>
+                                            <br><small class="text-muted">AI Coach</small>
+                                        </td>
+                                        <td>
+                                            <select class="form-select form-select-sm" data-app="coach-manlaw" data-tier="FREE">
+                                                <option value="none">🔒 Locked</option>
+                                                <option value="demo" selected>📱 Demo</option>
+                                                <option value="basic">✓ Basic</option>
+                                                <option value="full">✓✓ Full</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="form-select form-select-sm" data-app="coach-manlaw" data-tier="STARTER">
+                                                <option value="none">🔒 Locked</option>
+                                                <option value="demo">📱 Demo</option>
+                                                <option value="basic" selected>✓ Basic</option>
+                                                <option value="full">✓✓ Full</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="form-select form-select-sm" data-app="coach-manlaw" data-tier="PRO">
+                                                <option value="none">🔒 Locked</option>
+                                                <option value="demo">📱 Demo</option>
+                                                <option value="basic">✓ Basic</option>
+                                                <option value="full" selected>✓✓ Full</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="form-select form-select-sm" data-app="coach-manlaw" data-tier="ELITE">
+                                                <option value="none">🔒 Locked</option>
+                                                <option value="demo">📱 Demo</option>
+                                                <option value="basic">✓ Basic</option>
+                                                <option value="full" selected>✓✓ Full</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="form-select form-select-sm" data-app="coach-manlaw" data-tier="LIFETIME">
+                                                <option value="none">🔒 Locked</option>
+                                                <option value="demo">📱 Demo</option>
+                                                <option value="basic">✓ Basic</option>
+                                                <option value="full" selected>✓✓ Full</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Row for GLOWIE -->
+                                    <tr>
+                                        <td class="text-start">
+                                            <i class="fas fa-lightbulb" style="color: #FFD700; margin-right: 8px;"></i>
+                                            <strong>GLOWIE</strong>
+                                            <br><small class="text-muted">AI App Builder</small>
+                                        </td>
+                                        <td>
+                                            <select class="form-select form-select-sm" data-app="glowie" data-tier="FREE">
+                                                <option value="none" selected>🔒 Locked</option>
+                                                <option value="demo">📱 Demo</option>
+                                                <option value="basic">✓ Basic</option>
+                                                <option value="full">✓✓ Full</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="form-select form-select-sm" data-app="glowie" data-tier="STARTER">
+                                                <option value="none" selected>🔒 Locked</option>
+                                                <option value="demo">📱 Demo</option>
+                                                <option value="basic">✓ Basic</option>
+                                                <option value="full">✓✓ Full</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="form-select form-select-sm" data-app="glowie" data-tier="PRO">
+                                                <option value="none">🔒 Locked</option>
+                                                <option value="demo">📱 Demo</option>
+                                                <option value="basic">✓ Basic</option>
+                                                <option value="full" selected>✓✓ Full</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="form-select form-select-sm" data-app="glowie" data-tier="ELITE">
+                                                <option value="none">🔒 Locked</option>
+                                                <option value="demo">📱 Demo</option>
+                                                <option value="basic">✓ Basic</option>
+                                                <option value="full" selected>✓✓ Full</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="form-select form-select-sm" data-app="glowie" data-tier="LIFETIME">
+                                                <option value="none">🔒 Locked</option>
+                                                <option value="demo">📱 Demo</option>
+                                                <option value="basic">✓ Basic</option>
+                                                <option value="full" selected>✓✓ Full</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Row for ZYRA -->
+                                    <tr>
+                                        <td class="text-start">
+                                            <i class="fas fa-user-tie" style="color: #FFD700; margin-right: 8px;"></i>
+                                            <strong>ZYRA</strong>
+                                            <br><small class="text-muted">AI Sales Agent</small>
+                                        </td>
+                                        <td>
+                                            <select class="form-select form-select-sm" data-app="zyra" data-tier="FREE">
+                                                <option value="none" selected>🔒 Locked</option>
+                                                <option value="demo">📱 Demo</option>
+                                                <option value="basic">✓ Basic</option>
+                                                <option value="full">✓✓ Full</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="form-select form-select-sm" data-app="zyra" data-tier="STARTER">
+                                                <option value="none" selected>🔒 Locked</option>
+                                                <option value="demo">📱 Demo</option>
+                                                <option value="basic">✓ Basic</option>
+                                                <option value="full">✓✓ Full</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="form-select form-select-sm" data-app="zyra" data-tier="PRO">
+                                                <option value="none" selected>🔒 Locked</option>
+                                                <option value="demo">📱 Demo</option>
+                                                <option value="basic">✓ Basic</option>
+                                                <option value="full">✓✓ Full</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="form-select form-select-sm" data-app="zyra" data-tier="ELITE">
+                                                <option value="none">🔒 Locked</option>
+                                                <option value="demo">📱 Demo</option>
+                                                <option value="basic">✓ Basic</option>
+                                                <option value="full" selected>✓✓ Full</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="form-select form-select-sm" data-app="zyra" data-tier="LIFETIME">
+                                                <option value="none">🔒 Locked</option>
+                                                <option value="demo">📱 Demo</option>
+                                                <option value="basic">✓ Basic</option>
+                                                <option value="full" selected>✓✓ Full</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Row for BENOWN -->
+                                    <tr>
+                                        <td class="text-start">
+                                            <i class="fas fa-magic" style="color: #FFD700; margin-right: 8px;"></i>
+                                            <strong>BENOWN</strong>
+                                            <br><small class="text-muted">AI Content Creator</small>
+                                        </td>
+                                        <td>
+                                            <select class="form-select form-select-sm" data-app="benown" data-tier="FREE">
+                                                <option value="none" selected>🔒 Locked</option>
+                                                <option value="demo">📱 Demo</option>
+                                                <option value="basic">✓ Basic</option>
+                                                <option value="full">✓✓ Full</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="form-select form-select-sm" data-app="benown" data-tier="STARTER">
+                                                <option value="none" selected>🔒 Locked</option>
+                                                <option value="demo">📱 Demo</option>
+                                                <option value="basic">✓ Basic</option>
+                                                <option value="full">✓✓ Full</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="form-select form-select-sm" data-app="benown" data-tier="PRO">
+                                                <option value="none" selected>🔒 Locked</option>
+                                                <option value="demo">📱 Demo</option>
+                                                <option value="basic">✓ Basic</option>
+                                                <option value="full">✓✓ Full</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="form-select form-select-sm" data-app="benown" data-tier="ELITE">
+                                                <option value="none">🔒 Locked</option>
+                                                <option value="demo">📱 Demo</option>
+                                                <option value="basic">✓ Basic</option>
+                                                <option value="full" selected>✓✓ Full</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="form-select form-select-sm" data-app="benown" data-tier="LIFETIME">
+                                                <option value="none">🔒 Locked</option>
+                                                <option value="demo">📱 Demo</option>
+                                                <option value="basic">✓ Basic</option>
+                                                <option value="full" selected>✓✓ Full</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="text-end mt-3">
+                            <button class="btn btn-success btn-lg" id="saveAppAccessBtn">
+                                <i class="fas fa-save"></i> Save App Access Configuration
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Demo Mode Configuration -->
+                    <div class="data-table">
+                        <h5 class="mb-3">Demo Mode Configuration</h5>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 30%;">App</th>
+                                            <th>Demo Enabled</th>
+                                            <th>Duration (Days)</th>
+                                            <th>Limitations</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <i class="fas fa-gamepad" style="color: #FFD700;"></i> <strong>ZYRO</strong>
+                                            </td>
+                                            <td>
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input" type="checkbox" id="demoZyro" checked>
+                                                    <label class="form-check-label" for="demoZyro">Active</label>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <input type="number" class="form-control form-control-sm" value="7" style="width: 80px;">
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control form-control-sm" value="Limited game plays per day">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <i class="fas fa-graduation-cap" style="color: #FFD700;"></i> <strong>Coach Manlaw</strong>
+                                            </td>
+                                            <td>
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input" type="checkbox" id="demoCoach" checked>
+                                                    <label class="form-check-label" for="demoCoach">Active</label>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <input type="number" class="form-control form-control-sm" value="7" style="width: 80px;">
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control form-control-sm" value="Limited AI interactions per day">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <i class="fas fa-lightbulb" style="color: #FFD700;"></i> <strong>GLOWIE</strong>
+                                            </td>
+                                            <td>
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input" type="checkbox" id="demoGlowie" checked>
+                                                    <label class="form-check-label" for="demoGlowie">Active</label>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <input type="number" class="form-control form-control-sm" value="3" style="width: 80px;">
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control form-control-sm" value="Limited to 3 app generations">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <i class="fas fa-user-tie" style="color: #FFD700;"></i> <strong>ZYRA</strong>
+                                            </td>
+                                            <td>
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input" type="checkbox" id="demoZyra" checked>
+                                                    <label class="form-check-label" for="demoZyra">Active</label>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <input type="number" class="form-control form-control-sm" value="7" style="width: 80px;">
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control form-control-sm" value="Limited to 10 leads">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <i class="fas fa-magic" style="color: #FFD700;"></i> <strong>BENOWN</strong>
+                                            </td>
+                                            <td>
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input" type="checkbox" id="demoBenown" checked>
+                                                    <label class="form-check-label" for="demoBenown">Active</label>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <input type="number" class="form-control form-control-sm" value="7" style="width: 80px;">
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control form-control-sm" value="Limited to 5 content pieces per day">
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="text-end mt-3">
+                                    <button class="btn btn-success btn-lg" id="saveDemoConfigBtn">
+                                        <i class="fas fa-save"></i> Save Demo Configuration
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Other tabs content will be similar -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div class="loading-spinner">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <!-- Add Member Modal -->
+    <div class="modal fade" id="addMemberModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Member</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addMemberForm">
+                        <div class="mb-3">
+                            <label class="form-label">First Name</label>
+                            <input type="text" class="form-control" name="first_name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Last Name</label>
+                            <input type="text" class="form-control" name="last_name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" name="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Phone</label>
+                            <input type="tel" class="form-control" name="phone">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Tier</label>
+                            <select class="form-select" name="tier_id" required>
+                                <option value="1">Bronze Legacy Builder</option>
+                                <option value="2">Silver Legacy Builder</option>
+                                <option value="3">Gold Legacy Builder</option>
+                                <option value="4">Pearl Legacy Builder</option>
+                                <option value="5">Platinum Legacy Builder</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Sponsor ID (optional)</label>
+                            <input type="number" class="form-control" name="sponsor_id">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="saveMemberBtn">Save Member</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="../js/admin.js"></script>
+    <script>
+        // Scroll to App Admins section
+        function scrollToAppAdmins(event) {
+            event.preventDefault();
+            const appAdminLinks = document.querySelectorAll('a[href="coach-manlaw-admin.html"]');
+            if (appAdminLinks.length > 0) {
+                appAdminLinks[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                // Highlight the section briefly
+                appAdminLinks[0].parentElement.style.background = 'rgba(255, 215, 0, 0.2)';
+                setTimeout(() => {
+                    appAdminLinks[0].parentElement.style.background = '';
+                }, 2000);
+            }
+        }
+    </script>
+</body>
+</html>

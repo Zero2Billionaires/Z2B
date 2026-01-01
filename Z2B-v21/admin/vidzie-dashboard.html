@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIDZIE Admin Dashboard | Z2B Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --deep-navy: #0B1A2A;
+            --navy-blue: #1a2840;
+            --gold: #FFD700;
+            --light-gold: #FFEAA7;
+            --orange: #FF6B35;
+            --white: #ffffff;
+            --border-color: rgba(255, 215, 0, 0.3);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--deep-navy) 0%, var(--navy-blue) 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .dashboard-header {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.2), rgba(255, 215, 0, 0.2));
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            border: 2px solid var(--border-color);
+        }
+
+        .dashboard-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--orange), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .dashboard-header .subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+        }
+
+        .refresh-btn {
+            background: var(--orange);
+            color: var(--white);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 1rem;
+            transition: all 0.3s;
+        }
+
+        .refresh-btn:hover {
+            background: var(--gold);
+            color: var(--navy-blue);
+            transform: translateY(-2px);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--border-color);
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+        }
+
+        .stat-card .icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--orange), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-card .label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--gold);
+        }
+
+        .stat-card .subtext {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 0.5rem;
+        }
+
+        /* Sections */
+        .dashboard-section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--border-color);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-section h2 {
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .dashboard-section h2 i {
+            color: var(--orange);
+        }
+
+        /* Tables */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .data-table thead {
+            background: rgba(255, 107, 53, 0.2);
+        }
+
+        .data-table th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--gold);
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .data-table td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+        }
+
+        .data-table tbody tr {
+            transition: background 0.2s;
+        }
+
+        .data-table tbody tr:hover {
+            background: rgba(255, 107, 53, 0.1);
+        }
+
+        /* Charts */
+        .chart-container {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .bar-chart {
+            display: flex;
+            align-items: flex-end;
+            height: 200px;
+            gap: 1rem;
+            padding: 1rem;
+        }
+
+        .bar {
+            flex: 1;
+            background: linear-gradient(to top, var(--orange), var(--gold));
+            border-radius: 5px 5px 0 0;
+            position: relative;
+            min-height: 20px;
+            transition: all 0.3s;
+        }
+
+        .bar:hover {
+            opacity: 0.8;
+        }
+
+        .bar-label {
+            position: absolute;
+            bottom: -25px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .bar-value {
+            position: absolute;
+            top: -25px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: var(--gold);
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4caf50;
+            border: 1px solid #4caf50;
+        }
+
+        .badge-warning {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+            border: 1px solid #ffc107;
+        }
+
+        .badge-danger {
+            background: rgba(244, 67, 54, 0.2);
+            color: #f44336;
+            border: 1px solid #f44336;
+        }
+
+        .badge-info {
+            background: rgba(33, 150, 243, 0.2);
+            color: #2196f3;
+            border: 1px solid #2196f3;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .loading i {
+            font-size: 2rem;
+            color: var(--gold);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Alert Box */
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border-left: 4px solid;
+        }
+
+        .alert-warning {
+            background: rgba(255, 193, 7, 0.1);
+            border-left-color: #ffc107;
+            color: #ffc107;
+        }
+
+        .alert-danger {
+            background: rgba(244, 67, 54, 0.1);
+            border-left-color: #f44336;
+            color: #f44336;
+        }
+
+        .alert-info {
+            background: rgba(33, 150, 243, 0.1);
+            border-left-color: #2196f3;
+            color: #2196f3;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--orange), var(--gold));
+            border-radius: 4px;
+            transition: width 0.3s;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .dashboard-header h1 {
+                font-size: 1.8rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <div class="dashboard-header">
+            <h1><i class="fas fa-video"></i> VIDZIE Admin Dashboard</h1>
+            <p class="subtitle">AI Video Generation Monitoring & Management</p>
+            <button class="refresh-btn" onclick="loadAllData()">
+                <i class="fas fa-sync-alt"></i> Refresh Data
+            </button>
+        </div>
+
+        <!-- Key Stats -->
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card loading">
+                <i class="fas fa-spinner fa-spin"></i>
+            </div>
+        </div>
+
+        <!-- AI Video Credits Section -->
+        <div class="dashboard-section">
+            <h2><i class="fas fa-coins"></i> AI Video Credits</h2>
+            <div id="creditsSection">
+                <div class="loading">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Loading credit information...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Videos Section -->
+        <div class="dashboard-section">
+            <h2><i class="fas fa-film"></i> Recent Video Generations</h2>
+            <div id="recentVideos">
+                <div class="loading">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Loading recent videos...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Popular Videos Section -->
+        <div class="dashboard-section">
+            <h2><i class="fas fa-fire"></i> Most Popular Videos</h2>
+            <div id="popularVideos">
+                <div class="loading">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Loading popular videos...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Templates Analytics -->
+        <div class="dashboard-section">
+            <h2><i class="fas fa-layer-group"></i> Template Usage Analytics</h2>
+            <div id="templateAnalytics">
+                <div class="loading">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Loading template analytics...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Video Types Breakdown -->
+        <div class="dashboard-section">
+            <h2><i class="fas fa-chart-pie"></i> Video Types Distribution</h2>
+            <div class="chart-container">
+                <div class="bar-chart" id="videoTypesChart">
+                    <div class="loading">
+                        <i class="fas fa-spinner fa-spin"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:5000/api';
+        const authToken = localStorage.getItem('z2b_auth_token');
+
+        // Check authentication
+        if (!authToken) {
+            alert('Please login first!');
+            window.location.href = '../quick-login.html';
+        }
+
+        // Load all dashboard data
+        async function loadAllData() {
+            try {
+                await Promise.all([
+                    loadKeyStats(),
+                    loadCredits(),
+                    loadRecentVideos(),
+                    loadPopularVideos(),
+                    loadTemplateAnalytics(),
+                    loadVideoTypesChart()
+                ]);
+            } catch (error) {
+                console.error('Error loading dashboard data:', error);
+            }
+        }
+
+        // Load key statistics
+        async function loadKeyStats() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/vidzie/stats`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    const stats = data.data;
+
+                    document.getElementById('statsGrid').innerHTML = `
+                        <div class="stat-card">
+                            <div class="icon"><i class="fas fa-video"></i></div>
+                            <div class="label">Total Videos</div>
+                            <div class="value">${stats.totalVideos || 0}</div>
+                            <div class="subtext">All time generations</div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="icon"><i class="fas fa-check-circle"></i></div>
+                            <div class="label">Completed</div>
+                            <div class="value">${stats.completedCount || 0}</div>
+                            <div class="subtext">${Math.round((stats.completedCount / stats.totalVideos) * 100 || 0)}% success rate</div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="icon"><i class="fas fa-spinner"></i></div>
+                            <div class="label">Processing</div>
+                            <div class="value">${stats.processingCount || 0}</div>
+                            <div class="subtext">Currently generating</div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="icon"><i class="fas fa-eye"></i></div>
+                            <div class="label">Total Views</div>
+                            <div class="value">${stats.totalViews || 0}</div>
+                            <div class="subtext">Across all videos</div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="icon"><i class="fas fa-download"></i></div>
+                            <div class="label">Downloads</div>
+                            <div class="value">${stats.totalDownloads || 0}</div>
+                            <div class="subtext">Total downloads</div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="icon"><i class="fas fa-calendar-alt"></i></div>
+                            <div class="label">This Month</div>
+                            <div class="value">${stats.monthlyUsage || 0}</div>
+                            <div class="subtext">of ${stats.monthlyLimit || 10} limit</div>
+                            <div class="progress-bar">
+                                <div class="progress-bar-fill" style="width: ${(stats.monthlyUsage / stats.monthlyLimit) * 100 || 0}%"></div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    throw new Error(data.message || 'Failed to load stats');
+                }
+            } catch (error) {
+                console.error('Error loading stats:', error);
+                document.getElementById('statsGrid').innerHTML = `
+                    <div class="stat-card">
+                        <div class="empty-state">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <p>Error loading statistics</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Load AI Video credits
+        async function loadCredits() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/vidzie/credits`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    const credits = data.data.credits;
+                    const remaining = credits.remaining || 0;
+                    const total = credits.total || 100;
+                    const percentage = (remaining / total) * 100;
+
+                    let alertClass = 'alert-info';
+                    if (percentage < 20) alertClass = 'alert-danger';
+                    else if (percentage < 50) alertClass = 'alert-warning';
+
+                    document.getElementById('creditsSection').innerHTML = `
+                        <div class="alert ${alertClass}">
+                            <strong><i class="fas fa-info-circle"></i> Credit Status:</strong>
+                            ${remaining} credits remaining out of ${total} (${Math.round(percentage)}%)
+                        </div>
+                        <div class="progress-bar" style="height: 20px;">
+                            <div class="progress-bar-fill" style="width: ${percentage}%"></div>
+                        </div>
+                        <div style="margin-top: 1rem; color: rgba(255, 255, 255, 0.7);">
+                            <p><strong>Plan:</strong> ${credits.plan || 'Unknown'}</p>
+                            <p><strong>Reset Date:</strong> ${credits.resetDate || 'N/A'}</p>
+                        </div>
+                    `;
+                } else {
+                    throw new Error(data.message || 'Failed to load credits');
+                }
+            } catch (error) {
+                console.error('Error loading credits:', error);
+                document.getElementById('creditsSection').innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>Unable to load AI Video credit information</p>
+                        <p style="font-size: 0.9rem; margin-top: 0.5rem;">Error: ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Load recent videos
+        async function loadRecentVideos() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/vidzie/videos?limit=10&sortBy=createdAt&order=desc`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+
+                const data = await response.json();
+
+                if (data.success && data.data.length > 0) {
+                    const videosHTML = data.data.map(video => `
+                        <tr>
+                            <td>${video.videoName}</td>
+                            <td><span class="badge badge-info">${video.videoType}</span></td>
+                            <td><span class="badge badge-info">${video.purpose}</span></td>
+                            <td>${getStatusBadge(video.status)}</td>
+                            <td>${video.progress || 0}%</td>
+                            <td>${new Date(video.createdAt).toLocaleString()}</td>
+                            <td>${video.views || 0}</td>
+                            <td>${video.downloads || 0}</td>
+                        </tr>
+                    `).join('');
+
+                    document.getElementById('recentVideos').innerHTML = `
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Video Name</th>
+                                    <th>Type</th>
+                                    <th>Purpose</th>
+                                    <th>Status</th>
+                                    <th>Progress</th>
+                                    <th>Created</th>
+                                    <th>Views</th>
+                                    <th>Downloads</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${videosHTML}
+                            </tbody>
+                        </table>
+                    `;
+                } else {
+                    document.getElementById('recentVideos').innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-film"></i>
+                            <p>No videos generated yet</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading recent videos:', error);
+                document.getElementById('recentVideos').innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>Error loading recent videos</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Load popular videos
+        async function loadPopularVideos() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/vidzie/popular?limit=10`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+
+                const data = await response.json();
+
+                if (data.success && data.data.length > 0) {
+                    const videosHTML = data.data.map((video, index) => `
+                        <tr>
+                            <td><strong>#${index + 1}</strong></td>
+                            <td>${video.videoName}</td>
+                            <td><span class="badge badge-info">${video.videoType}</span></td>
+                            <td><strong style="color: var(--gold);">${video.views || 0}</strong></td>
+                            <td>${video.downloads || 0}</td>
+                            <td>${video.userRating ? `⭐ ${video.userRating.toFixed(1)}` : 'Not rated'}</td>
+                        </tr>
+                    `).join('');
+
+                    document.getElementById('popularVideos').innerHTML = `
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Video Name</th>
+                                    <th>Type</th>
+                                    <th>Views</th>
+                                    <th>Downloads</th>
+                                    <th>Rating</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${videosHTML}
+                            </tbody>
+                        </table>
+                    `;
+                } else {
+                    document.getElementById('popularVideos').innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-fire"></i>
+                            <p>No popular videos yet</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading popular videos:', error);
+                document.getElementById('popularVideos').innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>Error loading popular videos</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Load template analytics
+        async function loadTemplateAnalytics() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/vidzie/popular-templates?limit=10`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+
+                const data = await response.json();
+
+                if (data.success && data.data.templates.length > 0) {
+                    const templatesHTML = data.data.templates.map((template, index) => `
+                        <tr>
+                            <td><strong>#${index + 1}</strong></td>
+                            <td>${template.name}</td>
+                            <td><span class="badge badge-info">${template.category}</span></td>
+                            <td><strong style="color: var(--gold);">${template.usageCount || 0}</strong></td>
+                            <td>${template.rating.average > 0 ? `⭐ ${template.rating.average.toFixed(1)} (${template.rating.count})` : 'No ratings'}</td>
+                            <td>${template.featured ? '<span class="badge badge-warning">Featured</span>' : ''}</td>
+                        </tr>
+                    `).join('');
+
+                    document.getElementById('templateAnalytics').innerHTML = `
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Template Name</th>
+                                    <th>Category</th>
+                                    <th>Usage Count</th>
+                                    <th>Rating</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${templatesHTML}
+                            </tbody>
+                        </table>
+                    `;
+                } else {
+                    document.getElementById('templateAnalytics').innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-layer-group"></i>
+                            <p>No templates found. Run the seed script to populate templates.</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading template analytics:', error);
+                document.getElementById('templateAnalytics').innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>Error loading template analytics</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Load video types chart
+        async function loadVideoTypesChart() {
+            try {
+                // This would ideally come from a dedicated endpoint
+                // For now, we'll use the existing stats endpoint
+                const response = await fetch(`${API_BASE_URL}/vidzie/videos?limit=1000`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+
+                const data = await response.json();
+
+                if (data.success && data.data.length > 0) {
+                    // Count video types
+                    const typeCounts = {};
+                    data.data.forEach(video => {
+                        const type = video.videoType || 'other';
+                        typeCounts[type] = (typeCounts[type] || 0) + 1;
+                    });
+
+                    // Find max for scaling
+                    const maxCount = Math.max(...Object.values(typeCounts));
+
+                    // Create bars
+                    const barsHTML = Object.entries(typeCounts).map(([type, count]) => {
+                        const height = (count / maxCount) * 100;
+                        return `
+                            <div class="bar" style="height: ${height}%">
+                                <div class="bar-value">${count}</div>
+                                <div class="bar-label">${type}</div>
+                            </div>
+                        `;
+                    }).join('');
+
+                    document.getElementById('videoTypesChart').innerHTML = barsHTML;
+                } else {
+                    document.getElementById('videoTypesChart').innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-chart-bar"></i>
+                            <p>No data to display</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading video types chart:', error);
+                document.getElementById('videoTypesChart').innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>Error loading chart</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Helper function to get status badge
+        function getStatusBadge(status) {
+            const badges = {
+                'completed': '<span class="badge badge-success">Completed</span>',
+                'processing': '<span class="badge badge-warning">Processing</span>',
+                'queued': '<span class="badge badge-info">Queued</span>',
+                'failed': '<span class="badge badge-danger">Failed</span>',
+                'deleted': '<span class="badge badge-danger">Deleted</span>'
+            };
+            return badges[status] || `<span class="badge badge-info">${status}</span>`;
+        }
+
+        // Initialize dashboard
+        window.addEventListener('DOMContentLoaded', () => {
+            loadAllData();
+
+            // Auto-refresh every 30 seconds
+            setInterval(loadAllData, 30000);
+        });
+    </script>
+</body>
+</html>

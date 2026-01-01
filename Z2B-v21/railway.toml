@@ -1,0 +1,9 @@
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "admin-backend/Dockerfile"
+watchPatterns = ["admin-backend/**"]
+
+[deploy]
+startCommand = "cd admin-backend && npm start"
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10

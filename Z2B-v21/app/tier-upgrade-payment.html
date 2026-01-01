@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Payment Method - Zero2Billionaires</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            font-family: 'Poppins', sans-serif;
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .upgrade-summary {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .upgrade-summary h1 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .tier-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+            font-size: 1.5rem;
+        }
+
+        .tier-badge {
+            padding: 10px 25px;
+            border-radius: 30px;
+            font-weight: 600;
+        }
+
+        .tier-badge.from {
+            background: rgba(192, 192, 192, 0.3);
+            border: 2px solid #c0c0c0;
+        }
+
+        .tier-badge.to {
+            background: rgba(255, 215, 0, 0.3);
+            border: 2px solid #ffd700;
+        }
+
+        .balance-info {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .balance-item {
+            text-align: center;
+        }
+
+        .balance-item .label {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            margin-bottom: 5px;
+        }
+
+        .balance-item .value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #ffd700;
+        }
+
+        .payment-options {
+            display: grid;
+            gap: 20px;
+        }
+
+        .payment-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .payment-card:hover {
+            border-color: #ffd700;
+            background: rgba(255, 215, 0, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .payment-card.selected {
+            border-color: #ffd700;
+            background: rgba(255, 215, 0, 0.15);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+        }
+
+        .payment-card.disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge.instant {
+            background: #00ff88;
+            color: #000;
+        }
+
+        .badge.instant-access {
+            background: #ff6b6b;
+            color: #fff;
+        }
+
+        .badge.instant-free {
+            background: linear-gradient(45deg, #00ff88, #00d4ff);
+            color: #000;
+        }
+
+        .badge.manual {
+            background: #ff9800;
+            color: #fff;
+        }
+
+        .payment-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .payment-card p {
+            margin: 8px 0;
+            opacity: 0.8;
+        }
+
+        .bank-details {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-size: 0.95rem;
+        }
+
+        .bank-details p {
+            margin: 5px 0;
+        }
+
+        .bank-details strong {
+            color: #ffd700;
+            margin-right: 10px;
+        }
+
+        .slider-control {
+            margin: 20px 0;
+        }
+
+        .slider-control label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .slider-control input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.2);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider-control input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #ffd700;
+            cursor: pointer;
+        }
+
+        .slider-control input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #ffd700;
+            cursor: pointer;
+            border: none;
+        }
+
+        .live-preview {
+            background: rgba(255, 215, 0, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 10px;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+
+        .live-preview .highlight {
+            color: #ffd700;
+            font-weight: 600;
+        }
+
+        .checkbox-auth {
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .checkbox-auth input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .checkbox-auth label {
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+
+        .proceed-btn {
+            width: 100%;
+            padding: 20px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #000;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .proceed-btn:hover:not(:disabled) {
+            transform: scale(1.02);
+            box-shadow: 0 5px 25px rgba(255, 215, 0, 0.5);
+        }
+
+        .proceed-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid #ffd700;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .alert.success {
+            background: rgba(0, 255, 136, 0.2);
+            border: 1px solid #00ff88;
+            color: #00ff88;
+        }
+
+        .alert.error {
+            background: rgba(255, 107, 107, 0.2);
+            border: 1px solid #ff6b6b;
+            color: #ff6b6b;
+        }
+
+        .scheduled-info {
+            background: rgba(255, 215, 0, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            border-left: 4px solid #ffd700;
+        }
+
+        .scheduled-info h4 {
+            margin-top: 0;
+            color: #ffd700;
+        }
+
+        /* Smart Savings Specific Styles */
+        .badge.smart-savings {
+            background: linear-gradient(45deg, #10b981, #34d399);
+            color: white;
+        }
+
+        .tier-jump-selector {
+            margin: 20px 0;
+        }
+
+        .tier-select {
+            width: 100%;
+            padding: 12px;
+            font-size: 1rem;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        .tier-select option {
+            background: #1a1a2e;
+            color: #fff;
+        }
+
+        .tier-cost-display {
+            margin-top: 10px;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+
+        .savings-progress-container {
+            background: rgba(16, 185, 129, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #10b981;
+        }
+
+        .savings-progress-container h4 {
+            margin-top: 0;
+            color: #10b981;
+        }
+
+        .progress-bar-outer {
+            width: 100%;
+            height: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-bar-inner {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #34d399);
+            transition: width 0.5s ease;
+            border-radius: 15px;
+        }
+
+        .progress-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #10b981;
+            margin: 10px 0;
+        }
+
+        .estimate-text {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            opacity: 0.7;
+            margin-top: 5px;
+        }
+
+        .savings-notice {
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 4px solid #3b82f6;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-size: 0.9rem;
+        }
+
+        .savings-notice i {
+            color: #3b82f6;
+            margin-right: 8px;
+        }
+
+        .savings-benefits {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .benefit-item {
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .benefit-item i {
+            color: #10b981;
+        }
+
+
+        .back-to-dashboard {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            color: #ffd700;
+            padding: 12px 24px;
+            border-radius: 30px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+        }
+
+        .back-to-dashboard:hover {
+            background: rgba(255, 215, 0, 0.2);
+            border-color: #ffd700;
+            transform: translateX(-5px);
+        }
+
+        .back-to-dashboard i {
+            font-size: 1.2rem;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 50px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .footer a {
+            color: #ffd700;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+    </style>
+</head>
+<body>
+    <a href="dashboard.html" class="back-to-dashboard">
+        <i class="fas fa-arrow-left"></i>
+        <span>Back to Dashboard</span>
+    </a>
+
+    <div class="container">
+        <div id="alert-container"></div>
+
+        <div class="loading" id="loading-section">
+            <div class="spinner"></div>
+            <p>Loading upgrade details...</p>
+        </div>
+
+        <div id="main-content" style="display: none;">
+            <section class="upgrade-summary">
+                <h1>Choose Your Payment Method</h1>
+
+                <div class="tier-arrow">
+                    <span class="tier-badge from" id="from-tier">BRONZE</span>
+                    <i class="fas fa-arrow-right"></i>
+                    <span class="tier-badge to" id="to-tier">GOLD</span>
+                </div>
+
+                <div class="balance-info">
+                    <div class="balance-item">
+                        <div class="label">Upgrade Cost</div>
+                        <div class="value">R<span id="upgrade-cost">2,980</span></div>
+                    </div>
+                    <div class="balance-item">
+                        <div class="label">Your Commission Balance</div>
+                        <div class="value">R<span id="commission-balance">0</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="payment-options">
+                <!-- Option 1: Full Commission Balance -->
+                <div class="payment-card" id="card-commission-full" data-method="commission_full" style="display: none;">
+                    <span class="badge instant">INSTANT</span>
+                    <h3><i class="fas fa-wallet"></i> Pay with Commission Balance</h3>
+                    <p>Use your available commission balance to upgrade instantly</p>
+                    <p>Available Balance: <strong>R<span id="balance-full">0</span></strong></p>
+                    <p>After Payment: <strong>R<span id="balance-after">0</span></strong></p>
+                </div>
+
+                <!-- Option 2: Partial Commission + Online Payment -->
+                <div class="payment-card" id="card-commission-partial" data-method="commission_partial" style="display: none;">
+                    <span class="badge instant">INSTANT</span>
+                    <h3><i class="fas fa-coins"></i> Partial Commission + Online Payment</h3>
+                    <p>Combine your commission balance with online payment</p>
+
+                    <div class="slider-control">
+                        <label>Use Commission: R<span id="partial-comm-amount">0</span></label>
+                        <input type="range" id="commission-slider" min="0" max="0" step="10" value="0">
+                    </div>
+
+                    <div class="live-preview">
+                        Commission: <span class="highlight">R<span id="comm-amount">0</span></span>
+                        + Online: <span class="highlight">R<span id="online-amount">0</span></span>
+                    </div>
+                </div>
+
+                                <!-- Option 3: Smart Savings - Save for Bigger Upgrade -->
+                <div class="payment-card" id="card-savings" data-method="savings">
+                    <span class="badge smart-savings">SMART SAVINGS</span>
+                    <h3><i class="fas fa-piggy-bank"></i> Save for Bigger Upgrade</h3>
+                    <p>Jump up to 2 tiers! Save from your commissions, upgrade when fully paid</p>
+
+                    <!-- Tier Jump Selector -->
+                    <div class="tier-jump-selector">
+                        <label><strong>Choose Your Goal Tier:</strong></label>
+                        <select id="target-tier-select" class="tier-select">
+                            <!-- Options populated by JavaScript based on current tier -->
+                        </select>
+                        <div class="tier-cost-display">
+                            Total Cost: <span class="highlight">R<span id="selected-tier-cost">0</span></span>
+                        </div>
+                    </div>
+
+                    <!-- Savings Progress (shown if already saving) -->
+                    <div class="savings-progress-container" id="savings-progress-container" style="display:none;">
+                        <h4>📊 Your Savings Progress</h4>
+                        <div class="progress-bar-outer">
+                            <div class="progress-bar-inner" id="progress-bar-fill" style="width: 0%;"></div>
+                        </div>
+                        <p class="progress-text">
+                            R<span id="amount-saved">0</span> / R<span id="total-target">0</span> saved
+                            (<span id="progress-percentage">0</span>%)
+                        </p>
+                        <p class="estimate-text">
+                            <i class="fas fa-clock"></i> Estimated: <span id="estimated-time">calculating...</span>
+                        </p>
+                    </div>
+
+                    <!-- Deduction Slider -->
+                    <div class="slider-control">
+                        <label>Save from Each Commission: <span id="savings-pct">50</span>%</label>
+                        <input type="range" id="savings-slider" min="30" max="70" value="50" step="5">
+                        <div class="slider-labels">
+                            <span>30%</span>
+                            <span>50%</span>
+                            <span>70%</span>
+                        </div>
+                    </div>
+
+                    <!-- Live Example -->
+                    <div class="live-preview">
+                        <strong>Example:</strong> Earn R<span id="savings-example-earn">1000</span> →
+                        Save <span class="highlight">R<span id="savings-example-save">500</span></span> →
+                        Receive <span class="highlight">R<span id="savings-example-receive">500</span></span>
+                    </div>
+
+                    <!-- Important Notice -->
+                    <div class="savings-notice">
+                        <i class="fas fa-info-circle"></i>
+                        <strong>Important:</strong> You'll remain at your current tier and commission rate
+                        until your savings goal is reached. Then instant automatic upgrade!
+                    </div>
+
+                    <!-- Benefits List -->
+                    <div class="savings-benefits">
+                        <div class="benefit-item">
+                            <i class="fas fa-check-circle"></i> Zero upfront payment
+                        </div>
+                        <div class="benefit-item">
+                            <i class="fas fa-check-circle"></i> Jump up to 2 tiers
+                        </div>
+                        <div class="benefit-item">
+                            <i class="fas fa-check-circle"></i> Cancel anytime & get refund
+                        </div>
+                        <div class="benefit-item">
+                            <i class="fas fa-check-circle"></i> Track progress daily
+                        </div>
+                    </div>
+
+                    <!-- Authorization -->
+                    <div class="checkbox-auth">
+                        <input type="checkbox" id="authorize-savings">
+                        <label for="authorize-savings">
+                            <strong>I authorize automatic savings deductions from my commissions</strong>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Option 4: Online Payment (Yoco) -->
+                <div class="payment-card" id="card-online" data-method="online">
+                    <span class="badge instant">INSTANT</span>
+                    <h3><i class="fas fa-credit-card"></i> Online Payment</h3>
+                    <p>Credit/Debit Cards, EFT, SnapScan via Yoco Payment Gateway</p>
+                    <p>Secure instant payment processing</p>
+                </div>
+
+                <!-- Option 5: Bank EFT Transfer -->
+                <div class="payment-card" id="card-eft" data-method="eft">
+                    <span class="badge manual">1-24 HOURS</span>
+                    <h3><i class="fas fa-university"></i> Bank EFT Transfer</h3>
+                    <p>Direct bank transfer - Free instant tier access while awaiting verification</p>
+
+                    <div class="bank-details">
+                        <p><strong>Bank:</strong> NEDBANK</p>
+                        <p><strong>Account:</strong> Zero2billionaires Amavulandlela</p>
+                        <p><strong>Number:</strong> 1318257727</p>
+                        <p><strong>Reference:</strong> Your WhatsApp Number</p>
+                    </div>
+                    <p style="margin-top: 10px; color: #00ff88;"><i class="fas fa-bolt"></i> Get instant FREE tier access! Submit proof for verification.</p>
+                </div>
+
+                <!-- Option 6: Direct Cash Deposit -->
+                <div class="payment-card" id="card-cash" data-method="cash">
+                    <span class="badge instant-free">INSTANT + FREE</span>
+                    <h3><i class="fas fa-money-bill-wave"></i> Direct Cash Deposit</h3>
+                    <p>Cash deposit at any NEDBANK branch - Instant free tier access</p>
+
+                    <div class="bank-details">
+                        <p><strong>Bank:</strong> NEDBANK</p>
+                        <p><strong>Account:</strong> Zero2billionaires Amavulandlela</p>
+                        <p><strong>Number:</strong> 1318257727</p>
+                        <p><strong>Reference:</strong> Your WhatsApp Number</p>
+                    </div>
+                    <p style="margin-top: 10px; color: #00ff88;"><i class="fas fa-whatsapp"></i> Send proof to: <strong>077 490 1639</strong></p>
+                </div>
+            </div>
+
+            <button class="proceed-btn" id="proceed-btn" disabled>
+                <i class="fas fa-lock"></i> Select a Payment Method
+            </button>
+        </div>
+    </div>
+
+
+    <footer class="footer">
+        <p>Built with <i class="fas fa-heart" style="color: #ff6b6b;"></i> by <a href="https://www.z2blegacybuilders.co.za" target="_blank">Z2B Legacy Builders</a></p>
+        <p style="font-size: 0.9rem; margin-top: 10px; opacity: 0.6;">Empowering Legacy Builders Worldwide</p>
+    </footer>
+
+    <script>
+        // Global state
+        let upgradeData = null;
+        let commissionBalance = null;
+        let tierCosts = null;
+        let selectedMethod = null;
+        let savingsProgress = null;
+        let selectedSavingsTier = null;
+
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', async () => {
+            await initializePage();
+        });
+
+        async function initializePage() {
+            try {
+                // Load upgrade intent from localStorage
+                upgradeData = loadUpgradeData();
+                if (!upgradeData) {
+                    showError('No upgrade data found. Redirecting to tiers page...');
+                    setTimeout(() => window.location.href = 'tiers.html', 2000);
+                    return;
+                }
+
+                // Load tier costs
+                tierCosts = await loadTierCosts();
+
+                // Load commission balance
+                commissionBalance = await loadCommissionBalance(upgradeData.userId);
+
+                // Populate page with data
+                populatePage();
+
+                // Check payment options visibility
+                checkPaymentOptions();
+
+                // Load savings progress if applicable
+                savingsProgress = await loadSavingsProgress(upgradeData.userId);
+                if (savingsProgress && savingsProgress.has_active_plan) {
+                    displaySavingsProgress(savingsProgress);
+                }
+
+
+                // Setup event listeners
+                setupEventListeners();
+
+                // Hide loading, show content
+                document.getElementById('loading-section').style.display = 'none';
+                document.getElementById('main-content').style.display = 'block';
+
+            } catch (error) {
+                console.error('Initialization error:', error);
+                showError('Failed to load page: ' + error.message);
+            }
+        }
+
+        function loadUpgradeData() {
+            const data = localStorage.getItem('z2b_tier_upgrade');
+            if (!data) return null;
+
+            try {
+                return JSON.parse(data);
+            } catch (e) {
+                console.error('Failed to parse upgrade data:', e);
+                return null;
+            }
+        }
+
+        async function loadTierCosts() {
+            const response = await fetch('API/get-tier-costs.php');
+            const data = await response.json();
+
+            if (!data.success) {
+                throw new Error('Failed to load tier costs');
+            }
+
+            return data.tiers;
+        }
+
+
+        async function loadSavingsProgress(memberId) {
+            try {
+                const response = await fetch(`API/get-savings-progress.php?member_id=${memberId}`);
+                const data = await response.json();
+
+                if (!data.success) {
+                    return null;
+                }
+
+                return data;
+            } catch (error) {
+                console.error('Error loading savings progress:', error);
+                return null;
+            }
+        }
+
+        function displaySavingsProgress(progress) {
+            if (!progress.has_active_plan) return;
+
+            const container = document.getElementById('savings-progress-container');
+            const fillBar = document.getElementById('progress-bar-fill');
+            const amountSaved = document.getElementById('amount-saved');
+            const totalTarget = document.getElementById('total-target');
+            const progressPct = document.getElementById('progress-percentage');
+            const estimatedTime = document.getElementById('estimated-time');
+
+            // Show progress container
+            container.style.display = 'block';
+
+            // Update values
+            fillBar.style.width = progress.progress.progress_percentage + '%';
+            amountSaved.textContent = progress.progress.amount_saved.toLocaleString();
+            totalTarget.textContent = progress.progress.total_cost.toLocaleString();
+            progressPct.textContent = progress.progress.progress_percentage;
+
+            // Update estimated time
+            if (progress.estimates.estimated_months > 0) {
+                estimatedTime.textContent = progress.estimates.estimated_months + ' month(s)';
+            } else if (progress.estimates.estimated_weeks > 0) {
+                estimatedTime.textContent = progress.estimates.estimated_weeks + ' week(s)';
+            } else {
+                estimatedTime.textContent = 'Almost there!';
+            }
+        }
+
+        function populateTierSelector() {
+            const TIER_ORDER = ['BRONZE', 'COPPER', 'SILVER', 'GOLD', 'PLATINUM'];
+            const currentTier = upgradeData.fromTier;
+            const currentIndex = TIER_ORDER.indexOf(currentTier);
+
+            const selector = document.getElementById('target-tier-select');
+            selector.innerHTML = '<option value="">-- Select Target Tier --</option>';
+
+            // Add options for tiers up to 2 levels above
+            for (let i = currentIndex + 1; i <= currentIndex + 2 && i < TIER_ORDER.length; i++) {
+                const tier = TIER_ORDER[i];
+                const cost = tierCosts[tier].beta_price;
+                const option = document.createElement('option');
+                option.value = tier;
+                option.textContent = `${tier} - R${cost.toLocaleString()}`;
+                selector.appendChild(option);
+            }
+
+            // Add event listener for tier selection
+            selector.addEventListener('change', (e) => {
+                selectedSavingsTier = e.target.value;
+                if (selectedSavingsTier && tierCosts[selectedSavingsTier]) {
+                    const cost = tierCosts[selectedSavingsTier].beta_price;
+                    document.getElementById('selected-tier-cost').textContent = cost.toLocaleString();
+                }
+            });
+        }
+
+        function updateSavingsPreview(percentage) {
+            document.getElementById('savings-pct').textContent = percentage;
+
+            const exampleEarn = 1000;
+            const save = Math.round(exampleEarn * (percentage / 100));
+            const receive = exampleEarn - save;
+
+            document.getElementById('savings-example-earn').textContent = exampleEarn;
+            document.getElementById('savings-example-save').textContent = save;
+            document.getElementById('savings-example-receive').textContent = receive;
+        }
+
+        async function createSavingsPlan() {
+            const targetTier = document.getElementById('target-tier-select').value;
+            const deductionPct = parseInt(document.getElementById('savings-slider').value);
+            const authorized = document.getElementById('authorize-savings').checked;
+
+            if (!targetTier) {
+                throw new Error('Please select a target tier');
+            }
+
+            if (!authorized) {
+                throw new Error('Please authorize automatic savings deductions');
+            }
+
+            const cost = tierCosts[targetTier].beta_price;
+
+            const response = await fetch('API/create-savings-plan.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    member_id: upgradeData.userId,
+                    current_tier: upgradeData.fromTier,
+                    target_tier: targetTier,
+                    deduction_percentage: deductionPct
+                })
+            });
+
+            const result = await response.json();
+
+            if (!result.success) {
+                throw new Error(result.error || result.details || 'Failed to create savings plan');
+            }
+
+            // Show success message
+            showSuccess(`Smart Savings plan created! You'll save ${deductionPct}% from each commission towards ${targetTier} tier (R${cost.toLocaleString()})`);
+
+            // Redirect to dashboard
+            setTimeout(() => window.location.href = 'dashboard.html', 3000);
+        }
+
+        async function loadCommissionBalance(memberId) {
+            const response = await fetch(`API/get-commission-balance.php?member_id=${memberId}`);
+            const data = await response.json();
+
+            if (!data.success) {
+                throw new Error('Failed to load commission balance');
+            }
+
+            return data.balance;
+        }
+
+        function populatePage() {
+            // Tier names
+            document.getElementById('from-tier').textContent = upgradeData.fromTier;
+            document.getElementById('to-tier').textContent = upgradeData.toTier;
+
+            // Get upgrade cost
+            const cost = tierCosts[upgradeData.toTier].beta_price;
+            document.getElementById('upgrade-cost').textContent = cost.toLocaleString();
+
+            // Commission balance
+            const balance = commissionBalance.available_balance;
+            document.getElementById('commission-balance').textContent = balance.toLocaleString();
+
+            // Store cost in data attribute for easy access
+            document.getElementById('proceed-btn').dataset.cost = cost;
+            document.getElementById('proceed-btn').dataset.balance = balance;
+        }
+
+        function checkPaymentOptions() {
+            // Populate tier selector for Smart Savings
+            populateTierSelector();
+            const cost = parseFloat(document.getElementById('proceed-btn').dataset.cost);
+            const balance = parseFloat(document.getElementById('proceed-btn').dataset.balance);
+
+            // Option 1: Full commission balance (show if balance >= cost)
+            if (balance >= cost) {
+                document.getElementById('card-commission-full').style.display = 'block';
+                document.getElementById('balance-full').textContent = balance.toLocaleString();
+                document.getElementById('balance-after').textContent = (balance - cost).toLocaleString();
+            }
+
+            // Option 2: Partial commission (show if balance > 0 && balance < cost)
+            if (balance > 0 && balance < cost) {
+                const card = document.getElementById('card-commission-partial');
+                card.style.display = 'block';
+
+                // Set slider max to available balance
+                const slider = document.getElementById('commission-slider');
+                slider.max = Math.floor(balance);
+                slider.value = Math.min(Math.floor(balance), cost);
+
+                // Update preview
+                updatePartialPayment();
+            }
+
+            // Option 3, 4, 5, 6 are always visible
+        }
+
+        function setupEventListeners() {
+            // Savings slider
+            const savingsSlider = document.getElementById('savings-slider');
+            if (savingsSlider) {
+                savingsSlider.addEventListener('input', (e) => {
+                    updateSavingsPreview(parseInt(e.target.value));
+                });
+            }
+
+            // Payment card selection
+            document.querySelectorAll('.payment-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    if (!this.classList.contains('disabled')) {
+                        selectPaymentMethod(this.dataset.method);
+                    }
+                });
+            });
+
+            // Partial commission slider
+            const commSlider = document.getElementById('commission-slider');
+            if (commSlider) {
+                commSlider.addEventListener('input', updatePartialPayment);
+            }
+
+            // Deduction percentage slider
+            const deductSlider = document.getElementById('deduction-slider');
+            if (deductSlider) {
+                deductSlider.addEventListener('input', updateScheduledPreview);
+            }
+
+            // Authorization checkbox
+            const authCheckbox = document.getElementById('authorize-scheduled');
+            if (authCheckbox) {
+                authCheckbox.addEventListener('change', function() {
+                    updateProceedButton();
+                });
+            }
+
+            // Proceed button
+            document.getElementById('proceed-btn').addEventListener('click', processUpgrade);
+        }
+
+        function selectPaymentMethod(method) {
+            selectedMethod = method;
+
+            // Remove selected class from all cards
+            document.querySelectorAll('.payment-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+
+            // Add selected class to clicked card
+            document.querySelector(`[data-method="${method}"]`).classList.add('selected');
+
+            // Update proceed button
+            updateProceedButton();
+        }
+
+        function updateProceedButton() {
+            const btn = document.getElementById('proceed-btn');
+
+            if (!selectedMethod) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-lock"></i> Select a Payment Method';
+                return;
+            }
+
+            // Check if scheduled payment requires authorization
+            if (selectedMethod === 'scheduled') {
+                const authorized = document.getElementById('authorize-scheduled').checked;
+                if (!authorized) {
+                    btn.disabled = true;
+                    btn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Authorization Required';
+                    return;
+                }
+            }
+
+            // Enable button
+            btn.disabled = false;
+
+            // Update button text based on method
+            const methodTexts = {
+                'commission_full': '<i class="fas fa-check"></i> Pay with Commission Balance',
+                'commission_partial': '<i class="fas fa-check"></i> Use Commission + Pay Online',
+                'scheduled': '<i class="fas fa-calendar-check"></i> Get Instant Access - Pay Later',
+                'online': '<i class="fas fa-credit-card"></i> Proceed to Online Payment',
+                'eft': '<i class="fas fa-university"></i> Get Instant Access - Upload Proof',
+                'cash': '<i class="fas fa-money-bill-wave"></i> Get Instant Access - Upload Proof'
+            };
+
+            btn.innerHTML = methodTexts[selectedMethod] || 'Proceed';
+        }
+
+        function updatePartialPayment() {
+            const slider = document.getElementById('commission-slider');
+            const cost = parseFloat(document.getElementById('proceed-btn').dataset.cost);
+
+            const commAmount = parseFloat(slider.value);
+            const onlineAmount = cost - commAmount;
+
+            document.getElementById('partial-comm-amount').textContent = commAmount.toLocaleString();
+            document.getElementById('comm-amount').textContent = commAmount.toLocaleString();
+            document.getElementById('online-amount').textContent = onlineAmount.toLocaleString();
+        }
+
+        function updateScheduledPreview() {
+            const slider = document.getElementById('deduction-slider');
+            const percentage = parseInt(slider.value);
+
+            document.getElementById('deduction-pct').textContent = percentage;
+
+            // Update example calculation
+            const exampleEarn = 1000;
+            const exampleDeduct = exampleEarn * (percentage / 100);
+            const exampleReceive = exampleEarn - exampleDeduct;
+
+            document.getElementById('example-earn').textContent = exampleEarn.toLocaleString();
+            document.getElementById('example-deduct').textContent = exampleDeduct.toLocaleString();
+            document.getElementById('example-receive').textContent = exampleReceive.toLocaleString();
+
+            // Update estimate
+            const cost = parseFloat(document.getElementById('proceed-btn').dataset.cost);
+            const avgCommission = 800; // Placeholder - could fetch from API
+            const estimatedPayments = Math.ceil(cost / (avgCommission * (percentage / 100)));
+
+            document.getElementById('estimate-text').textContent =
+                `Based on your earning history, you'll pay this off in approximately ${estimatedPayments} commission payments at ${percentage}% deduction.`;
+        }
+
+        async function processUpgrade() {
+            const btn = document.getElementById('proceed-btn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+            try {
+                switch(selectedMethod) {
+                    case 'commission_full':
+                        await useFullCommission();
+                        break;
+                    case 'commission_partial':
+                        await usePartialCommission();
+                        break;
+                    case 'savings':
+                        await createSavingsPlan();
+                        break;
+                    case 'scheduled':
+                        await scheduleCommissionPayment();
+                        break;
+                    case 'online':
+                        await redirectToYoco();
+                        break;
+                    case 'eft':
+                    case 'cash':
+                        await createManualUpgrade();
+                        break;
+                    default:
+                        throw new Error('Invalid payment method');
+                }
+            } catch (error) {
+                console.error('Payment processing error:', error);
+                showError('Payment failed: ' + error.message);
+                updateProceedButton();
+            }
+        }
+
+        async function useFullCommission() {
+            const cost = parseFloat(document.getElementById('proceed-btn').dataset.cost);
+
+            const response = await fetch('API/use-commission-for-upgrade.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    member_id: upgradeData.userId,
+                    from_tier: upgradeData.fromTier,
+                    to_tier: upgradeData.toTier,
+                    upgrade_cost: cost,
+                    commission_amount_to_use: cost,
+                    remaining_payment_method: null
+                })
+            });
+
+            const result = await response.json();
+
+            if (!result.success) {
+                throw new Error(result.error || 'Payment failed');
+            }
+
+            // Update localStorage tier
+            const userData = JSON.parse(localStorage.getItem('z2b_user'));
+            if (userData) {
+                userData.tier = upgradeData.toTier;
+                localStorage.setItem('z2b_user', JSON.stringify(userData));
+            }
+
+            // Show success and redirect
+            showSuccess(`Tier upgraded to ${upgradeData.toTier}! New balance: R${result.new_balance.toLocaleString()}`);
+            setTimeout(() => window.location.href = 'dashboard.html', 2000);
+        }
+
+        async function usePartialCommission() {
+            const cost = parseFloat(document.getElementById('proceed-btn').dataset.cost);
+            const commAmount = parseFloat(document.getElementById('commission-slider').value);
+
+            const response = await fetch('API/use-commission-for-upgrade.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    member_id: upgradeData.userId,
+                    from_tier: upgradeData.fromTier,
+                    to_tier: upgradeData.toTier,
+                    upgrade_cost: cost,
+                    commission_amount_to_use: commAmount,
+                    remaining_payment_method: 'online'
+                })
+            });
+
+            const result = await response.json();
+
+            if (!result.success) {
+                throw new Error(result.error || 'Payment failed');
+            }
+
+            // Commission deducted successfully, redirect to Yoco for remaining amount
+            if (result.yoco_redirect_url) {
+                showSuccess(`R${commAmount.toLocaleString()} commission deducted. Redirecting to payment gateway...`);
+                setTimeout(() => window.location.href = result.yoco_redirect_url, 1500);
+            }
+        }
+
+        async function scheduleCommissionPayment() {
+            const cost = parseFloat(document.getElementById('proceed-btn').dataset.cost);
+            const deductionPct = parseInt(document.getElementById('deduction-slider').value);
+            const authorized = document.getElementById('authorize-scheduled').checked;
+
+            if (!authorized) {
+                throw new Error('Authorization required');
+            }
+
+            const response = await fetch('API/schedule-commission-payment.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    member_id: upgradeData.userId,
+                    from_tier: upgradeData.fromTier,
+                    to_tier: upgradeData.toTier,
+                    upgrade_cost: cost,
+                    deduction_percentage: deductionPct,
+                    user_authorized: true,
+                    authorization_ip: await getClientIP()
+                })
+            });
+
+            const result = await response.json();
+
+            if (!result.success) {
+                throw new Error(result.error || 'Failed to schedule payment');
+            }
+
+            // Update localStorage tier
+            const userData = JSON.parse(localStorage.getItem('z2b_user'));
+            if (userData) {
+                userData.tier = upgradeData.toTier;
+                localStorage.setItem('z2b_user', JSON.stringify(userData));
+            }
+
+            // Show success and redirect
+            showSuccess(`Instant access to ${result.tier_upgraded_to} granted! Future commissions will be deducted at ${deductionPct}%`);
+            setTimeout(() => window.location.href = 'dashboard.html', 2500);
+        }
+
+        async function redirectToYoco() {
+            // Create full online payment checkout
+            const cost = parseFloat(document.getElementById('proceed-btn').dataset.cost);
+
+            // This would call the existing create-tier-checkout.php
+            // For now, placeholder redirect
+            showSuccess('Redirecting to Yoco payment gateway...');
+            setTimeout(() => {
+                window.location.href = `register.html?tier=${upgradeData.tierCode}&upgrade=true`;
+            }, 1500);
+        }
+
+        async function createManualUpgrade() {
+            const cost = parseFloat(document.getElementById('proceed-btn').dataset.cost);
+
+            const response = await fetch('API/create-manual-tier-upgrade.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    member_id: upgradeData.userId,
+                    from_tier: upgradeData.fromTier,
+                    to_tier: upgradeData.toTier,
+                    upgrade_cost: cost,
+                    payment_method: selectedMethod,
+                    reference: upgradeData.userPhone || '0774901639'
+                })
+            });
+
+            const result = await response.json();
+
+            if (!result.success) {
+                throw new Error(result.error || 'Failed to create upgrade');
+            }
+
+            // Store tier upgrade ID for proof upload
+            localStorage.setItem('z2b_tier_upgrade_id', result.tier_upgrade_id);
+
+            // Update localStorage tier (instant access)
+            const userData = JSON.parse(localStorage.getItem('z2b_user'));
+            if (userData) {
+                userData.tier = upgradeData.toTier;
+                localStorage.setItem('z2b_user', JSON.stringify(userData));
+            }
+
+            // Redirect to proof upload page
+            window.location.href = 'tier-upgrade-proof-upload.html';
+        }
+
+        async function getClientIP() {
+            try {
+                const response = await fetch('https://api.ipify.org?format=json');
+                const data = await response.json();
+                return data.ip;
+            } catch (e) {
+                return 'unknown';
+            }
+        }
+
+        function showSuccess(message) {
+            const container = document.getElementById('alert-container');
+            container.innerHTML = `<div class="alert success" style="display: block;">${message}</div>`;
+        }
+
+        function showError(message) {
+            const container = document.getElementById('alert-container');
+            container.innerHTML = `<div class="alert error" style="display: block;">${message}</div>`;
+        }
+    </script>
+</body>
+</html>
