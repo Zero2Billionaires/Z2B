@@ -89,7 +89,10 @@
       "Bash(del landing-page.html)",
       "Bash(start \"C:\\Users\\Manana\\Z2B\\Z2B-v21\\app\\tiers.html\")",
       "Bash(start \"http://localhost:5000/admin/index.html\")",
-      "Bash(start \"http://localhost:5000/app/sell-product.html\")"
+      "Bash(start \"http://localhost:5000/app/sell-product.html\")",
+      "Bash(git checkout:*)",
+      "Bash(powershell.exe -Command \"Compress-Archive -Path ''build\\\\*'' -DestinationPath ''z2b-react-deployment.zip'' -Force\")",
+      "Bash(git reset:*)"
     ],
     "deny": [],
     "ask": []

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/dashboard.css';
+import MembersTraining from './MembersTraining';
 
 const MembersDashboard = ({ user, onLogout }) => {
   const [stats, setStats] = useState({
@@ -178,6 +179,13 @@ const MembersDashboard = ({ user, onLogout }) => {
             Milestones
           </button>
           <button
+            className={activeTab === 'training' ? 'nav-item active' : 'nav-item'}
+            onClick={() => setActiveTab('training')}
+          >
+            <span className="nav-icon">🎓</span>
+            Training
+          </button>
+          <button
             className={activeTab === 'coach' ? 'nav-item active' : 'nav-item'}
             onClick={() => setActiveTab('coach')}
           >
@@ -341,8 +349,15 @@ const MembersDashboard = ({ user, onLogout }) => {
           </div>
         )}
 
+        {/* Training Tab */}
+        {activeTab === 'training' && (
+          <div className="tab-content">
+            <MembersTraining />
+          </div>
+        )}
+
         {/* Other Tabs - Placeholders for now */}
-        {activeTab !== 'overview' && (
+        {activeTab !== 'overview' && activeTab !== 'training' && (
           <div className="tab-content">
             <div className="placeholder-message">
               <h2>🚧 {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Section</h2>
