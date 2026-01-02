@@ -1,11 +1,11 @@
 [variables]
-NIXPACKS_BUILD_DIR = "Z2B-v21/admin-backend"
+NIXPACKS_BUILD_DIR = "server"
 
 [phases.setup]
 nixPkgs = ["nodejs-18_x"]
 
 [phases.install]
-cmds = ["cd Z2B-v21/admin-backend && npm install"]
+cmds = ["cd server && npm install"]
 
 [start]
-cmd = "cd Z2B-v21/admin-backend && npm start"
+cmd = "cd server && npm start"
