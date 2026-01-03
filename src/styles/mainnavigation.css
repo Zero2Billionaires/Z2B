@@ -128,8 +128,9 @@
 }
 
 .nav-item.highlight .nav-icon {
-  font-size: 1.3rem;
-  animation: bounce 2s ease-in-out infinite;
+  font-size: 1.1rem;
+  animation: none;
+  margin-right: 0.2rem;
 }
 
 @keyframes pulse-gold {
@@ -220,7 +221,6 @@
   transform: scale(1.05);
 }
 
-.btn-start,
 .btn-dashboard {
   background: linear-gradient(135deg, #32cd32, #228b22);
   border: none;
@@ -233,10 +233,38 @@
   box-shadow: 0 4px 15px rgba(50, 205, 50, 0.3);
 }
 
-.btn-start:hover,
 .btn-dashboard:hover {
   transform: scale(1.05);
   box-shadow: 0 6px 20px rgba(50, 205, 50, 0.5);
+}
+
+.btn-register {
+  background: linear-gradient(135deg, #daa520, #b8860b);
+  border: 2px solid #ffd700;
+  color: #0f0a08;
+  padding: 0.75rem 1.8rem;
+  border-radius: 10px;
+  font-weight: bold;
+  font-size: 1.05rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(218, 165, 32, 0.5);
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.btn-register:hover {
+  background: linear-gradient(135deg, #ffd700, #daa520);
+  transform: scale(1.08) translateY(-2px);
+  box-shadow: 0 8px 30px rgba(218, 165, 32, 0.7);
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 4px 20px rgba(218, 165, 32, 0.5);
+  }
+  50% {
+    box-shadow: 0 4px 25px rgba(255, 215, 0, 0.8);
+  }
 }
 
 .btn-logout {
@@ -342,7 +370,9 @@
 }
 
 .btn-login.mobile,
-.btn-start.mobile {
+.btn-register.mobile,
+.btn-dashboard.mobile,
+.btn-logout.mobile {
   width: 100%;
   padding: 1rem;
   font-size: 1.1rem;
@@ -450,8 +480,8 @@
   align-items: center;
   gap: 1.5rem;
   padding: 1.5rem;
-  background: rgba(255, 255, 255, 0.05);
-  border: 2px solid rgba(218, 165, 32, 0.3);
+  background: #8b4513;
+  border: 2px solid #daa520;
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -468,6 +498,9 @@
 .side-menu-icon {
   font-size: 2.5rem;
   line-height: 1;
+  color: #ffffff;
+  font-weight: bold;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .side-menu-content {
@@ -522,7 +555,7 @@
   }
 
   .header-cta .btn-login,
-  .header-cta .btn-start,
+  .header-cta .btn-register,
   .header-cta .btn-dashboard,
   .header-cta .btn-logout {
     display: none;

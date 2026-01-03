@@ -3,23 +3,23 @@
   "name": "Z2B Table - Build Your Legacy",
   "icons": [
     {
-      "src": "z2b-icon.jpg",
+      "src": "z2b-table-icon.jpeg",
       "sizes": "64x64 32x32 24x24 16x16",
       "type": "image/jpeg"
     },
     {
-      "src": "z2b-icon-192.png",
-      "type": "image/png",
+      "src": "z2b-table-icon.jpeg",
+      "type": "image/jpeg",
       "sizes": "192x192"
     },
     {
-      "src": "z2b-icon-512.png",
-      "type": "image/png",
+      "src": "z2b-table-icon.jpeg",
+      "type": "image/jpeg",
       "sizes": "512x512"
     }
   ],
-  "start_url": "./Table",
+  "start_url": "./",
   "display": "standalone",
-  "theme_color": "#daa520",
+  "theme_color": "#8b4513",
   "background_color": "#1a0f0a"
 }

@@ -129,6 +129,53 @@ const coachUserSchema = new mongoose.Schema({
   lastActive: {
     type: Date,
     default: Date.now
+  },
+
+  // Admin Role System
+  adminRole: {
+    type: String,
+    enum: ['none', 'call_center', 'support', 'sales', 'finance', 'senior', 'ceo'],
+    default: 'none'
+  },
+
+  adminPermissions: {
+    canRead: { type: Boolean, default: false },
+    canEdit: { type: Boolean, default: false },
+    canDelete: { type: Boolean, default: false },
+    canManageAdmins: { type: Boolean, default: false },
+    canEditCommissions: { type: Boolean, default: false },
+    canCreateAwards: { type: Boolean, default: false },
+    canAuthorizeFree: { type: Boolean, default: false },
+    canProcessPayouts: { type: Boolean, default: false },
+    canViewFinancials: { type: Boolean, default: false }
+  },
+
+  assignedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'CoachUser'
+  },
+
+  roleAssignedDate: Date,
+  roleNotes: String,
+
+  // Free Membership Authorization
+  freeMembershipStatus: {
+    isFree: {
+      type: Boolean,
+      default: false
+    },
+    category: {
+      type: String,
+      enum: ['partner', 'community', 'cash_deposit', 'special', null]
+    },
+    justification: String,
+    authorizedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'CoachUser'
+    },
+    authorizedDate: Date,
+    expiresAt: Date,
+    notes: String
   }
 }, {
   timestamps: true

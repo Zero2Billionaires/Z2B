@@ -104,25 +104,29 @@ const MembershipPricing = ({ onTierSelected }) => {
 
   const handleTierSelect = (tierId) => {
     setSelectedTier(tierId);
+
+    // Immediately save and navigate (single-click selection)
+    const tier = tiers.find(t => t.id === tierId);
+    const price = showBetaPricing ? tier.betaPrice : tier.regularPrice;
+    const pvPoints = calculatePV(tier);
+
+    localStorage.setItem('selectedTier', JSON.stringify({
+      tier: tierId,
+      name: tier.name,
+      price: price,
+      pvPoints: pvPoints,
+      pricingType: showBetaPricing ? 'beta' : 'regular'
+    }));
+
+    if (onTierSelected) {
+      onTierSelected(tierId);
+    }
   };
 
   const handleContinue = () => {
-    if (selectedTier) {
-      const tier = tiers.find(t => t.id === selectedTier);
-      const price = showBetaPricing ? tier.betaPrice : tier.regularPrice;
-      const pvPoints = calculatePV(tier);
-
-      localStorage.setItem('selectedTier', JSON.stringify({
-        tier: selectedTier,
-        name: tier.name,
-        price: price,
-        pvPoints: pvPoints,
-        pricingType: showBetaPricing ? 'beta' : 'regular'
-      }));
-
-      if (onTierSelected) {
-        onTierSelected(selectedTier);
-      }
+    // This function is now redundant but kept for backwards compatibility
+    if (selectedTier && onTierSelected) {
+      onTierSelected(selectedTier);
     }
   };
 

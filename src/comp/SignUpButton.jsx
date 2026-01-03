@@ -10,7 +10,7 @@ const SignUpButton = ({
 }) => {
   const handleSignUp = () => {
     if (onNavigate) {
-      onNavigate('tiers');
+      onNavigate('signup');
     }
   };
 

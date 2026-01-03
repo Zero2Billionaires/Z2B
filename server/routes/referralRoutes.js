@@ -53,15 +53,15 @@ router.get('/stats', protect, async (req, res, next) => {
     // Get member's tier info
     const user = await CoachUser.findById(userId);
 
-    // Tier-based ISP percentages (from compensation plan)
+    // Tier-based ISP percentages (from compensation plan - matches opportunity page)
     const tierISPRates = {
-      'FAM': 0.20,
-      'Bronze': 0.25,
-      'Copper': 0.30,
-      'Silver': 0.35,
-      'Gold': 0.40,
-      'Platinum': 0.45,
-      'Diamond': 0.00  // Whitelabel tier - sets own prices, keeps all sales, pays Z2B whitelabel premium only
+      'FAM': 0.00,      // Free tier - no commission
+      'Bronze': 0.18,   // 18% - Updated to match opportunity page
+      'Copper': 0.22,   // 22% - Updated to match opportunity page
+      'Silver': 0.25,   // 25% - Updated to match opportunity page
+      'Gold': 0.28,     // 28% - Updated to match opportunity page
+      'Platinum': 0.30, // 30% - Updated to match opportunity page
+      'Diamond': 0.00   // Whitelabel tier - sets own prices, keeps all sales, pays Z2B whitelabel premium only
     };
 
     // Average monthly subscription price (example: R480 for Bronze)
@@ -123,8 +123,8 @@ router.get('/stats', protect, async (req, res, next) => {
           return sum + (tierPrices[referral.tier] || 0);
         }, 0);
 
-        // First set of 3 = 8%, additional sets = 10%
-        const qpbRate = setIndex === 0 ? 0.08 : 0.10;
+        // First set of 3 = 7.5%, additional sets = 10% (matches opportunity page)
+        const qpbRate = setIndex === 0 ? 0.075 : 0.10;
         qpbBonus += setSalesValue * qpbRate;
       }
     }
@@ -144,7 +144,7 @@ router.get('/stats', protect, async (req, res, next) => {
     // QPB breakdown for display
     const qpbSets = [];
     for (let i = 0; i < completeSetsOf3; i++) {
-      const rate = i === 0 ? '8%' : '10%';
+      const rate = i === 0 ? '7.5%' : '10%';
       const setNum = i + 1;
       qpbSets.push({
         setNumber: setNum,
@@ -178,7 +178,7 @@ router.get('/stats', protect, async (req, res, next) => {
             qpbSets: qpbSets,
             daysRemaining: daysRemaining,
             explanation: completeSetsOf3 === 0
-              ? `You need 3 sales by ${cycleEndDate.toLocaleDateString()} to earn your first QPB (8% of sales value)`
+              ? `You need 3 sales by ${cycleEndDate.toLocaleDateString()} to earn your first QPB (7.5% of sales value)`
               : `You've earned ${completeSetsOf3} QPB set(s) this cycle! Next set pays 10%.`
           }
         },

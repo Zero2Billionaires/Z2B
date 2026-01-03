@@ -2,8 +2,10 @@ import React from 'react';
 import '../styles/about.css';
 import coachManlawFace from '../assets/coach-manlaw-face.png';
 import billionaireTable4Legs from '../assets/billionaire-table-4legs.png';
+import SignUpButton from './SignUpButton';
+import FloatingUpsell from './FloatingUpsell';
 
-const MeetCoachManlaw = () => {
+const MeetCoachManlaw = ({ onNavigate }) => {
   return (
     <div className="about-container">
       {/* Header */}
@@ -302,13 +304,14 @@ const MeetCoachManlaw = () => {
           Coach Manlaw is waiting to guide you from zero to billionaire. Start with Milestone 1
           (100% FREE) and experience personalized AI coaching that actually works.
         </p>
-        <button className="cta-button">
-          🤖 Start Free & Meet Coach Manlaw
-        </button>
+        <SignUpButton onNavigate={onNavigate} variant="primary" size="large" text="🚀 Join Z2B Now" />
         <p className="cta-footnote">
           No credit card required. Access to Coach Manlaw included in all membership tiers.
         </p>
       </section>
+
+      {/* Floating Upsell Button */}
+      <FloatingUpsell onNavigate={onNavigate} />
     </div>
   );
 };

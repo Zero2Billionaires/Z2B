@@ -1,7 +1,9 @@
 import React from 'react';
 import '../styles/about.css';
+import SignUpButton from './SignUpButton';
+import FloatingUpsell from './FloatingUpsell';
 
-const SuccessStories = () => {
+const SuccessStories = ({ onNavigate }) => {
   return (
     <div className="about-container">
       {/* Header */}
@@ -178,13 +180,14 @@ const SuccessStories = () => {
         <p>
           Will you write it? Or will you watch someone else write theirs while you stay where you are?
         </p>
-        <button className="cta-button">
-          ✍️ Yes! I'm Ready to Write My Success Story
-        </button>
+        <SignUpButton onNavigate={onNavigate} variant="primary" size="large" text="✍️ Yes! I'm Ready to Write My Success Story" />
         <p className="cta-footnote">
           Milestone 1 is 100% FREE. No credit card. No risk. Just you, your vision, and your future.
         </p>
       </section>
+
+      {/* Floating Upsell Button */}
+      <FloatingUpsell onNavigate={onNavigate} />
     </div>
   );
 };

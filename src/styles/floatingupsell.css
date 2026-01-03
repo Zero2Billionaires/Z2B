@@ -1,0 +1,470 @@
+/* Floating Upsell Container */
+.floating-upsell-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: linear-gradient(135deg, #8b4513, #654321);
+  border: 2px solid #daa520;
+  border-radius: 16px;
+  padding: 12px 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 20px rgba(218, 165, 32, 0.3);
+  z-index: 9999;
+  max-width: 320px;
+  animation: slideInRight 0.5s ease-out, floatPulse 3s ease-in-out infinite;
+  backdrop-filter: blur(10px);
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes floatPulse {
+  0%, 100% {
+    transform: translateY(0px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 20px rgba(218, 165, 32, 0.3);
+  }
+  50% {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.6), 0 0 30px rgba(218, 165, 32, 0.5);
+  }
+}
+
+.floating-upsell-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(218, 165, 32, 0.3);
+  color: #daa520;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.floating-upsell-close:hover {
+  background: rgba(218, 165, 32, 0.2);
+  border-color: #daa520;
+  transform: rotate(90deg);
+}
+
+.floating-upsell-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.floating-upsell-icon {
+  font-size: 2rem;
+  animation: iconPulse 2s ease-in-out infinite;
+}
+
+@keyframes iconPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+.floating-upsell-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.floating-upsell-title {
+  color: #ffd700;
+  font-weight: bold;
+  font-size: 0.95rem;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.floating-upsell-subtitle {
+  color: #c4a76f;
+  font-size: 0.75rem;
+}
+
+.floating-upsell-btn {
+  background: linear-gradient(135deg, #daa520, #b8860b);
+  color: #0f0a08;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(218, 165, 32, 0.4);
+}
+
+.floating-upsell-btn:hover {
+  background: linear-gradient(135deg, #ffd700, #daa520);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(218, 165, 32, 0.6);
+}
+
+/* Minimized State */
+.floating-upsell-minimized {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #8b4513, #654321);
+  border: 2px solid #daa520;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 9999;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 20px rgba(218, 165, 32, 0.4);
+  animation: bounce 2s ease-in-out infinite;
+  transition: all 0.3s ease;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.floating-upsell-minimized:hover {
+  transform: scale(1.1);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.6), 0 0 30px rgba(218, 165, 32, 0.6);
+}
+
+.pulse-icon {
+  font-size: 2rem;
+  animation: iconPulse 2s ease-in-out infinite;
+}
+
+/* Modal Styles */
+.floating-upsell-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 20px;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.floating-upsell-modal {
+  background: linear-gradient(135deg, #1a0f0a 0%, #2d1810 100%);
+  border: 2px solid rgba(218, 165, 32, 0.4);
+  border-radius: 20px;
+  padding: 30px;
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+  animation: modalSlideUp 0.4s ease-out;
+}
+
+@keyframes modalSlideUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(218, 165, 32, 0.3);
+  color: #daa520;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.modal-close-btn:hover {
+  background: rgba(218, 165, 32, 0.2);
+  border-color: #ffd700;
+  transform: rotate(90deg);
+}
+
+.modal-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.modal-header h2 {
+  color: #ffd700;
+  font-size: 1.8rem;
+  margin-bottom: 8px;
+}
+
+.modal-tagline {
+  color: #daa520;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.modal-benefits {
+  margin-bottom: 30px;
+}
+
+.modal-benefits h3 {
+  color: #daa520;
+  font-size: 1.3rem;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.modal-benefits ul {
+  list-style: none;
+  padding: 0;
+}
+
+.modal-benefits li {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding: 15px;
+  background: rgba(218, 165, 32, 0.05);
+  border: 1px solid rgba(218, 165, 32, 0.2);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.modal-benefits li:hover {
+  background: rgba(218, 165, 32, 0.1);
+  border-color: rgba(218, 165, 32, 0.4);
+  transform: translateX(5px);
+}
+
+.benefit-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.modal-benefits li div {
+  flex: 1;
+}
+
+.modal-benefits strong {
+  color: #ffd700;
+  display: block;
+  margin-bottom: 4px;
+  font-size: 1rem;
+}
+
+.modal-benefits p {
+  color: #c4a76f;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.modal-pricing {
+  text-align: center;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: rgba(218, 165, 32, 0.1);
+  border: 2px solid rgba(218, 165, 32, 0.3);
+  border-radius: 12px;
+}
+
+.price-highlight {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.price-label {
+  color: #daa520;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.price-amount {
+  color: #ffd700;
+  font-size: 2.5rem;
+  font-weight: bold;
+}
+
+.price-note {
+  color: #ff6b6b;
+  font-size: 0.9rem;
+  margin-top: 10px;
+  font-weight: 600;
+}
+
+.modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.btn-upgrade-now {
+  background: linear-gradient(135deg, #daa520, #b8860b);
+  color: #0f0a08;
+  border: none;
+  padding: 16px 32px;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 20px rgba(218, 165, 32, 0.4);
+}
+
+.btn-upgrade-now:hover {
+  background: linear-gradient(135deg, #ffd700, #daa520);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(218, 165, 32, 0.6);
+}
+
+.btn-maybe-later {
+  background: transparent;
+  color: #c4a76f;
+  border: 1px solid rgba(218, 165, 32, 0.3);
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-maybe-later:hover {
+  background: rgba(218, 165, 32, 0.1);
+  border-color: rgba(218, 165, 32, 0.5);
+  color: #daa520;
+}
+
+.modal-guarantee {
+  text-align: center;
+  padding-top: 20px;
+  border-top: 1px solid rgba(218, 165, 32, 0.2);
+}
+
+.modal-guarantee p {
+  color: #c4a76f;
+  margin: 5px 0;
+}
+
+.modal-guarantee strong {
+  color: #51cf66;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .floating-upsell-container {
+    position: fixed;
+    bottom: 15px;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    max-width: 260px;
+    width: calc(100% - 40px);
+    padding: 8px 10px;
+    z-index: 9999;
+  }
+
+  .floating-upsell-content {
+    gap: 8px;
+  }
+
+  .floating-upsell-icon {
+    font-size: 1.5rem;
+  }
+
+  .floating-upsell-title {
+    font-size: 0.8rem;
+  }
+
+  .floating-upsell-subtitle {
+    font-size: 0.65rem;
+  }
+
+  .floating-upsell-btn {
+    padding: 6px 10px;
+    font-size: 0.7rem;
+  }
+
+  .floating-upsell-minimized {
+    position: fixed;
+    width: 50px;
+    height: 50px;
+    bottom: 15px;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    z-index: 9999;
+  }
+
+  .pulse-icon {
+    font-size: 1.5rem;
+  }
+
+  .floating-upsell-modal {
+    padding: 20px;
+    border-radius: 16px;
+    max-width: 95%;
+  }
+
+  .modal-header h2 {
+    font-size: 1.3rem;
+  }
+
+  .price-amount {
+    font-size: 1.8rem;
+  }
+}
+
+/* Prevent body scroll when modal is open */
+body:has(.floating-upsell-modal-overlay) {
+  overflow: hidden;
+}

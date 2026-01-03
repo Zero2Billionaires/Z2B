@@ -1,5 +1,7 @@
 import React from 'react';
 import '../styles/ecosystem.css';
+import SignUpButton from './SignUpButton';
+import FloatingUpsell from './FloatingUpsell';
 
 const Ecosystem = ({ onNavigate }) => {
   const apps = [
@@ -374,6 +376,18 @@ const Ecosystem = ({ onNavigate }) => {
           💎 Upgrade Your Tier
         </button>
       </div>
+
+      {/* Sign Up CTA */}
+      <div className="ecosystem-cta" style={{ marginTop: '2rem', textAlign: 'center' }}>
+        <h2>Not a Member Yet?</h2>
+        <p>
+          Join Z2B Legacy Builders today and start building your billion-dollar table!
+        </p>
+        <SignUpButton onNavigate={onNavigate} variant="primary" size="large" />
+      </div>
+
+      {/* Floating Upsell Button */}
+      <FloatingUpsell onNavigate={onNavigate} />
     </div>
   );
 };

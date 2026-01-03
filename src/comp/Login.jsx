@@ -28,7 +28,7 @@ const Login = ({ onLoginSuccess }) => {
     setError('');
 
     try {
-      const response = await fetch(`${API_URL}/auth/login`, {
+      const response = await fetch(`${API_URL}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -55,8 +55,10 @@ const Login = ({ onLoginSuccess }) => {
       }
     } catch (err) {
       console.error('Login error:', err);
-      setError('Connection error. Please try again.');
-      setTimeout(() => setError(''), 5000);
+
+      // Show helpful message about backend deployment
+      setError('⚠️ Member login requires backend deployment. Contact support or use the REGISTER button to create a new account.');
+      setTimeout(() => setError(''), 10000);
     } finally {
       setLoading(false);
     }
@@ -75,7 +77,7 @@ const Login = ({ onLoginSuccess }) => {
     setResetMessage('');
 
     try {
-      const response = await fetch(`${API_URL}/auth/forgot-password`, {
+      const response = await fetch(`${API_URL}/api/auth/forgot-password`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

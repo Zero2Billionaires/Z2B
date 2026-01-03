@@ -1,9 +1,14 @@
 import React from 'react';
 import '../styles/welcome.css';
 import z2bTableLogo from '../assets/z2b-table-logo.jpeg';
+import billionaireTable from '../assets/billionaire-table-4legs.png';
 import SignUpButton from './SignUpButton';
+import FloatingUpsell from './FloatingUpsell';
 
 const Welcome = ({ onStartJourney, onNavigate }) => {
+  const [showUpsellModal, setShowUpsellModal] = React.useState(false);
+  const [selectedMilestone, setSelectedMilestone] = React.useState(null);
+
   const milestones = [
     { number: 1, name: 'Vision Board', icon: '🎯', free: true, description: 'Define your WHY, SWOT, and legacy vision' },
     { number: 2, name: 'Skills Assessment', icon: '📚', free: false, description: 'Identify skills, gaps, and set goals' },
@@ -13,6 +18,29 @@ const Welcome = ({ onStartJourney, onNavigate }) => {
     { number: 6, name: 'Personal Brand', icon: '⭐', free: false, description: 'Build your unique value proposition' },
     { number: 7, name: 'Launch Ready', icon: '🚀', free: false, description: 'Go live with your Table' }
   ];
+
+  const handleMilestoneClick = (milestone) => {
+    if (milestone.number === 1) {
+      onStartJourney();
+    } else {
+      setSelectedMilestone(milestone);
+      setShowUpsellModal(true);
+    }
+  };
+
+  const handleStageClick = (stageNumber) => {
+    if (stageNumber === 1) {
+      onStartJourney();
+    } else {
+      setSelectedMilestone({ number: stageNumber, name: `Stage ${stageNumber}` });
+      setShowUpsellModal(true);
+    }
+  };
+
+  const handleTableFocusClick = (tableName) => {
+    setSelectedMilestone({ name: tableName });
+    setShowUpsellModal(true);
+  };
 
   const tliHighlights = [
     { level: '☿️ MERCURY', income: 'R2.5K - R10K' },
@@ -42,7 +70,7 @@ const Welcome = ({ onStartJourney, onNavigate }) => {
 
       {/* What is Z2B Table */}
       <div className="section what-is-section">
-        <h2>🪑 What is the Z2B Table?</h2>
+        <h2>What is the Z2B Table?</h2>
         <p className="section-intro">
           Your Table is more than a business—it's your personal ecosystem for building generational wealth.
           Whether you're a creator, entrepreneur, investor, or impact-maker, the Z2B Table gives you
@@ -113,7 +141,10 @@ const Welcome = ({ onStartJourney, onNavigate }) => {
 
       {/* The 4 Legs of the Billionaire Table */}
       <div className="section legs-section">
-        <h2>🪑 The 4 Legs of the Billionaire Table</h2>
+        <div className="billion-dollar-table-image">
+          <img src={billionaireTable} alt="Billion Dollar Table" className="table-image" />
+        </div>
+        <h2>The 4 Legs of the Billionaire Table</h2>
         <p className="section-intro">
           Your Table stands on 4 unshakeable legs. Each leg represents a pillar of wealth-building
           that successful entrepreneurs master. Neglect one, and your Table wobbles.
@@ -163,7 +194,7 @@ const Welcome = ({ onStartJourney, onNavigate }) => {
         </p>
 
         <div className="stages-journey">
-          <div className="stage-item">
+          <div className="stage-item clickable" onClick={() => handleStageClick(1)} style={{ cursor: 'pointer' }}>
             <div className="stage-number">1</div>
             <div className="stage-content">
               <h3>Awareness</h3>
@@ -172,7 +203,7 @@ const Welcome = ({ onStartJourney, onNavigate }) => {
             </div>
           </div>
 
-          <div className="stage-item">
+          <div className="stage-item clickable" onClick={() => handleStageClick(2)} style={{ cursor: 'pointer' }}>
             <div className="stage-number">2</div>
             <div className="stage-content">
               <h3>Alignment</h3>
@@ -181,7 +212,7 @@ const Welcome = ({ onStartJourney, onNavigate }) => {
             </div>
           </div>
 
-          <div className="stage-item">
+          <div className="stage-item clickable" onClick={() => handleStageClick(3)} style={{ cursor: 'pointer' }}>
             <div className="stage-number">3</div>
             <div className="stage-content">
               <h3>Action</h3>
@@ -190,7 +221,7 @@ const Welcome = ({ onStartJourney, onNavigate }) => {
             </div>
           </div>
 
-          <div className="stage-item">
+          <div className="stage-item clickable" onClick={() => handleStageClick(4)} style={{ cursor: 'pointer' }}>
             <div className="stage-number">4</div>
             <div className="stage-content">
               <h3>Adjustment</h3>
@@ -199,7 +230,7 @@ const Welcome = ({ onStartJourney, onNavigate }) => {
             </div>
           </div>
 
-          <div className="stage-item">
+          <div className="stage-item clickable" onClick={() => handleStageClick(5)} style={{ cursor: 'pointer' }}>
             <div className="stage-number">5</div>
             <div className="stage-content">
               <h3>Acceleration</h3>
@@ -208,7 +239,7 @@ const Welcome = ({ onStartJourney, onNavigate }) => {
             </div>
           </div>
 
-          <div className="stage-item">
+          <div className="stage-item clickable" onClick={() => handleStageClick(6)} style={{ cursor: 'pointer' }}>
             <div className="stage-number">6</div>
             <div className="stage-content">
               <h3>Ascension</h3>
@@ -217,7 +248,7 @@ const Welcome = ({ onStartJourney, onNavigate }) => {
             </div>
           </div>
 
-          <div className="stage-item">
+          <div className="stage-item clickable" onClick={() => handleStageClick(7)} style={{ cursor: 'pointer' }}>
             <div className="stage-number">7</div>
             <div className="stage-content">
               <h3>Activation</h3>
@@ -239,7 +270,12 @@ const Welcome = ({ onStartJourney, onNavigate }) => {
 
         <div className="milestones-grid">
           {milestones.map(milestone => (
-            <div key={milestone.number} className={`milestone-card ${milestone.free ? 'free' : 'paid'}`}>
+            <div
+              key={milestone.number}
+              className={`milestone-card ${milestone.free ? 'free' : 'paid'} clickable`}
+              onClick={() => handleMilestoneClick(milestone)}
+              style={{ cursor: 'pointer' }}
+            >
               <div className="milestone-header">
                 <span className="milestone-icon">{milestone.icon}</span>
                 <div className="milestone-title">
@@ -249,7 +285,7 @@ const Welcome = ({ onStartJourney, onNavigate }) => {
               </div>
               <p className="milestone-description">{milestone.description}</p>
               <div className="milestone-badge">
-                {milestone.free ? '✅ FREE' : '💎 Members Only'}
+                {milestone.free ? '✅ FREE - Click to Start' : '💎 Members Only - Click for Details'}
               </div>
             </div>
           ))}
@@ -296,32 +332,32 @@ const Welcome = ({ onStartJourney, onNavigate }) => {
       <div className="section tables-section">
         <h2>🎨 Choose Your Table Focus</h2>
         <div className="tables-grid">
-          <div className="table-card">
+          <div className="table-card clickable" onClick={() => handleTableFocusClick('Creator Table')} style={{ cursor: 'pointer' }}>
             <span className="table-icon">🎨</span>
             <h3>Creator Table</h3>
             <p>Digital products, content, courses, AI tools</p>
           </div>
-          <div className="table-card">
+          <div className="table-card clickable" onClick={() => handleTableFocusClick('Entrepreneur Table')} style={{ cursor: 'pointer' }}>
             <span className="table-icon">💼</span>
             <h3>Entrepreneur Table</h3>
             <p>Trading, services, SMEs, systems</p>
           </div>
-          <div className="table-card">
+          <div className="table-card clickable" onClick={() => handleTableFocusClick('Family Table')} style={{ cursor: 'pointer' }}>
             <span className="table-icon">👨‍👩‍👧‍👦</span>
             <h3>Family Table</h3>
             <p>Generational wealth, education, property</p>
           </div>
-          <div className="table-card">
+          <div className="table-card clickable" onClick={() => handleTableFocusClick('Social Impact Table')} style={{ cursor: 'pointer' }}>
             <span className="table-icon">🌍</span>
             <h3>Social Impact Table</h3>
             <p>Community upliftment, healing, transformation</p>
           </div>
-          <div className="table-card">
+          <div className="table-card clickable" onClick={() => handleTableFocusClick('Investor Table')} style={{ cursor: 'pointer' }}>
             <span className="table-icon">💰</span>
             <h3>Investor Table</h3>
             <p>Real estate, farming, multiple streams</p>
           </div>
-          <div className="table-card">
+          <div className="table-card clickable" onClick={() => handleTableFocusClick('Innovation Table')} style={{ cursor: 'pointer' }}>
             <span className="table-icon">🚀</span>
             <h3>Innovation Table</h3>
             <p>Digital-first, scale, raise capital</p>
@@ -373,6 +409,48 @@ const Welcome = ({ onStartJourney, onNavigate }) => {
           </a>
         </p>
       </div>
+
+      {/* Upsell Modal */}
+      {showUpsellModal && (
+        <div className="upsell-modal-overlay" onClick={() => setShowUpsellModal(false)}>
+          <div className="upsell-modal" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close" onClick={() => setShowUpsellModal(false)}>×</button>
+            <div className="modal-header">
+              <h2>🔒 Premium Content</h2>
+              <p className="modal-subtitle">Unlock Your Full Potential</p>
+            </div>
+            <div className="modal-body">
+              <div className="modal-icon">💎</div>
+              <h3>{selectedMilestone?.name || 'Premium Feature'}</h3>
+              <p className="modal-message">
+                This milestone is part of our premium Z2B Table membership.
+                Join today to access all 7 milestones and unlock your path to financial freedom!
+              </p>
+              <div className="modal-benefits">
+                <h4>What You'll Get:</h4>
+                <ul>
+                  <li>✅ Access to all 7 TEEE Milestones</li>
+                  <li>✅ Full Z2B Ecosystem Tools</li>
+                  <li>✅ AI Coach & Video Training</li>
+                  <li>✅ Community Support</li>
+                  <li>✅ Income Opportunities</li>
+                </ul>
+              </div>
+              <div className="modal-actions">
+                <button className="btn-modal-primary" onClick={() => onNavigate('signup')}>
+                  🚀 Join Z2B Now
+                </button>
+                <button className="btn-modal-secondary" onClick={() => onNavigate('tiers')}>
+                  View Membership Tiers
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Floating Upsell Button */}
+      <FloatingUpsell onNavigate={onNavigate} />
     </div>
   );
 };

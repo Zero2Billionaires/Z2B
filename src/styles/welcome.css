@@ -279,6 +279,34 @@
 }
 
 /* 4 Legs of the Billionaire Table */
+.billion-dollar-table-image {
+  display: flex;
+  justify-content: center;
+  margin: 2rem auto 3rem;
+  max-width: 600px;
+}
+
+.billion-dollar-table-image .table-image {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  object-fit: contain;
+  border-radius: 16px;
+  border: 3px solid rgba(218, 165, 32, 0.6);
+  box-shadow:
+    0 0 30px rgba(218, 165, 32, 0.4),
+    0 10px 40px rgba(0, 0, 0, 0.3);
+  transition: all 0.4s ease;
+}
+
+.billion-dollar-table-image .table-image:hover {
+  transform: scale(1.05);
+  border-color: #ffd700;
+  box-shadow:
+    0 0 40px rgba(218, 165, 32, 0.6),
+    0 15px 50px rgba(0, 0, 0, 0.4);
+}
+
 .legs-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -800,5 +828,219 @@
 
   .transparency-box {
     padding: 1.5rem;
+  }
+}
+
+/* Upsell Modal */
+.upsell-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5000;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.upsell-modal {
+  background: linear-gradient(135deg, #1a0f0a 0%, #2d1810 100%);
+  border: 3px solid #daa520;
+  border-radius: 20px;
+  max-width: 600px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(218, 165, 32, 0.4);
+  position: relative;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(220, 20, 60, 0.3);
+  border: 2px solid #dc143c;
+  color: #ff6b6b;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 1.8rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  line-height: 1;
+}
+
+.modal-close:hover {
+  background: rgba(220, 20, 60, 0.5);
+  transform: scale(1.1);
+}
+
+.modal-header {
+  background: linear-gradient(135deg, rgba(218, 165, 32, 0.2), rgba(255, 215, 0, 0.1));
+  padding: 2.5rem 2rem 2rem;
+  text-align: center;
+  border-bottom: 2px solid rgba(218, 165, 32, 0.3);
+}
+
+.modal-header h2 {
+  color: #ffd700;
+  font-size: 2.2rem;
+  margin: 0 0 0.5rem;
+  text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+}
+
+.modal-subtitle {
+  color: #daa520;
+  font-size: 1.1rem;
+  margin: 0;
+  font-style: italic;
+}
+
+.modal-body {
+  padding: 2rem;
+  text-align: center;
+}
+
+.modal-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.modal-body h3 {
+  color: #ffd700;
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+}
+
+.modal-message {
+  color: #c4a76f;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.modal-benefits {
+  background: rgba(218, 165, 32, 0.1);
+  border: 2px solid rgba(218, 165, 32, 0.3);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+.modal-benefits h4 {
+  color: #daa520;
+  font-size: 1.3rem;
+  margin: 0 0 1rem;
+  text-align: center;
+}
+
+.modal-benefits ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.modal-benefits li {
+  color: #f5f5dc;
+  font-size: 1rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(218, 165, 32, 0.2);
+}
+
+.modal-benefits li:last-child {
+  border-bottom: none;
+}
+
+.modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.btn-modal-primary,
+.btn-modal-secondary {
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.btn-modal-primary {
+  background: linear-gradient(135deg, #32cd32, #228b22);
+  color: white;
+  box-shadow: 0 4px 15px rgba(50, 205, 50, 0.3);
+}
+
+.btn-modal-primary:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(50, 205, 50, 0.5);
+}
+
+.btn-modal-secondary {
+  background: transparent;
+  border: 2px solid #daa520;
+  color: #daa520;
+}
+
+.btn-modal-secondary:hover {
+  background: rgba(218, 165, 32, 0.2);
+  transform: scale(1.05);
+}
+
+.milestone-card.clickable:hover,
+.stage-item.clickable:hover,
+.table-card.clickable:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 10px 30px rgba(218, 165, 32, 0.5);
+}
+
+@media (max-width: 768px) {
+  .upsell-modal {
+    width: 95%;
+  }
+
+  .modal-header h2 {
+    font-size: 1.8rem;
+  }
+
+  .modal-body {
+    padding: 1.5rem;
+  }
+
+  .modal-body h3 {
+    font-size: 1.5rem;
   }
 }

@@ -121,9 +121,9 @@ function AppContent() {
           <Route path="/vision-board" element={<VisionBoard onComplete={handleVisionBoardComplete} />} />
           <Route path="/skills-assessment" element={<SkillsAssessment onComplete={handleSkillsAssessmentComplete} />} />
           <Route path="/daily-checkin" element={<DailyCheckIn />} />
-          <Route path="/about-z2b" element={<AboutZ2B />} />
-          <Route path="/about-coach" element={<MeetCoachManlaw />} />
-          <Route path="/testimonials" element={<SuccessStories />} />
+          <Route path="/about-z2b" element={<AboutZ2B onNavigate={handleNavigate} />} />
+          <Route path="/about-coach" element={<MeetCoachManlaw onNavigate={handleNavigate} />} />
+          <Route path="/testimonials" element={<SuccessStories onNavigate={handleNavigate} />} />
           <Route path="/opportunity" element={<Opportunity onNavigate={handleNavigate} />} />
           <Route path="/tli" element={<TLIChallenge onNavigate={handleNavigate} />} />
           <Route path="/milestones" element={<MilestoneTracker onNavigate={handleNavigate} />} />

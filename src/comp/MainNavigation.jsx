@@ -24,8 +24,6 @@ const MainNavigation = ({ currentPage, onNavigate, isLoggedIn = false }) => {
     { id: 'ecosystem', label: 'Ecosystem', icon: '🌐' },
     { id: 'tiers', label: 'Membership Tiers', icon: '💎' },
     { id: 'tli', label: 'TLI Challenge', icon: '🚀' },
-    // Dashboard link for logged-in users only
-    ...(isLoggedIn ? [{ id: 'dashboard', label: 'Dashboard', icon: '📊' }] : []),
   ];
 
   // Side menu items (quick access links)
@@ -112,7 +110,7 @@ const MainNavigation = ({ currentPage, onNavigate, isLoggedIn = false }) => {
           {isLoggedIn ? (
             <>
               <button className="btn-dashboard" onClick={() => handleNavigate('dashboard')}>
-                📊 Dashboard
+                📊 My Dashboard
               </button>
               <button className="btn-logout" onClick={() => handleNavigate('logout')}>
                 Logout
@@ -121,10 +119,10 @@ const MainNavigation = ({ currentPage, onNavigate, isLoggedIn = false }) => {
           ) : (
             <>
               <button className="btn-login" onClick={() => handleNavigate('login')}>
-                Members Login
+                Member Login
               </button>
-              <button className="btn-start" onClick={() => handleNavigate('get-started')}>
-                🚀 Start Free
+              <button className="btn-register" onClick={() => handleNavigate('signup')}>
+                ✨ REGISTER NOW
               </button>
             </>
           )}
@@ -185,13 +183,22 @@ const MainNavigation = ({ currentPage, onNavigate, isLoggedIn = false }) => {
             ))}
 
             <div className="mobile-cta-section">
-              {!isLoggedIn && (
+              {isLoggedIn ? (
+                <>
+                  <button className="btn-dashboard mobile" onClick={() => handleNavigate('dashboard')}>
+                    📊 My Dashboard
+                  </button>
+                  <button className="btn-logout mobile" onClick={() => handleNavigate('logout')}>
+                    Logout
+                  </button>
+                </>
+              ) : (
                 <>
                   <button className="btn-login mobile" onClick={() => handleNavigate('login')}>
-                    Members Login
+                    Member Login
                   </button>
-                  <button className="btn-start mobile" onClick={() => handleNavigate('get-started')}>
-                    🚀 Start Free
+                  <button className="btn-register mobile" onClick={() => handleNavigate('signup')}>
+                    ✨ REGISTER NOW
                   </button>
                 </>
               )}
