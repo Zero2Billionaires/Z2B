@@ -36,6 +36,12 @@ const Login = ({ onLoginSuccess }) => {
         body: JSON.stringify({ email, password }),
       });
 
+      // Check if response is JSON before parsing
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        throw new Error('Backend not available. Server returned HTML instead of JSON.');
+      }
+
       const data = await response.json();
 
       if (response.ok && data.token) {
@@ -43,21 +49,27 @@ const Login = ({ onLoginSuccess }) => {
         localStorage.setItem('authToken', data.token);
         localStorage.setItem('userData', JSON.stringify(data.user));
 
-        setSuccess('Login successful! Redirecting...');
+        setSuccess('✅ Login successful! Redirecting...');
 
         // Call parent callback with user data
         setTimeout(() => {
           onLoginSuccess(data.user);
         }, 1000);
       } else {
-        setError(data.message || 'Login failed. Please check your credentials.');
+        setError(data.message || 'Invalid credentials. Please check your email and password.');
         setTimeout(() => setError(''), 5000);
       }
     } catch (err) {
       console.error('Login error:', err);
 
-      // Show helpful message about backend deployment
-      setError('⚠️ Member login requires backend deployment. Contact support or use the REGISTER button to create a new account.');
+      // Provide clear, actionable error messages
+      if (err.message.includes('Backend not available')) {
+        setError('⚠️ Backend server is not deployed yet. Please register a new account or contact support.');
+      } else if (err.message.includes('Failed to fetch') || err.message.includes('NetworkError')) {
+        setError('⚠️ Cannot connect to server. Please check your internet connection or try again later.');
+      } else {
+        setError('⚠️ Login failed. Please register a new account or contact support.');
+      }
       setTimeout(() => setError(''), 10000);
     } finally {
       setLoading(false);
@@ -77,7 +89,7 @@ const Login = ({ onLoginSuccess }) => {
     setResetMessage('');
 
     try {
-      const response = await fetch(`${API_URL}/api/auth/forgot-password`, {
+      const response = await fetch(`${API_URL}/api/auth/forgotpassword`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -85,10 +97,16 @@ const Login = ({ onLoginSuccess }) => {
         body: JSON.stringify({ email: resetEmail }),
       });
 
+      // Check if response is JSON before parsing
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        throw new Error('Backend not available');
+      }
+
       const data = await response.json();
 
       if (response.ok) {
-        setResetMessage('✅ Password reset link sent to your email!');
+        setResetMessage('✅ Password reset instructions sent! Check your email.');
         setTimeout(() => {
           setShowForgotPassword(false);
           setResetEmail('');
@@ -100,7 +118,7 @@ const Login = ({ onLoginSuccess }) => {
       }
     } catch (err) {
       console.error('Password reset error:', err);
-      setResetMessage('Connection error. Please try again.');
+      setResetMessage('⚠️ Backend server not available. Please contact support.');
       setTimeout(() => setResetMessage(''), 5000);
     } finally {
       setResetLoading(false);

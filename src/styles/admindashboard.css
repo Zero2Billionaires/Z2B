@@ -1,0 +1,237 @@
+/* Admin Dashboard Styles */
+
+.admin-dashboard {
+  display: flex;
+  min-height: 100vh;
+  background: #f5f5f5;
+}
+
+.admin-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  gap: 1rem;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #2e5077;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Sidebar */
+.admin-sidebar {
+  width: 280px;
+  background: linear-gradient(135deg, #1e3a5f 0%, #2e5077 100%);
+  color: white;
+  padding: 2rem 0;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.admin-brand {
+  padding: 0 1.5rem 2rem 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 2rem;
+}
+
+.admin-brand h2 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.5rem;
+  color: #ffd700;
+}
+
+.admin-role-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background: rgba(255, 215, 0, 0.2);
+  border: 1px solid #ffd700;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: #ffd700;
+}
+
+.admin-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0 1rem;
+}
+
+.admin-nav button {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.95rem;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.2s;
+  text-align: left;
+}
+
+.admin-nav button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.admin-nav button.active {
+  background: rgba(255, 215, 0, 0.15);
+  color: #ffd700;
+  font-weight: 600;
+}
+
+.nav-icon {
+  font-size: 1.2rem;
+}
+
+.nav-divider {
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin: 1rem 0;
+}
+
+.nav-back-btn {
+  margin-top: 1rem;
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+.nav-back-btn:hover {
+  color: white !important;
+}
+
+/* Main Content */
+.admin-content {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+/* Overview */
+.admin-overview {
+  max-width: 1200px;
+}
+
+.admin-overview h2 {
+  font-size: 2rem;
+  color: #1e3a5f;
+  margin-bottom: 2rem;
+}
+
+.admin-info-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.admin-info-card h3 {
+  color: #2e5077;
+  margin: 0 0 1rem 0;
+}
+
+.admin-info-card p {
+  margin: 0.5rem 0;
+  color: #666;
+}
+
+.admin-info-card strong {
+  color: #1e3a5f;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+}
+
+.permissions-grid h3 {
+  font-size: 1.5rem;
+  color: #1e3a5f;
+  margin-bottom: 1.5rem;
+}
+
+.permission-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.permission-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  border: 2px solid #e0e0e0;
+  transition: all 0.2s;
+}
+
+.permission-card:hover {
+  border-color: #4caf50;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
+}
+
+.permission-icon {
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.permission-card span:last-child {
+  font-size: 0.9rem;
+  color: #666;
+  font-weight: 500;
+}
+
+/* Access Denied */
+.access-denied {
+  background: #fff3cd;
+  border: 2px solid #ffc107;
+  border-radius: 12px;
+  padding: 3rem;
+  text-align: center;
+  max-width: 500px;
+  margin: 2rem auto;
+}
+
+.access-denied h3 {
+  color: #856404;
+  margin: 0 0 1rem 0;
+}
+
+.access-denied p {
+  color: #856404;
+  margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .admin-dashboard {
+    flex-direction: column;
+  }
+
+  .admin-sidebar {
+    width: 100%;
+    padding: 1rem 0;
+  }
+
+  .admin-content {
+    padding: 1rem;
+  }
+
+  .permission-cards {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+}

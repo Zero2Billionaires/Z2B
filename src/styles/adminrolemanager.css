@@ -1,0 +1,90 @@
+@import './adminpanels.css';
+
+.admin-role-manager {
+  max-width: 1400px;
+}
+
+.assign-form-container {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.role-options,
+.category-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.role-option,
+.category-option {
+  padding: 1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.role-option:hover,
+.category-option:hover {
+  border-color: #2e5077;
+  background: #f5f9ff;
+}
+
+.role-option.selected,
+.category-option.selected {
+  border-color: #2e5077;
+  background: #e3f2fd;
+}
+
+.role-label,
+.category-label {
+  font-weight: 600;
+  color: #1e3a5f;
+  margin-bottom: 0.5rem;
+}
+
+.role-description,
+.category-description {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.permissions-reference {
+  margin-top: 3rem;
+}
+
+.permissions-reference h3 {
+  margin-bottom: 1.5rem;
+  color: #1e3a5f;
+}
+
+.perm-card {
+  background: #f9f9f9;
+  border-left: 4px solid #2e5077;
+}
+
+.perm-card-ceo {
+  background: linear-gradient(135deg, #fff9e6, #fff3cd);
+  border-left-color: #ffc107;
+}
+
+.perm-card h4 {
+  margin: 0 0 0.75rem 0;
+  color: #2e5077;
+}
+
+.perm-card ul {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.perm-card li {
+  margin-bottom: 0.25rem;
+  font-size: 0.9rem;
+  color: #666;
+}
