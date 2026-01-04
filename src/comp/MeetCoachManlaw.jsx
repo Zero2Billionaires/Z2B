@@ -148,7 +148,7 @@ const MeetCoachManlaw = ({ onNavigate }) => {
         <div className="journey-stages">
           <div className="journey-stage">
             <div className="stage-badge">1</div>
-            <h3>👁️ Awareness</h3>
+            <h3>💡 Awareness</h3>
             <p>Recognize your current reality and discover what's truly possible for your future</p>
           </div>
           <div className="journey-stage">

@@ -109,7 +109,7 @@ const FloatingUpsell = ({ onNavigate }) => {
               </div>
               <p className="price-note">Start your legacy journey today!</p>
               <div style={{ marginTop: '10px', fontSize: '0.75rem', color: '#c4a76f', opacity: 0.8 }}>
-                Other tiers available: Silver R980 • Gold R1980 • Platinum R4980
+                Other tiers available: Copper R980 • Silver R1480 • Gold R2980 • Platinum R4980
               </div>
             </div>
 

@@ -411,6 +411,28 @@
     width: calc(100% - 40px);
     padding: 8px 10px;
     z-index: 9999;
+    animation: slideInBottom 0.5s ease-out, floatPulse 3s ease-in-out infinite;
+  }
+
+  @keyframes slideInBottom {
+    from {
+      transform: translate(-50%, 100px);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(-50%);
+      opacity: 1;
+    }
+  }
+
+  /* Override floatPulse for mobile to maintain centering */
+  @keyframes floatPulse {
+    0%, 100% {
+      transform: translateX(-50%) translateY(0px);
+    }
+    50% {
+      transform: translateX(-50%) translateY(-5px);
+    }
   }
 
   .floating-upsell-content {
@@ -443,6 +465,17 @@
     right: auto;
     transform: translateX(-50%);
     z-index: 9999;
+    animation: bounceMobile 2s ease-in-out infinite;
+  }
+
+  /* Override bounce for mobile to maintain centering */
+  @keyframes bounceMobile {
+    0%, 100% {
+      transform: translateX(-50%) translateY(0);
+    }
+    50% {
+      transform: translateX(-50%) translateY(-10px);
+    }
   }
 
   .pulse-icon {

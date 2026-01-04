@@ -5,7 +5,7 @@ import FloatingUpsell from './FloatingUpsell';
 
 const AboutZ2B = ({ onNavigate }) => {
   const stages = [
-    { number: 1, name: 'Awareness', icon: '👁️', description: 'Recognize your current reality and discover what\'s truly possible for your future' },
+    { number: 1, name: 'Awareness', icon: '💡', description: 'Recognize your current reality and discover what\'s truly possible for your future' },
     { number: 2, name: 'Alignment', icon: '🎯', description: 'Align your goals, values, and vision with your transformation path' },
     { number: 3, name: 'Action', icon: '⚡', description: 'Take consistent daily steps that move you toward your entrepreneurial goals' },
     { number: 4, name: 'Adjustment', icon: '🔧', description: 'Adapt your strategies based on real feedback and lessons learned along the way' },
