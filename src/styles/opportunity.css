@@ -600,3 +600,80 @@
     gap: 0.5rem;
   }
 }
+
+/* Marketplace Example Styles */
+.marketplace-example {
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(218, 165, 32, 0.05) 100%);
+  border-left: 4px solid #ffd700;
+  border-radius: 8px;
+}
+
+.marketplace-example h5 {
+  color: #ffd700;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.example-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.example-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.example-row:hover {
+  background: rgba(0, 0, 0, 0.4);
+  transform: translateX(5px);
+}
+
+.example-label {
+  color: #c4a76f;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.example-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+}
+
+.example-value.highlight {
+  color: #ffd700;
+  background: rgba(255, 215, 0, 0.15);
+}
+
+.example-value.success {
+  color: #00ff88;
+  background: rgba(0, 255, 136, 0.15);
+  font-size: 1.3rem;
+}
+
+.example-value.muted {
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.example-note {
+  color: #daa520;
+  font-style: italic;
+  font-size: 0.95rem;
+  text-align: center;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 215, 0, 0.2);
+}

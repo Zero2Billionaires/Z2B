@@ -71,11 +71,17 @@ const Opportunity = ({ onNavigate }) => {
     {
       id: 'mkt',
       code: 'MKT',
-      name: 'Marketplace Sales',
+      name: 'The Marketplace',
       icon: '🏪',
-      shortDesc: 'Sell your digital products',
-      fullDesc: 'Sellers retain 95% of sales on digital products! Only 5% platform fee for courses, templates, and tools sold on the Z2B marketplace.',
-      retention: '95% Seller Retention'
+      shortDesc: 'Sell Your Digital Products Without the Headaches',
+      fullDesc: 'You focus on creating. We handle the pricing, marketing, sales, and affiliates. List your apps, templates, or AI services on the Z2B Marketplace and earn 95% of your creator payout on every sale. We price the product to cover platform operations and affiliate rewards. Example: If you want to earn R100, you get R95 per sale. Z2B handles everything else — promotion, payments, and distribution. You build. You earn. We scale.',
+      retention: '95% Creator Payout',
+      hasExample: true,
+      example: {
+        yourEarning: 'R100',
+        youReceive: 'R95',
+        platform: 'R5 (covers marketing, sales & affiliates)'
+      }
     }
   ];
 
@@ -247,6 +253,27 @@ const Opportunity = ({ onNavigate }) => {
                   {stream.retention && (
                     <div className="stream-badge success-badge">
                       ✨ {stream.retention}
+                    </div>
+                  )}
+
+                  {stream.hasExample && stream.example && (
+                    <div className="marketplace-example">
+                      <h5>💡 Example Breakdown:</h5>
+                      <div className="example-grid">
+                        <div className="example-row">
+                          <span className="example-label">You want to earn:</span>
+                          <span className="example-value highlight">{stream.example.yourEarning}</span>
+                        </div>
+                        <div className="example-row">
+                          <span className="example-label">You receive per sale:</span>
+                          <span className="example-value success">{stream.example.youReceive}</span>
+                        </div>
+                        <div className="example-row">
+                          <span className="example-label">Platform fee:</span>
+                          <span className="example-value muted">{stream.example.platform}</span>
+                        </div>
+                      </div>
+                      <p className="example-note">🚀 You build. You earn. We scale.</p>
                     </div>
                   )}
                 </div>
