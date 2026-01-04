@@ -209,12 +209,12 @@ const CommissionEditor = () => {
           <div className="qpb-editor">
             <h3>Quick Pathfinder Bonus Rates</h3>
             <p className="description">
-              Bonus for recruiting within first 90 days (4th-3rd of month cycle)
+              Bonus for inviting new builders within first 90 days (4th-3rd of month cycle)
             </p>
 
             <div className="rates-grid">
               <div className="rate-item">
-                <label>First Set (3 recruits)</label>
+                <label>First Set (3 invites)</label>
                 <div className="rate-input-group">
                   <input
                     type="number"
@@ -234,7 +234,7 @@ const CommissionEditor = () => {
               </div>
 
               <div className="rate-item">
-                <label>Additional Sets (per 3 recruits)</label>
+                <label>Additional Sets (per 3 invites)</label>
                 <div className="rate-input-group">
                   <input
                     type="number"

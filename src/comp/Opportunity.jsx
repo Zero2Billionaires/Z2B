@@ -11,8 +11,8 @@ const Opportunity = ({ onNavigate }) => {
       code: 'ISP',
       name: 'Individual Sales Profit',
       icon: '💰',
-      shortDesc: 'Commission on direct sales and recruitment',
-      fullDesc: 'Earn commission ranging from 18-30% based on your membership tier. Paid monthly on all direct sales and personal recruitment.',
+      shortDesc: 'Commission on direct sales and inviting new builders',
+      fullDesc: 'Earn commission ranging from 18-30% based on your membership tier. Paid monthly on all direct sales and inviting new builders to the Z2B platform.',
       tiers: {
         Bronze: '18%',
         Copper: '22%',

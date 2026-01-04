@@ -210,7 +210,7 @@ const MeetCoachManlaw = ({ onNavigate }) => {
                 <li>Map your revenue streams (Milestone 3)</li>
                 <li>Create your action plan (Milestone 4)</li>
                 <li>Build your first income system</li>
-                <li>Start recruiting your team</li>
+                <li>Start inviting new builders to your team</li>
               </ul>
             </div>
             <div className="curriculum-phase">
