@@ -530,7 +530,67 @@
             <!-- Other sections will be added via JavaScript -->
             <div id="tiers" class="content-section"></div>
             <!-- User Management Section -->
-            <div id="users" class="content-section"></div>
+            <div id="users" class="content-section">
+                <h2><i class="fas fa-users"></i> User Management</h2>
+                <p>View and manage all registered users</p>
+
+                <!-- User Stats -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                    <div style="background: linear-gradient(135deg, #4CAF50, #45a049); padding: 1.5rem; border-radius: 12px; color: white;">
+                        <div style="font-size: 2.5rem; font-weight: 700;" id="totalUsers">0</div>
+                        <div style="opacity: 0.9;"><i class="fas fa-users"></i> Total Users</div>
+                    </div>
+                    <div style="background: linear-gradient(135deg, #2196F3, #1976D2); padding: 1.5rem; border-radius: 12px; color: white;">
+                        <div style="font-size: 2.5rem; font-weight: 700;" id="activeUsers">0</div>
+                        <div style="opacity: 0.9;"><i class="fas fa-user-check"></i> Active Users</div>
+                    </div>
+                    <div style="background: linear-gradient(135deg, #FF9800, #F57C00); padding: 1.5rem; border-radius: 12px; color: white;">
+                        <div style="font-size: 2.5rem; font-weight: 700;" id="newUsersToday">0</div>
+                        <div style="opacity: 0.9;"><i class="fas fa-user-plus"></i> New Today</div>
+                    </div>
+                </div>
+
+                <!-- Search and Filters -->
+                <div style="background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;">
+                        <div style="flex: 1; min-width: 250px;">
+                            <input type="text" id="userSearch" placeholder="Search by name or email..." style="width: 100%; padding: 0.8rem 1rem; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem;">
+                        </div>
+                        <button onclick="loadUsers()" style="padding: 0.8rem 1.5rem; background: linear-gradient(135deg, var(--gold), var(--orange)); border: none; border-radius: 8px; color: white; font-weight: 600; cursor: pointer;">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                        <button onclick="loadUsers()" style="padding: 0.8rem 1.5rem; background: #2196F3; border: none; border-radius: 8px; color: white; font-weight: 600; cursor: pointer;">
+                            <i class="fas fa-sync"></i> Refresh
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Users Table -->
+                <div style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <div style="overflow-x: auto;">
+                        <table id="usersTable" style="width: 100%; border-collapse: collapse;">
+                            <thead style="background: var(--navy-blue); color: white;">
+                                <tr>
+                                    <th style="padding: 1rem; text-align: left;">Name</th>
+                                    <th style="padding: 1rem; text-align: left;">Email</th>
+                                    <th style="padding: 1rem; text-align: left;">Role</th>
+                                    <th style="padding: 1rem; text-align: left;">Stage</th>
+                                    <th style="padding: 1rem; text-align: left;">Registered</th>
+                                    <th style="padding: 1rem; text-align: center;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody">
+                                <tr>
+                                    <td colspan="6" style="padding: 3rem; text-align: center; color: #999;">
+                                        <i class="fas fa-spinner fa-spin" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                                        <div>Loading users...</div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
             <!-- App Access Management Section -->
             <div id="app-access" class="content-section"></div>
 
@@ -1191,7 +1251,7 @@
         }
 
         // API Configuration
-        const API_URL = 'https://z2b-production-3cd3.up.railway.app/api'; // Production backend (Railway)
+        const API_URL = 'https://romantic-light-production.up.railway.app/api'; // Production backend (Railway)
         let authToken = localStorage.getItem('admin_token');
 
         // Login Form Handler
@@ -6087,6 +6147,121 @@ async function updatePendingBadge() {
 
 // Update badge every 60 seconds
 setInterval(updatePendingBadge, 60000);
+
+// ========================================
+// USER MANAGEMENT FUNCTIONS
+// ========================================
+
+async function loadUsers() {
+    try {
+        const searchQuery = document.getElementById('userSearch')?.value || '';
+        const url = `${API_URL}/admin/users?search=${encodeURIComponent(searchQuery)}&limit=100`;
+
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${authToken}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch users');
+        }
+
+        const data = await response.json();
+        const users = data.users || [];
+
+        // Update stats
+        document.getElementById('totalUsers').textContent = users.length;
+
+        // Calculate active users (logged in within last 7 days)
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+        const activeCount = users.filter(u => u.lastActive && new Date(u.lastActive) > sevenDaysAgo).length;
+        document.getElementById('activeUsers').textContent = activeCount;
+
+        // Calculate new users today
+        const today = new Date().setHours(0, 0, 0, 0);
+        const newToday = users.filter(u => u.createdAt && new Date(u.createdAt).setHours(0, 0, 0, 0) === today).length;
+        document.getElementById('newUsersToday').textContent = newToday;
+
+        // Render table
+        renderUsersTableNew(users);
+
+    } catch (error) {
+        console.error('Error loading users:', error);
+        document.getElementById('usersTableBody').innerHTML = `
+            <tr>
+                <td colspan="6" style="padding: 2rem; text-align: center; color: #dc3545;">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+                    <div>Error loading users. Please try again.</div>
+                </td>
+            </tr>
+        `;
+    }
+}
+
+function renderUsersTableNew(users) {
+    const tbody = document.getElementById('usersTableBody');
+
+    if (!users || users.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="6" style="padding: 2rem; text-align: center; color: #999;">
+                    <i class="fas fa-users" style="font-size: 2rem; margin-bottom: 0.5rem; opacity: 0.5;"></i>
+                    <div>No users found</div>
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    tbody.innerHTML = users.map(user => {
+        const regDate = user.createdAt ? new Date(user.createdAt).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        }) : 'N/A';
+
+        const role = user.role || 'User';
+        const stage = user.currentStage || 'N/A';
+
+        return `
+            <tr style="border-bottom: 1px solid #e0e0e0;">
+                <td style="padding: 1rem;">${user.fullName || 'N/A'}</td>
+                <td style="padding: 1rem;">${user.email || 'N/A'}</td>
+                <td style="padding: 1rem;">
+                    <span style="background: #2196F3; color: white; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.85rem;">
+                        ${role}
+                    </span>
+                </td>
+                <td style="padding: 1rem;">${stage}</td>
+                <td style="padding: 1rem;">${regDate}</td>
+                <td style="padding: 1rem; text-align: center;">
+                    <button onclick="viewUserDetails('${user._id}')" style="padding: 0.5rem 1rem; background: #4CAF50; color: white; border: none; border-radius: 6px; cursor: pointer; margin-right: 0.5rem;">
+                        <i class="fas fa-eye"></i> View
+                    </button>
+                </td>
+            </tr>
+        `;
+    }).join('');
+}
+
+function viewUserDetails(userId) {
+    alert('User details feature coming soon! User ID: ' + userId);
+    // TODO: Implement user details modal
+}
+
+// Load users when the users section is clicked
+document.addEventListener('DOMContentLoaded', function() {
+    const usersLink = document.querySelector('[data-section="users"]');
+    if (usersLink) {
+        usersLink.addEventListener('click', function() {
+            setTimeout(() => loadUsers(), 100);
+        });
+    }
+});
 
     </script>
     <!-- Footer -->
