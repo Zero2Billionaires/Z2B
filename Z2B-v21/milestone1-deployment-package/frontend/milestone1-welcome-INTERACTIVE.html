@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Milestone 1: Vision Board | Z2B Legacy Builders</title>
-    <meta name="description" content="Complete your Vision Board and SWOT Analysis online. Interactive, guided, and saved to your account.">
+    <title>Milestone 1: Vision Board - Complete Your Foundation | Z2B Legacy Builders</title>
+    <meta name="description" content="Interactive Vision Board and SWOT Analysis. Complete Milestone 1 online - From Zero to Structured Wealth.">
 
     <style>
         * {
@@ -14,303 +14,389 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Georgia', 'Times New Roman', serif;
             line-height: 1.6;
-            color: #1A1A1A;
-            background: #F9F9F9;
+            color: #E8DCC8;
+            background: #000000;
+            background: linear-gradient(180deg, #0A0504 0%, #1A0F0A 50%, #0A0504 100%);
+            min-height: 100vh;
         }
 
-        .welcome-header {
-            background: linear-gradient(135deg, #0F1A2F 0%, #1A2942 100%);
-            color: #FFFFFF;
-            padding: 60px 20px;
+        /* HERO HEADER */
+        .hero-header {
+            position: relative;
+            background: linear-gradient(180deg, #0A0504 0%, #1A0F0A 100%);
+            padding: 80px 20px 60px;
             text-align: center;
-            border-bottom: 5px solid #FF6F00;
+            border-bottom: 3px solid #FDB931;
+            overflow: hidden;
         }
 
-        .welcome-header h1 {
-            font-size: 2.5rem;
+        .hero-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, rgba(253, 185, 49, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-header h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: #FDB931;
+            text-transform: uppercase;
+            letter-spacing: 3px;
             margin-bottom: 1rem;
+            text-shadow: 0 0 30px rgba(253, 185, 49, 0.6), 0 0 60px rgba(253, 185, 49, 0.3);
+            position: relative;
+            z-index: 1;
         }
 
-        .welcome-header .subtitle {
-            font-size: 1.3rem;
-            color: #D0D0D0;
-            margin-bottom: 2rem;
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: #D4C5A9;
+            font-style: italic;
+            margin-bottom: 1rem;
+            letter-spacing: 2px;
         }
 
-        .progress-indicator {
+        .hero-tagline {
+            font-size: 1.5rem;
+            color: #FFFFFF;
+            font-weight: 300;
+            margin-top: 2rem;
+            letter-spacing: 1px;
+        }
+
+        .progress-badge {
             display: inline-block;
-            background: rgba(255, 111, 0, 0.2);
-            padding: 10px 25px;
-            border-radius: 25px;
-            font-size: 1rem;
-            font-weight: 600;
-            color: #FF6F00;
-            border: 2px solid #FF6F00;
+            background: linear-gradient(135deg, #FDB931 0%, #D4A029 100%);
+            color: #000000;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 2rem;
+            box-shadow: 0 0 30px rgba(253, 185, 49, 0.5);
         }
 
+        /* MAIN CONTENT */
         .main-content {
-            max-width: 900px;
+            max-width: 1000px;
             margin: 60px auto;
             padding: 0 20px;
         }
 
-        .intro-message {
-            background: #FFFFFF;
+        /* INTRO MESSAGE */
+        .intro-card {
+            background: linear-gradient(135deg, #1A0F0A 0%, #2A1F1A 100%);
+            border: 2px solid #FDB931;
+            border-radius: 15px;
             padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            margin-bottom: 40px;
-            border-left: 6px solid #FF6F00;
+            margin-bottom: 50px;
+            box-shadow: 0 0 50px rgba(253, 185, 49, 0.2);
+            position: relative;
+            overflow: hidden;
         }
 
-        .intro-message h2 {
-            color: #0F1A2F;
+        .intro-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(253, 185, 49, 0.05) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .intro-card h2 {
+            color: #FDB931;
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .intro-card p {
+            color: #D4C5A9;
+            font-size: 1.1rem;
+            line-height: 1.8;
             margin-bottom: 1rem;
         }
 
-        .intro-message p {
-            color: #4A4A4A;
-            line-height: 1.8;
-            font-size: 1.125rem;
-        }
-
+        /* SECTION CARDS */
         .section-card {
-            background: #FFFFFF;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            margin-bottom: 40px;
+            background: linear-gradient(135deg, #1A0F0A 0%, #2A1F1A 100%);
+            border: 1px solid #443322;
+            border-radius: 15px;
+            padding: 50px 40px;
+            margin-bottom: 50px;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
         }
 
         .section-card h2 {
-            color: #0F1A2F;
-            margin-bottom: 1.5rem;
-            font-size: 2rem;
+            color: #FDB931;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center;
+            text-shadow: 0 0 20px rgba(253, 185, 49, 0.4);
+        }
+
+        .section-card > p {
+            color: #B8A890;
+            font-size: 1.1rem;
+            text-align: center;
+            margin-bottom: 2.5rem;
         }
 
         .section-card h3 {
-            color: #FF6F00;
-            margin-bottom: 1rem;
-            margin-top: 2rem;
-            font-size: 1.5rem;
+            color: #FDB931;
+            font-size: 1.8rem;
+            margin: 2.5rem 0 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 2px solid #443322;
+            padding-bottom: 0.5rem;
         }
 
         .section-card h3:first-of-type {
             margin-top: 0;
         }
 
+        /* FORM STYLING */
         .form-group {
-            margin-bottom: 25px;
+            margin-bottom: 30px;
         }
 
         .form-group label {
             display: block;
             font-weight: 600;
-            color: #1A1A1A;
-            margin-bottom: 8px;
-            font-size: 1rem;
+            color: #FDB931;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
         }
 
         .form-group .help-text {
             display: block;
-            font-size: 0.9rem;
-            color: #666;
-            margin-bottom: 8px;
+            font-size: 0.95rem;
+            color: #998877;
+            margin-bottom: 10px;
             font-style: italic;
         }
 
         .form-group input,
         .form-group textarea {
             width: 100%;
-            padding: 14px 16px;
-            font-size: 1rem;
-            border: 2px solid #E0E0E0;
-            border-radius: 6px;
-            background: #F5F5F5;
-            color: #1A1A1A;
+            padding: 16px 18px;
+            font-size: 1.05rem;
+            border: 2px solid #443322;
+            border-radius: 8px;
+            background: #0F0A08;
+            color: #E8DCC8;
             transition: all 0.3s ease;
-            font-family: inherit;
+            font-family: 'Georgia', serif;
         }
 
         .form-group textarea {
-            min-height: 120px;
+            min-height: 130px;
             resize: vertical;
         }
 
         .form-group input:focus,
         .form-group textarea:focus {
             outline: none;
-            border-color: #FF6F00;
-            background: #FFFFFF;
-            box-shadow: 0 0 0 3px rgba(255, 111, 0, 0.1);
+            border-color: #FDB931;
+            background: #1A0F0A;
+            box-shadow: 0 0 20px rgba(253, 185, 49, 0.3);
         }
 
+        /* SWOT GRID */
         .swot-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: 25px;
-            margin-top: 2rem;
+            margin-top: 25px;
         }
 
-        .swot-quadrant {
+        .swot-box {
+            background: #0F0A08;
             padding: 25px;
-            border-radius: 8px;
-            border: 3px solid;
+            border-radius: 10px;
+            border: 1px solid #443322;
+            transition: all 0.3s ease;
         }
 
-        .swot-quadrant.strengths {
-            border-color: #4CAF50;
-            background: #F0F7F0;
+        .swot-box:hover {
+            border-color: #FDB931;
+            box-shadow: 0 0 20px rgba(253, 185, 49, 0.2);
         }
 
-        .swot-quadrant.weaknesses {
-            border-color: #F44336;
-            background: #FFF0F0;
-        }
-
-        .swot-quadrant.opportunities {
-            border-color: #2196F3;
-            background: #F0F7FF;
-        }
-
-        .swot-quadrant.threats {
-            border-color: #FF6F00;
-            background: #FFF3E0;
-        }
-
-        .swot-quadrant h4 {
-            margin-bottom: 1rem;
+        .swot-box h4 {
+            color: #D4A029;
+            margin-bottom: 12px;
             font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .swot-quadrant.strengths h4 {
-            color: #2E7D32;
-        }
-
-        .swot-quadrant.weaknesses h4 {
-            color: #C62828;
-        }
-
-        .swot-quadrant.opportunities h4 {
-            color: #1565C0;
-        }
-
-        .swot-quadrant.threats h4 {
-            color: #E65100;
-        }
-
-        .teee-section {
-            margin-bottom: 20px;
-        }
-
-        .teee-section label {
+        /* AUTO-SAVE INDICATOR */
+        .save-indicator {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 30px;
             font-size: 0.95rem;
             font-weight: 600;
-            color: #1A1A1A;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            border: 1px solid #4CAF50;
         }
 
-        .teee-section textarea {
-            min-height: 80px;
-            font-size: 0.95rem;
+        .save-indicator.show {
+            opacity: 1;
         }
 
-        .action-buttons {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 30px;
+        /* SUBMIT SECTION */
+        .submit-section {
+            background: linear-gradient(135deg, #1A0F0A 0%, #2A1F1A 100%);
+            border: 3px solid #FDB931;
+            padding: 60px 40px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 50px 0;
+            box-shadow: 0 0 50px rgba(253, 185, 49, 0.3);
+        }
+
+        .submit-section h2 {
+            color: #FDB931;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .submit-section p {
+            color: #D4C5A9;
+            font-size: 1.3rem;
+            margin-bottom: 2.5rem;
         }
 
         .btn-primary {
-            background: #FF6F00;
-            color: #FFFFFF;
-            padding: 18px 40px;
-            font-size: 1.2rem;
+            display: inline-block;
+            background: linear-gradient(135deg, #FDB931 0%, #D4A029 100%);
+            color: #000000;
+            padding: 20px 50px;
+            font-size: 1.3rem;
             font-weight: 700;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
+            text-decoration: none;
+            border-radius: 50px;
             transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 0 40px rgba(253, 185, 49, 0.6);
             text-transform: uppercase;
-            box-shadow: 0 4px 15px rgba(255, 111, 0, 0.4);
+            letter-spacing: 2px;
+            font-family: 'Georgia', serif;
         }
 
         .btn-primary:hover {
-            background: #E66300;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 111, 0, 0.6);
+            transform: translateY(-3px);
+            box-shadow: 0 0 60px rgba(253, 185, 49, 0.9);
         }
 
         .btn-primary:disabled {
             opacity: 0.5;
             cursor: not-allowed;
+            transform: none;
         }
 
-        .btn-secondary {
-            background: transparent;
-            color: #666;
-            padding: 16px 32px;
-            font-size: 1rem;
-            font-weight: 600;
-            border: 2px solid #CCC;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
+        /* UPSELL SECTION */
+        .upsell-section {
+            background: linear-gradient(135deg, #2A1F1A 0%, #3A2F2A 100%);
+            border: 3px solid #FDB931;
+            border-radius: 15px;
+            padding: 60px 40px;
+            margin: 50px 0;
+            text-align: center;
+            display: none;
+            box-shadow: 0 0 60px rgba(253, 185, 49, 0.4);
         }
 
-        .btn-secondary:hover {
-            border-color: #999;
-            color: #333;
+        .upsell-section.show {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
         }
 
-        .download-notice {
-            background: #FFF3E0;
-            padding: 20px;
-            border-radius: 8px;
-            border-left: 4px solid #FF6F00;
-            margin-bottom: 30px;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .download-notice h3 {
-            color: #E65100;
-            font-size: 1.1rem;
-            margin-bottom: 0.5rem;
+        .upsell-section h2 {
+            color: #FDB931;
+            font-size: 2.8rem;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
 
-        .download-notice p {
-            color: #666;
-            margin: 0;
-            font-size: 0.95rem;
+        .upsell-section p {
+            color: #D4C5A9;
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
         }
 
-        .save-progress-btn {
-            background: #2196F3;
-            margin-right: auto;
+        .upsell-section .highlight {
+            color: #FDB931;
+            font-weight: 700;
+            font-size: 1.3rem;
         }
 
-        .save-progress-btn:hover {
-            background: #1976D2;
-        }
-
+        /* FOOTER */
         .footer-section {
-            background: #0F1A2F;
-            color: #FFFFFF;
+            background: #000000;
+            border-top: 2px solid #443322;
+            color: #998877;
             padding: 40px 20px;
             text-align: center;
         }
 
         .footer-section p {
-            color: #B0B0B0;
             margin: 0;
+            font-size: 0.95rem;
         }
 
+        /* MOBILE RESPONSIVE */
         @media (max-width: 768px) {
-            .welcome-header h1 {
+            .hero-header h1 {
+                font-size: 2.2rem;
+            }
+
+            .hero-tagline {
+                font-size: 1.2rem;
+            }
+
+            .intro-card,
+            .section-card,
+            .submit-section {
+                padding: 30px 20px;
+            }
+
+            .section-card h2 {
                 font-size: 2rem;
             }
 
@@ -318,301 +404,278 @@
                 grid-template-columns: 1fr;
             }
 
-            .section-card {
-                padding: 30px 20px;
-            }
-
-            .action-buttons {
-                flex-direction: column;
-            }
-
-            .btn-primary,
-            .btn-secondary {
+            .btn-primary {
                 width: 100%;
+                padding: 18px 30px;
             }
         }
 
         html {
             scroll-behavior: smooth;
         }
-
-        .success-message {
-            background: #4CAF50;
-            color: white;
-            padding: 15px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            display: none;
-        }
-
-        .success-message.show {
-            display: block;
-        }
     </style>
 </head>
 <body>
 
-    <!-- WELCOME HEADER -->
-    <section class="welcome-header">
-        <div class="progress-indicator">MILESTONE 1 OF 7</div>
-        <h1>Welcome to Your Foundation</h1>
-        <p class="subtitle">Complete your Vision Board and SWOT Analysis online. Your progress is saved automatically.</p>
-    </section>
+    <!-- AUTO-SAVE INDICATOR -->
+    <div class="save-indicator" id="saveIndicator">✓ Auto-Saved</div>
+
+    <!-- HERO HEADER -->
+    <header class="hero-header">
+        <h1>Milestone 1: Vision Board</h1>
+        <p class="hero-subtitle">Transformation • Education • Empowerment • Enrichment</p>
+        <p class="hero-tagline">From Zero to Structured Wealth</p>
+        <div class="progress-badge">Free Milestone 1 of 7</div>
+    </header>
 
     <!-- MAIN CONTENT -->
     <div class="main-content">
 
         <!-- INTRO MESSAGE -->
-        <div class="intro-message">
-            <h2>You're In. Now Let's Get Clear.</h2>
-            <p>You didn't opt in for motivation. You opted in for clarity. Complete Milestone 1 right here—no downloads required (though we've included printable PDFs if you prefer working offline).</p>
-            <p><strong>Your responses are saved to your account. You can come back anytime.</strong></p>
+        <div class="intro-card">
+            <h2>Complete Your Foundation</h2>
+            <p>This is where your journey from employee to owner begins. Not with hype. Not with motivation. With clarity.</p>
+            <p>Fill out your Vision Board and SWOT Analysis below. Your work is auto-saved as you type, so take your time and be honest with yourself.</p>
+            <p><strong style="color: #FDB931;">Remember:</strong> A weak foundation creates a weak business. A strong foundation creates unstoppable momentum.</p>
         </div>
 
-        <!-- SUCCESS MESSAGE -->
-        <div class="success-message" id="successMessage">
-            ✅ Progress saved successfully!
-        </div>
-
-        <!-- OPTIONAL PDF DOWNLOADS -->
-        <div class="download-notice">
-            <h3>📄 Prefer Printable Worksheets?</h3>
-            <p>
-                <a href="/downloads/milestone1-vision-board-template.pdf" download style="color: #FF6F00; font-weight: 600;">Download Vision Board PDF</a> |
-                <a href="/downloads/milestone1-swot-teee-worksheet.pdf" download style="color: #FF6F00; font-weight: 600;">Download SWOT/TEEE PDF</a>
-            </p>
-            <p style="margin-top: 8px;">Complete online below, or print these worksheets for offline work.</p>
-        </div>
-
-        <!-- VISION BOARD FORM -->
+        <!-- FORM START -->
         <form id="milestone1Form">
+
+            <!-- VISION BOARD SECTION -->
             <section class="section-card">
-                <h2>Part 1: Your Personal Vision Board</h2>
-                <p style="color: #666; margin-bottom: 2rem;">Not a Pinterest board. A strategic visual map of what ownership actually looks like for you.</p>
+                <h2>🎯 Your Vision Board</h2>
+                <p>Not a Pinterest board. A strategic map of what ownership looks like for you.</p>
 
-                <h3>🏢 Business Vision</h3>
                 <div class="form-group">
-                    <label for="businessWhat">What am I building?</label>
-                    <span class="help-text">Be specific. What product/service? What business model?</span>
-                    <textarea id="businessWhat" name="businessWhat" placeholder="Example: An online coaching business helping African professionals transition from employment to entrepreneurship..."></textarea>
+                    <label for="businessVision">1. What business do you want to build?</label>
+                    <span class="help-text">Be specific. Not "something online" — what exact business model?</span>
+                    <textarea id="businessVision" name="businessVision" required></textarea>
                 </div>
 
                 <div class="form-group">
-                    <label for="businessProblem">What problem am I solving?</label>
-                    <span class="help-text">What pain point or need does your business address?</span>
-                    <textarea id="businessProblem" name="businessProblem" placeholder="Example: Helping people escape toxic employment and build ownership..."></textarea>
+                    <label for="lifestyleGoals">2. What lifestyle will this business fund?</label>
+                    <span class="help-text">How much per month? Where will you live? What does freedom look like?</span>
+                    <textarea id="lifestyleGoals" name="lifestyleGoals" required></textarea>
                 </div>
 
                 <div class="form-group">
-                    <label for="businessServing">Who am I serving?</label>
-                    <span class="help-text">Be specific about your target audience</span>
-                    <textarea id="businessServing" name="businessServing" placeholder="Example: African professionals aged 30-45, employed full-time, frustrated with capped income..."></textarea>
-                </div>
-
-                <h3>🏡 Lifestyle Goals</h3>
-                <div class="form-group">
-                    <label for="lifestyleIdealDay">What does my ideal day look like?</label>
-                    <span class="help-text">Describe a typical day when you've achieved your vision</span>
-                    <textarea id="lifestyleIdealDay" name="lifestyleIdealDay" placeholder="Example: Wake up at 6am, work from home office, 4 hours of deep work, afternoon with family..."></textarea>
+                    <label for="legacyPlan">3. What legacy will you leave?</label>
+                    <span class="help-text">What will your children inherit? What will people remember you for?</span>
+                    <textarea id="legacyPlan" name="legacyPlan" required></textarea>
                 </div>
 
                 <div class="form-group">
-                    <label for="lifestyleLocation">Where do I want to live?</label>
-                    <textarea id="lifestyleLocation" name="lifestyleLocation" placeholder="Example: Stay in Johannesburg but move to a bigger house in a better area..."></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="lifestyleExperiences">What experiences do I want to have?</label>
-                    <textarea id="lifestyleExperiences" name="lifestyleExperiences" placeholder="Example: Travel internationally 3 months/year, attend conferences, host workshops..."></textarea>
-                </div>
-
-                <h3>🌟 Legacy Plan</h3>
-                <div class="form-group">
-                    <label for="legacyLeave">What do I want to leave behind?</label>
-                    <textarea id="legacyLeave" name="legacyLeave" placeholder="Example: A business my children can run, a scholarship fund, a training program..."></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="legacyImpact">Who do I want to impact?</label>
-                    <textarea id="legacyImpact" name="legacyImpact" placeholder="Example: Help 1,000 African professionals become business owners..."></textarea>
-                </div>
-
-                <h3>💎 Freedom Definition</h3>
-                <div class="form-group">
-                    <label for="freedomSuccess">What does success mean to me?</label>
-                    <textarea id="freedomSuccess" name="freedomSuccess" placeholder="Example: R50,000/month passive income, no boss, time with family..."></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="freedomFinancial">What does financial freedom look like?</label>
-                    <textarea id="freedomFinancial" name="freedomFinancial" placeholder="Example: R50,000/month, R2 million in savings, no debt, own my home..."></textarea>
+                    <label for="freedomDefinition">4. How do you define freedom?</label>
+                    <span class="help-text">Time freedom? Financial freedom? Location freedom? Define it clearly.</span>
+                    <textarea id="freedomDefinition" name="freedomDefinition" required></textarea>
                 </div>
             </section>
 
-            <!-- SWOT/TEEE ANALYSIS -->
+            <!-- SWOT ANALYSIS SECTION -->
             <section class="section-card">
-                <h2>Part 2: SWOT Analysis Using the TEEE Framework</h2>
-                <p style="color: #666; margin-bottom: 2rem;">Audit your <strong>Time, Energy, Experience, and Expertise</strong> across all four quadrants.</p>
+                <h2>⚡ SWOT Analysis (TEEE Framework)</h2>
+                <p>Audit your reality using Time, Energy, Experience, and Expertise.</p>
+
+                <h3>Strengths</h3>
+                <p style="color: #998877; margin-bottom: 1.5rem;">What do you have working FOR you?</p>
 
                 <div class="swot-grid">
-                    <!-- STRENGTHS -->
-                    <div class="swot-quadrant strengths">
-                        <h4>✅ STRENGTHS (What I HAVE)</h4>
-
-                        <div class="teee-section">
-                            <label>⏰ TIME:</label>
-                            <textarea name="strengthsTime" placeholder="How much time do I have? When am I most productive?"></textarea>
-                        </div>
-
-                        <div class="teee-section">
-                            <label>⚡ ENERGY:</label>
-                            <textarea name="strengthsEnergy" placeholder="What energizes me? What tasks give me energy?"></textarea>
-                        </div>
-
-                        <div class="teee-section">
-                            <label>📚 EXPERIENCE:</label>
-                            <textarea name="strengthsExperience" placeholder="What have I done? What industries have I worked in?"></textarea>
-                        </div>
-
-                        <div class="teee-section">
-                            <label>💡 EXPERTISE:</label>
-                            <textarea name="strengthsExpertise" placeholder="What am I good at? What can I teach?"></textarea>
+                    <div class="swot-box">
+                        <h4>Time</h4>
+                        <div class="form-group">
+                            <textarea name="strengthTime" placeholder="How much time can you invest weekly?"></textarea>
                         </div>
                     </div>
-
-                    <!-- WEAKNESSES -->
-                    <div class="swot-quadrant weaknesses">
-                        <h4>❌ WEAKNESSES (What I LACK)</h4>
-
-                        <div class="teee-section">
-                            <label>⏰ TIME:</label>
-                            <textarea name="weaknessesTime" placeholder="What time constraints do I face? What limits my availability?"></textarea>
-                        </div>
-
-                        <div class="teee-section">
-                            <label>⚡ ENERGY:</label>
-                            <textarea name="weaknessesEnergy" placeholder="What drains me? What tasks do I procrastinate on?"></textarea>
-                        </div>
-
-                        <div class="teee-section">
-                            <label>📚 EXPERIENCE:</label>
-                            <textarea name="weaknessesExperience" placeholder="What experience gaps do I have? What have I never done?"></textarea>
-                        </div>
-
-                        <div class="teee-section">
-                            <label>💡 EXPERTISE:</label>
-                            <textarea name="weaknessesExpertise" placeholder="What skills do I lack? What do I need to learn?"></textarea>
+                    <div class="swot-box">
+                        <h4>Energy</h4>
+                        <div class="form-group">
+                            <textarea name="strengthEnergy" placeholder="Peak energy hours? Morning? Night?"></textarea>
                         </div>
                     </div>
-
-                    <!-- OPPORTUNITIES -->
-                    <div class="swot-quadrant opportunities">
-                        <h4>🚀 OPPORTUNITIES (What I CAN LEVERAGE)</h4>
-
-                        <div class="teee-section">
-                            <label>⏰ TIME:</label>
-                            <textarea name="opportunitiesTime" placeholder="What time can I reallocate? What can I automate?"></textarea>
-                        </div>
-
-                        <div class="teee-section">
-                            <label>⚡ ENERGY:</label>
-                            <textarea name="opportunitiesEnergy" placeholder="What high-energy activities can I do more of?"></textarea>
-                        </div>
-
-                        <div class="teee-section">
-                            <label>📚 EXPERIENCE:</label>
-                            <textarea name="opportunitiesExperience" placeholder="What past experience can I monetize? What edge do I have?"></textarea>
-                        </div>
-
-                        <div class="teee-section">
-                            <label>💡 EXPERTISE:</label>
-                            <textarea name="opportunitiesExpertise" placeholder="What expertise can I package and sell?"></textarea>
+                    <div class="swot-box">
+                        <h4>Experience</h4>
+                        <div class="form-group">
+                            <textarea name="strengthExperience" placeholder="What have you done that helps?"></textarea>
                         </div>
                     </div>
-
-                    <!-- THREATS -->
-                    <div class="swot-quadrant threats">
-                        <h4>⚠️ THREATS (What BLOCKS ME)</h4>
-
-                        <div class="teee-section">
-                            <label>⏰ TIME:</label>
-                            <textarea name="threatsTime" placeholder="What time-wasters threaten my progress?"></textarea>
+                    <div class="swot-box">
+                        <h4>Expertise</h4>
+                        <div class="form-group">
+                            <textarea name="strengthExpertise" placeholder="What skills do you already have?"></textarea>
                         </div>
+                    </div>
+                </div>
 
-                        <div class="teee-section">
-                            <label>⚡ ENERGY:</label>
-                            <textarea name="threatsEnergy" placeholder="What could burn me out? What negative influences drain me?"></textarea>
+                <h3>Weaknesses</h3>
+                <p style="color: #998877; margin-bottom: 1.5rem;">What's working AGAINST you? (Be brutally honest)</p>
+
+                <div class="swot-grid">
+                    <div class="swot-box">
+                        <h4>Time</h4>
+                        <div class="form-group">
+                            <textarea name="weaknessTime" placeholder="What time constraints do you face?"></textarea>
                         </div>
-
-                        <div class="teee-section">
-                            <label>📚 EXPERIENCE:</label>
-                            <textarea name="threatsExperience" placeholder="What lack of experience could hurt me? What mistakes might I make?"></textarea>
+                    </div>
+                    <div class="swot-box">
+                        <h4>Energy</h4>
+                        <div class="form-group">
+                            <textarea name="weaknessEnergy" placeholder="What drains your energy daily?"></textarea>
                         </div>
+                    </div>
+                    <div class="swot-box">
+                        <h4>Experience</h4>
+                        <div class="form-group">
+                            <textarea name="weaknessExperience" placeholder="What experience gaps exist?"></textarea>
+                        </div>
+                    </div>
+                    <div class="swot-box">
+                        <h4>Expertise</h4>
+                        <div class="form-group">
+                            <textarea name="weaknessExpertise" placeholder="What skills are you missing?"></textarea>
+                        </div>
+                    </div>
+                </div>
 
-                        <div class="teee-section">
-                            <label>💡 EXPERTISE:</label>
-                            <textarea name="threatsExpertise" placeholder="What knowledge gaps could cause failure?"></textarea>
+                <h3>Opportunities</h3>
+                <p style="color: #998877; margin-bottom: 1.5rem;">What doors are open to you right now?</p>
+
+                <div class="swot-grid">
+                    <div class="swot-box">
+                        <h4>Time</h4>
+                        <div class="form-group">
+                            <textarea name="opportunityTime" placeholder="Any upcoming time windows?"></textarea>
+                        </div>
+                    </div>
+                    <div class="swot-box">
+                        <h4>Energy</h4>
+                        <div class="form-group">
+                            <textarea name="opportunityEnergy" placeholder="What energizes you to act now?"></textarea>
+                        </div>
+                    </div>
+                    <div class="swot-box">
+                        <h4>Experience</h4>
+                        <div class="form-group">
+                            <textarea name="opportunityExperience" placeholder="What experiences can you leverage?"></textarea>
+                        </div>
+                    </div>
+                    <div class="swot-box">
+                        <h4>Expertise</h4>
+                        <div class="form-group">
+                            <textarea name="opportunityExpertise" placeholder="How can you monetize your expertise?"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Threats</h3>
+                <p style="color: #998877; margin-bottom: 1.5rem;">What could stop you or slow you down?</p>
+
+                <div class="swot-grid">
+                    <div class="swot-box">
+                        <h4>Time</h4>
+                        <div class="form-group">
+                            <textarea name="threatTime" placeholder="What threatens to steal your time?"></textarea>
+                        </div>
+                    </div>
+                    <div class="swot-box">
+                        <h4>Energy</h4>
+                        <div class="form-group">
+                            <textarea name="threatEnergy" placeholder="What could kill your motivation?"></textarea>
+                        </div>
+                    </div>
+                    <div class="swot-box">
+                        <h4>Experience</h4>
+                        <div class="form-group">
+                            <textarea name="threatExperience" placeholder="What past failures haunt you?"></textarea>
+                        </div>
+                    </div>
+                    <div class="swot-box">
+                        <h4>Expertise</h4>
+                        <div class="form-group">
+                            <textarea name="threatExpertise" placeholder="What skill gaps are dangerous?"></textarea>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- ACTION BUTTONS -->
-            <div class="action-buttons">
-                <button type="button" class="btn-primary save-progress-btn" onclick="saveProgress()">💾 SAVE PROGRESS</button>
-                <button type="submit" class="btn-primary" id="completeButton">✅ COMPLETE MILESTONE 1</button>
-            </div>
+            <!-- SUBMIT SECTION -->
+            <section class="submit-section">
+                <h2>Ready to Complete?</h2>
+                <p>Submit your foundation and unlock access to all 7 milestones.</p>
+                <button type="submit" id="completeButton" class="btn-primary">Complete Milestone 1</button>
+            </section>
+
         </form>
+
+        <!-- UPSELL SECTION (shown after completion) -->
+        <section class="upsell-section" id="upsellSection">
+            <h2>🏆 Foundation Complete!</h2>
+            <p>You've laid your foundation. Now it's time to build on it.</p>
+            <p class="highlight">The next 6 milestones will take you from employee to owner.</p>
+            <p>Choose your Z2B membership tier to continue your journey:</p>
+            <a href="bronze-upsell.html" class="btn-primary" style="margin-top: 1.5rem;">View Membership Tiers</a>
+        </section>
 
     </div>
 
     <!-- FOOTER -->
-    <section class="footer-section">
-        <p>Z2B Legacy Builders © 2026. Building owners, not employees.</p>
-    </section>
+    <footer class="footer-section">
+        <p>Z2B Legacy Builders © 2026 • From Zero to Structured Wealth</p>
+    </footer>
 
-    <!-- JAVASCRIPT -->
+    <!-- REFERRAL TRACKER SCRIPT -->
+    <script src="referral-tracker.js"></script>
+
+    <!-- FORM AUTO-SAVE & SUBMISSION SCRIPT -->
     <script>
-        // Auto-save functionality
-        let autoSaveTimeout;
-        const formElements = document.querySelectorAll('#milestone1Form input, #milestone1Form textarea');
+        const form = document.getElementById('milestone1Form');
+        const saveIndicator = document.getElementById('saveIndicator');
+        const upsellSection = document.getElementById('upsellSection');
+        let saveTimeout;
 
-        formElements.forEach(element => {
-            element.addEventListener('input', () => {
-                clearTimeout(autoSaveTimeout);
-                autoSaveTimeout = setTimeout(saveProgress, 3000); // Auto-save after 3 seconds of inactivity
-            });
-        });
+        // Auto-save function with 2-second delay
+        function autoSave() {
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(async function() {
+                const formData = new FormData(form);
+                const data = Object.fromEntries(formData.entries());
+                data.email = localStorage.getItem('userEmail') || sessionStorage.getItem('userEmail');
 
-        // Save progress function
-        async function saveProgress() {
-            const formData = new FormData(document.getElementById('milestone1Form'));
-            const data = Object.fromEntries(formData.entries());
-            data.email = localStorage.getItem('userEmail') || sessionStorage.getItem('userEmail');
-
-            try {
-                const response = await fetch('/api/milestone1-save-progress', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data)
-                });
-
-                if (response.ok) {
-                    const successMsg = document.getElementById('successMessage');
-                    successMsg.classList.add('show');
-                    setTimeout(() => {
-                        successMsg.classList.remove('show');
-                    }, 3000);
+                // Attach referral tracking data
+                if (window.ReferralTracker) {
+                    const referralData = window.ReferralTracker.attachToFormData({});
+                    Object.assign(data, referralData);
                 }
-            } catch (error) {
-                console.error('Save error:', error);
-            }
+
+                try {
+                    const response = await fetch('/api/milestone1-save-progress', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(data)
+                    });
+
+                    if (response.ok) {
+                        saveIndicator.classList.add('show');
+                        setTimeout(() => {
+                            saveIndicator.classList.remove('show');
+                        }, 2000);
+                    }
+                } catch (error) {
+                    console.error('Save error:', error);
+                }
+            }, 2000);
         }
 
+        // Attach auto-save to all form inputs
+        const formInputs = form.querySelectorAll('input, textarea');
+        formInputs.forEach(input => {
+            input.addEventListener('input', autoSave);
+        });
+
         // Form submission (Complete M1)
-        document.getElementById('milestone1Form').addEventListener('submit', async function(e) {
+        form.addEventListener('submit', async function(e) {
             e.preventDefault();
 
             const completeButton = document.getElementById('completeButton');
@@ -625,6 +688,12 @@
             const data = Object.fromEntries(formData.entries());
             data.email = localStorage.getItem('userEmail') || sessionStorage.getItem('userEmail');
             data.completedAt = new Date().toISOString();
+
+            // Attach referral tracking data
+            if (window.ReferralTracker) {
+                const referralData = window.ReferralTracker.attachToFormData({});
+                Object.assign(data, referralData);
+            }
 
             try {
                 // Save final data
@@ -644,13 +713,19 @@
                     },
                     body: JSON.stringify({
                         email: data.email,
-                        completedAt: data.completedAt
+                        completedAt: data.completedAt,
+                        referralBuilderId: data.referralBuilderId || null,
+                        referralSource: data.referralSource || null
                     })
                 });
 
                 if (response.ok) {
                     localStorage.setItem('milestone1Complete', 'true');
-                    window.location.href = '/bronze-upsell';
+
+                    // Show upsell section
+                    form.style.display = 'none';
+                    upsellSection.classList.add('show');
+                    upsellSection.scrollIntoView({ behavior: 'smooth' });
                 } else {
                     alert('There was an issue. Please try again.');
                     completeButton.textContent = originalText;
