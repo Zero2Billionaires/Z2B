@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upgrade to Bronze Tier | Z2B Legacy Builders</title>
+    <meta name="description" content="You've completed Milestone 1. Ready to accelerate? Upgrade to Bronze Tier for R480/month.">
+
+    <style>
+        /* ========================================
+           GLOBAL RESET & BASE STYLES
+        ======================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #1A1A1A;
+            background: #F9F9F9;
+            overflow-x: hidden;
+        }
+
+        /* ========================================
+           TYPOGRAPHY
+        ======================================== */
+        h1, h2, h3 {
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            font-size: 1.125rem;
+        }
+
+        /* ========================================
+           CELEBRATION HEADER
+        ======================================== */
+        .celebration-header {
+            background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+            color: #FFFFFF;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .celebration-header .icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .celebration-header h1 {
+            color: #FFFFFF;
+            margin-bottom: 1rem;
+        }
+
+        .celebration-header p {
+            font-size: 1.3rem;
+            color: #E0F7E0;
+        }
+
+        /* ========================================
+           MAIN CONTENT
+        ======================================== */
+        .main-content {
+            max-width: 900px;
+            margin: -40px auto 60px;
+            padding: 0 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ========================================
+           TRANSITION MESSAGE
+        ======================================== */
+        .transition-message {
+            background: #FFFFFF;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 6px 30px rgba(0,0,0,0.12);
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .transition-message h2 {
+            color: #0F1A2F;
+            margin-bottom: 1rem;
+        }
+
+        .transition-message p {
+            color: #4A4A4A;
+            font-size: 1.2rem;
+            line-height: 1.8;
+        }
+
+        .transition-message .highlight {
+            background: #FFF3E0;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #FF6F00;
+        }
+
+        .transition-message .highlight p {
+            margin: 0;
+            font-weight: 600;
+            color: #1A1A1A;
+            font-size: 1.1rem;
+        }
+
+        /* ========================================
+           OFFER SECTION
+        ======================================== */
+        .offer-section {
+            background: linear-gradient(135deg, #0F1A2F 0%, #1A2942 100%);
+            color: #FFFFFF;
+            padding: 50px 40px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.2);
+        }
+
+        .offer-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .offer-header .badge {
+            display: inline-block;
+            background: #FF6F00;
+            color: #FFFFFF;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1.5rem;
+        }
+
+        .offer-header h2 {
+            color: #FFFFFF;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .offer-price {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: #FF6F00;
+            margin-bottom: 0.5rem;
+        }
+
+        .offer-price .currency {
+            font-size: 2rem;
+            vertical-align: top;
+        }
+
+        .offer-price .period {
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: #D0D0D0;
+        }
+
+        .offer-tagline {
+            font-size: 1.2rem;
+            color: #D0D0D0;
+        }
+
+        /* ========================================
+           BENEFITS GRID
+        ======================================== */
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 3rem;
+        }
+
+        .benefit-card {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 25px;
+            border-radius: 8px;
+            border: 2px solid rgba(255, 111, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .benefit-card:hover {
+            border-color: #FF6F00;
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-3px);
+        }
+
+        .benefit-card .icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .benefit-card h3 {
+            color: #FF6F00;
+            margin-bottom: 0.75rem;
+            font-size: 1.3rem;
+        }
+
+        .benefit-card p {
+            color: #E0E0E0;
+            font-size: 1.05rem;
+            margin: 0;
+        }
+
+        .benefit-card ul {
+            list-style: none;
+            padding: 0;
+            margin-top: 15px;
+        }
+
+        .benefit-card ul li {
+            padding: 6px 0;
+            color: #E0E0E0;
+            font-size: 0.95rem;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .benefit-card ul li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        /* ========================================
+           COMPARISON TABLE
+        ======================================== */
+        .comparison-section {
+            background: #FFFFFF;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin-bottom: 40px;
+        }
+
+        .comparison-section h2 {
+            color: #0F1A2F;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #E0E0E0;
+        }
+
+        .comparison-table th {
+            background: #F5F5F5;
+            font-weight: 600;
+            color: #1A1A1A;
+        }
+
+        .comparison-table td {
+            color: #4A4A4A;
+        }
+
+        .comparison-table .free-column {
+            color: #666;
+        }
+
+        .comparison-table .bronze-column {
+            color: #FF6F00;
+            font-weight: 600;
+        }
+
+        .comparison-table .check-yes {
+            color: #4CAF50;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .comparison-table .check-no {
+            color: #CCC;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        /* ========================================
+           ACTION BUTTONS
+        ======================================== */
+        .action-section {
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            background: #FF6F00;
+            color: #FFFFFF;
+            padding: 20px 50px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 111, 0, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary:hover {
+            background: #E66300;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 111, 0, 0.6);
+        }
+
+        .btn-secondary {
+            display: inline-block;
+            background: transparent;
+            color: #666;
+            padding: 18px 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            border: 2px solid #CCC;
+            cursor: pointer;
+        }
+
+        .btn-secondary:hover {
+            border-color: #999;
+            color: #333;
+        }
+
+        /* ========================================
+           GUARANTEE SECTION
+        ======================================== */
+        .guarantee-section {
+            background: #FFF3E0;
+            padding: 30px;
+            border-radius: 8px;
+            text-align: center;
+            border: 2px solid #FF6F00;
+            margin-bottom: 40px;
+        }
+
+        .guarantee-section .icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .guarantee-section h3 {
+            color: #1A1A1A;
+            margin-bottom: 1rem;
+        }
+
+        .guarantee-section p {
+            color: #4A4A4A;
+            margin: 0;
+            font-size: 1.05rem;
+        }
+
+        /* ========================================
+           FOOTER
+        ======================================== */
+        .footer-section {
+            background: #0F1A2F;
+            color: #FFFFFF;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .footer-section p {
+            color: #B0B0B0;
+            margin: 0;
+        }
+
+        /* ========================================
+           MOBILE RESPONSIVE
+        ======================================== */
+        @media (max-width: 768px) {
+            .celebration-header h1 {
+                font-size: 2rem;
+            }
+
+            .offer-header h2 {
+                font-size: 2rem;
+            }
+
+            .offer-price {
+                font-size: 2.5rem;
+            }
+
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn-primary,
+            .btn-secondary {
+                width: 100%;
+            }
+
+            .comparison-table {
+                font-size: 0.9rem;
+            }
+
+            .comparison-table th,
+            .comparison-table td {
+                padding: 10px 8px;
+            }
+        }
+
+        /* ========================================
+           SMOOTH SCROLL
+        ======================================== */
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ========================================
+         CELEBRATION HEADER
+    ======================================== -->
+    <section class="celebration-header">
+        <div class="icon">🎉</div>
+        <h1>Milestone 1 Complete!</h1>
+        <p>You've clarified your foundation. Most people never get this far.</p>
+    </section>
+
+    <!-- ========================================
+         MAIN CONTENT
+    ======================================== -->
+    <div class="main-content">
+
+        <!-- TRANSITION MESSAGE -->
+        <div class="transition-message">
+            <h2>You Have Two Options From Here</h2>
+            <p>Option 1: Continue with the <strong>FREE path</strong>—complete all 7 milestones at your own pace, with no cost.</p>
+            <p>Option 2: <strong>Accelerate your journey</strong> with Bronze Tier—unlock premium support, accountability, and resources for R480/month.</p>
+
+            <div class="highlight">
+                <p>Either way, you keep access to all 7 milestones. Bronze just gives you the tools to move faster and build stronger.</p>
+            </div>
+        </div>
+
+        <!-- OFFER SECTION -->
+        <section class="offer-section">
+            <div class="offer-header">
+                <div class="badge">LIMITED TIME OFFER</div>
+                <h2>Upgrade to Bronze Tier</h2>
+                <div class="offer-price">
+                    <span class="currency">R</span>480<span class="period">/month</span>
+                </div>
+                <p class="offer-tagline">Accelerate your TABLE journey with premium support and resources</p>
+            </div>
+
+            <div class="benefits-grid">
+
+                <div class="benefit-card">
+                    <span class="icon">💰</span>
+                    <h3>18% ISP Commission</h3>
+                    <p>Earn 18% Income Sharing Program commission on your team's performance. Build once, earn recurring income.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <span class="icon">🧠</span>
+                    <h3>Coach Manlaw AI + 1 App Choice</h3>
+                    <p><strong>Coach Manlaw</strong> is your Personal and Business Development AI Coach, guiding you through transition and transformation—converting ideas, visions, and brainstorms into clear, executable outcomes.</p>
+                    <p style="margin-top: 10px; font-size: 0.95rem;">Plus choose 1 additional app from our marketplace.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <span class="icon">⚡</span>
+                    <h3>25 AI Fuel Daily</h3>
+                    <p>Get 25 AI Fuel credits every day to power your Coach Manlaw sessions and other AI-powered tools in the Z2B ecosystem.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <span class="icon">👥</span>
+                    <h3>Team Bonuses from Generation 2</h3>
+                    <p>Earn team bonuses starting from Generation 2 of your network. Build deeper, earn more—beyond just your direct referrals.</p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- COMPARISON TABLE -->
+        <section class="comparison-section">
+            <h2>Free vs. Bronze Tier</h2>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th class="free-column">FREE</th>
+                        <th class="bronze-column">BRONZE (R480/month)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Access to all 7 TABLE milestones</td>
+                        <td class="check-yes">✓</td>
+                        <td class="check-yes">✓</td>
+                    </tr>
+                    <tr>
+                        <td>ISP Commission</td>
+                        <td class="check-no">0%</td>
+                        <td class="check-yes">18%</td>
+                    </tr>
+                    <tr>
+                        <td>Coach Manlaw AI (Personal & Business Development)</td>
+                        <td class="check-no">✗</td>
+                        <td class="check-yes">✓</td>
+                    </tr>
+                    <tr>
+                        <td>Additional Marketplace Apps</td>
+                        <td class="check-no">0 apps</td>
+                        <td class="check-yes">1 app</td>
+                    </tr>
+                    <tr>
+                        <td>AI Fuel Credits (Daily)</td>
+                        <td class="check-no">0</td>
+                        <td class="check-yes">25</td>
+                    </tr>
+                    <tr>
+                        <td>Team Bonuses</td>
+                        <td class="check-no">Generation 1 only</td>
+                        <td class="check-yes">From Generation 2+</td>
+                    </tr>
+                    <tr>
+                        <td>Monthly Investment</td>
+                        <td class="check-yes">FREE</td>
+                        <td class="bronze-column">R480/month</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- GUARANTEE -->
+        <div class="guarantee-section">
+            <div class="icon">🛡️</div>
+            <h3>30-Day Money-Back Guarantee</h3>
+            <p>Try Bronze Tier risk-free. If it's not accelerating your journey, cancel anytime in the first 30 days for a full refund.</p>
+        </div>
+
+        <!-- ACTION BUTTONS -->
+        <section class="action-section">
+            <div class="action-buttons">
+                <a href="/checkout/bronze-tier" class="btn-primary">YES, UPGRADE TO BRONZE (R480/month)</a>
+                <a href="https://www.z2blegacybuilders.co.za/milestones" class="btn-secondary">No thanks, continue FREE</a>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- ========================================
+         FOOTER
+    ======================================== -->
+    <section class="footer-section">
+        <p>Z2B Legacy Builders © 2026. Building owners, not employees.</p>
+    </section>
+
+    <!-- ========================================
+         TRACKING SCRIPT
+    ======================================== -->
+    <script>
+        // Track user decision
+        document.querySelector('a[href="/checkout/bronze-tier"]').addEventListener('click', function() {
+            // Log upgrade decision
+            fetch('/api/track-upsell-decision', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: localStorage.getItem('userEmail'),
+                    decision: 'accepted',
+                    timestamp: new Date().toISOString()
+                })
+            });
+        });
+
+        document.querySelector('a[href="https://www.z2blegacybuilders.co.za/milestones"]').addEventListener('click', function() {
+            // Log decline decision
+            fetch('/api/track-upsell-decision', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: localStorage.getItem('userEmail'),
+                    decision: 'declined',
+                    timestamp: new Date().toISOString()
+                })
+            });
+        });
+    </script>
+
+</body>
+</html>

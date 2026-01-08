@@ -1,0 +1,235 @@
+═══════════════════════════════════════════════════════════════
+Z2B MILESTONE 1 SYSTEM - DEPLOYMENT CHECKLIST
+═══════════════════════════════════════════════════════════════
+
+Date: _______________
+Deployed By: _______________
+
+─────────────────────────────────────────────────────────────
+PHASE 1: PRE-DEPLOYMENT PREPARATION
+─────────────────────────────────────────────────────────────
+
+[ ] Backup existing database
+[ ] Backup existing files
+[ ] Review all documentation in /docs/ folder
+[ ] Verify MongoDB connection string
+[ ] Verify email service credentials
+[ ] Confirm BASE_URL environment variable
+
+─────────────────────────────────────────────────────────────
+PHASE 2: UPLOAD FILES
+─────────────────────────────────────────────────────────────
+
+FRONTEND FILES:
+[ ] Upload: frontend/start-milestone-1.html → /app/start-milestone-1.html
+[ ] Upload: frontend/milestone1-welcome-INTERACTIVE.html → /app/milestone1-welcome.html
+[ ] Upload: frontend/bronze-upsell.html → /app/bronze-upsell.html
+[ ] Upload: frontend/unhappy-employee.jpeg → /app/images/unhappy-employee.jpeg
+
+BACKEND FILES:
+[ ] Upload: backend/models/Milestone1Lead.js → /admin-backend/models/
+[ ] Upload: backend/routes/milestone1.js → /admin-backend/routes/
+[ ] Upload: backend/templates/milestone1-welcome-email.html → /admin-backend/templates/
+[ ] Upload: backend/templates/milestone1-completion-email.html → /admin-backend/templates/
+
+─────────────────────────────────────────────────────────────
+PHASE 3: CODE INTEGRATION
+─────────────────────────────────────────────────────────────
+
+SERVER.JS UPDATES:
+[ ] Add: const milestone1Routes = require('./routes/milestone1');
+[ ] Add: app.use('/api', milestone1Routes);
+[ ] Restart server
+
+EMAIL SERVICE UPDATES:
+[ ] Add: sendMilestone1Welcome() method
+[ ] Add: sendMilestone1Completion() method
+[ ] Add: scheduleBronzeFollowUp() method (optional)
+[ ] Test email sending
+
+─────────────────────────────────────────────────────────────
+PHASE 4: DATABASE SETUP
+─────────────────────────────────────────────────────────────
+
+[ ] Verify MongoDB connection
+[ ] Milestone1Lead model auto-creates collection
+[ ] Check indexes are created
+[ ] Test database write operation
+
+─────────────────────────────────────────────────────────────
+PHASE 5: TESTING - LANDING PAGE
+─────────────────────────────────────────────────────────────
+
+[ ] Navigate to: /start-milestone-1.html
+[ ] Verify page loads correctly
+[ ] Verify unhappy-employee.jpeg image displays
+[ ] Fill out all 5 form fields:
+    [ ] Full Name
+    [ ] Email
+    [ ] WhatsApp
+    [ ] Current Situation
+    [ ] Biggest Frustration
+[ ] Submit form
+[ ] Verify redirect to: /milestone1-welcome?email=...
+[ ] Check MongoDB - new lead document created
+[ ] Check email inbox - welcome email received
+
+─────────────────────────────────────────────────────────────
+PHASE 6: TESTING - INTERACTIVE M1
+─────────────────────────────────────────────────────────────
+
+[ ] Page loads with email parameter
+[ ] All 26 form fields visible:
+    VISION BOARD (10 fields):
+    [ ] Business Vision (3 fields)
+    [ ] Lifestyle Goals (3 fields)
+    [ ] Legacy Plan (2 fields)
+    [ ] Freedom Definition (2 fields)
+
+    SWOT/TEEE (16 fields):
+    [ ] Strengths (4 TEEE fields)
+    [ ] Weaknesses (4 TEEE fields)
+    [ ] Opportunities (4 TEEE fields)
+    [ ] Threats (4 TEEE fields)
+
+[ ] Fill out 2-3 fields
+[ ] Wait 3 seconds - verify "Saved!" message appears
+[ ] Check MongoDB - milestone1Data field updated
+[ ] Refresh page - verify fields still have saved data
+[ ] Click "💾 SAVE PROGRESS" button manually
+[ ] Verify success message
+[ ] Complete all remaining fields
+[ ] Click "✅ COMPLETE MILESTONE 1" button
+[ ] Verify redirect to: /bronze-upsell?email=...
+[ ] Check MongoDB - milestone1Complete = true
+
+─────────────────────────────────────────────────────────────
+PHASE 7: TESTING - BRONZE UPSELL
+─────────────────────────────────────────────────────────────
+
+[ ] Page loads correctly
+[ ] Verify Bronze Tier features displayed:
+    [ ] 18% ISP Commission
+    [ ] Coach Manlaw AI + 1 App Choice
+    [ ] 25 AI Fuel Daily
+    [ ] Team Bonuses from Generation 2
+[ ] Comparison table displays correctly
+[ ] Click "🚀 UPGRADE TO BRONZE" button
+    [ ] Verify tracks decision as "accepted"
+    [ ] Check MongoDB - bronzeUpsellDecision = "accepted"
+    [ ] Redirects to checkout page
+[ ] Go back, click "Continue with FREE"
+    [ ] Verify tracks decision as "declined"
+    [ ] Check MongoDB - bronzeUpsellDecision = "declined"
+    [ ] Redirects to full milestones page
+
+─────────────────────────────────────────────────────────────
+PHASE 8: TESTING - API ENDPOINTS
+─────────────────────────────────────────────────────────────
+
+[ ] POST /api/milestone1-optin - Creates new lead
+[ ] POST /api/milestone1-save-progress - Saves form data
+[ ] POST /api/milestone1-complete - Marks M1 complete
+[ ] POST /api/track-upsell-decision - Tracks Bronze decision
+[ ] GET /api/milestone1-progress/:email - Returns saved data
+
+─────────────────────────────────────────────────────────────
+PHASE 9: MOBILE TESTING
+─────────────────────────────────────────────────────────────
+
+[ ] Test on mobile device (or Chrome DevTools mobile view)
+[ ] Landing page responsive
+[ ] M1 Welcome page responsive (all 26 fields usable)
+[ ] Bronze Upsell page responsive
+[ ] All buttons clickable on mobile
+[ ] Form fields not cut off
+[ ] Images display correctly
+
+─────────────────────────────────────────────────────────────
+PHASE 10: EMAIL TESTING
+─────────────────────────────────────────────────────────────
+
+[ ] Welcome email sends after opt-in
+[ ] Welcome email contains correct link
+[ ] Completion email sends after M1 complete
+[ ] Completion email contains Bronze upsell link
+[ ] Email templates format correctly on mobile
+[ ] Email links work correctly
+
+─────────────────────────────────────────────────────────────
+PHASE 11: FULL USER FLOW TEST (END-TO-END)
+─────────────────────────────────────────────────────────────
+
+Complete flow from start to finish with REAL DATA:
+
+[ ] Start at landing page
+[ ] Submit opt-in form with real email
+[ ] Check email for welcome message
+[ ] Click link in email → Redirected to M1 Welcome
+[ ] Fill out all 26 fields thoughtfully
+[ ] Verify auto-save works (wait 3+ seconds between fields)
+[ ] Complete M1 → Redirected to Bronze Upsell
+[ ] Review Bronze features
+[ ] Make decision (Accept or Decline)
+[ ] Proceed to next step in flow
+[ ] Verify all data captured in MongoDB
+[ ] Check database document has:
+    - All opt-in data
+    - All milestone1Data (26 fields)
+    - milestone1Complete = true
+    - bronzeUpsellDecision = "accepted" or "declined"
+    - Correct status field
+
+─────────────────────────────────────────────────────────────
+PHASE 12: POST-DEPLOYMENT VERIFICATION
+─────────────────────────────────────────────────────────────
+
+[ ] Server logs show no errors
+[ ] MongoDB connection stable
+[ ] Email service functioning
+[ ] All routes responding
+[ ] Images loading correctly
+[ ] No console errors in browser
+[ ] Page load times acceptable (<3 seconds)
+[ ] SSL certificate valid (HTTPS working)
+
+─────────────────────────────────────────────────────────────
+PHASE 13: DOCUMENTATION & HANDOFF
+─────────────────────────────────────────────────────────────
+
+[ ] Document any deployment issues encountered
+[ ] Note any environment-specific configurations
+[ ] Update team on new M1 system
+[ ] Provide admin access to MongoDB for M1 tracking
+[ ] Set up analytics/tracking (optional)
+[ ] Create admin dashboard view for M1 leads (optional)
+
+─────────────────────────────────────────────────────────────
+OPTIONAL: CREATE PDF TEMPLATES
+─────────────────────────────────────────────────────────────
+
+[ ] Create Vision Board PDF using docs/VISION-BOARD-TEMPLATE-GUIDE.md
+[ ] Upload to: /app/downloads/vision-board-template.pdf
+[ ] Create SWOT/TEEE PDF using docs/SWOT-TEEE-WORKSHEET-GUIDE.md
+[ ] Upload to: /app/downloads/swot-teee-worksheet.pdf
+[ ] Test PDF downloads from M1 Welcome page
+
+═══════════════════════════════════════════════════════════════
+DEPLOYMENT COMPLETE
+═══════════════════════════════════════════════════════════════
+
+All tests passed: [ ]
+Ready for production: [ ]
+
+Deployed by: _______________
+Date: _______________
+Time: _______________
+
+Notes:
+_________________________________________________________________
+_________________________________________________________________
+_________________________________________________________________
+_________________________________________________________________
+_________________________________________________________________
+
+═══════════════════════════════════════════════════════════════
