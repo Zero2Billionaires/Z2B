@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Before You Build Wealth, Clarify Your Foundation | Z2B Legacy Builders</title>
+    <meta name="description" content="Free Milestone 1: Vision Board + SWOT Analysis using the TEEE Framework. For African employees ready to stop working for others and start building ownership.">
+
+    <style>
+        /* ========================================
+           GLOBAL RESET & BASE STYLES
+        ======================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #1A1A1A;
+            background: #FFFFFF;
+            overflow-x: hidden;
+        }
+
+        /* ========================================
+           TYPOGRAPHY
+        ======================================== */
+        h1, h2, h3 {
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            font-size: 1.125rem;
+        }
+
+        /* ========================================
+           HERO SECTION
+        ======================================== */
+        .hero-section {
+            background: linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 100%);
+            color: #FFFFFF;
+            padding: 80px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('hero-bg-overlay.png');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.1;
+            z-index: 1;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-headline {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            color: #FFFFFF;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero-subheadline {
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 2rem;
+            color: #E0E0E0;
+            line-height: 1.5;
+        }
+
+        .hero-cta-button {
+            display: inline-block;
+            background: #FF6F00;
+            color: #FFFFFF;
+            padding: 18px 48px;
+            font-size: 1.25rem;
+            font-weight: 700;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 111, 0, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .hero-cta-button:hover {
+            background: #E66300;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 111, 0, 0.6);
+        }
+
+        /* ========================================
+           PAIN MIRROR SECTION
+        ======================================== */
+        .pain-mirror-section {
+            background: #F9F9F9;
+            padding: 80px 20px;
+        }
+
+        .pain-mirror-content {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .pain-mirror-intro {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .pain-mirror-intro h2 {
+            font-size: 2.5rem;
+            color: #1A1A1A;
+            margin-bottom: 1.5rem;
+        }
+
+        .pain-mirror-intro p {
+            font-size: 1.25rem;
+            color: #4A4A4A;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .pain-points-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 3rem;
+        }
+
+        .pain-point-card {
+            background: #FFFFFF;
+            padding: 30px;
+            border-radius: 8px;
+            border-left: 5px solid #FF6F00;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        .pain-point-card h3 {
+            color: #1A1A1A;
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+        }
+
+        .pain-point-card p {
+            color: #4A4A4A;
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        .pain-mirror-image {
+            text-align: center;
+            margin: 3rem 0;
+        }
+
+        .pain-mirror-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+        }
+
+        .pain-mirror-cta {
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .pain-mirror-cta p {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #1A1A1A;
+            margin-bottom: 1.5rem;
+        }
+
+        /* ========================================
+           WHAT YOU GET SECTION
+        ======================================== */
+        .what-you-get-section {
+            background: linear-gradient(135deg, #0F1A2F 0%, #1A2942 100%);
+            color: #FFFFFF;
+            padding: 80px 20px;
+        }
+
+        .what-you-get-content {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .what-you-get-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .what-you-get-header h2 {
+            font-size: 2.5rem;
+            color: #FFFFFF;
+            margin-bottom: 1rem;
+        }
+
+        .what-you-get-header p {
+            font-size: 1.2rem;
+            color: #D0D0D0;
+        }
+
+        .deliverables-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 3rem;
+        }
+
+        .deliverable-item {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 30px;
+            border-radius: 8px;
+            border: 2px solid rgba(255, 111, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .deliverable-item:hover {
+            border-color: #FF6F00;
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-5px);
+        }
+
+        .deliverable-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .deliverable-item h3 {
+            color: #FF6F00;
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+        }
+
+        .deliverable-item p {
+            color: #E0E0E0;
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        .what-you-get-cta {
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .what-you-get-cta p {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #FFFFFF;
+            margin-bottom: 1.5rem;
+        }
+
+        /* ========================================
+           OPT-IN FORM SECTION
+        ======================================== */
+        .optin-section {
+            background: #F5F5F5;
+            padding: 80px 20px;
+        }
+
+        .optin-content {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .optin-header {
+            margin-bottom: 2rem;
+        }
+
+        .optin-header h2 {
+            font-size: 2.2rem;
+            color: #1A1A1A;
+            margin-bottom: 1rem;
+        }
+
+        .optin-header p {
+            font-size: 1.15rem;
+            color: #4A4A4A;
+        }
+
+        .optin-form {
+            background: #FFFFFF;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #1A1A1A;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 14px 16px;
+            font-size: 1rem;
+            border: 2px solid #FF6F00;
+            border-radius: 6px;
+            background: #F5F5F5;
+            color: #1A1A1A;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #E66300;
+            background: #FFFFFF;
+            box-shadow: 0 0 0 3px rgba(255, 111, 0, 0.1);
+        }
+
+        .submit-button {
+            width: 100%;
+            background: #FF6F00;
+            color: #FFFFFF;
+            padding: 18px;
+            font-size: 1.25rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 10px;
+        }
+
+        .submit-button:hover {
+            background: #E66300;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 111, 0, 0.4);
+        }
+
+        .privacy-notice {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            font-size: 0.95rem;
+            color: #666;
+        }
+
+        .privacy-notice svg {
+            width: 16px;
+            height: 16px;
+            fill: #4CAF50;
+        }
+
+        /* ========================================
+           FOOTER / REASSURANCE SECTION
+        ======================================== */
+        .footer-section {
+            background: #0F1A2F;
+            color: #FFFFFF;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .footer-icon {
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-icon svg {
+            width: 50px;
+            height: 50px;
+            fill: #FF6F00;
+        }
+
+        .footer-message {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #FFFFFF;
+            margin-bottom: 1rem;
+        }
+
+        .footer-tagline {
+            font-size: 1rem;
+            color: #B0B0B0;
+        }
+
+        /* ========================================
+           MOBILE RESPONSIVE
+        ======================================== */
+        @media (max-width: 768px) {
+            .hero-headline {
+                font-size: 2rem;
+            }
+
+            .hero-subheadline {
+                font-size: 1.2rem;
+            }
+
+            h2 {
+                font-size: 1.75rem;
+            }
+
+            .pain-points-grid,
+            .deliverables-list {
+                grid-template-columns: 1fr;
+            }
+
+            .optin-form {
+                padding: 30px 20px;
+            }
+
+            .hero-cta-button,
+            .submit-button {
+                font-size: 1.1rem;
+                padding: 16px 32px;
+            }
+        }
+
+        /* ========================================
+           SMOOTH SCROLL
+        ======================================== */
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ========================================
+         1️⃣ HERO SECTION
+    ======================================== -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-headline">Before You Change Your Life, Clarify Your Foundation</h1>
+            <p class="hero-subheadline">
+                You can't build ownership on confusion. Milestone 1 gives you the Vision Board and SWOT Analysis (using the TEEE Framework) to face the truth about where you are—and where you're actually going.
+            </p>
+            <a href="#optin-form" class="hero-cta-button">Start Milestone 1 FREE</a>
+        </div>
+    </section>
+
+    <!-- ========================================
+         2️⃣ PAIN MIRROR SECTION
+    ======================================== -->
+    <section class="pain-mirror-section">
+        <div class="pain-mirror-content">
+
+            <div class="pain-mirror-intro">
+                <h2>You Already Know Something Is Wrong</h2>
+                <p>You feel it every Monday morning. Every time your manager takes credit for your work. Every time you check your bank account and realize another month passed with nothing to show for it.</p>
+            </div>
+
+            <div class="pain-points-grid">
+
+                <div class="pain-point-card">
+                    <h3>Capped Income. Capped Future.</h3>
+                    <p>You work harder than your boss, but your salary is locked. No matter how much you give, the ceiling stays low. Meanwhile, the owner gets richer from your effort.</p>
+                </div>
+
+                <div class="pain-point-card">
+                    <h3>Underappreciated. Overworked.</h3>
+                    <p>They call you "essential," but you're replaceable the moment you ask for more. Your ideas get ignored. Your contributions get forgotten. Your worth gets questioned.</p>
+                </div>
+
+                <div class="pain-point-card">
+                    <h3>Insecure. One Paycheck Away.</h3>
+                    <p>Retrenchments. Budget cuts. Restructuring. You know you could lose everything tomorrow, and there's nothing you can do about it. That's not stability—that's a gamble you didn't sign up for.</p>
+                </div>
+
+                <div class="pain-point-card">
+                    <h3>Trapped in Toxic Politics.</h3>
+                    <p>The favoritism. The backstabbing. The managers who protect their turf instead of developing talent. You didn't sign up to play games—you signed up to work. But the system doesn't reward competence. It rewards compliance.</p>
+                </div>
+
+            </div>
+
+            <div class="pain-mirror-image">
+                <img src="images/unhappy-employee.jpeg" alt="Frustrated African employee at desk reflecting on career dissatisfaction" style="max-width: 100%; height: auto;">
+            </div>
+
+            <div class="pain-mirror-cta">
+                <p><strong>If this is your reality, you don't need motivation. You need a different foundation.</strong></p>
+                <a href="#optin-form" class="hero-cta-button">Get Milestone 1 Now (FREE)</a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ========================================
+         3️⃣ WHAT YOU GET SECTION
+    ======================================== -->
+    <section class="what-you-get-section">
+        <div class="what-you-get-content">
+
+            <div class="what-you-get-header">
+                <h2>What You Get in Milestone 1 (FREE)</h2>
+                <p>This is not a motivational poster. This is strategic clarity for people who are done playing small.</p>
+            </div>
+
+            <div class="deliverables-list">
+
+                <div class="deliverable-item">
+                    <span class="deliverable-icon">🎯</span>
+                    <h3>Your Personal Vision Board</h3>
+                    <p>No fluffy dreams. No empty wishes. A clear, visual roadmap of what ownership looks like for you—your business, your legacy, your freedom. You'll see it. Then you'll build it.</p>
+                </div>
+
+                <div class="deliverable-item">
+                    <span class="deliverable-icon">⚡</span>
+                    <h3>SWOT Analysis Using the TEEE Framework</h3>
+                    <p><strong>Time. Energy. Experience. Expertise.</strong> We audit what you actually have, not what you wish you had. Your strengths. Your gaps. Your real advantages. Your honest obstacles. No sugar-coating.</p>
+                </div>
+
+                <div class="deliverable-item">
+                    <span class="deliverable-icon">🔍</span>
+                    <h3>Honest Self-Assessment</h3>
+                    <p>You'll answer the hard questions: Where is your time going? What drains your energy? What experience do you have that others will pay for? What expertise makes you irreplaceable?</p>
+                </div>
+
+                <div class="deliverable-item">
+                    <span class="deliverable-icon">🛠️</span>
+                    <h3>Foundation for the TABLE System</h3>
+                    <p>Milestone 1 is the entry point to the full Z2B TABLE—a 10-milestone roadmap that takes you from employee to owner. This is where transformation begins.</p>
+                </div>
+
+            </div>
+
+            <div class="what-you-get-cta">
+                <p><strong>No selling. No spam. No gimmicks. Just clarity.</strong></p>
+                <a href="#optin-form" class="hero-cta-button">Start Milestone 1 FREE</a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ========================================
+         4️⃣ OPT-IN FORM SECTION
+    ======================================== -->
+    <section class="optin-section" id="optin-form">
+        <div class="optin-content">
+
+            <div class="optin-header">
+                <h2>Ready to Get Clear?</h2>
+                <p>Fill out the form below to get instant access to Milestone 1. This is for serious people only.</p>
+            </div>
+
+            <form class="optin-form" id="milestone1Form" method="POST" action="/api/milestone1-optin">
+
+                <div class="form-group">
+                    <label for="fullName">Full Name *</label>
+                    <input type="text" id="fullName" name="fullName" required placeholder="Your full name">
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <input type="email" id="email" name="email" required placeholder="your.email@example.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="whatsapp">WhatsApp Number *</label>
+                    <input type="tel" id="whatsapp" name="whatsapp" required placeholder="+27 XX XXX XXXX">
+                </div>
+
+                <div class="form-group">
+                    <label for="currentSituation">Current Work Situation *</label>
+                    <select id="currentSituation" name="currentSituation" required>
+                        <option value="">-- Select One --</option>
+                        <option value="employed-fulltime">Employed Full-Time</option>
+                        <option value="employed-parttime">Employed Part-Time</option>
+                        <option value="self-employed">Self-Employed / Freelancer</option>
+                        <option value="unemployed">Unemployed / Between Jobs</option>
+                        <option value="student">Student</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="biggestFrustration">What's your biggest frustration right now? *</label>
+                    <input type="text" id="biggestFrustration" name="biggestFrustration" required placeholder="E.g., Capped income, toxic boss, no growth...">
+                </div>
+
+                <button type="submit" class="submit-button">GET MILESTONE 1 FREE</button>
+
+                <div class="privacy-notice">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3zm-1 14.93h2V19h-2v-2.07zm1.23-11.93c-2.74 0-4.96 2.22-4.96 4.96h2c0-1.64 1.32-2.96 2.96-2.96s2.96 1.32 2.96 2.96c0 2.96-4.44 2.59-4.44 7.04h2c0-3.16 4.44-3.54 4.44-7.04C17.19 7.22 14.97 5 12.23 5z"/>
+                    </svg>
+                    <span>No selling, no spam. Your data is safe.</span>
+                </div>
+
+            </form>
+
+        </div>
+    </section>
+
+    <!-- ========================================
+         5️⃣ FOOTER / REASSURANCE SECTION
+    ======================================== -->
+    <section class="footer-section">
+        <div class="footer-content">
+
+            <div class="footer-icon">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>
+                </svg>
+            </div>
+
+            <p class="footer-message">This is not motivation. This is preparation for ownership.</p>
+            <p class="footer-tagline">Z2B Legacy Builders &copy; 2026. Building owners, not employees.</p>
+
+        </div>
+    </section>
+
+    <!-- ========================================
+         FORM SUBMISSION SCRIPT
+    ======================================== -->
+    <script>
+        document.getElementById('milestone1Form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData.entries());
+
+            // Show loading state
+            const submitButton = this.querySelector('.submit-button');
+            const originalText = submitButton.textContent;
+            submitButton.textContent = 'SUBMITTING...';
+            submitButton.disabled = true;
+
+            try {
+                const response = await fetch('/api/milestone1-optin', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    // Get user email to pass to welcome page
+                    const userEmail = data.email;
+
+                    // Redirect to Milestone 1 Welcome Page (focused, no distractions)
+                    window.location.href = `/milestone1-welcome?email=${encodeURIComponent(userEmail)}`;
+                } else {
+                    alert('Something went wrong. Please try again or contact support.');
+                    submitButton.textContent = originalText;
+                    submitButton.disabled = false;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Network error. Please check your connection and try again.');
+                submitButton.textContent = originalText;
+                submitButton.disabled = false;
+            }
+        });
+    </script>
+
+</body>
+</html>

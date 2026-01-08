@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Milestone 1: Vision Board | Z2B Legacy Builders</title>
+    <meta name="description" content="Welcome to Milestone 1. Clarify your foundation with your Vision Board and SWOT Analysis using the TEEE Framework.">
+
+    <style>
+        /* ========================================
+           GLOBAL RESET & BASE STYLES
+        ======================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #1A1A1A;
+            background: #F9F9F9;
+            overflow-x: hidden;
+        }
+
+        /* ========================================
+           TYPOGRAPHY
+        ======================================== */
+        h1, h2, h3 {
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            font-size: 1.125rem;
+        }
+
+        /* ========================================
+           HEADER / WELCOME SECTION
+        ======================================== */
+        .welcome-header {
+            background: linear-gradient(135deg, #0F1A2F 0%, #1A2942 100%);
+            color: #FFFFFF;
+            padding: 60px 20px;
+            text-align: center;
+            border-bottom: 5px solid #FF6F00;
+        }
+
+        .welcome-header h1 {
+            font-size: 2.5rem;
+            color: #FFFFFF;
+            margin-bottom: 1rem;
+        }
+
+        .welcome-header .subtitle {
+            font-size: 1.3rem;
+            color: #D0D0D0;
+            margin-bottom: 2rem;
+        }
+
+        .progress-indicator {
+            display: inline-block;
+            background: rgba(255, 111, 0, 0.2);
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #FF6F00;
+            border: 2px solid #FF6F00;
+        }
+
+        /* ========================================
+           MAIN CONTENT SECTION
+        ======================================== */
+        .main-content {
+            max-width: 900px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+
+        .intro-message {
+            background: #FFFFFF;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin-bottom: 40px;
+            border-left: 6px solid #FF6F00;
+        }
+
+        .intro-message h2 {
+            color: #0F1A2F;
+            margin-bottom: 1rem;
+        }
+
+        .intro-message p {
+            color: #4A4A4A;
+            line-height: 1.8;
+        }
+
+        .intro-message .highlight {
+            background: #FFF3E0;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #FF6F00;
+        }
+
+        .intro-message .highlight p {
+            margin: 0;
+            font-weight: 600;
+            color: #1A1A1A;
+        }
+
+        /* ========================================
+           MILESTONE DELIVERABLES
+        ======================================== */
+        .deliverables-section {
+            margin-bottom: 40px;
+        }
+
+        .deliverables-section h2 {
+            color: #0F1A2F;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .deliverables-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .deliverable-card {
+            background: #FFFFFF;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .deliverable-card:hover {
+            border-color: #FF6F00;
+            transform: translateY(-5px);
+            box-shadow: 0 6px 25px rgba(255, 111, 0, 0.2);
+        }
+
+        .deliverable-card .icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .deliverable-card h3 {
+            color: #FF6F00;
+            margin-bottom: 1rem;
+        }
+
+        .deliverable-card p {
+            color: #4A4A4A;
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        .deliverable-card ul {
+            list-style: none;
+            padding: 0;
+            margin-top: 15px;
+        }
+
+        .deliverable-card ul li {
+            padding: 8px 0;
+            color: #4A4A4A;
+            font-size: 1rem;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .deliverable-card ul li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        /* ========================================
+           ACTION BUTTONS
+        ======================================== */
+        .action-section {
+            background: linear-gradient(135deg, #0F1A2F 0%, #1A2942 100%);
+            padding: 50px 40px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 40px 0;
+            box-shadow: 0 6px 30px rgba(0,0,0,0.15);
+        }
+
+        .action-section h2 {
+            color: #FFFFFF;
+            margin-bottom: 1rem;
+        }
+
+        .action-section p {
+            color: #D0D0D0;
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            background: #FF6F00;
+            color: #FFFFFF;
+            padding: 18px 40px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 111, 0, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary:hover {
+            background: #E66300;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 111, 0, 0.6);
+        }
+
+        .btn-secondary {
+            display: inline-block;
+            background: transparent;
+            color: #FFFFFF;
+            padding: 18px 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            border: 2px solid #FFFFFF;
+            cursor: pointer;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #FF6F00;
+            color: #FF6F00;
+        }
+
+        /* ========================================
+           INSTRUCTIONS SECTION
+        ======================================== */
+        .instructions-section {
+            background: #FFFFFF;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin-bottom: 40px;
+        }
+
+        .instructions-section h2 {
+            color: #0F1A2F;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .step {
+            display: flex;
+            align-items: start;
+            margin-bottom: 30px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #E0E0E0;
+        }
+
+        .step:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .step-number {
+            background: #FF6F00;
+            color: #FFFFFF;
+            font-size: 1.5rem;
+            font-weight: 700;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-right: 20px;
+        }
+
+        .step-content h3 {
+            color: #1A1A1A;
+            margin-bottom: 0.5rem;
+        }
+
+        .step-content p {
+            color: #4A4A4A;
+            margin: 0;
+        }
+
+        /* ========================================
+           COMPLETION SECTION
+        ======================================== */
+        .completion-section {
+            background: #FFF3E0;
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+            border: 3px solid #FF6F00;
+            margin-bottom: 40px;
+        }
+
+        .completion-section h2 {
+            color: #0F1A2F;
+            margin-bottom: 1rem;
+        }
+
+        .completion-section p {
+            color: #4A4A4A;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        .completion-checklist {
+            text-align: left;
+            max-width: 500px;
+            margin: 0 auto 2rem;
+            background: #FFFFFF;
+            padding: 25px;
+            border-radius: 8px;
+        }
+
+        .completion-checklist label {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            font-size: 1.05rem;
+            color: #1A1A1A;
+            cursor: pointer;
+        }
+
+        .completion-checklist input[type="checkbox"] {
+            width: 22px;
+            height: 22px;
+            margin-right: 15px;
+            cursor: pointer;
+            accent-color: #FF6F00;
+        }
+
+        #completeM1Button {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        #completeM1Button.enabled {
+            opacity: 1;
+            cursor: pointer;
+        }
+
+        /* ========================================
+           FOOTER
+        ======================================== */
+        .footer-section {
+            background: #0F1A2F;
+            color: #FFFFFF;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .footer-section p {
+            color: #B0B0B0;
+            margin: 0;
+        }
+
+        /* ========================================
+           MOBILE RESPONSIVE
+        ======================================== */
+        @media (max-width: 768px) {
+            .welcome-header h1 {
+                font-size: 2rem;
+            }
+
+            .welcome-header .subtitle {
+                font-size: 1.1rem;
+            }
+
+            .intro-message {
+                padding: 30px 20px;
+            }
+
+            .deliverables-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-section {
+                padding: 40px 20px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn-primary,
+            .btn-secondary {
+                width: 100%;
+            }
+
+            .instructions-section {
+                padding: 30px 20px;
+            }
+
+            .step {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .step-number {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+        }
+
+        /* ========================================
+           SMOOTH SCROLL
+        ======================================== */
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ========================================
+         WELCOME HEADER
+    ======================================== -->
+    <section class="welcome-header">
+        <div class="progress-indicator">MILESTONE 1 OF 7</div>
+        <h1>Welcome to Your Foundation</h1>
+        <p class="subtitle">Before you build wealth, clarify your vision. This is where ownership begins.</p>
+    </section>
+
+    <!-- ========================================
+         MAIN CONTENT
+    ======================================== -->
+    <div class="main-content">
+
+        <!-- INTRO MESSAGE -->
+        <div class="intro-message">
+            <h2>You're In. Now Let's Get Clear.</h2>
+            <p>You didn't opt in for motivation. You opted in for clarity. Milestone 1 is your foundation—the honest starting point before you build anything else.</p>
+            <p>This isn't about dreaming. It's about facing where you are right now, understanding what you have, and mapping where you're going.</p>
+
+            <div class="highlight">
+                <p><strong>⚠️ Important:</strong> Don't rush this. A weak foundation creates a weak business. Take this seriously, and everything after this gets easier.</p>
+            </div>
+        </div>
+
+        <!-- DELIVERABLES -->
+        <section class="deliverables-section">
+            <h2>What You'll Complete in Milestone 1</h2>
+
+            <div class="deliverables-grid">
+
+                <div class="deliverable-card">
+                    <span class="icon">🎯</span>
+                    <h3>Your Personal Vision Board</h3>
+                    <p>Not a Pinterest board. A strategic visual map of what ownership actually looks like for you.</p>
+                    <ul>
+                        <li>Your business vision</li>
+                        <li>Your lifestyle goals</li>
+                        <li>Your legacy plan</li>
+                        <li>Your freedom definition</li>
+                    </ul>
+                </div>
+
+                <div class="deliverable-card">
+                    <span class="icon">⚡</span>
+                    <h3>SWOT Analysis (TEEE Framework)</h3>
+                    <p>Audit your current reality using <strong>Time, Energy, Experience, and Expertise</strong>.</p>
+                    <ul>
+                        <li>Strengths you can leverage</li>
+                        <li>Weaknesses you must address</li>
+                        <li>Opportunities waiting for you</li>
+                        <li>Threats you need to manage</li>
+                    </ul>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- INSTRUCTIONS -->
+        <section class="instructions-section">
+            <h2>How to Complete Milestone 1</h2>
+
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3>Download Your Vision Board Template</h3>
+                    <p>Click the button below to access your downloadable Vision Board template. Fill it out honestly—not hopefully.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3>Complete Your SWOT Using TEEE</h3>
+                    <p>Use the TEEE Framework worksheet to assess your Time, Energy, Experience, and Expertise. Be honest about gaps.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3>Review and Reflect</h3>
+                    <p>Look at what you've created. Does it feel real? Does it feel achievable? Does it scare you a little? Good. That means it's honest.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h3>Mark as Complete Below</h3>
+                    <p>Once you've finished both deliverables, check the boxes below and mark this milestone complete.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ACTION SECTION -->
+        <section class="action-section">
+            <h2>Ready to Start?</h2>
+            <p>Download your materials and begin clarifying your foundation.</p>
+
+            <div class="action-buttons">
+                <a href="/downloads/milestone1-vision-board-template.pdf" class="btn-primary" download>Download Vision Board Template</a>
+                <a href="/downloads/milestone1-swot-teee-worksheet.pdf" class="btn-secondary" download>Download SWOT/TEEE Worksheet</a>
+            </div>
+        </section>
+
+        <!-- COMPLETION SECTION -->
+        <section class="completion-section" id="completionSection">
+            <h2>Finished? Mark Milestone 1 Complete</h2>
+            <p>Check both boxes below once you've completed your Vision Board and SWOT analysis.</p>
+
+            <div class="completion-checklist">
+                <label>
+                    <input type="checkbox" id="checkbox1" class="completion-checkbox">
+                    <span>✅ I've completed my Vision Board</span>
+                </label>
+                <label>
+                    <input type="checkbox" id="checkbox2" class="completion-checkbox">
+                    <span>✅ I've completed my SWOT using the TEEE Framework</span>
+                </label>
+            </div>
+
+            <button id="completeM1Button" class="btn-primary">COMPLETE MILESTONE 1</button>
+        </section>
+
+    </div>
+
+    <!-- ========================================
+         FOOTER
+    ======================================== -->
+    <section class="footer-section">
+        <p>Z2B Legacy Builders © 2026. Building owners, not employees.</p>
+    </section>
+
+    <!-- ========================================
+         COMPLETION TRACKING SCRIPT
+    ======================================== -->
+    <script>
+        // Enable "Complete Milestone 1" button only when both checkboxes are checked
+        const checkbox1 = document.getElementById('checkbox1');
+        const checkbox2 = document.getElementById('checkbox2');
+        const completeButton = document.getElementById('completeM1Button');
+
+        function checkCompletion() {
+            if (checkbox1.checked && checkbox2.checked) {
+                completeButton.classList.add('enabled');
+                completeButton.disabled = false;
+            } else {
+                completeButton.classList.remove('enabled');
+                completeButton.disabled = true;
+            }
+        }
+
+        checkbox1.addEventListener('change', checkCompletion);
+        checkbox2.addEventListener('change', checkCompletion);
+
+        // Handle milestone completion
+        completeButton.addEventListener('click', async function() {
+            if (!checkbox1.checked || !checkbox2.checked) {
+                alert('Please complete both tasks before marking this milestone complete.');
+                return;
+            }
+
+            // Show loading state
+            const originalText = completeButton.textContent;
+            completeButton.textContent = 'SAVING...';
+            completeButton.disabled = true;
+
+            try {
+                // Get user email from localStorage or session
+                const userEmail = localStorage.getItem('userEmail') || sessionStorage.getItem('userEmail');
+
+                // Send completion to backend
+                const response = await fetch('/api/milestone1-complete', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: userEmail,
+                        completedAt: new Date().toISOString()
+                    })
+                });
+
+                if (response.ok) {
+                    // Store completion in localStorage
+                    localStorage.setItem('milestone1Complete', 'true');
+                    localStorage.setItem('milestone1CompletedAt', new Date().toISOString());
+
+                    // Redirect to Bronze Tier Upsell
+                    window.location.href = '/bronze-upsell';
+                } else {
+                    alert('There was an issue saving your progress. Please try again.');
+                    completeButton.textContent = originalText;
+                    completeButton.disabled = false;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Network error. Please check your connection and try again.');
+                completeButton.textContent = originalText;
+                completeButton.disabled = false;
+            }
+        });
+
+        // Store user email in localStorage when page loads (from URL parameter or session)
+        window.addEventListener('load', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const emailParam = urlParams.get('email');
+            if (emailParam) {
+                localStorage.setItem('userEmail', emailParam);
+            }
+        });
+    </script>
+
+</body>
+</html>
