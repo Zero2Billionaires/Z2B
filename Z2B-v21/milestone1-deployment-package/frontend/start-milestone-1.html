@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Before You Build Wealth, Clarify Your Foundation | Z2B Legacy Builders</title>
+    <title>Before You Upgrade Your Life by resigning from the Job you hate, Clarify Your Foundation | Z2B Legacy Builders</title>
     <meta name="description" content="Free Milestone 1: Vision Board + SWOT Analysis using the TEEE Framework (Transformation, Education, Empowerment, and Enrichment). For African employees ready to stop working for others and start building ownership.">
 
     <style>
@@ -20,7 +20,7 @@
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             line-height: 1.6;
             color: #FFFFFF;
-            background: #000B1F;
+            background: #051428;
             overflow-x: hidden;
         }
 
@@ -94,6 +94,100 @@
             to { transform: rotate(360deg); }
         }
 
+        @keyframes flipInX {
+            from {
+                transform: perspective(1000px) rotateX(-90deg);
+                opacity: 0;
+            }
+            to {
+                transform: perspective(1000px) rotateX(0deg);
+                opacity: 1;
+            }
+        }
+
+        @keyframes flipInY {
+            from {
+                transform: perspective(1000px) rotateY(-90deg);
+                opacity: 0;
+            }
+            to {
+                transform: perspective(1000px) rotateY(0deg);
+                opacity: 1;
+            }
+        }
+
+        @keyframes zoomInRotate {
+            from {
+                transform: scale(0.3) rotate(-15deg);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInFromLeft {
+            from {
+                transform: translateX(-100vw) rotate(-5deg);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0) rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInFromRight {
+            from {
+                transform: translateX(100vw) rotate(5deg);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0) rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0.3) translateY(-100px);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.05) translateY(10px);
+            }
+            70% {
+                transform: scale(0.95) translateY(-5px);
+            }
+            100% {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes rollIn {
+            from {
+                transform: translateX(-100%) rotate(-360deg);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0) rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        @keyframes expandIn {
+            from {
+                transform: scaleY(0) scaleX(0.3);
+                opacity: 0;
+            }
+            to {
+                transform: scaleY(1) scaleX(1);
+                opacity: 1;
+            }
+        }
+
         .animate-on-scroll {
             opacity: 0;
             transform: translateY(50px);
@@ -103,6 +197,36 @@
         .animate-on-scroll.visible {
             opacity: 1;
             transform: translateY(0);
+        }
+
+        /* Section-specific animations */
+        .section-flip-in {
+            animation: flipInX 1.2s ease-out;
+        }
+
+        .section-slide-left {
+            animation: slideInFromLeft 1s ease-out;
+        }
+
+        .section-slide-right {
+            animation: slideInFromRight 1s ease-out;
+        }
+
+        .section-zoom-rotate {
+            animation: zoomInRotate 1s ease-out;
+        }
+
+        .section-bounce {
+            animation: bounceIn 1.2s ease-out;
+        }
+
+        .section-roll {
+            animation: rollIn 1s ease-out;
+        }
+
+        .section-expand {
+            animation: expandIn 0.8s ease-out;
+            transform-origin: center center;
         }
 
         /* Particle Background Effect */
@@ -182,7 +306,7 @@
            HERO SECTION
         ======================================== */
         .hero-section {
-            background: linear-gradient(135deg, #0A1F5C 0%, #001F5C 50%, #0D2975 100%);
+            background: linear-gradient(135deg, #0A2647 0%, #051428 50%, #0A2647 100%);
             background-size: 400% 400%;
             animation: gradientShift 15s ease infinite;
             color: #FFFFFF;
@@ -240,11 +364,10 @@
             font-weight: 900;
             margin-bottom: 2rem;
             color: #FFFFFF;
-            text-shadow: 0 0 30px rgba(255, 215, 0, 1),
-                         0 0 60px rgba(255, 215, 0, 0.8),
-                         0 0 90px rgba(255, 215, 0, 0.6),
+            text-shadow: 0 0 40px rgba(255, 215, 0, 0.9),
+                         0 0 80px rgba(255, 215, 0, 0.6),
                          0 0 120px rgba(255, 215, 0, 0.4),
-                         2px 2px 15px rgba(0, 0, 0, 0.9);
+                         3px 3px 20px rgba(0, 0, 0, 0.9);
             animation: fadeInUp 1s ease-out;
             letter-spacing: 2px;
             line-height: 1.2;
@@ -260,28 +383,8 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             animation: gradientShift 6s ease infinite, fadeInUp 1s ease-out;
-            filter: brightness(1.3) contrast(1.2);
+            filter: brightness(1.4) contrast(1.3) drop-shadow(0 0 20px rgba(255, 215, 0, 0.8));
             position: relative;
-        }
-
-        .hero-headline::before {
-            content: attr(data-text);
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg,
-                rgba(255, 215, 0, 0.4) 0%,
-                rgba(255, 193, 7, 0.6) 50%,
-                rgba(255, 215, 0, 0.4) 100%);
-            background-size: 200% 200%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: gradientShift 4s ease infinite;
-            filter: blur(2px);
-            z-index: -1;
         }
 
         .hero-subheadline {
@@ -299,7 +402,7 @@
 
         .hero-cta-button {
             display: inline-block;
-            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            background: linear-gradient(135deg, #FFD700 0%, #FF6B35 100%);
             color: #FFFFFF;
             padding: 20px 60px;
             font-size: 1.3rem;
@@ -350,7 +453,7 @@
            PAIN MIRROR SECTION
         ======================================== */
         .pain-mirror-section {
-            background: linear-gradient(135deg, #001F5C 0%, #0A1F5C 50%, #0D2975 100%);
+            background: linear-gradient(135deg, #0A2647 0%, #051428 50%, #0A2647 100%);
             background-size: 400% 400%;
             animation: gradientShift 20s ease infinite;
             padding: 100px 20px;
@@ -423,7 +526,7 @@
         }
 
         .pain-point-card {
-            background: rgba(10, 31, 92, 0.7);
+            background: rgba(10, 38, 71, 0.7);
             padding: 35px;
             border-radius: 20px;
             border: 3px solid #FFD700;
@@ -522,7 +625,7 @@
            WHAT YOU GET SECTION
         ======================================== */
         .what-you-get-section {
-            background: linear-gradient(135deg, #0A1F5C 0%, #001F5C 50%, #0D2975 100%);
+            background: linear-gradient(135deg, #0A2647 0%, #051428 50%, #0A2647 100%);
             background-size: 400% 400%;
             animation: gradientShift 18s ease infinite;
             color: #FFFFFF;
@@ -591,7 +694,7 @@
         }
 
         .deliverable-item {
-            background: rgba(10, 31, 92, 0.7);
+            background: rgba(10, 38, 71, 0.7);
             padding: 35px;
             border-radius: 20px;
             border: 3px solid #FFD700;
@@ -624,7 +727,7 @@
 
         .deliverable-item:hover {
             border-color: #FFC107;
-            background: rgba(10, 31, 92, 0.9);
+            background: rgba(10, 38, 71, 0.9);
             transform: translateY(-10px) scale(1.02);
             box-shadow: 0 20px 60px rgba(0,0,0,0.6),
                         0 0 40px rgba(255, 215, 0, 0.5),
@@ -683,7 +786,7 @@
            OPT-IN FORM SECTION
         ======================================== */
         .optin-section {
-            background: linear-gradient(135deg, #001F5C 0%, #0A1F5C 50%, #0D2975 100%);
+            background: linear-gradient(135deg, #0A2647 0%, #051428 50%, #0A2647 100%);
             background-size: 400% 400%;
             animation: gradientShift 22s ease infinite;
             padding: 100px 20px;
@@ -745,7 +848,7 @@
         }
 
         .optin-form {
-            background: rgba(10, 31, 92, 0.8);
+            background: rgba(10, 38, 71, 0.8);
             padding: 50px 40px;
             border-radius: 25px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.6),
@@ -798,7 +901,7 @@
 
         .submit-button {
             width: 100%;
-            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            background: linear-gradient(135deg, #FFD700 0%, #FF6B35 100%);
             color: #FFFFFF;
             padding: 20px;
             font-size: 1.3rem;
@@ -862,7 +965,7 @@
            FOOTER / REASSURANCE SECTION
         ======================================== */
         .footer-section {
-            background: linear-gradient(135deg, #000B1F 0%, #0A1F5C 100%);
+            background: linear-gradient(135deg, #051428 0%, #0A2647 100%);
             color: #FFFFFF;
             padding: 80px 20px;
             text-align: center;
@@ -962,9 +1065,9 @@
     <!-- ========================================
          1️⃣ HERO SECTION
     ======================================== -->
-    <section class="hero-section">
+    <section class="hero-section section-zoom-rotate">
         <div class="hero-content">
-            <h1 class="hero-headline" data-text="Before You Change Your Life, Clarify Your Foundation">Before You Change Your Life, Clarify Your Foundation</h1>
+            <h1 class="hero-headline">Before You Upgrade Your Life by resigning from the Job you hate, Clarify Your Foundation</h1>
             <p class="hero-subheadline">
                 You can't build ownership on confusion. Milestone 1 gives you the Vision Board and SWOT Analysis (using the TEEE Framework: Transformation, Education, Empowerment, and Enrichment) to face the truth about where you are—and where you're actually going.
             </p>
@@ -975,7 +1078,7 @@
     <!-- ========================================
          2️⃣ PAIN MIRROR SECTION
     ======================================== -->
-    <section class="pain-mirror-section">
+    <section class="pain-mirror-section section-slide-left">
         <div class="pain-mirror-content">
 
             <div class="pain-mirror-intro">
@@ -1032,7 +1135,7 @@
     <!-- ========================================
          3️⃣ WHAT YOU GET SECTION
     ======================================== -->
-    <section class="what-you-get-section">
+    <section class="what-you-get-section section-flip-in">
         <div class="what-you-get-content">
 
             <div class="what-you-get-header">
@@ -1079,7 +1182,7 @@
     <!-- ========================================
          4️⃣ OPT-IN FORM SECTION
     ======================================== -->
-    <section class="optin-section" id="optin-form">
+    <section class="optin-section section-bounce" id="optin-form">
         <div class="optin-content">
 
             <div class="optin-header">
@@ -1138,7 +1241,7 @@
     <!-- ========================================
          5️⃣ FOOTER / REASSURANCE SECTION
     ======================================== -->
-    <section class="footer-section">
+    <section class="footer-section section-expand">
         <div class="footer-content">
 
             <div class="footer-icon">
@@ -1176,6 +1279,11 @@
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify(data)
+                // Attach referral data if present
+                if (window.ReferralTracker) {
+                    const referralData = window.ReferralTracker.attachToFormData({});
+                    Object.assign(data, referralData);
+                }
                 });
 
                 if (response.ok) {
@@ -1306,5 +1414,7 @@
         window.addEventListener('load', createAIGrid);
     </script>
 
+    <!-- Referral Tracking System -->
+    <script src="referral-tracker.js"></script>
 </body>
 </html>
