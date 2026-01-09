@@ -257,6 +257,60 @@ const MembersDashboard = ({ user, onLogout }) => {
               </div>
             </div>
 
+            {/* Shareable Referral Link */}
+            <div className="section-card" style={{ background: 'linear-gradient(135deg, #2A1810 0%, #3A2820 100%)', border: '2px solid #FDB931' }}>
+              <h2 className="section-title" style={{ color: '#FDB931' }}>🔗 Your Prospect Funnel Link</h2>
+              <p style={{ color: '#D4C5A9', marginBottom: '20px', fontSize: '1.1rem' }}>
+                Share this link on social media to invite prospects to complete Milestone 1 and join Z2B.
+                When they upgrade to a paid tier, you earn commissions!
+              </p>
+              <div style={{ display: 'flex', gap: '10px', alignItems: 'center', background: '#1A0F0A', padding: '15px', borderRadius: '10px', border: '1px solid #443322' }}>
+                <input
+                  type="text"
+                  value={`https://www.z2blegacybuilders.co.za/start-milestone-1?ref=${user?._id || 'YOUR_ID'}`}
+                  readOnly
+                  style={{
+                    flex: 1,
+                    padding: '12px 15px',
+                    fontSize: '1rem',
+                    background: '#0F0A08',
+                    border: '1px solid #FDB931',
+                    borderRadius: '8px',
+                    color: '#E8DCC8',
+                    fontFamily: 'monospace'
+                  }}
+                  onClick={(e) => e.target.select()}
+                />
+                <button
+                  onClick={() => {
+                    const link = `https://www.z2blegacybuilders.co.za/start-milestone-1?ref=${user?._id || 'YOUR_ID'}`;
+                    navigator.clipboard.writeText(link);
+                    alert('✅ Link copied! Share it on Facebook, WhatsApp, Instagram, or anywhere!');
+                  }}
+                  style={{
+                    background: 'linear-gradient(135deg, #FDB931 0%, #D4A029 100%)',
+                    color: '#000000',
+                    padding: '12px 30px',
+                    fontSize: '1rem',
+                    fontWeight: '700',
+                    border: 'none',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    boxShadow: '0 0 20px rgba(253, 185, 49, 0.5)',
+                    whiteSpace: 'nowrap'
+                  }}
+                >
+                  📋 Copy Link
+                </button>
+              </div>
+              <div style={{ marginTop: '15px', padding: '12px', background: 'rgba(253, 185, 49, 0.1)', borderRadius: '8px', borderLeft: '4px solid #FDB931' }}>
+                <p style={{ color: '#FDB931', fontSize: '0.95rem', margin: 0 }}>
+                  💡 <strong>Pro Tip:</strong> Share this on Facebook groups, WhatsApp status, Instagram stories, or email it to friends.
+                  Every prospect who completes M1 and upgrades is credited to YOU!
+                </p>
+              </div>
+            </div>
+
             {/* Income Streams Overview */}
             <div className="section-card">
               <h2 className="section-title">🌊 Your Income Streams</h2>
