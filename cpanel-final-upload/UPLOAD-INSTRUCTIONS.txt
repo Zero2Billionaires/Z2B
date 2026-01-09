@@ -1,0 +1,123 @@
+===============================================
+CPANEL UPLOAD INSTRUCTIONS - SIMPLE & CLEAR
+===============================================
+
+WHAT YOU'RE UPLOADING:
+- Sales funnel for prospects to complete M1 and see tiers offer
+
+===============================================
+STEP 1: UPLOAD FILES TO CPANEL
+===============================================
+
+1. Login to cPanel
+2. Open File Manager
+3. Navigate to: public_html/
+4. Upload ALL 4 files in this folder:
+   - start-milestone-1.html
+   - milestone1-welcome.html
+   - referral-tracker.js
+   - .htaccess
+
+IMPORTANT: Upload directly to public_html/ (NOT in a subfolder)
+
+===============================================
+STEP 2: TEST THE FUNNEL
+===============================================
+
+After upload, visit:
+https://www.z2blegacybuilders.co.za/start-milestone-1?ref=TEST123
+
+You should see:
+✓ Landing page with provocative title
+✓ "Start Milestone 1" button
+✓ Click it → Interactive M1 form
+✓ Fill some fields → Auto-saves
+✓ Complete → Sees 7 milestones upsell
+✓ Click "View Tiers" → Redirects to /tiers page
+
+===============================================
+STEP 3: ADD SHAREABLE LINK TO DASHBOARD
+===============================================
+
+Builders need to get their unique link from the dashboard.
+
+In your Members Dashboard code, add this:
+
+<div class="shareable-link-section">
+    <h3>Your Prospect Funnel Link</h3>
+    <p>Share this link on social media to invite prospects:</p>
+
+    <div class="link-box">
+        <input
+            type="text"
+            id="shareableLink"
+            value="https://www.z2blegacybuilders.co.za/start-milestone-1?ref=BUILDER_ID_HERE"
+            readonly
+            style="width: 100%; padding: 10px; font-size: 16px;"
+        />
+        <button onclick="copyLink()" style="margin-top: 10px; padding: 10px 20px;">
+            Copy Link
+        </button>
+    </div>
+</div>
+
+<script>
+function copyLink() {
+    const linkInput = document.getElementById('shareableLink');
+    linkInput.select();
+    document.execCommand('copy');
+    alert('Link copied! Share it on social media.');
+}
+</script>
+
+REPLACE "BUILDER_ID_HERE" with the actual builder's ID from your database.
+
+===============================================
+HOW THE FUNNEL WORKS:
+===============================================
+
+1. Builder copies link from dashboard
+   https://www.z2blegacybuilders.co.za/start-milestone-1?ref=12345
+
+2. Builder shares on Facebook, WhatsApp, Instagram, etc.
+
+3. Prospect clicks link → start-milestone-1 page opens
+
+4. Prospect reads and clicks "Start Milestone 1"
+
+5. milestone1-welcome page opens (interactive form)
+
+6. Prospect fills in:
+   - 3-Level SWOT Analysis
+   - 3 Vision Boards (Individual, Family, Group)
+   - Business opportunities
+
+7. Everything auto-saves as they type
+
+8. When done, prospect clicks "Complete Milestone 1 & Continue"
+
+9. Upsell appears showing all 7 milestones roadmap
+
+10. Prospect clicks "View 4 Membership Tiers & Complete Offer"
+
+11. Redirects to: https://www.z2blegacybuilders.co.za/tiers?ref=12345
+
+12. Builder gets commission credit!
+
+===============================================
+URLS THAT WORK:
+===============================================
+
+✓ https://www.z2blegacybuilders.co.za/start-milestone-1
+✓ https://www.z2blegacybuilders.co.za/start-milestone-1?ref=12345
+✓ https://www.z2blegacybuilders.co.za/milestone1-welcome
+✓ https://www.z2blegacybuilders.co.za/milestone1-welcome?ref=12345
+
+The .htaccess file handles URLs without .html extension automatically.
+
+===============================================
+THAT'S IT!
+===============================================
+
+Just upload the 4 files and test with:
+https://www.z2blegacybuilders.co.za/start-milestone-1?ref=TEST123

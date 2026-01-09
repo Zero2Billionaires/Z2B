@@ -1,0 +1,12 @@
+# Enable rewrite engine
+RewriteEngine On
+
+# Remove .html extension from URLs
+# If the request is for a file that doesn't exist but exists with .html
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME}.html -f
+RewriteRule ^(.*)$ $1.html [L]
+
+# Force HTTPS
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
