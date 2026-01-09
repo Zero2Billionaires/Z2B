@@ -13,7 +13,7 @@ const Login = ({ onLoginSuccess }) => {
   const [resetLoading, setResetLoading] = useState(false);
   const [resetMessage, setResetMessage] = useState('');
 
-  const API_URL = process.env.REACT_APP_API_BASE_URL || 'https://z2b-production-3cd3.up.railway.app';
+  const API_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000';
 
   const handleLogin = async (e) => {
     e.preventDefault();
