@@ -984,13 +984,29 @@
         <!-- UPSELL SECTION -->
         <!-- ============================================ -->
         <section class="upsell-section" id="upsellSection">
-            <h2>🏆 Your Foundation is Laid</h2>
-            <p>What you just completed is what most people avoid their entire lives.</p>
-            <p>You now have clarity. You have vision. You have a roadmap.</p>
-            <p style="color: #FDB931; font-weight: 700; font-size: 1.5rem; margin-top: 2rem;">But vision without execution is just a dream.</p>
-            <p>The next 6 milestones will take you from awareness to <strong>mastery</strong>. From clarity to <strong>legacy</strong>.</p>
-            <p><strong>Choose your Z2B membership tier and continue your Transform Journey:</strong></p>
-            <a href="bronze-upsell.html" class="btn-primary" style="margin-top: 2rem;">View Membership Tiers</a>
+            <h2>🏆 Your Foundation is Complete</h2>
+            <p style="font-size: 1.2rem;">What you just completed is what most people avoid their entire lives.</p>
+            <p>You now have <strong style="color: #FDB931;">clarity</strong>. You have <strong style="color: #FDB931;">vision</strong>. You have <strong style="color: #FDB931;">a roadmap</strong>.</p>
+
+            <p style="color: #FDB931; font-weight: 700; font-size: 1.6rem; margin-top: 2.5rem; margin-bottom: 1.5rem;">But vision without execution is just a dream.</p>
+
+            <p style="font-size: 1.15rem; line-height: 1.8;">Milestone 1 was <strong>Awareness</strong>—you now SEE what's possible.</p>
+            <p style="font-size: 1.15rem; line-height: 1.8; margin-bottom: 2rem;">But there are <strong style="color: #FDB931;">6 MORE Transform Journeys</strong> waiting for you:</p>
+
+            <div style="background: rgba(253, 185, 49, 0.08); border-left: 4px solid #FDB931; padding: 25px; margin: 30px 0; border-radius: 8px; text-align: left;">
+                <p style="margin: 0.8rem 0;"><strong style="color: #FDB931;">M2: Mindset</strong> — Rewire your thinking for wealth, faith, and legacy</p>
+                <p style="margin: 0.8rem 0;"><strong style="color: #FDB931;">M3: Skills</strong> — Master the competencies that create income</p>
+                <p style="margin: 0.8rem 0;"><strong style="color: #FDB931;">M4: Systems</strong> — Build automated engines that work while you sleep</p>
+                <p style="margin: 0.8rem 0;"><strong style="color: #FDB931;">M5: Income</strong> — Launch your first cash-generating asset</p>
+                <p style="margin: 0.8rem 0;"><strong style="color: #FDB931;">M6: Wealth</strong> — Scale from income to true financial freedom</p>
+                <p style="margin: 0.8rem 0;"><strong style="color: #FDB931;">M7: Legacy</strong> — Build what outlives you and transforms generations</p>
+            </div>
+
+            <p style="font-size: 1.3rem; font-weight: 700; margin-top: 2.5rem;">This is the complete Transform Journey.</p>
+            <p style="font-size: 1.15rem; margin-bottom: 3rem;">From awareness to mastery. From clarity to legacy. From dreaming to <strong>building</strong>.</p>
+
+            <p style="font-size: 1.2rem; color: #FDB931; font-weight: 700; margin-bottom: 1.5rem;">Choose Your Z2B Membership Tier and Unlock All 7 Milestones:</p>
+            <a href="#" id="tiersButton" class="btn-primary" style="margin-top: 2rem; font-size: 1.3rem; padding: 20px 60px;">View 4 Membership Tiers & Complete Offer</a>
         </section>
 
     </div>
@@ -1128,6 +1144,26 @@
                     console.error('Load error:', error);
                 }
             }
+        });
+
+        // Tiers button redirect with referral tracking
+        document.getElementById('tiersButton').addEventListener('click', function(e) {
+            e.preventDefault();
+
+            // Get referral builder ID from tracker
+            let builderId = null;
+            if (window.ReferralTracker) {
+                builderId = window.ReferralTracker.getReferralBuilderId();
+            }
+
+            // Build tiers URL with referral parameter
+            let tiersUrl = 'https://www.z2blegacybuilders.co.za/tiers';
+            if (builderId) {
+                tiersUrl += `?ref=${builderId}`;
+            }
+
+            // Redirect to tiers page
+            window.location.href = tiersUrl;
         });
     </script>
 
