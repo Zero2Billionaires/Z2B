@@ -20,7 +20,6 @@ import MembersDashboard from './comp/MembersDashboard';
 import AdminPanel from './comp/AdminPanel';
 import MembershipSignUp from './comp/MembershipSignUp';
 import PaymentProcessing from './comp/PaymentProcessing';
-import StartMilestone1 from './comp/StartMilestone1';
 import Footer from './comp/Footer';
 import './App.css';
 
@@ -128,9 +127,6 @@ function AppContent() {
           <Route path="/opportunity" element={<Opportunity onNavigate={handleNavigate} />} />
           <Route path="/tli" element={<TLIChallenge onNavigate={handleNavigate} />} />
           <Route path="/milestones" element={<MilestoneTracker onNavigate={handleNavigate} />} />
-          <Route path="/m1/start-milestone-1" element={<StartMilestone1 />} />
-          <Route path="/m1/start-milestone-1.html" element={<StartMilestone1 />} />
-          <Route path="/milestone1-welcome" element={<div style={{display:'none'}}>{window.location.href = '/m1/milestone1-welcome.html' + window.location.search}</div>} />
           <Route path="/income" element={<IncomeTracker onNavigate={handleNavigate} />} />
           <Route path="/login" element={<Login onLoginSuccess={handleLoginSuccess} />} />
           <Route path="/admin-login" element={<AdminLogin onLoginSuccess={handleLoginSuccess} />} />
